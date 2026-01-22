@@ -1,0 +1,90 @@
+# .gitignore for CinemaManagement (C# .NET + React + Vite)
+
+# Ignore build outputs
+server/bin/
+server/obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore logs
+*.log
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore node_modules and npm/yarn/pnpm logs
+client/node_modules/
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/pnpm-debug.log*
+
+# Ignore environment files
+client/.env
+client/.env.*
+server/.env
+server/.env.*
+
+# Ignore build/dist outputs
+client/dist/
+
+# Ignore coverage and test outputs
+client/coverage/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore package lock files (optional, if you want to commit lock files, remove these)
+client/package-lock.json
+client/yarn.lock
+client/pnpm-lock.yaml
+
+# Ignore migrations build artifacts (not the migration scripts themselves)
+server/Migrations/*.Designer.cs
+
+# Ignore publish outputs
+server/publish/
+
+# Ignore local secrets
+secrets.json
+
+# Ignore backup files
+*.bak
+*.tmp
+~$*
+
+# Ignore ReSharper files
+*.ReSharper*
+*_ReSharper*/
+
+# Ignore Rider IDE files
+.idea/
+
+# Ignore test result files
+TestResult*/
+
+# Ignore coverage reports
+coverage/
+
+# Ignore NCrunch files
+*.ncrunch*
+.ncrunch*/
+
+# Ignore Azure Pipeline files
+*.azure-pipelines*
+
+# Ignore local database files
+*.mdf
+*.ldf
+*.db
+*.sqlite
+
+# Ignore swagger generated files
+server/swagger/
+
+# End of .gitignore
