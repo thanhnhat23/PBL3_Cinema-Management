@@ -6,7 +6,7 @@ namespace CinemaAPI.Models.DTOs
         public string nameRoom { get; set; } = null!;
         public RoomLayoutType roomLayoutType{ get; set; } = RoomLayoutType.Standard;
         public decimal price { get; set; }
-        public int rows { get; set; }
-        public int cols { get; set; }
+        public int row { get; set; }
+        public int column { get; set; }
     }
 }

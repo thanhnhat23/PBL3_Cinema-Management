@@ -29,6 +29,10 @@ client/.env.*
 server/.env
 server/.env.*
 
+# Ignore appsettings with API keys (keep only appsettings.json.example or appsettings.Development.json)
+server/**/appsettings.json
+server/**/appsettings.*.json
+
 # Ignore build/dist outputs
 client/dist/
 
@@ -52,6 +56,7 @@ server/publish/
 
 # Ignore local secrets
 secrets.json
+server/appsettings.json
 
 # Ignore backup files
 *.bak

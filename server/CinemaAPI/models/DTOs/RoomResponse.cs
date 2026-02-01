@@ -4,6 +4,8 @@ public class RoomResponse
     public string nameRoom { get; set; } = null!;
     public string roomLayoutType { get; set; } = null!;
     public decimal price { get; set; }
+    public int row { get; set; }
+    public int column { get; set; }
     public List<SeatResponse> Seats { get; set; } = new();
 }
 

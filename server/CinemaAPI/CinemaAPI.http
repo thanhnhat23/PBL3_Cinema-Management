@@ -1,16 +1,19 @@
 @CinemaAPI_HostAddress = http://localhost:5143
 
 ###
+@movie_id = 1528577
 @tmdb_api_key = b656d57b7410ec76e064859fd6588e8a
 @tmdb_nowplaying = https://api.themoviedb.org/3/movie/now_playing
 @tmdb_upcoming = https://api.themoviedb.org/3/movie/upcoming
 @tmdb_popular = https://api.themoviedb.org/3/movie/popular
 @tmdb_genres_movie = https://api.themoviedb.org/3/genre/movie/list
-@tmdb_actor = https://api.themoviedb.org/3/movie/1137179/credits
-@tmdb_actor_details = https://api.themoviedb.org/3/person/2530329
+@tmdb_actor = https://api.themoviedb.org/3/movie/{{movie_id}}/credits
+@tmdb_actor_details = https://api.themoviedb.org/3/person/{{movie_id}}
+@tmdb_trailer = https://api.themoviedb.org/3/movie/{{movie_id}}/videos
+@tmdb_movie_details = https://api.themoviedb.org/3/movie/{{movie_id}}
 
 @Cinema_UpcomingMovies = {{CinemaAPI_HostAddress}}/api/Admin/sync-movies?type=upcoming
-@Cinema_NowPlayingMovies = {{CinemaAPI_HostAddress}}/api/Admin/sync-movies?type=now_playing
+@Cinema_NowPlayingMovies = {{CinemaAPI_HostAddress}}/api/Admin/sync-movies?type=nowplaying
 @Cinema_PopularMovies = {{CinemaAPI_HostAddress}}/api/Admin/sync-movies?type=popular
 
 # GET {{tmdb_nowplaying}}?api_key={{tmdb_api_key}}&language=vi-V&region=VN
@@ -31,7 +34,14 @@
 # GET {{tmdb_actor_details}}?api_key={{tmdb_api_key}}&language=vi-VN
 # Content-Type: application/json
 
-POST {{Cinema_PopularMovies}}
-Accept: */*
+GET {{tmdb_trailer}}?api_key={{tmdb_api_key}}&language=vi-VN&include_video_language=vi,en
+Content-Type: application/json
+
+# GET {{tmdb_movie_details}}?api_key={{tmdb_api_key}}&language=vi-VN
+# Content-Type: application/json
+
+# POST {{Cinema_PopularMovies}}
+# Accept: */*
 
 // https://image.tmdb.org/t/p/original/{{poster_path}}
+// https://www.youtube.com/watch?v={{key}}
