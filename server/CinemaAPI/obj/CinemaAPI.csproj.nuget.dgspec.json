@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj": {}
+    "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj": {}
   },
   "projects": {
-    "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj": {
+    "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj",
+        "projectUniqueName": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj",
         "projectName": "CinemaAPI",
-        "projectPath": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj",
+        "projectPath": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj",
         "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\obj\\",
+        "outputPath": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -44,6 +44,10 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[10.0.2, )"
@@ -80,6 +84,10 @@
               "target": "Package",
               "version": "[9.0.0, )"
             },
+            "Resend": {
+              "target": "Package",
+              "version": "[0.2.1, )"
+            },
             "Scalar.AspNetCore": {
               "target": "Package",
               "version": "[2.12.11, )"
@@ -104,7 +112,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

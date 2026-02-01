@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using CinemaAPI.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace CinemaAPI.data
 {
@@ -9,8 +11,6 @@ namespace CinemaAPI.data
 
         // DbSets for each model
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<UserVoucher> UserVouchers { get; set; }
         public DbSet<Location> Locations { get; set; }
@@ -27,6 +27,13 @@ namespace CinemaAPI.data
         public DbSet<Snack> Snacks { get; set; }
         public DbSet<ShowTime> ShowTimes { get; set; }
         public DbSet<ShowTimeSeat> ShowTimeSeats { get; set; }
+        public DbSet<ShowTimePrice> ShowTimePrices { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<ComboDetail> ComboDetails { get; set; }
+        public DbSet<SeatType> SeatTypes { get; set; }
+        public DbSet<PointTransaction> PointTransactions { get; set; }
+        public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }
 
         // Model configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,8 +41,6 @@ namespace CinemaAPI.data
             base.OnModelCreating(modelBuilder);
 
             // Many-to-Many Relationships
-            modelBuilder.Entity<UserRole>()
-                .HasKey(ur => new { ur.user_id, ur.role_id });
             modelBuilder.Entity<MovieActor>()
                 .HasKey(ma => new { ma.movie_id, ma.actor_id });
             modelBuilder.Entity<MovieGenre>()
@@ -46,24 +51,26 @@ namespace CinemaAPI.data
                 .HasKey(sts => new { sts.showtime_id, sts.seat_id });
             modelBuilder.Entity<UserVoucher>()
                 .HasKey(uv => new { uv.user_id, uv.coupon_id });
+            modelBuilder.Entity<Inventory>()
+                .HasKey(inv => new { inv.snack_id, inv.cinema_id });
+            modelBuilder.Entity<ShowTimePrice>()
+                .HasKey(stp => new { stp.type_id, stp.showtime_id });
+
+            // Configure one-to-one
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.PointTransaction)
+                .WithOne(pt => pt.Booking)
+                .HasForeignKey<PointTransaction>(pt => pt.booking_id);
+            
             
             // Configure enum
-            modelBuilder.Entity<Role>()
-                .Property(s => s.type)
+            modelBuilder.Entity<User>()
+                .Property(u => u.role)
                 .HasConversion<string>()
                 .HasMaxLength(20)
                 .IsRequired();
             modelBuilder.Entity<Booking>()
                 .Property(s => s.status)
-                .HasConversion<string>()
-                .HasMaxLength(20);
-            modelBuilder.Entity<Booking>()
-                .Property(s => s.paymentMethod)
-                .HasConversion<string>()
-                .HasMaxLength(20)
-                .IsRequired();
-            modelBuilder.Entity<Seat>()
-                .Property(s => s.type)
                 .HasConversion<string>()
                 .HasMaxLength(20);
             modelBuilder.Entity<Snack>()
@@ -81,6 +88,18 @@ namespace CinemaAPI.data
                 .HasMaxLength(20);
             modelBuilder.Entity<Actor>()
                 .Property(a => a.gender)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.method)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.status)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+            modelBuilder.Entity<PointTransaction>()
+                .Property(pt => pt.type)
                 .HasConversion<string>()
                 .HasMaxLength(20);
             
@@ -112,6 +131,12 @@ namespace CinemaAPI.data
             modelBuilder.Entity<Booking>()
                 .Property(b => b.finalAmount)
                 .HasColumnType("decimal(18, 2)");
+            modelBuilder.Entity<Cinema>()
+                .Property(c => c.latitude)
+                .HasColumnType("decimal(18, 10)");
+            modelBuilder.Entity<Cinema>()
+                .Property(c => c.longitude)
+                .HasColumnType("decimal(18, 10)");
         }
     }
 }
