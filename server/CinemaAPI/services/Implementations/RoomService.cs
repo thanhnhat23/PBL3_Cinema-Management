@@ -19,7 +19,7 @@ namespace CinemaAPI.Services.Implementations
         // Get room by ID
         public async Task<Room?> GetRoomById(int room_id) => await _dbContext.Rooms.FindAsync(room_id);
 
-        public async Task AddRoom(Room room, int rows, int cols)
+        public async Task AddRoom(Room room)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
@@ -28,20 +28,20 @@ namespace CinemaAPI.Services.Implementations
                 await _dbContext.SaveChangesAsync();
 
                 var seats = new List<Seat>();
-                for (int row = 1; row <= rows; row++)
+                for (int row = 1; row <= room.row; row++)
                 {
                     char rowLabel = (char)('A' + row - 1);
-                    for (int col = 1; col <= cols; col++)
+                    for (int col = 1; col <= room.column; col++)
                     {
                         bool isCoupleSeat = (col <= 2);
 
                         seats.Add(new Seat
                         {
                            room_id = room.room_id,
-                           rowNumber = row,
-                           columnNumber = col,
-                           seatCode = $"{rowLabel}{col}",
-                           type = isCoupleSeat ? SeatType.Couple : SeatType.Single
+                           row_index = row,
+                           column_index = col,
+                           seat_code = $"{rowLabel}{col}",
+                           type_id = isCoupleSeat ? 2 : 1 // 2 for Couple, 1 for Standard
                         });
                     }
                 }

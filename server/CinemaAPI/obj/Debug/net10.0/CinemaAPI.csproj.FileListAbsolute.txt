@@ -134,3 +134,6 @@ D:\Project_A\CinemaManagement\Server\CinemaAPI\bin\Debug\net10.0\tr\Microsoft.Co
 D:\Project_A\CinemaManagement\Server\CinemaAPI\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 D:\Project_A\CinemaManagement\Server\CinemaAPI\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 D:\Project_A\CinemaManagement\Server\CinemaAPI\bin\Debug\net10.0\Scalar.AspNetCore.dll
+D:\Project_A\CinemaManagement\server\cinemaAPI\obj\Debug\net10.0\CinemaAPI.sourcelink.json
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\BCrypt.Net-Next.dll
+D:\Project_A\CinemaManagement\server\cinemaAPI\bin\Debug\net10.0\Resend.dll

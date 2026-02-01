@@ -80,21 +80,35 @@ public class TmdbService : ITmdbService
 
     private async Task ProcessNewMovie(MovieItem item)
     {
-        var endDate = item.release_date.AddMonths(1);
+        var endDate = item.release_date.AddMonths(1).AddDays(15);
         var now = DateTime.UtcNow;
+
+        var api_key = _config.ApiKey;
+        // Fetch trailer
+        var trailer = _config.ConfigEndpoints.Videos.Replace("{movie_id}", item.Id.ToString());
+        var url = $"{trailer}?api_key={api_key}&language=vi-VN&include_video_language=vi,en";
+        var trailerResponse = await _httpClient.GetFromJsonAsync<MovieDetailResponse>(url);
+
+        // Fetch runtime
+        var runtime = _config.ConfigEndpoints.MovieDetails.Replace("{movie_id}", item.Id.ToString());
+        var runtimeUrl = $"{runtime}?api_key={api_key}";
+        var runtimeResponse = await _httpClient.GetFromJsonAsync<MovieDetailResponse>(runtimeUrl);
+
 
         var newMovie = new Movie
         {
             tmdb_id = item.Id.ToString(),
             adult = item.adult,
-            backdrop_path = _config.ImageBaseUrl + item.backdrop_path,
-            poster_path = _config.ImageBaseUrl + item.poster_path,
+            backdrop_path = item.backdrop_path,
+            poster_path = item.poster_path,
             title = item.title,
             overview = item.overview,
             release_date = item.release_date.AddHours(7), // Convert to UTC+7
             end_date = endDate.AddHours(7), // Convert to UTC+7
             vote_average = item.vote_average,
             vote_count = item.vote_count,
+            runtime = runtimeResponse?.runtime ?? 0,
+            trailer_url = trailerResponse?.results.FirstOrDefault(v => v.type == "Trailer" && v.site == "YouTube")?.key,
             status = now < item.release_date ? MovieStatus.Upcoming :
                      now > endDate ? MovieStatus.Ended : MovieStatus.Released
         };
@@ -185,14 +199,10 @@ public class TmdbService : ITmdbService
                     {
                         actor_id = cast.Id,
                         name = cast.name,
-                        profile_path = _config.ImageBaseUrl + cast.profile_path,
+                        profile_path = cast?.profile_path,
                         gender = (ActorGender)cast.gender,
-                        biography = !string.IsNullOrWhiteSpace(detail?.biography)
-                                        ? detail.biography
-                                        : "Updating...",
-                        place_of_birth = !string.IsNullOrWhiteSpace(detail?.place_of_birth)
-                                        ? detail.place_of_birth
-                                        : "Updating...",
+                        biography = detail?.biography,
+                        place_of_birth = detail?.place_of_birth,
                         birthday = detail?.birthday ?? null
                     };
 

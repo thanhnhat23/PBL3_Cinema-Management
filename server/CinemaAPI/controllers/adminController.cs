@@ -29,16 +29,16 @@ namespace CinemaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred: {ex.Message}");
+                return StatusCode(500, $"An error occurred in adminController.SyncGenres: {ex.Message}");
             }
         }
 
         [HttpPost("sync-movies")]
-        public async Task<IActionResult> SyncMovie([FromQuery] string type = "now_playing")
+        public async Task<IActionResult> SyncMovie([FromQuery] string type = "nowplaying")
         {
-            if (type != "now_playing" && type != "upcoming" && type != "popular")
+            if (type != "nowplaying" && type != "upcoming" && type != "popular")
             {
-                return BadRequest("Invalid type. Allowed values are 'now_playing', 'upcoming', or 'popular'.");
+                return BadRequest("Invalid type. Allowed values are 'nowplaying', 'upcoming', or 'popular'.");
             }
 
             try
@@ -48,7 +48,7 @@ namespace CinemaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred: {ex.Message}");
+                return StatusCode(500, $"An error occurred in adminController.SyncMovie: {ex.Message}");
             }
         }
 
@@ -62,15 +62,17 @@ namespace CinemaAPI.Controllers
                     cinema_id = request.cinema_id,
                     nameRoom = request.nameRoom,
                     roomLayoutType = request.roomLayoutType,
-                    price = request.price
+                    price = request.price,
+                    row = request.row,
+                    column = request.column
                 };
 
-                await _roomService.AddRoom(room, request.rows, request.cols);
+                await _roomService.AddRoom(room);
                 return Ok("Room created successfully.");
                 
             } catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred: {ex.Message}");
+                return StatusCode(500, $"An error occurred in adminController.CreateRoom: {ex.Message}");
             }
         }
 
@@ -84,7 +86,7 @@ namespace CinemaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred: {ex.Message}");
+                return StatusCode(500, $"An error occurred in adminController.UpdateRoom: {ex.Message}");
             }
         }
 
@@ -98,7 +100,7 @@ namespace CinemaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred: {ex.Message}");
+                return StatusCode(500, $"An error occurred in adminController.DeleteRoom: {ex.Message}");
             }
         }
     }

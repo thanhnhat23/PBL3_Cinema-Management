@@ -8,16 +8,26 @@
     ".NETCoreApp,Version=v10.0": {
       "CinemaAPI/1.0.0": {
         "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.2",
           "Microsoft.AspNetCore.OpenApi": "10.0.1",
           "Microsoft.EntityFrameworkCore.Design": "9.0.0",
           "Microsoft.EntityFrameworkCore.Relational": "9.0.0",
           "MongoDB.Driver": "3.6.0",
           "Pomelo.EntityFrameworkCore.MySql": "9.0.0",
+          "Resend": "0.2.1",
           "Scalar.AspNetCore": "2.12.11"
         },
         "runtime": {
           "CinemaAPI.dll": {}
+        }
+      },
+      "BCrypt.Net-Next/4.0.3": {
+        "runtime": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "assemblyVersion": "4.0.3.0",
+            "fileVersion": "4.0.3.0"
+          }
         }
       },
       "DnsClient/1.6.1": {
@@ -524,6 +534,14 @@
           }
         }
       },
+      "Resend/0.2.1": {
+        "runtime": {
+          "lib/net8.0/Resend.dll": {
+            "assemblyVersion": "0.2.1.0",
+            "fileVersion": "0.2.1.0"
+          }
+        }
+      },
       "Scalar.AspNetCore/2.12.11": {
         "runtime": {
           "lib/net10.0/Scalar.AspNetCore.dll": {
@@ -643,6 +661,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "BCrypt.Net-Next/4.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
+      "path": "bcrypt.net-next/4.0.3",
+      "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"
     },
     "DnsClient/1.6.1": {
       "type": "package",
@@ -839,6 +864,13 @@
       "sha512": "sha512-cl7S4s6CbJno0LjNxrBHNc2xxmCliR5i40ATPZk/eTywVaAbHCbdc9vbGc3QThvwGjHqrDHT8vY9m1VF/47o0g==",
       "path": "pomelo.entityframeworkcore.mysql/9.0.0",
       "hashPath": "pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512"
+    },
+    "Resend/0.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KE+irutvTpJsXUDSnYVlNVZuQb/MGrYGZ6IKVZ3FusRz64tlN0zHjWreAPE5UpqU/lLMg34n4WyoPdetTQCLHw==",
+      "path": "resend/0.2.1",
+      "hashPath": "resend.0.2.1.nupkg.sha512"
     },
     "Scalar.AspNetCore/2.12.11": {
       "type": "package",
