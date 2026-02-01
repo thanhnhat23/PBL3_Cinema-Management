@@ -36,6 +36,9 @@ server/**/appsettings.*.json
 # Ignore build/dist outputs
 client/dist/
 
+server/**/appsettings.json
+server/**/appsettings.*.json
+
 # Ignore coverage and test outputs
 client/coverage/
 
