@@ -41,6 +41,7 @@ namespace CinemaAPI.Services.Implementations
                     user_id = user.user_id,
                     userName = user.userName,
                     email = user.email,
+                    birthDate = user.birthDate,
                     role = user.role.ToString(),
                     token = token,
                     expiresAt = DateTime.UtcNow.AddDays(3)
@@ -80,9 +81,12 @@ namespace CinemaAPI.Services.Implementations
             try
             {
                 var existingUser = await _dbContext.Users.AnyAsync(u => u.email == request.email);
+                var address = new System.Net.Mail.MailAddress(request.email);
 
                 if (existingUser)
-                    return false; // User already exists
+                    throw new Exception("User already exists"); // User already exists
+                if (address.Address != request.email)
+                    throw new Exception("Invalid email format"); // Invalid email format
 
                 var user = new User
                 {
@@ -106,11 +110,18 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<bool> ForgotPasswordAsync(string email)
         {
-            try {
+            try
+            {
                 var user = _dbContext.Users.FirstOrDefault(u => u.email == email);
                 if (user == null) return false;
 
                 var token = new Random().Next(100000, 999999).ToString();
+                // Ensure token is unique
+                var existingToken = await _dbContext.Users.AnyAsync(u => u.passwordResetToken == token);
+                if (existingToken)
+                {
+                    token = new Random().Next(100000, 999999).ToString();
+                }
                 user.passwordResetToken = token;
                 user.resetTokenExpires = DateTime.UtcNow.AddMinutes(5);
 
@@ -119,7 +130,8 @@ namespace CinemaAPI.Services.Implementations
                 // Send reset password email
                 await _emailService.SendResetPasswordEmailAsync(user.email, token);
                 return true;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"ForgotPasswordAsync Error: {ex.Message}");
                 throw new Exception("An error occurred during forgot password process.");
@@ -130,12 +142,15 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                var user =  await _dbContext.Users.FirstOrDefaultAsync(u => 
-                    u.email == request.email && 
-                    u.passwordResetToken == request.resetToken && 
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
+                    u.email == request.email &&
+                    u.passwordResetToken == request.resetToken &&
                     u.resetTokenExpires > DateTime.UtcNow);
-                
-                if (user == null) return false;
+
+                if (user == null)
+                    return false; // Invalid token or email
+                if (user.resetTokenExpires > DateTime.UtcNow)
+                    return false; // Token expired
 
                 // Update password and clear reset token
                 user.passwordHash = BCrypt.Net.BCrypt.HashPassword(request.newPassword);
@@ -144,7 +159,8 @@ namespace CinemaAPI.Services.Implementations
 
                 await _dbContext.SaveChangesAsync();
                 return true;
-            } catch (Exception ex)  
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"ResetPasswordAsync Error: {ex.Message}");
                 throw new Exception("An error occurred during password reset.");

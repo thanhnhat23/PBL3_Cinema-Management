@@ -1,5 +1,6 @@
 using CinemaAPI.data;
 using CinemaAPI.Models;
+using CinemaAPI.Models.DTOs;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +16,17 @@ namespace CinemaAPI.Services.Implementations
         }
 
         // Get all rooms
-        public async Task<List<Room>> GetAllRooms() => await _dbContext.Rooms.ToListAsync();
+        public async Task<List<Room>> GetAllRooms() =>
+            await _dbContext.Rooms
+                .Include(r => r.Cinema)
+                .ThenInclude(c => c.Location)
+                .ToListAsync();
         // Get room by ID
-        public async Task<Room?> GetRoomById(int room_id) => await _dbContext.Rooms.FindAsync(room_id);
+        public async Task<Room?> GetRoomById(int room_id) =>
+            await _dbContext.Rooms
+                .Include(r => r.Cinema)
+                .ThenInclude(c => c.Location)
+                .FirstOrDefaultAsync(r => r.room_id == room_id);
 
         public async Task AddRoom(Room room)
         {
@@ -37,11 +46,11 @@ namespace CinemaAPI.Services.Implementations
 
                         seats.Add(new Seat
                         {
-                           room_id = room.room_id,
-                           row_index = row,
-                           column_index = col,
-                           seat_code = $"{rowLabel}{col}",
-                           type_id = isCoupleSeat ? 2 : 1 // 2 for Couple, 1 for Standard
+                            room_id = room.room_id,
+                            row_index = row,
+                            column_index = col,
+                            seat_code = $"{rowLabel}{col}",
+                            type_id = isCoupleSeat ? (int)SeatEnum.Single : (int)SeatEnum.Couple
                         });
                     }
                 }
@@ -50,28 +59,38 @@ namespace CinemaAPI.Services.Implementations
                 await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-            } catch (Exception)
+            }
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw;
+                Console.WriteLine($"AddRoom Error: {ex.Message}");
+                throw new Exception($"An error occurred while adding the room: {ex.Message}");
             }
         }
 
-        public async Task UpdateRoom(int room_id, Room updatedRoom)
+        public async Task UpdateRoom(int room_id, RoomUpdateRequest request)
         {
             var room = await _dbContext.Rooms.FindAsync(room_id);
+
+            if (room == null)
+                throw new Exception("Room not found");
+
             try
             {
-                if (room != null)
-                {
-                    room.nameRoom = updatedRoom.nameRoom;
-                    room.roomLayoutType = updatedRoom.roomLayoutType;
-                    room.price = updatedRoom.price;
-                    await _dbContext.SaveChangesAsync();
-                }
-            } catch (Exception)
+                if (request.nameRoom != null)
+                    room.nameRoom = request.nameRoom;
+
+                if (request.roomLayoutType.HasValue)
+                    room.roomLayoutType = request.roomLayoutType.Value;
+
+                if (request.price.HasValue)
+                    room.price = request.price.Value;
+
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception ex)
             {
-                throw;
+                Console.WriteLine($"UpdateRoom Error: {ex.Message}");
+                throw new Exception($"An error occurred while updating the room: {ex.Message}");
             }
         }
 
@@ -85,22 +104,24 @@ namespace CinemaAPI.Services.Implementations
                             .Include(r => r.Showtimes)
                             .FirstOrDefaultAsync(r => r.room_id == room_id);
 
-                        if (room == null) throw new Exception("Phòng không tồn tại.");
+                if (room == null) throw new Exception("Phòng không tồn tại.");
 
-                        // Check if the room has any showtimes to avoid losing booking data
-                        if (room.Showtimes.Any()) 
-                            throw new Exception("Cannot delete a room that has showtimes. Please delete the showtimes first.");
+                // Check if the room has any showtimes to avoid losing booking data
+                if (room.Showtimes.Any())
+                    throw new Exception("Cannot delete a room that has showtimes. Please delete the showtimes first.");
 
-                        // Delete associated seats first
-                        _dbContext.Seats.RemoveRange(room.Seats);
-                        _dbContext.Rooms.Remove(room);
+                // Delete associated seats first
+                _dbContext.Seats.RemoveRange(room.Seats);
+                _dbContext.Rooms.Remove(room);
 
-                        await _dbContext.SaveChangesAsync();
-                        await transaction.CommitAsync();
-            } catch (Exception)
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw;
+                Console.WriteLine($"DeleteRoom Error: {ex.Message}");
+                throw new Exception($"An error occurred while deleting the room: {ex.Message}");
             }
         }
     }

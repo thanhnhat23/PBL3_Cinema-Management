@@ -102,6 +102,10 @@ namespace CinemaAPI.data
                 .Property(pt => pt.type)
                 .HasConversion<string>()
                 .HasMaxLength(20);
+            modelBuilder.Entity<SeatType>()
+                .Property(st => st.type_name)
+                .HasConversion<string>()
+                .HasMaxLength(20);
             
             // Configure decimal precision
             modelBuilder.Entity<Coupon>()

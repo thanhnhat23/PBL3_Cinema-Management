@@ -9,4 +9,11 @@ namespace CinemaAPI.Models.DTOs
         public int row { get; set; }
         public int column { get; set; }
     }
+
+    public class RoomUpdateRequest
+    {
+        public string? nameRoom { get; set; }
+        public RoomLayoutType? roomLayoutType { get; set; }
+        public decimal? price { get; set; }
+    }
 }
