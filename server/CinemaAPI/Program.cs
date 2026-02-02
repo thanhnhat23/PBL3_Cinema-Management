@@ -56,6 +56,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 ); ;
 
 builder.Services.AddHostedService<TmdbSyncWorker>();
+builder.Services.AddHostedService<ExpiredResetTokenCleanupService>();
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -86,10 +87,10 @@ builder.Services.AddAuthorization();
 // Configure resend email service
 builder.Services.AddOptions();
 builder.Services.AddHttpClient<ResendClient>();
-builder.Services.Configure<ResendClientOptions>( o =>
+builder.Services.Configure<ResendClientOptions>(o =>
 {
     o.ApiToken = builder.Configuration["Resend:ApiKey"]!;
-} );
+});
 builder.Services.AddTransient<IResend, ResendClient>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();

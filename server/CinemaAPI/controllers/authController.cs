@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CinemaAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class authController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -86,7 +86,7 @@ namespace CinemaAPI.Controllers
                 if (!response)
                     return BadRequest(new { Message = "Failed to process forgot password request. Please check your email." });
 
-                return Ok(new { Message = "If the email is registered, a reset token has been sent." });
+                return Ok(new { Message = "Check your email for the reset password." });
             }
             catch (Exception ex)
             {
@@ -101,9 +101,9 @@ namespace CinemaAPI.Controllers
             {
                 var response = await _authService.ResetPasswordAsync(request);
                 if (!response)
-                    return BadRequest(new { Message = "Failed to reset password. Please check your email." });
+                    return BadRequest(new { Message = "Failed to reset password. The reset token may be invalid or expired." });
 
-                return Ok(new { Message = "Password reset successful. Please check your email for the new password." });
+                return Ok(new { Message = "Password reset successful. You can now log in with your new password." });
             }
             catch (Exception ex)
             {

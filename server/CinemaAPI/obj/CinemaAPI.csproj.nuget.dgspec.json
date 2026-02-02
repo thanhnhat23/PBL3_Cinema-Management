@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj": {}
+    "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj": {}
   },
   "projects": {
-    "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj": {
+    "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj",
+        "projectUniqueName": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj",
         "projectName": "CinemaAPI",
-        "projectPath": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj",
+        "projectPath": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj",
         "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\obj\\",
+        "outputPath": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -4,6 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace CinemaAPI.Models
 {
+    public enum SeatEnum
+    {
+        Single = 1,
+        Couple = 2
+    }
+
     public class SeatType
     {
         [Key]
@@ -14,7 +20,6 @@ namespace CinemaAPI.Models
         [JsonIgnore]
         public virtual ICollection<ShowTimePrice> ShowTimePrices { get; set; } = new List<ShowTimePrice>();
 
-        [Required, MaxLength(50)]
-        public string type_name { get; set; } = null!;
+        public SeatEnum type_name { get; set; } = SeatEnum.Single;
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ghubfns/JRw=",
+  "dgSpecHash": "opZWvgtbUXk=",
   "success": true,
-  "projectFilePath": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj",
+  "projectFilePath": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
@@ -57,9 +57,9 @@
       "code": "NU1510",
       "level": "Warning",
       "message": "PackageReference Microsoft.AspNetCore.SignalR will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "projectPath": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj",
+      "projectPath": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\Project_A\\CinemaManagement\\server\\cinemaAPI\\CinemaAPI.csproj",
+      "filePath": "D:\\Project_A\\CinemaManagement\\server\\CinemaAPI\\CinemaAPI.csproj",
       "libraryId": "Microsoft.AspNetCore.SignalR",
       "targetGraphs": [
         "net10.0"

@@ -86,5 +86,7 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("An error occurred while sending reset password email.");
             }
         }
+
+        
     }
 }
