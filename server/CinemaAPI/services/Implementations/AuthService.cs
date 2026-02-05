@@ -34,6 +34,10 @@ namespace CinemaAPI.Services.Implementations
                 if (user == null || !BCrypt.Net.BCrypt.Verify(request.password, user.passwordHash))
                     return null; // Invalid credentials
 
+                // Check verification email
+                if (!user.isEmailVerified)
+                    throw new Exception("Email not verified. Please verify your email before logging in.");
+
                 var token = GenerateJwtToken(user);
 
                 return new AuthResponse
@@ -50,7 +54,7 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"LoginAsync Error: {ex.Message}");
-                throw new Exception("An error occurred during login.");
+                throw new Exception($"An error occurred during login. {ex.Message}");
             }
         }
 
@@ -72,7 +76,7 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"LogoutAsync Error: {ex.Message}");
-                throw new Exception("An error occurred during logout.");
+                throw new Exception($"An error occurred during logout. {ex.Message}");
             }
         }
 
@@ -88,31 +92,68 @@ namespace CinemaAPI.Services.Implementations
                 if (address.Address != request.email)
                     throw new Exception("Invalid email format"); // Invalid email format
 
+                var token = new Random().Next(100000, 999999).ToString();
+
                 var user = new User
                 {
                     userName = request.userName,
                     email = request.email,
                     passwordHash = BCrypt.Net.BCrypt.HashPassword(request.password),
                     role = role ?? UserType.User,
-                    birthDate = request.birthDate
+                    birthDate = request.birthDate,
+                    isEmailVerified = false,
+                    verificationToken = token,
+                    verificationTokenExpires = DateTime.UtcNow.AddMinutes(5)
                 };
 
                 _dbContext.Users.Add(user);
                 await _dbContext.SaveChangesAsync();
+
+                if (role != UserType.Admin && role != UserType.Staff)
+                {
+                    user.isEmailVerified = true;
+                    await _emailService.SendVerificationEmailAsync(user.email, token);
+                }
+
                 return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"RegisterAsync Error: {ex.Message}");
-                throw new Exception("An error occurred during registration.");
+                throw new Exception($"An error occurred during registration. {ex.Message}");
             }
         }
 
-        public async Task<bool> ForgotPasswordAsync(string email)
+        public async Task<bool> VerifyEmailAsync(VerifyEmailRequest request) {
+            try
+            {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
+                    u.email == request.email &&
+                    u.verificationToken == request.verificationToken &&
+                    u.verificationTokenExpires > DateTime.UtcNow);
+
+                if (user == null)
+                    return false; // Invalid token or email
+                if (user.verificationTokenExpires < DateTime.UtcNow)
+                    return false; // Token expired
+                
+                user.isEmailVerified = true;
+                user.verificationToken = null;
+                user.verificationTokenExpires = null;
+
+                await _dbContext.SaveChangesAsync();
+                return true;
+            } catch (Exception ex) {
+                Console.WriteLine($"VerifyEmailAsync Error: {ex.Message}");
+                throw new Exception($"An error occurred during email verification. {ex.Message}");
+            }
+        }
+
+        public async Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request)
         {
             try
             {
-                var user = _dbContext.Users.FirstOrDefault(u => u.email == email);
+                var user = _dbContext.Users.FirstOrDefault(u => u.email == request.email);
                 if (user == null) return false;
 
                 var token = new Random().Next(100000, 999999).ToString();
@@ -134,7 +175,7 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"ForgotPasswordAsync Error: {ex.Message}");
-                throw new Exception("An error occurred during forgot password process.");
+                throw new Exception($"An error occurred during forgot password process. {ex.Message}");
             }
         }
 
@@ -163,7 +204,7 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"ResetPasswordAsync Error: {ex.Message}");
-                throw new Exception("An error occurred during password reset.");
+                throw new Exception($"An error occurred during password reset. {ex.Message}");
             }
         }
 
@@ -199,7 +240,7 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"GenerateJwtToken Error: {ex.Message}");
-                throw new Exception("An error occurred while generating JWT token.");
+                throw new Exception($"An error occurred while generating JWT token. {ex.Message}");
             }
         }
     }

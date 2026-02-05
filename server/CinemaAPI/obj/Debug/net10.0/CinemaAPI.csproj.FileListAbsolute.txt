@@ -137,3 +137,11 @@ D:\Project_A\CinemaManagement\Server\CinemaAPI\bin\Debug\net10.0\Scalar.AspNetCo
 D:\Project_A\CinemaManagement\server\cinemaAPI\obj\Debug\net10.0\CinemaAPI.sourcelink.json
 D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\BCrypt.Net-Next.dll
 D:\Project_A\CinemaManagement\server\cinemaAPI\bin\Debug\net10.0\Resend.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\Google.Apis.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\Google.Apis.Auth.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\Google.Apis.Core.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\Google.GenAI.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\Microsoft.Extensions.AI.Abstractions.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\Newtonsoft.Json.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\System.Management.dll
+D:\Project_A\CinemaManagement\server\CinemaAPI\bin\Debug\net10.0\runtimes\win\lib\net7.0\System.Management.dll

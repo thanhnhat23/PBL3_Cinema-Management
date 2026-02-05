@@ -77,12 +77,29 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpPost("verify-email")]
+        public async Task<IActionResult> Post([FromBody] VerifyEmailRequest request)
+        {
+            try
+            {
+                var response = await _authService.VerifyEmailAsync(request);
+                if (!response)
+                    return BadRequest(new { Message = "Email verification failed. The token may be invalid or expired." });
+
+                return Ok(new { Message = "Email verified successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in authController.VerifyEmail: {ex.Message}");
+            }
+        }
+
         [HttpPost("forgot-password")]
         public async Task<IActionResult> Post([FromBody] ForgotPasswordRequest request)
         {
             try
             {
-                var response = await _authService.ForgotPasswordAsync(request.email);
+                var response = await _authService.ForgotPasswordAsync(request);
                 if (!response)
                     return BadRequest(new { Message = "Failed to process forgot password request. Please check your email." });
 

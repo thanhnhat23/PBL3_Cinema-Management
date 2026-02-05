@@ -1,11 +1,14 @@
 using CinemaAPI.data;
+using CinemaAPI.Models;
 using CinemaAPI.Services.Interfaces;
 using CinemaAPI.Services.Implementations;
+// using CinemaAPI.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
+using MongoDB.Driver;
 using Resend;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,15 +28,25 @@ builder.Services.AddCors(options =>
 // Configure Database Connection
 var connectionString = builder.Configuration.GetConnectionString("CinemaDatabase");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+    options.UseMySql(connectionString, Microsoft.EntityFrameworkCore.ServerVersion.AutoDetect(connectionString))
 );
 
 // Configure MongoDB
 builder.Services.AddSingleton<MongoDbContext>();
 
+// Configure Gemini
+builder.Services.Configure<GeminiConfig>(builder.Configuration.GetSection("Gemini"));
+
 // Configure Services
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICinemaService, CinemaService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IGeminiService, GeminiService>();
+
+// Configure SignalR
+builder.Services.AddSignalR();
 
 // Configure Tmdb
 builder.Services.Configure<TmdbConfig>(builder.Configuration.GetSection("TmdbConfig"));
@@ -93,8 +106,6 @@ builder.Services.Configure<ResendClientOptions>(o =>
 });
 builder.Services.AddTransient<IResend, ResendClient>();
 
-builder.Services.AddScoped<IEmailService, EmailService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -105,6 +116,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// app.MapHub<ChatHub>("/chathub");
 
 app.UseCors("AllowReactApp");
 

@@ -1,0 +1,17 @@
+### 1. LOGIN
+POST http://localhost:5143/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "luongthanhnhat567@gmail.com",
+  "password": "luongthanhnhat23"
+}
+
+### 2. CHAT MESSAGE
+POST http://localhost:5143/api/v1/chat/message
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTJiMTIyMjUtYzgyYS00MjAwLWEzMWItMDc4NjNhNDUyNmVjIiwidXNlck5hbWUiOiJUaGFuaCBOaGF0IiwiZW1haWwiOiJsdW9uZ3RoYW5obmhhdDU2N0BnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJleHAiOjE3NzAzODc0NTEsImlzcyI6IkNpbmVtYUFQSSIsImF1ZCI6IkNpbmVtYUNsaWVudCJ9.MDzgj_EF2NNuDFhnCrSTh9T8pEQ_01P0OPcibEHWyC8
+Content-Type: application/json
+
+{
+  "message": "Thông tin diễn viên trong phim tiểu yêu quái nu"
+}
