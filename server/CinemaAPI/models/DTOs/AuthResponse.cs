@@ -1,7 +1,8 @@
 namespace CinemaAPI.Models.DTOs
 {
-    public record RegisterRequest(string userName, string email, string password, string role, DateTime birthDate);
     public record LoginRequest(string email, string password);
+    public record RegisterRequest(string userName, string email, string password, string role, DateTime birthDate);
+    public record VerifyEmailRequest(string email, string verificationToken);
     public record ResetPassRequest(string email, string resetToken, string newPassword);
     public record ForgotPasswordRequest(string email);
 

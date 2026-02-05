@@ -39,5 +39,9 @@ namespace CinemaAPI.Models
         public DateTime createAt { get; set; } = DateTime.UtcNow;
         public string? passwordResetToken { get; set; }
         public DateTime? resetTokenExpires { get; set; }
+
+        public bool isEmailVerified { get; set; } = false;
+        public string? verificationToken { get; set; }
+        public DateTime? verificationTokenExpires { get; set; }
     }
 }
