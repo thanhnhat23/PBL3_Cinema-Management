@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
+    [Index(nameof(room_id), nameof(seat_code))]
     public class Seat
     {
         [Key]

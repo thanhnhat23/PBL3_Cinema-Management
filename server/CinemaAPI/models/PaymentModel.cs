@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -17,6 +18,10 @@ namespace CinemaAPI.Models
         Failed = 2
     }
 
+    [Index(nameof(status))]
+    [Index(nameof(transaction_code), IsUnique = true)]
+    [Index(nameof(paidAt))]
+    [Index(nameof(status), nameof(paidAt))]
     public class Payment
     {
         [Key]

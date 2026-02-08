@@ -9,9 +9,17 @@ Content-Type: application/json
 
 ### 2. CHAT MESSAGE
 POST http://localhost:5143/api/v1/chat/message
+<<<<<<< HEAD
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZWNhMmRmZDMtYThiZi00MzBjLThjNjctNWIxZDM2ZGU0ZmRhIiwidXNlck5hbWUiOiJhYmMiLCJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJleHAiOjE3NzA1NDMxNjgsImlzcyI6IkNpbmVtYUFQSSIsImF1ZCI6IkNpbmVtYUNsaWVudCJ9.xgVUGgdp_ILBpRnSAaX9HMOZh5WhIqnH2L3FF9dTTYI
 Content-Type: application/json
 
 {
   "message": "Thông tin diễn viên trong phim tiểu yêu quái nuí lãng lãng"
+=======
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYTJiMTIyMjUtYzgyYS00MjAwLWEzMWItMDc4NjNhNDUyNmVjIiwidXNlck5hbWUiOiJUaGFuaCBOaGF0IiwiZW1haWwiOiJsdW9uZ3RoYW5obmhhdDU2N0BnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJleHAiOjE3NzA1MzkxNjksImlzcyI6IkNpbmVtYUFQSSIsImF1ZCI6IkNpbmVtYUNsaWVudCJ9.2py8pCkbRxC7Q_KiB8gKTP-PxPOw-lf-BWeCHcls9t4
+Content-Type: application/json
+
+{
+  "message": "thông tin về phim tiểu yêu quái núi lãng lãng?"
+>>>>>>> 9d7636949013c004c0bf122b6c03e6748c6b189b
 }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CinemaAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Inital : Migration
+    public partial class CreateDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,21 @@ namespace CinemaAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Actors", x => x.actor_id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "BlacklistedTokens",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Token = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlacklistedTokens", x => x.id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -104,7 +119,7 @@ namespace CinemaAPI.Migrations
                     tmdb_id = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     adult = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    title = table.Column<string>(type: "longtext", nullable: false)
+                    title = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     overview = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -134,7 +149,7 @@ namespace CinemaAPI.Migrations
                 {
                     type_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    type_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    type_name = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -177,7 +192,14 @@ namespace CinemaAPI.Migrations
                     birthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     role = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    createAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    createAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    passwordResetToken = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    resetTokenExpires = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    isEmailVerified = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    verificationToken = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    verificationTokenExpires = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -196,8 +218,8 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     address = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    latitude = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    latitude = table.Column<decimal>(type: "decimal(18,10)", nullable: false),
+                    longitude = table.Column<decimal>(type: "decimal(18,10)", nullable: false),
                     phone_number = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     description = table.Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
@@ -596,7 +618,7 @@ namespace CinemaAPI.Migrations
                     stseat_id = table.Column<int>(type: "int", nullable: false),
                     booking_id = table.Column<int>(type: "int", nullable: true),
                     status = table.Column<int>(type: "int", nullable: false),
-                    hold_token = table.Column<string>(type: "longtext", nullable: true)
+                    hold_token = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     hold_expires_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     held_by_user = table.Column<string>(type: "longtext", nullable: true)
@@ -626,9 +648,30 @@ namespace CinemaAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Actors_name",
+                table: "Actors",
+                column: "name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlacklistedTokens_ExpiryDate",
+                table: "BlacklistedTokens",
+                column: "ExpiryDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlacklistedTokens_Token",
+                table: "BlacklistedTokens",
+                column: "Token",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_coupon_id",
                 table: "Bookings",
                 column: "coupon_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_createAt",
+                table: "Bookings",
+                column: "createAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_showtime_id",
@@ -636,9 +679,20 @@ namespace CinemaAPI.Migrations
                 column: "showtime_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_user_id",
+                name: "IX_Bookings_status",
                 table: "Bookings",
-                column: "user_id");
+                column: "status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_user_id_createAt",
+                table: "Bookings",
+                columns: new[] { "user_id", "createAt" },
+                descending: new[] { false, true });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_user_id_status",
+                table: "Bookings",
+                columns: new[] { "user_id", "status" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookingSnacks_snack_id",
@@ -651,9 +705,25 @@ namespace CinemaAPI.Migrations
                 column: "location_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cinemas_name",
+                table: "Cinemas",
+                column: "name");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ComboDetails_snack_id",
                 table: "ComboDetails",
                 column: "snack_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Coupons_code",
+                table: "Coupons",
+                column: "code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Coupons_startDate_endDate",
+                table: "Coupons",
+                columns: new[] { "startDate", "endDate" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inventories_cinema_id",
@@ -671,9 +741,51 @@ namespace CinemaAPI.Migrations
                 column: "genre_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Movies_release_date_end_date",
+                table: "Movies",
+                columns: new[] { "release_date", "end_date" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_status",
+                table: "Movies",
+                column: "status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_status_release_date",
+                table: "Movies",
+                columns: new[] { "status", "release_date" },
+                descending: new[] { false, true });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_title",
+                table: "Movies",
+                column: "title");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_booking_id",
                 table: "Payments",
                 column: "booking_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_paidAt",
+                table: "Payments",
+                column: "paidAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_status",
+                table: "Payments",
+                column: "status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_status_paidAt",
+                table: "Payments",
+                columns: new[] { "status", "paidAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_transaction_code",
+                table: "Payments",
+                column: "transaction_code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PointTransactions_booking_id",
@@ -682,9 +794,10 @@ namespace CinemaAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PointTransactions_user_id",
+                name: "IX_PointTransactions_user_id_occurredAt",
                 table: "PointTransactions",
-                column: "user_id");
+                columns: new[] { "user_id", "occurredAt" },
+                descending: new[] { false, true });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rooms_cinema_id",
@@ -692,9 +805,14 @@ namespace CinemaAPI.Migrations
                 column: "cinema_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Seats_room_id",
+                name: "IX_Rooms_roomLayoutType",
+                table: "Rooms",
+                column: "roomLayoutType");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Seats_room_id_seat_code",
                 table: "Seats",
-                column: "room_id");
+                columns: new[] { "room_id", "seat_code" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Seats_type_id",
@@ -707,14 +825,19 @@ namespace CinemaAPI.Migrations
                 column: "showtime_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShowTimes_movie_id",
+                name: "IX_ShowTimes_movie_id_startTime",
                 table: "ShowTimes",
-                column: "movie_id");
+                columns: new[] { "movie_id", "startTime" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShowTimes_room_id",
+                name: "IX_ShowTimes_room_id_startTime",
                 table: "ShowTimes",
-                column: "room_id");
+                columns: new[] { "room_id", "startTime" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowTimes_startTime",
+                table: "ShowTimes",
+                column: "startTime");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShowTimeSeats_booking_id",
@@ -722,9 +845,40 @@ namespace CinemaAPI.Migrations
                 column: "booking_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShowTimeSeats_hold_token",
+                table: "ShowTimeSeats",
+                column: "hold_token");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShowTimeSeats_seat_id",
                 table: "ShowTimeSeats",
                 column: "seat_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowTimeSeats_showtime_id_seat_id",
+                table: "ShowTimeSeats",
+                columns: new[] { "showtime_id", "seat_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowTimeSeats_showtime_id_status",
+                table: "ShowTimeSeats",
+                columns: new[] { "showtime_id", "status" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_passwordResetToken",
+                table: "Users",
+                column: "passwordResetToken");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_role",
+                table: "Users",
+                column: "role");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_verificationToken",
+                table: "Users",
+                column: "verificationToken");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserVouchers_coupon_id",
@@ -735,6 +889,9 @@ namespace CinemaAPI.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "BlacklistedTokens");
+
             migrationBuilder.DropTable(
                 name: "BookingSnacks");
 

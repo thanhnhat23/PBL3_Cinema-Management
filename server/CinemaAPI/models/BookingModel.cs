@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -11,6 +12,10 @@ namespace CinemaAPI.Models
         Cancelled = 2
     }
 
+    [Index(nameof(user_id), nameof(createAt), IsDescending = new[] { false, true })]
+    [Index(nameof(status))]
+    [Index(nameof(user_id), nameof(status))]
+    [Index(nameof(createAt))]
     public class Booking
     {
         [Key]

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -11,6 +12,9 @@ namespace CinemaAPI.Models
         Holding = 2
     }
 
+    [Index(nameof(showtime_id), nameof(status))]
+    [Index(nameof(showtime_id), nameof(seat_id), IsUnique = true)]
+    [Index(nameof(hold_token))]
     public class ShowTimeSeat
     {
         [Key]

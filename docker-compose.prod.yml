@@ -1,0 +1,57 @@
+version: '3.8'
+
+# Production overrides for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+    volumes:
+      - /var/lib/mysql-data:/var/lib/mysql  # Production volume path
+
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+  api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 10s
+    # Uncomment for production logging
+    # logging:
+    #   driver: "json-file"
+    #   options:
+    #     max-size: "10m"
+    #     max-file: "3"
+
+  client:
+    environment:
+      - NEXT_PUBLIC_API_URL=https://api.yourdomain.com  # Production API URL
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 10s

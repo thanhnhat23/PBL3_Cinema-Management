@@ -1,0 +1,82 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: cinema_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-luongthanhnhat23}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-CinemaDB}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cinema_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-luongthanhnhat23}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: cinema_redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - cinema_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  api:
+    build:
+      context: ./server
+      dockerfile: CinemaAPI/Dockerfile
+    container_name: cinema_api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__CinemaDatabase=Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-CinemaDB};User=root;Password=${MYSQL_ROOT_PASSWORD:-luongthanhnhat23};
+      - ConnectionStrings__CinemaMongoDB=${MONGODB_CONNECTION_STRING:-mongodb+srv://ThanhNhat:iZOFqvxSyN3HB5IT@cluster0.kgmfw19.mongodb.net/CinemaDb}
+      - Redis__ConnectionString=redis:6379
+    ports:
+      - "${API_PORT:-5000}:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cinema_network
+    restart: unless-stopped
+
+  # Frontend Client (Next.js)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: cinema_client
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:5000}
+    ports:
+      - "${CLIENT_PORT:-3000}:3000"
+    depends_on:
+      - api
+    networks:
+      - cinema_network
+    restart: unless-stopped
+
+networks:
+  cinema_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
