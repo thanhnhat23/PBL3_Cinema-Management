@@ -61,12 +61,15 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: cinema_client
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:5000}
     ports:
       - "${CLIENT_PORT:-3000}:3000"
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
     depends_on:
       - api
     networks:
