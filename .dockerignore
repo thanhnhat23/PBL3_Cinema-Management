@@ -1,0 +1,17 @@
+**/.git
+**/.gitignore
+**/.vscode
+**/.vs
+**/node_modules
+**/bin
+**/obj
+**/dist
+**/build
+**/*.log
+**/.env
+**/.env.local
+**/docker-compose*.yml
+**/Dockerfile*
+**/.dockerignore
+README.md
+LICENSE

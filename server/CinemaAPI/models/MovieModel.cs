@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -11,6 +12,10 @@ namespace CinemaAPI.Models
         Ended = 2
     }
 
+    [Index(nameof(title))]
+    [Index(nameof(status))]
+    [Index(nameof(status), nameof(release_date), IsDescending = new[] { false, true })]
+    [Index(nameof(release_date), nameof(end_date))]
     public class Movie
     {
         [Key]

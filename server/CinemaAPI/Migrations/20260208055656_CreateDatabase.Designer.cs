@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260131103449_UpdateCinema")]
-    partial class UpdateCinema
+    [Migration("20260208055656_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,7 +60,33 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("actor_id");
 
+                    b.HasIndex("name");
+
                     b.ToTable("Actors");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.BlacklistedToken", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ExpiryDate");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("BlacklistedTokens");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Booking", b =>
@@ -101,9 +127,16 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("coupon_id");
 
+                    b.HasIndex("createAt");
+
                     b.HasIndex("showtime_id");
 
-                    b.HasIndex("user_id");
+                    b.HasIndex("status");
+
+                    b.HasIndex("user_id", "createAt")
+                        .IsDescending(false, true);
+
+                    b.HasIndex("user_id", "status");
 
                     b.ToTable("Bookings");
                 });
@@ -174,6 +207,8 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("location_id");
 
+                    b.HasIndex("name");
+
                     b.ToTable("Cinemas");
                 });
 
@@ -239,6 +274,11 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("coupon_id");
+
+                    b.HasIndex("code")
+                        .IsUnique();
+
+                    b.HasIndex("startDate", "endDate");
 
                     b.ToTable("Coupons");
                 });
@@ -338,7 +378,7 @@ namespace CinemaAPI.Migrations
 
                     b.Property<string>("title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("tmdb_id")
                         .HasColumnType("longtext");
@@ -353,6 +393,15 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("movie_id");
+
+                    b.HasIndex("status");
+
+                    b.HasIndex("title");
+
+                    b.HasIndex("release_date", "end_date");
+
+                    b.HasIndex("status", "release_date")
+                        .IsDescending(false, true);
 
                     b.ToTable("Movies");
                 });
@@ -440,6 +489,15 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("booking_id");
 
+                    b.HasIndex("paidAt");
+
+                    b.HasIndex("status");
+
+                    b.HasIndex("transaction_code")
+                        .IsUnique();
+
+                    b.HasIndex("status", "paidAt");
+
                     b.ToTable("Payments");
                 });
 
@@ -471,7 +529,8 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("booking_id")
                         .IsUnique();
 
-                    b.HasIndex("user_id");
+                    b.HasIndex("user_id", "occurredAt")
+                        .IsDescending(false, true);
 
                     b.ToTable("PointTransactions");
                 });
@@ -509,6 +568,8 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("cinema_id");
 
+                    b.HasIndex("roomLayoutType");
+
                     b.ToTable("Rooms");
                 });
 
@@ -539,9 +600,9 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("seat_id");
 
-                    b.HasIndex("room_id");
-
                     b.HasIndex("type_id");
+
+                    b.HasIndex("room_id", "seat_code");
 
                     b.ToTable("Seats");
                 });
@@ -556,8 +617,8 @@ namespace CinemaAPI.Migrations
 
                     b.Property<string>("type_name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("type_id");
 
@@ -586,9 +647,11 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("showtime_id");
 
-                    b.HasIndex("movie_id");
+                    b.HasIndex("startTime");
 
-                    b.HasIndex("room_id");
+                    b.HasIndex("movie_id", "startTime");
+
+                    b.HasIndex("room_id", "startTime");
 
                     b.ToTable("ShowTimes");
                 });
@@ -629,7 +692,7 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("hold_token")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -641,7 +704,14 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("booking_id");
 
+                    b.HasIndex("hold_token");
+
                     b.HasIndex("seat_id");
+
+                    b.HasIndex("showtime_id", "seat_id")
+                        .IsUnique();
+
+                    b.HasIndex("showtime_id", "status");
 
                     b.ToTable("ShowTimeSeats");
                 });
@@ -691,10 +761,19 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
 
+                    b.Property<bool>("isEmailVerified")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("passwordHash")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("passwordResetToken")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("resetTokenExpires")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("role")
                         .IsRequired()
@@ -706,7 +785,19 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("verificationToken")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("verificationTokenExpires")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("user_id");
+
+                    b.HasIndex("passwordResetToken");
+
+                    b.HasIndex("role");
+
+                    b.HasIndex("verificationToken");
 
                     b.ToTable("Users");
                 });

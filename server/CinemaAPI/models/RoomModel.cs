@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -17,6 +18,7 @@ namespace CinemaAPI.Models
         ThreeD = 3
     }
 
+    [Index(nameof(roomLayoutType))]
     public class Room
     {
         [Key]

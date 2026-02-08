@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -11,6 +12,9 @@ namespace CinemaAPI.Models
         User
     }
 
+    [Index(nameof(verificationToken))]
+    [Index(nameof(passwordResetToken))]
+    [Index(nameof(role))]
     public class User
     {
         [Key]

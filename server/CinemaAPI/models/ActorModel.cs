@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -10,6 +11,7 @@ namespace CinemaAPI.Models
         Male = 2,
     }
 
+    [Index(nameof(name))]
     public class Actor
     {
         [Key]

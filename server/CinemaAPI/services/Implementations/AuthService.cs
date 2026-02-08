@@ -112,7 +112,7 @@ namespace CinemaAPI.Services.Implementations
                 if (role != UserType.Admin && role != UserType.Staff)
                 {
                     user.isEmailVerified = true;
-                    await _emailService.SendVerificationEmailAsync(user.email, token);
+                    await _emailService.SendEmailVerificationAsync(user.email, token);
                 }
 
                 return true;

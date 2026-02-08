@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -10,6 +11,7 @@ namespace CinemaAPI.Models
         Expired
     }
 
+    [Index(nameof(user_id), nameof(occurredAt), IsDescending = new[] { false, true })]
     public class PointTransaction
     {
         [Key]

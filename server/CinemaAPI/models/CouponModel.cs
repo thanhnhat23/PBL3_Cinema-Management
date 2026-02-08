@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -10,6 +11,8 @@ namespace CinemaAPI.Models
         FixedAmount = 1
     }
 
+    [Index(nameof(code), IsUnique = true)]
+    [Index(nameof(startDate), nameof(endDate))]
     public class Coupon
     {
         [Key]
