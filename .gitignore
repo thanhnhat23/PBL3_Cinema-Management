@@ -96,3 +96,5 @@ coverage/
 server/swagger/
 
 # End of .gitignore
+server/**/bin/
+server/**/obj/
