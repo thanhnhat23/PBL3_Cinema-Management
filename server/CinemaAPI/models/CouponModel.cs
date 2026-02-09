@@ -27,15 +27,15 @@ namespace CinemaAPI.Models
         public string? code { get; set; } = null;
 
         [MaxLength(255)]
-        public string? description { get; set; } = null;
+        public string description { get; set; } = "No description";
 
-        public DiscountType type { get; set; }
-        public decimal? discountValue { get; set; } = null;
-        public decimal? maxDiscountAmount { get; set; } = null;
-        public decimal? minOrderValue { get; set; } = null;
-        public DateTime startDate { get; set; }
-        public DateTime endDate { get; set; }
-        public bool isHoliday { get; set; }
+        public DiscountType type { get; set; } = DiscountType.Percentage;
+        public decimal discountValue { get; set; } = 0;
+        public decimal maxDiscountAmount { get; set; } = 0;
+        public decimal minOrderValue { get; set; } = 0;
+        public DateTime startDate { get; set; } = DateTime.UtcNow;
+        public DateTime endDate { get; set; } = DateTime.UtcNow.AddMonths(1);
+        public bool isHoliday { get; set; } = false;
 
         [NotMapped]
         public bool IsActive => DateTime.UtcNow >= startDate && DateTime.UtcNow <= endDate;

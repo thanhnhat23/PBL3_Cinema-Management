@@ -10,4 +10,14 @@ namespace CinemaAPI.Models.DTOs
         public int Id { get; set; }
         public string name { get; set;} = null!;
     }
+
+    public class GenreCreateRequest
+    {
+        public string name { get; set;} = null!;
+    }
+
+    public class GenreUpdateRequest
+    {
+        public string? name { get; set;} = null;
+    }
 }

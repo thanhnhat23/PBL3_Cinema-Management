@@ -84,11 +84,14 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                var existingUser = await _dbContext.Users.AnyAsync(u => u.email == request.email);
+                var existingEmail = await _dbContext.Users.AnyAsync(u => u.email == request.email);
+                var existingUser = await _dbContext.Users.AnyAsync(u => u.userName == request.userName);
                 var address = new System.Net.Mail.MailAddress(request.email);
 
+                if (existingEmail)
+                    throw new Exception("Email already exists"); // Email already exists
                 if (existingUser)
-                    throw new Exception("User already exists"); // User already exists
+                    throw new Exception("Username already exists"); // Username already exists
                 if (address.Address != request.email)
                     throw new Exception("Invalid email format"); // Invalid email format
 
@@ -101,8 +104,7 @@ namespace CinemaAPI.Services.Implementations
                     passwordHash = BCrypt.Net.BCrypt.HashPassword(request.password),
                     role = role ?? UserType.User,
                     birthDate = request.birthDate,
-                    isEmailVerified = false,
-                    verificationToken = token,
+                    isEmailVerified = (role == UserType.Admin || role == UserType.Staff),
                     verificationTokenExpires = DateTime.UtcNow.AddMinutes(5)
                 };
 
@@ -111,7 +113,6 @@ namespace CinemaAPI.Services.Implementations
 
                 if (role != UserType.Admin && role != UserType.Staff)
                 {
-                    user.isEmailVerified = true;
                     await _emailService.SendEmailVerificationAsync(user.email, token);
                 }
 
@@ -124,7 +125,8 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task<bool> VerifyEmailAsync(VerifyEmailRequest request) {
+        public async Task<bool> VerifyEmailAsync(VerifyEmailRequest request)
+        {
             try
             {
                 var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
@@ -136,14 +138,16 @@ namespace CinemaAPI.Services.Implementations
                     return false; // Invalid token or email
                 if (user.verificationTokenExpires < DateTime.UtcNow)
                     return false; // Token expired
-                
+
                 user.isEmailVerified = true;
                 user.verificationToken = null;
                 user.verificationTokenExpires = null;
 
                 await _dbContext.SaveChangesAsync();
                 return true;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine($"VerifyEmailAsync Error: {ex.Message}");
                 throw new Exception($"An error occurred during email verification. {ex.Message}");
             }

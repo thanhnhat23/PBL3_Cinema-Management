@@ -39,6 +39,9 @@ namespace CinemaAPI.Models
 
         [NotMapped]
         public int age => DateTime.Now.Year - birthDate.Year;
+
+        public bool isBanned { get; set; } = false;
+
         public UserType role { get; set; } = UserType.User;
         public DateTime createAt { get; set; } = DateTime.UtcNow;
         public string? passwordResetToken { get; set; }

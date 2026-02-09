@@ -34,8 +34,8 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task AddMovie(Movie movie)
         {
-               _dbContext.Movies.Add(movie);
-               await _dbContext.SaveChangesAsync();
+            _dbContext.Movies.Add(movie);
+            await _dbContext.SaveChangesAsync();
         }
         
         public async Task UpdateMovie(int movie_id, MovieUpdateRequest request)
@@ -58,24 +58,6 @@ namespace CinemaAPI.Services.Implementations
 
                 if (request.end_date.HasValue)
                     movie.end_date = request.end_date.Value;
-
-                if (request.backdrop_path != null)
-                    movie.backdrop_path = request.backdrop_path;
-
-                if (request.poster_path != null)
-                    movie.poster_path = request.poster_path;
-
-                if (request.vote_average.HasValue)
-                    movie.vote_average = request.vote_average.Value;
-
-                if (request.vote_count.HasValue)
-                    movie.vote_count = request.vote_count.Value;
-
-                if (request.trailer_url != null)
-                    movie.trailer_url = request.trailer_url;
-
-                if (request.runtime.HasValue)
-                    movie.runtime = request.runtime.Value;
 
                 if (request.status.HasValue)
                     movie.status = request.status.Value;

@@ -25,7 +25,8 @@ namespace CinemaAPI.Services.Implementations
                     var now = DateTime.UtcNow;
 
                     var expiredUsers = await dbContext.Users
-                        .Where(u => u.passwordResetToken != null && u.resetTokenExpires != null && u.resetTokenExpires < now)
+                        .Where(u => u.passwordResetToken != null && u.resetTokenExpires != null && u.resetTokenExpires < now
+                              || u.verificationToken != null && u.verificationTokenExpires != null && u.verificationTokenExpires < now)
                         .ToListAsync(stoppingToken);
 
                     if (expiredUsers.Count > 0)
@@ -34,6 +35,8 @@ namespace CinemaAPI.Services.Implementations
                         {
                             user.passwordResetToken = null;
                             user.resetTokenExpires = null;
+                            user.verificationToken = null;
+                            user.verificationTokenExpires = null;
                         }
 
                         await dbContext.SaveChangesAsync(stoppingToken);

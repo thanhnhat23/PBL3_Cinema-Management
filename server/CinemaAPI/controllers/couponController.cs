@@ -1,0 +1,109 @@
+using CinemaAPI.Models;
+using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CinemaAPI.Controllers
+{
+    [ApiController]
+    [Route("api/v1/[controller]")]
+    public class couponController : ControllerBase
+    {
+        private readonly ICouponService _couponService;
+
+        public couponController(ICouponService couponService)
+        {
+            _couponService = couponService;
+        }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllCoupons()
+        {
+            try
+            {
+                var coupons = await _couponService.GetAllCoupons();
+                return Ok(coupons);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.GetAllCoupons: {ex.Message}");
+            }
+        }
+
+        [HttpGet("get/{couponId}")]
+        public async Task<IActionResult> GetCoupon(int couponId)
+        {
+            try
+            {
+                var coupon = await _couponService.GetCouponById(couponId);
+                if (coupon == null)
+                    return NotFound("Coupon not found");
+
+                return Ok(coupon);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.GetCoupon: {ex.Message}");
+            }
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> AddCoupon([FromBody] CouponCreateRequest request)
+        {
+            try
+            {
+                var code = await _couponService.GenerateUniqueCouponCodeAsync();
+
+                var coupon = new Coupon
+                {
+                    code = code,
+                    type = request.type,
+                    description = request.description ?? "No description",
+                    discountValue = request.discountValue,
+                    maxDiscountAmount = request.maxDiscountAmount,
+                    minOrderValue = request.minOrderValue,
+                    isHoliday = request.isHoliday
+                };
+
+                await _couponService.AddCoupon(coupon);
+                return Ok("Coupon created successfully.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return StatusCode(500, $"Failed to generate unique coupon code: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.AddCoupon: {ex.Message}");
+            }
+        }
+
+        [HttpPut("update/{couponId}")]
+        public async Task<IActionResult> UpdateCoupon(int couponId, [FromBody] CouponUpdateRequest updateCoupon)
+        {
+            try
+            {
+                await _couponService.UpdateCoupon(couponId, updateCoupon);
+                return Ok("Coupon updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.UpdateCoupon: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("delete/{couponId}")]
+        public async Task<IActionResult> DeleteCoupon(int couponId)
+        {
+            try
+            {
+                await _couponService.DeleteCoupon(couponId);
+                return Ok("Coupon deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.DeleteCoupon: {ex.Message}");
+            }
+        }
+    }
+}
