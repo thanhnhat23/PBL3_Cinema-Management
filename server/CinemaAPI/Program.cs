@@ -10,6 +10,7 @@ using Scalar.AspNetCore;
 using System.Text;
 using MongoDB.Driver;
 using Resend;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();
@@ -112,7 +114,17 @@ builder.Services.Configure<ResendClientOptions>(o =>
 });
 builder.Services.AddTransient<IResend, ResendClient>();
 
+// Configure Gzip Compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+});
+
 var app = builder.Build();
+
+// Use Gzip Compression
+app.UseResponseCompression();
 
 // Auto-migrate database on startup
 using (var scope = app.Services.CreateScope())

@@ -120,7 +120,7 @@ namespace CinemaAPI.Services.Implementations
             .ToListAsync();
 
             var result = string.Join("\n", movies.Select(m =>
-               $"Phim: {m.title}, Mô tả: {m.overview}, Ngày chiếu: {m.release_date.ToShortDateString()}-{m.end_date.ToShortDateString()}, Đánh giá: {m.vote_average}/10, Thời lượng: {m.runtime}p, Thể loại: {string.Join(", ", m.genres)}, Diễn viên: {string.Join(", ", m.actors)}"
+                   $"Phim: {m.title}, Mô tả: {m.overview}, Ngày chiếu: {m.release_date?.ToShortDateString() ?? ""}-{m.end_date?.ToShortDateString() ?? ""}, Đánh giá: {m.vote_average}/10, Thời lượng: {m.runtime}p, Thể loại: {string.Join(", ", m.genres)}, Diễn viên: {string.Join(", ", m.actors)}"
             ));
 
             return result;

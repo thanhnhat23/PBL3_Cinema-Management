@@ -28,7 +28,7 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                var user = _dbContext.Users.FirstOrDefault(u => u.email == request.email);
+                var user = _dbContext.Users.FirstOrDefault(u => u.userName == request.userName);
 
                 // Verify password
                 if (user == null || !BCrypt.Net.BCrypt.Verify(request.password, user.passwordHash))
@@ -95,7 +95,8 @@ namespace CinemaAPI.Services.Implementations
                 if (address.Address != request.email)
                     throw new Exception("Invalid email format"); // Invalid email format
 
-                var token = new Random().Next(100000, 999999).ToString();
+                // Generate a secure token for email verification link
+                var token = Guid.NewGuid().ToString("N").Substring(0, 32);
 
                 var user = new User
                 {
@@ -105,7 +106,8 @@ namespace CinemaAPI.Services.Implementations
                     role = role ?? UserType.User,
                     birthDate = request.birthDate,
                     isEmailVerified = (role == UserType.Admin || role == UserType.Staff),
-                    verificationTokenExpires = DateTime.UtcNow.AddMinutes(5)
+                    verificationToken = (role != UserType.Admin && role != UserType.Staff) ? token : null,
+                    verificationTokenExpires = (role != UserType.Admin && role != UserType.Staff) ? DateTime.UtcNow.AddMinutes(5) : null
                 };
 
                 _dbContext.Users.Add(user);
@@ -131,13 +133,19 @@ namespace CinemaAPI.Services.Implementations
             {
                 var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
                     u.email == request.email &&
-                    u.verificationToken == request.verificationToken &&
-                    u.verificationTokenExpires > DateTime.UtcNow);
+                    u.verificationToken == request.verificationToken);
 
                 if (user == null)
                     return false; // Invalid token or email
+
+                // Check if token has expired
                 if (user.verificationTokenExpires < DateTime.UtcNow)
-                    return false; // Token expired
+                {
+                    // Token expired - delete the user account to allow re-registration
+                    _dbContext.Users.Remove(user);
+                    await _dbContext.SaveChangesAsync();
+                    throw new Exception("Verification token has expired. Please register again.");
+                }
 
                 user.isEmailVerified = true;
                 user.verificationToken = null;
@@ -183,7 +191,7 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task<bool> ResetPasswordAsync(ResetPassRequest request)
+        public async Task<bool> CheckResetPasswordAsync(CheckPasswordResetRequest request)
         {
             try
             {
@@ -194,10 +202,27 @@ namespace CinemaAPI.Services.Implementations
 
                 if (user == null)
                     return false; // Invalid token or email
-                if (user.resetTokenExpires > DateTime.UtcNow)
+                if (user.resetTokenExpires < DateTime.UtcNow)
                     return false; // Token expired
 
-                // Update password and clear reset token
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"CheckResetPasswordAsync Error: {ex.Message}");
+                throw new Exception($"An error occurred during password reset check. {ex.Message}");
+            }
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPassRequest request)
+        {
+            try
+            {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.email == request.email);
+
+                if (user == null)
+                    return false; // Invalid email
+
                 user.passwordHash = BCrypt.Net.BCrypt.HashPassword(request.newPassword);
                 user.passwordResetToken = null;
                 user.resetTokenExpires = null;
@@ -218,6 +243,7 @@ namespace CinemaAPI.Services.Implementations
             {
                 var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, user.user_id.ToString()),
                     new Claim("user_id", user.user_id.ToString()),
                     new Claim("userName", user.userName),
                     new Claim("email", user.email),

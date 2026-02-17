@@ -351,7 +351,7 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<DateTime>("end_date")
+                    b.Property<DateTime?>("end_date")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("overview")
@@ -363,7 +363,7 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<DateTime>("release_date")
+                    b.Property<DateTime?>("release_date")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("runtime")
@@ -747,6 +747,9 @@ namespace CinemaAPI.Migrations
                     b.Property<Guid>("user_id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<string>("avatar_path")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("birthDate")
                         .HasColumnType("datetime(6)");
