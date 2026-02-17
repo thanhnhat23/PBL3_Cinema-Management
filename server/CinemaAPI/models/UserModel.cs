@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
@@ -11,6 +12,9 @@ namespace CinemaAPI.Models
         User
     }
 
+    [Index(nameof(verificationToken))]
+    [Index(nameof(passwordResetToken))]
+    [Index(nameof(role))]
     public class User
     {
         [Key]
@@ -33,8 +37,13 @@ namespace CinemaAPI.Models
 
         public DateTime birthDate { get; set; }
 
+        public string? avatar_path { get; set; }
+
         [NotMapped]
         public int age => DateTime.Now.Year - birthDate.Year;
+
+        public bool isBanned { get; set; } = false;
+
         public UserType role { get; set; } = UserType.User;
         public DateTime createAt { get; set; } = DateTime.UtcNow;
         public string? passwordResetToken { get; set; }

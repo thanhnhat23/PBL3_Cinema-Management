@@ -104,9 +104,8 @@ namespace CinemaAPI.Services.Implementations
                             .Include(r => r.Showtimes)
                             .FirstOrDefaultAsync(r => r.room_id == room_id);
 
-                if (room == null) throw new Exception("Phòng không tồn tại.");
+                if (room == null) throw new Exception("Room not found");
 
-                // Check if the room has any showtimes to avoid losing booking data
                 if (room.Showtimes.Any())
                     throw new Exception("Cannot delete a room that has showtimes. Please delete the showtimes first.");
 

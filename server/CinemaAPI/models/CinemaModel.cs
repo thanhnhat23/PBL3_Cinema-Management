@@ -2,9 +2,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MongoDB.Driver;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
+    [Index(nameof(name))]
     public class Cinema
     {
         [Key]

@@ -1,48 +1,45 @@
-# .gitignore for CinemaManagement (C# .NET + React + Vite)
+# .gitignore for CinemaManagement (.NET + Next.js)
 
-# Ignore build outputs
+# Build outputs
 server/bin/
 server/obj/
+server/**/bin/
+server/**/obj/
 
-# Ignore user-specific files
+# User-specific files
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
-# Ignore logs
+# Logs
 *.log
 
-# Ignore Visual Studio Code settings
+# VS Code settings
 .vscode/
 
-# Ignore node_modules and npm/yarn/pnpm logs
+# Node modules and logs
 client/node_modules/
 client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 client/pnpm-debug.log*
 
-# Ignore environment files
-client/.env
-client/.env.*
-server/.env
-server/.env.*
+# Environment files - only ignore .env (actual values)
+.env
+client/.env.local
 
-# Ignore appsettings with API keys (keep only appsettings.json.example or appsettings.Development.json)
-server/**/appsettings.json
-server/**/appsettings.*.json
+# Don't ignore .env.example
+!.env.example
 
-# Ignore build/dist outputs
-client/dist/
+# Next.js
+client/.next/
+client/out/
 
-server/**/appsettings.json
-server/**/appsettings.*.json
-
-# Ignore coverage and test outputs
+# Coverage and test outputs
 client/coverage/
 
-# Ignore OS generated files
+# OS generated files
 .DS_Store
 Thumbs.db
 
@@ -59,7 +56,13 @@ server/publish/
 
 # Ignore local secrets
 secrets.json
-server/appsettings.json
+
+# Ignore ALL appsettings with potential secrets
+server/**/appsettings.json
+server/**/appsettings.*.json
+
+# EXCEPT example files (templates without secrets)
+!server/**/appsettings.example.json
 
 # Ignore backup files
 *.bak
@@ -96,3 +99,5 @@ coverage/
 server/swagger/
 
 # End of .gitignore
+server/**/bin/
+server/**/obj/

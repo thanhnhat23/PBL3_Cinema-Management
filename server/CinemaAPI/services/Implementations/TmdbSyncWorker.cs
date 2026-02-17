@@ -1,4 +1,6 @@
 using CinemaAPI.Services.Interfaces;
+using CinemaAPI.data;
+using Microsoft.EntityFrameworkCore;
 
 public class TmdbSyncWorker : BackgroundService
 {
@@ -13,6 +15,10 @@ public class TmdbSyncWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        // Wait 10 seconds for app to fully initialize before starting sync
+        _logger.LogInformation("TmdbSyncWorker starting in 10 seconds...");
+        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+
         while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation("Starting automatic TMDB data synchronization at: {time}", DateTimeOffset.UtcNow);
@@ -20,17 +26,33 @@ public class TmdbSyncWorker : BackgroundService
             using (var scope = _serviceProvider.CreateScope())
             {
                 var tmdbService = scope.ServiceProvider.GetRequiredService<ITmdbService>();
-                try 
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                try
                 {
+                    // Check if Genres table has data, if not, sync genres first
+                    var genresCount = await dbContext.Genres.CountAsync(stoppingToken);
+                    if (genresCount == 0)
+                    {
+                        _logger.LogInformation("Genres table is empty. Syncing genres first...");
+                        await tmdbService.ISyncGenresAsync();
+                        _logger.LogInformation("Genres synced successfully.");
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Found {count} genres in database.", genresCount);
+                    }
+
+                    // Now sync movies
                     await tmdbService.SyncMovieAsync("nowplaying");
                     await tmdbService.SyncMovieAsync("upcoming");
                     await tmdbService.SyncMovieAsync("popular");
-                    
+
                     _logger.LogInformation("Synchronization completed successfully.");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "An error occurred during automatic movie synchronization.");
+                    _logger.LogError(ex, "An error occurred during automatic movie synchronization. Will retry in 24 hours.");
                 }
             }
 

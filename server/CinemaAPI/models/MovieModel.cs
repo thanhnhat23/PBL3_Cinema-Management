@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace CinemaAPI.Models
 {
@@ -11,6 +13,10 @@ namespace CinemaAPI.Models
         Ended = 2
     }
 
+    [Index(nameof(title))]
+    [Index(nameof(status))]
+    [Index(nameof(status), nameof(release_date), IsDescending = new[] { false, true })]
+    [Index(nameof(release_date), nameof(end_date))]
     public class Movie
     {
         [Key]
@@ -33,8 +39,9 @@ namespace CinemaAPI.Models
         [Required]
         public string overview { get; set; } = null!;
 
-        public DateTime release_date { get; set; }
-        public DateTime end_date { get; set; }
+        [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
+        public DateTime? release_date { get; set; }
+        public DateTime? end_date { get; set; }
 
         [MaxLength(500)]
         public string backdrop_path { get; set; } = null!;

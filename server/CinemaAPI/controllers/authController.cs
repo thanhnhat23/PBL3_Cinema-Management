@@ -3,6 +3,7 @@ using CinemaAPI.Models.DTOs;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CinemaAPI.Controllers
 {
@@ -11,10 +12,27 @@ namespace CinemaAPI.Controllers
     public class authController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public authController(IAuthService authService)
+        public authController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("user_id")?.Value;
+            if (string.IsNullOrWhiteSpace(userIdValue))
+            {
+                return Unauthorized(new { Message = "Invalid token claims." });
+            }
+
+            var user = await _userService.GetUserById(Guid.Parse(userIdValue));
+            return Ok(new { user });
         }
 
         [HttpPost("login")]
@@ -77,6 +95,29 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmailGet([FromQuery] string token)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(token))
+                    return BadRequest(new { Message = "Verification token is required." });
+
+                // Create dummy email for DTO (backend only uses token)
+                var request = new VerifyEmailRequest("verify-by-token", token);
+                var response = await _authService.VerifyEmailAsync(request);
+                
+                if (!response)
+                    return BadRequest(new { Message = "Email verification failed. The token may be invalid or expired." });
+
+                return Ok(new { Message = "Email verified successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+
         [HttpPost("verify-email")]
         public async Task<IActionResult> Post([FromBody] VerifyEmailRequest request)
         {
@@ -108,6 +149,23 @@ namespace CinemaAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in authController.ForgotPassword: {ex.Message}");
+            }
+        }
+
+        [HttpPost("check-reset-password")]
+        public async Task<IActionResult> CheckResetPassword([FromBody] CheckPasswordResetRequest request)
+        {
+            try
+            {
+                var response = await _authService.CheckResetPasswordAsync(request);
+                if (!response)
+                    return BadRequest(new { Message = "Invalid or expired reset token." });
+
+                return Ok(new { Message = "Valid reset token." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in authController.CheckResetPassword: {ex.Message}");
             }
         }
 

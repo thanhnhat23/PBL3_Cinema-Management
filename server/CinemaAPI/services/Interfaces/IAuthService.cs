@@ -11,6 +11,7 @@ namespace CinemaAPI.Services.Interfaces
         Task<bool> VerifyEmailAsync(VerifyEmailRequest request);
         Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request);
         Task<bool> ResetPasswordAsync(ResetPassRequest request);
+        Task<bool> CheckResetPasswordAsync(CheckPasswordResetRequest request);
         string GenerateJwtToken(User user);
     }
 }

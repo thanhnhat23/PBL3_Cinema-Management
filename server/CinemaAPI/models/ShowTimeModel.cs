@@ -1,9 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
+    [Index(nameof(movie_id), nameof(startTime))]
+    [Index(nameof(room_id), nameof(startTime))]
+    [Index(nameof(startTime))]
     public class ShowTime
     {
         [Key]
