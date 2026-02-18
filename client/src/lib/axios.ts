@@ -6,7 +6,7 @@ export const _axios = axios.create({
       ? `${process.env.NEXT_PUBLIC_API_URL}/api`
       : process.env.NODE_ENV === 'development'
         ? 'http://localhost:5143/api'
-        : '/api',
+        : 'https://cinema-api-vetv.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
