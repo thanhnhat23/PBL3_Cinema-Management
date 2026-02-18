@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-// @ts-expect-error - CSS import not recognized by TypeScript
 import "./globals.css";
 import { Providers } from "./providers"
 import FooterLayout from "../components/layout/footer";
