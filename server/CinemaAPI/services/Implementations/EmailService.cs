@@ -93,9 +93,8 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                // Get base URL from configuration
-                var isProduction = _configuration["ASPNETCORE_ENVIRONMENT"] == "Production";
-                var baseUrl = isProduction ? "https://milkywayyy.me" : "http://localhost:3000";
+                // Get base URL from configuration (App:BaseUrl), fallback về localhost nếu không có
+                var baseUrl = _configuration["App:BaseUrl"] ?? "http://localhost:3000";
                 var verificationLink = $"{baseUrl}/verify-email?token={verificationToken}";
 
                 var message = new EmailMessage();
