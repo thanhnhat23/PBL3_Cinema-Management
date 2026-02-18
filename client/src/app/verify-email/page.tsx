@@ -1,12 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { _axios } from '@/lib/axios';
 import { Button } from '@/components/ui/buttons/buttonCarousel';
 export const dynamic = "force-dynamic";
 
-export default function VerifyEmailPage() {
+export default function VerifyEmailWrapper() {
+  return (
+    <Suspense>
+      <VerifyEmailPage />
+    </Suspense>
+  );
+}
+
+function VerifyEmailPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'expired'>('loading');
@@ -29,14 +37,10 @@ export default function VerifyEmailPage() {
 
         setStatus('success');
         setMessage('Email verified successfully! Redirecting to home...');
-        
-        // Redirect to home sau 2 giây
         setTimeout(() => router.push('/'), 2000);
       } catch (error: any) {
         const errorMsg = error.response?.data?.Message || error.message;
-        
         console.error('Verification error:', errorMsg);
-        
         if (errorMsg.includes('expired') || errorMsg.includes('Please register again')) {
           setStatus('expired');
           setMessage('Verification link has expired. Please register again.');
@@ -46,7 +50,6 @@ export default function VerifyEmailPage() {
         }
       }
     };
-
     verifyEmail();
   }, [searchParams, router]);
 
@@ -59,32 +62,21 @@ export default function VerifyEmailPage() {
             <p>Verifying your email...</p>
           </>
         )}
-        
         {status === 'success' && (
           <>
             <p className="text-green-600 text-2xl mb-4">✓ {message}</p>
           </>
         )}
-        
         {status === 'error' && (
           <>
             <p className="text-red-600 text-xl mb-4">✗ {message}</p>
-            <Button 
-              onClick={() => router.push('/')}
-            >
-              Back to Home
-            </Button>
+            <Button onClick={() => router.push('/')}>Back to Home</Button>
           </>
         )}
-        
         {status === 'expired' && (
           <>
             <p className="text-red-600 text-xl mb-4">✗ {message}</p>
-            <Button 
-              onClick={() => router.push('/register')}
-            >
-              Register Again
-            </Button>
+            <Button onClick={() => router.push('/register')}>Register Again</Button>
           </>
         )}
       </div>
