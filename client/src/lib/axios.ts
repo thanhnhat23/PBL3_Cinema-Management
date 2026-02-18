@@ -1,7 +1,12 @@
 import axios from 'axios';
 
 export const _axios = axios.create({
-  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:5143/api' : '/api',
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL
+      ? `${process.env.NEXT_PUBLIC_API_URL}/api`
+      : process.env.NODE_ENV === 'development'
+        ? 'http://localhost:5143/api'
+        : '/api',
   headers: {
     'Content-Type': 'application/json',
   },

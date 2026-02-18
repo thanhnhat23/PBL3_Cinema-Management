@@ -43,7 +43,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__CinemaDatabase=Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-CinemaDB};User=root;Password=${MYSQL_ROOT_PASSWORD:-luongthanhnhat23};
+      - ConnectionStrings__CinemaDatabase=Server=metro.proxy.rlwy.net;Port=55203;Database=railway;User=root;Password=DGoJfXPLkBmcciXPNRiXsfQKyMXGnFHC;
       - ConnectionStrings__CinemaMongoDB=${MONGODB_CONNECTION_STRING:-mongodb+srv://ThanhNhat:iZOFqvxSyN3HB5IT@cluster0.kgmfw19.mongodb.net/CinemaDb}
       - Redis__ConnectionString=redis:6379
     ports:
