@@ -1,6 +1,6 @@
-'use client'
 
-import { useEffect, useState, useRef, useMemo } from "react";
+'use client';
+import { useEffect, useState, useRef, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useMovieStore } from "@/stores/useMovieStore";
 import { Tabs,Tab, Pagination } from '@heroui/react';
@@ -10,8 +10,17 @@ import { TrendingUpIcon } from "@/components/icons/trending-up";
 import { CardLayout } from "@/components/layout/card";
 import CardSkeleton from "@/components/skeletons/card";
 import { BlurFade } from "@/components/ui/effects/blur-fade";
+export const dynamic = "force-dynamic";
 
-export default function Movies() {
+export default function MoviesWrapper() {
+  return (
+    <Suspense>
+      <Movies />
+    </Suspense>
+  );
+}
+
+function Movies() {
     const searchParams = useSearchParams();
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
     const [page, setPage] = useState<number>(1);
