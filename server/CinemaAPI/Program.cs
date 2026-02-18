@@ -24,7 +24,8 @@ builder.Services.AddCors(options =>
                         "http://localhost:5173",  // Vite dev server
                         "http://localhost:3000",  // Docker client
                         "http://cinema_client",   // Docker service name
-                        "https://cinema-client-vetv.onrender.com" // Deployed client
+                        "https://cinema-client-vetv.onrender.com", // Deployed client
+                        "https://milkywayyy.me"
                     )
                         .AllowAnyMethod()
                         .AllowAnyHeader()
