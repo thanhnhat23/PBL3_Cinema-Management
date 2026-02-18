@@ -3,8 +3,9 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json package-lock.json* ./
+# Install dependencies (copy từng file để chắc chắn lockfile được copy)
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm ci
 
 # Builder stage
