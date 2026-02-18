@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { _axios } from '@/lib/axios';
 import { Button } from '@/components/ui/buttons/buttonCarousel';
+export const dynamic = "force-dynamic";
 
 export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
