@@ -50,6 +50,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();
