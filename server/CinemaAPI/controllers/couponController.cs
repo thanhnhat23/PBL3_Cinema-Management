@@ -7,6 +7,7 @@ namespace CinemaAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+
     public class couponController : ControllerBase
     {
         private readonly ICouponService _couponService;

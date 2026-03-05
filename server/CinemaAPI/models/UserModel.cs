@@ -37,6 +37,8 @@ namespace CinemaAPI.Models
 
         public DateTime birthDate { get; set; }
 
+        public string? avatar_path { get; set; }
+
         [NotMapped]
         public int age => DateTime.Now.Year - birthDate.Year;
 

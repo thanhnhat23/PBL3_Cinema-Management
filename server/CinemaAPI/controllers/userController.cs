@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace CinemaAPI.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")] 
+    [Route("api/v1/[controller]")]
     public class userController : ControllerBase
     {
         private readonly IUserService _userService;
+
         public userController(IUserService userService)
         {
-            _userService = userService;  
+            _userService = userService;
         }
 
         [HttpGet("get-all")]
@@ -26,11 +27,12 @@ namespace CinemaAPI.Controllers
                     user_id = u.user_id,
                     userName = u.userName,
                     email = u.email,
-                    isBanned = u.isBanned,
+                    birthDate = u.birthDate,
+                    age = u.age,
                     role = u.role,
-                    birthDate= u.birthDate,
-                    createAt= u.createAt,
-                    isEmailVerified= u.isEmailVerified
+                    createAt = u.createAt,
+                    isEmailVerified = u.isEmailVerified,
+                    isBanned = u.isBanned
                 });
                 return Ok(response);
             }
@@ -47,19 +49,20 @@ namespace CinemaAPI.Controllers
             {
                 var user = await _userService.GetUserById(userId);
                 if (user == null)
-                    return NotFound("User not found");
-
+                {
+                    return NotFound();
+                }
 
                 var response = new UserResponse
                 {
                     user_id = user.user_id,
                     userName = user.userName,
                     email = user.email,
-                    isBanned = user.isBanned,
+                    birthDate = user.birthDate,
+                    age = user.age,
                     role = user.role,
-                    birthDate= user.birthDate,
-                    createAt= user.createAt,
-                    isEmailVerified= user.isEmailVerified
+                    createAt = user.createAt,
+                    isEmailVerified = user.isEmailVerified
                 };
                 return Ok(response);
             }
@@ -68,14 +71,13 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in userController.GetUserById: {ex.Message}");
             }
         }
-
-        [HttpPut("ban/{userId}")]
+        [HttpPut("banned/{userId}")]
         public async Task<IActionResult> BannedUser(Guid userId, bool isBanned)
         {
             try
             {
                 await _userService.BannedUser(userId, isBanned);
-                return Ok(new { message = isBanned ? "User has been banned." : "User has been unbanned." });
+                return Ok($"User {userId} banned status updated to {isBanned}.");
             }
             catch (Exception ex)
             {

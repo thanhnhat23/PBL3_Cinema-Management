@@ -6,10 +6,12 @@ namespace CinemaAPI.Services.Implementations
     public class EmailService : IEmailService
     {
         private readonly IResend _resendClient;
+        private readonly IConfiguration _configuration;
 
         public EmailService(IResend resendClient, IConfiguration configuration)
         {
             _resendClient = resendClient;
+            _configuration = configuration;
         }
 
         public async Task SendResetPasswordEmailAsync(string email, string resetToken)
@@ -91,6 +93,10 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
+                // Get base URL from configuration (App:BaseUrl), fallback về localhost nếu không có
+                var baseUrl = _configuration["App:BaseUrl"] ?? "http://localhost:3000";
+                var verificationLink = $"{baseUrl}/verify-email?token={verificationToken}";
+
                 var message = new EmailMessage();
                 message.From = "MilkyWayyy Cinema <support@milkywayyy.me>";
                 message.To.Add(email);
@@ -126,24 +132,24 @@ namespace CinemaAPI.Services.Implementations
                         
                         <p style=""color: #666666; line-height: 1.6; font-size: 16px; text-align: center;"">
                             Chào mừng bạn gia nhập hệ thống rạp phim <strong>MilkyWayyy Cinema</strong>! <br/>
-                            Để bắt đầu hành trình điện ảnh và đặt những tấm vé đầu tiên, vui lòng sử dụng mã xác nhận bên dưới để kích hoạt tài khoản của bạn:
+                            Để bắt đầu hành trình điện ảnh và đặt những tấm vé đầu tiên, vui lòng nhấp vào nút dưới để kích hoạt tài khoản:
                         </p>
                         
                         <div style=""text-align: center; margin: 30px 0;"">
-                            <div style=""display: inline-block; padding: 15px 40px; background-color: #f4f9ff; border: 2px dashed #4ca8ff; border-radius: 8px;"">
-                                <span style=""font-size: 35px; font-weight: bold; color: #1a73e8; letter-spacing: 8px;"">{verificationToken}</span>
-                            </div>
+                            <a href=""{verificationLink}"" style=""display: inline-block; padding: 15px 40px; background-color: #1a73e8; border: none; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: bold; color: #FFFFFF; cursor: pointer;"">
+                                Xác thực tài khoản
+                            </a>
                         </div>
                         
                         <p style=""color: #ff4b4b; font-size: 14px; font-weight: bold; text-align: center;"">
-                            * Lưu ý: Mã xác thực có hiệu lực trong vòng 5 phút.
+                            * Lưu ý: Đường link xác thực có hiệu lực trong vòng 5 phút.
                         </p>
                         
                         <hr style=""border: 0; border-top: 1px solid #eeeeee; margin: 30px 0;"">
                         
                         <p style=""color: #999999; font-size: 13px; line-height: 1.5; text-align: center;"">
                             Nếu bạn không thực hiện đăng ký tài khoản trên hệ thống của chúng tôi, 
-                            vui lòng bỏ qua email này. Tài khoản sẽ không được kích hoạt nếu không có mã xác nhận trên.
+                            vui lòng bỏ qua email này. Tài khoản sẽ không được kích hoạt nếu bạn không nhấp vào đường link xác thực.
                         </p>
                     </div>
 
@@ -157,9 +163,9 @@ namespace CinemaAPI.Services.Implementations
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"SendResetPasswordEmailAsync Error: {ex.Message}");
-                throw new Exception("An error occurred while sending reset password email.");
+                Console.WriteLine($"SendEmailVerificationAsync Error: {ex.Message}");
+                throw new Exception("An error occurred while sending email verification.");
             }
-        }        
+        }
     }
 }

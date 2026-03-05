@@ -10,6 +10,7 @@ using Scalar.AspNetCore;
 using System.Text;
 using MongoDB.Driver;
 using Resend;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,9 @@ builder.Services.AddCors(options =>
         policy => policy.WithOrigins(
                         "http://localhost:5173",  // Vite dev server
                         "http://localhost:3000",  // Docker client
-                        "http://cinema_client"    // Docker service name
+                        "http://cinema_client",   // Docker service name
+                        "https://cinema-client-vetv.onrender.com", // Deployed client
+                        "https://milkywayyy.me"
                     )
                         .AllowAnyMethod()
                         .AllowAnyHeader()
@@ -114,7 +117,17 @@ builder.Services.Configure<ResendClientOptions>(o =>
 });
 builder.Services.AddTransient<IResend, ResendClient>();
 
+// Configure Gzip Compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+});
+
 var app = builder.Build();
+
+// Use Gzip Compression
+app.UseResponseCompression();
 
 // Auto-migrate database on startup
 using (var scope = app.Services.CreateScope())

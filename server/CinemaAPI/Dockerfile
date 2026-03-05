@@ -3,12 +3,12 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore dependencies
-COPY ["CinemaAPI/CinemaAPI.csproj", "CinemaAPI/"]
-RUN dotnet restore "CinemaAPI/CinemaAPI.csproj"
+COPY CinemaAPI.csproj .
+RUN dotnet restore "CinemaAPI.csproj"
+
 
 # Copy everything else and build
 COPY . .
-WORKDIR "/src/CinemaAPI"
 RUN dotnet build "CinemaAPI.csproj" -c Release -o /app/build
 
 # Publish stage

@@ -4,6 +4,8 @@ using CinemaAPI.Models.DTOs;
 using Microsoft.Extensions.Options;
 using CinemaAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class TmdbService : ITmdbService
 {
@@ -13,17 +15,51 @@ public class TmdbService : ITmdbService
     // NoSQL
     private readonly MongoDbContext _mongoDbContext;
     private readonly TmdbConfig _config;
+    private readonly ILogger<TmdbService> _logger;
 
     public TmdbService(
         HttpClient httpClient,
         AppDbContext sqlContext,
         MongoDbContext mongoContext,
-        IOptions<TmdbConfig> config)
+        IOptions<TmdbConfig> config,
+        ILogger<TmdbService> logger)
     {
         _httpClient = httpClient;
         _dbContext = sqlContext;
         _mongoDbContext = mongoContext;
         _config = config.Value;
+        _logger = logger;
+    }
+
+    public class NullableDateTimeConverter : JsonConverter<DateTime?>
+    {
+        public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            string? dateString = reader.GetString();
+            if (string.IsNullOrWhiteSpace(dateString))
+            {
+                return null;
+            }
+
+            if (DateTime.TryParse(dateString, out DateTime result))
+            {
+                return result;
+            }
+
+            return null;
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
+        {
+            if (value.HasValue)
+            {
+                writer.WriteStringValue(value.Value.ToString("yyyy-MM-dd"));
+            }
+            else
+            {
+                writer.WriteNullValue();
+            }
+        }
     }
 
     public async Task SyncMovieAsync(string endpointType)
@@ -39,10 +75,15 @@ public class TmdbService : ITmdbService
         else if (endpointType == "popular") endpoint = _config.ConfigEndpoints.Popular;
         else throw new ArgumentException("Invalid endpointType specified.");
 
-        for (int page = 1; page <= 5; page++)
+        for (int page = 1; page <= 10; page++)
         {
-            var url = $"{endpoint}?api_key={api_key}&language=vi-VN&page={page}&region=VN";
-            var response = await _httpClient.GetFromJsonAsync<MovieResponse>(url);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters = { new NullableDateTimeConverter() }
+            };
+            var url = $"{endpoint}?api_key={api_key}&language=vi-VN&page={page}";
+            var response = await _httpClient.GetFromJsonAsync<MovieResponse>(url, options);
 
             if (response?.Results != null)
             {
@@ -56,7 +97,8 @@ public class TmdbService : ITmdbService
                             || string.IsNullOrWhiteSpace(item.poster_path)
                             || item.title.Length < 2
                             || item.overview.Length < 10
-                            || item.release_date.Year < 2025
+                            || !item.release_date.HasValue
+                            || item.release_date.Value.Year < 2025
                         ) continue;
 
                         // Check if movie already exists
@@ -73,6 +115,7 @@ public class TmdbService : ITmdbService
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error processing page {page}: {ex.Message}");
+                    _logger.LogError(ex, "Error syncing movies");
                 }
             }
         }
@@ -80,7 +123,7 @@ public class TmdbService : ITmdbService
 
     private async Task ProcessNewMovie(MovieItem item)
     {
-        var endDate = item.release_date.AddMonths(1).AddDays(15);
+        var endDate = item.release_date.HasValue ? item.release_date.Value.AddMonths(1).AddDays(15) : DateTime.MinValue;
         var now = DateTime.UtcNow;
 
         var api_key = _config.ApiKey;
@@ -103,14 +146,15 @@ public class TmdbService : ITmdbService
             poster_path = item.poster_path,
             title = item.title,
             overview = item.overview,
-            release_date = item.release_date.AddHours(7), // Convert to UTC+7
+            release_date = item.release_date.HasValue ? item.release_date.Value.AddHours(7) : DateTime.MinValue, // Convert to UTC+7
             end_date = endDate.AddHours(7), // Convert to UTC+7
             vote_average = item.vote_average,
             vote_count = item.vote_count,
             runtime = runtimeResponse?.runtime ?? 0,
             trailer_url = trailerResponse?.results.FirstOrDefault(v => v.type == "Trailer" && v.site == "YouTube")?.key,
-            status = now < item.release_date ? MovieStatus.Upcoming :
-                     now > endDate ? MovieStatus.Ended : MovieStatus.Released
+            status = !item.release_date.HasValue ? MovieStatus.Upcoming :
+                now < item.release_date.Value ? MovieStatus.Upcoming :
+                now > endDate ? MovieStatus.Ended : MovieStatus.Released,
         };
 
         _dbContext.Movies.Add(newMovie);

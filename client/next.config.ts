@@ -1,9 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  compress: true,
+  reactCompiler: process.env.NODE_ENV === 'production',
   output: 'standalone',
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.pinimg.com', 
+      },
+      {
+        protocol: 'https',
+        hostname: 'image.tmdb.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.galaxycine.vn',
+      }
+    ],
+  },
 };
 
 export default nextConfig;

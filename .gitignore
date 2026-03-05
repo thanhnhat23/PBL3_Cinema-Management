@@ -43,8 +43,8 @@ client/coverage/
 .DS_Store
 Thumbs.db
 
-# Ignore package lock files (optional, if you want to commit lock files, remove these)
-client/package-lock.json
+# Ignore package lock files (chỉ ignore yarn/pnpm, KHÔNG ignore package-lock.json để commit lên repo)
+# client/package-lock.json
 client/yarn.lock
 client/pnpm-lock.yaml
 
