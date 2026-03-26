@@ -9,13 +9,13 @@ namespace CinemaAPI.Services.Implementations
     public class ChatService : IChatService
     {
         private readonly MongoDbContext _mongoDbContext;
-        private readonly ICinemaService _cinemaService;
+        private readonly IService _Service;
         private readonly IGeminiService _geminiService;
 
-        public ChatService(MongoDbContext mongoDbContext, ICinemaService cinemaService, IGeminiService geminiService)
+        public ChatService(MongoDbContext mongoDbContext, IService Service, IGeminiService geminiService)
         {
             _mongoDbContext = mongoDbContext;
-            _cinemaService = cinemaService;
+            _Service = Service;
             _geminiService = geminiService;
         }
 
@@ -42,25 +42,25 @@ namespace CinemaAPI.Services.Implementations
             // Only load data relevant to query
             if (msgLower.Contains("phim") || msgLower.Contains("movie"))
             {
-                db += await _cinemaService.GetMoviesAsync(searchKeyword);
+                db += await _Service.GetMoviesAsync(searchKeyword);
                 if (string.IsNullOrWhiteSpace(db) && !string.IsNullOrEmpty(searchKeyword))
-                    db += await _cinemaService.GetMoviesAsync(null);
+                    db += await _Service.GetMoviesAsync(null);
             }
             else if (msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
-                db += await _cinemaService.GetRoomsAsync(searchKeyword);
+                db += await _Service.GetRoomsAsync(searchKeyword);
             else if (msgLower.Contains("ăn")
                     || msgLower.Contains("đồ ăn")
                     || msgLower.Contains("snack")
                     || msgLower.Contains("bỏng")
                     || msgLower.Contains("nước uống")
                     || msgLower.Contains("drink"))
-                db += await _cinemaService.GetSnacksAsync(searchKeyword);
+                db += await _Service.GetSnacksAsync(searchKeyword);
             else if (msgLower.Contains("thể loại") || msgLower.Contains("genre"))
-                db += await _cinemaService.GetGenresAsync(searchKeyword);
+                db += await _Service.GetGenresAsync(searchKeyword);
             else if (msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
-                db += await _cinemaService.GetActorsAsync(searchKeyword);
+                db += await _Service.GetActorsAsync(searchKeyword);
             else
-                db += await _cinemaService.GetMoviesAsync(searchKeyword);
+                db += await _Service.GetMoviesAsync(searchKeyword);
 
             // NODE 4: GENERATE ANSWER
             string reply = await _geminiService.GenerateResponseAsync(message, db);

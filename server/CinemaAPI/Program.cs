@@ -55,6 +55,8 @@ builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<ISnackService, SnackService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();

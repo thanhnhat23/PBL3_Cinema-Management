@@ -3,13 +3,16 @@ using CinemaAPI.Models.DTOs;
 
 namespace CinemaAPI.Services.Interfaces
 {
-    public interface ICinemaService
+      public interface ICinemaService
     {
-        Task<string> GetRoomsAsync(string? searchKeyword = null);
-        Task<string> GetSnacksAsync(string? searchKeyword = null);
-        Task<string> GetShowtimesAsync(string? searchKeyword = null);
-        Task<string> GetMoviesAsync(string? searchKeyword = null);
-        Task<string> GetGenresAsync(string? searchKeyword = null);
-        Task<string> GetActorsAsync(string? searchKeyword = null);
+        // Read
+        Task<List<Cinema>> GetAllCinemas();
+        Task<Cinema?> GetCinemaById(int cinema_id);
+        // Create
+        Task AddCinema(CinemaCreateRequest request);
+        // Update
+        Task UpdateCinema(int cinema_id, CinemaUpdateRequest request);
+        // Delete
+        Task DeleteCinema(int cinema_id);
     }
 }
