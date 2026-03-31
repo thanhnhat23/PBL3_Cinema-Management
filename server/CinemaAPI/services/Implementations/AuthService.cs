@@ -250,9 +250,9 @@ namespace CinemaAPI.Services.Implementations
                     new Claim("role", user.role.ToString())
                 };
 
-                var jwtKey = _config["Jwt:Key"];
-                var issuer = _config["Jwt:Issuer"];
-                var audience = _config["Jwt:Audience"];
+                var jwtKey = _config["Jwt:Key"] ?? throw new Exception("JWT Key is not configured");
+                var issuer = _config["Jwt:Issuer"] ?? throw new Exception("JWT Issuer is not configured");
+                var audience = _config["Jwt:Audience"] ?? throw new Exception("JWT Audience is not configured");
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

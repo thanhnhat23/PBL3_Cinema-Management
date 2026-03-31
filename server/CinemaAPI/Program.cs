@@ -57,6 +57,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IService, Service>();
 builder.Services.AddScoped<ISnackService, SnackService>();
+builder.Services.AddScoped<IComboDetail, ComboDetailService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();
