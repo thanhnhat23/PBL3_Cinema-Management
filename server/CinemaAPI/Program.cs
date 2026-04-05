@@ -185,7 +185,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowReactApp");
 
-app.MapGet("/ping", () => Results.Ok("pong"));
+app.MapMethods("/ping", new[] { "GET", "HEAD" }, () => Results.Ok());
 
 app.UseAuthentication();
 app.UseAuthorization();
