@@ -6,19 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services.Implementations
 {
-<<<<<<<< HEAD:server/CinemaAPI/services/Implementations/Service.cs
     public class Service : IService
-========
-     public class CinemaService : ICinemaService
->>>>>>>> 7bd3e0f8d4b8d900de8b97b0c4911b5c79e3d30a:server/CinemaAPI/services/Implementations/CinemaService.cs
     {
          private readonly AppDbContext _dbContext;
 
-<<<<<<<< HEAD:server/CinemaAPI/services/Implementations/Service.cs
         public Service(AppDbContext dbContext)
-========
-         public CinemaService(AppDbContext dbContext)
->>>>>>>> 7bd3e0f8d4b8d900de8b97b0c4911b5c79e3d30a:server/CinemaAPI/services/Implementations/CinemaService.cs
         {
             _dbContext = dbContext;
         }
