@@ -24,11 +24,11 @@ namespace CinemaAPI.Controllers
                 var users = await _userService.GetAllUsers();
                 var response = users.Select(u => new UserResponse
                 {
-                    user_id = u.user_id,
                     userName = u.userName,
                     email = u.email,
                     birthDate = u.birthDate,
                     age = u.age,
+                    avatar_path = u.avatar_path,
                     role = u.role,
                     createAt = u.createAt,
                     isEmailVerified = u.isEmailVerified,
@@ -52,16 +52,18 @@ namespace CinemaAPI.Controllers
                 {
                     return NotFound();
                 }
+
                 var response = new UserResponse
                 {
-                    user_id = user.user_id,
                     userName = user.userName,
                     email = user.email,
                     birthDate = user.birthDate,
                     age = user.age,
+                    avatar_path = user.avatar_path,
                     role = user.role,
                     createAt = user.createAt,
-                    isEmailVerified = user.isEmailVerified
+                    isEmailVerified = user.isEmailVerified,
+                    isBanned = user.isBanned
                 };
                 return Ok(response);
             }
@@ -70,7 +72,6 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in userController.GetUserById: {ex.Message}");
             }
         }
-
         [HttpPut("banned/{userId}")]
         public async Task<IActionResult> BannedUser(Guid userId, bool isBanned)
         {

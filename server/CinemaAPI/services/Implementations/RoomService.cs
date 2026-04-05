@@ -21,6 +21,7 @@ namespace CinemaAPI.Services.Implementations
                 .Include(r => r.Cinema)
                 .ThenInclude(c => c.Location)
                 .ToListAsync();
+                
         // Get room by ID
         public async Task<Room?> GetRoomById(int room_id) =>
             await _dbContext.Rooms

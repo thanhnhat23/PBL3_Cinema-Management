@@ -3,12 +3,12 @@
 import { useEffect, useState, useRef, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useMovieStore } from "@/stores/useMovieStore";
-import { Tabs,Tab, Pagination } from '@heroui/react';
+import { Tabs, Tab, Pagination } from '@heroui/react';
 import { Cctv } from "@/components/icons/cctv";
 import { FlameIcon, type FlameIconHandle } from "@/components/icons/flame";
 import { TrendingUpIcon } from "@/components/icons/trending-up";
-import { CardLayout } from "@/components/layout/card";
-import CardSkeleton from "@/components/skeletons/card";
+import { CardMovie } from "@/components/layout/cardMovie";
+import CardMovieSkeleton from "@/components/skeletons/cardMovie";
 import { BlurFade } from "@/components/ui/effects/blur-fade";
 export const dynamic = "force-dynamic";
 
@@ -91,13 +91,9 @@ function Movies() {
         return popularMovies.slice(start, start + pageSize);
     }, [popularMovies, page]);
 
-    useEffect(() => {
-        setPage(1);
-    }, [selectedTab]);
-
     return (
-        <div className="min-h-screen px-8 flex items-center justify-center">
-            <div className="relative my-4 md:my-8 flex flex-col gap-4 md:max-w-[72%]">
+        <div className="px-8 flex items-start justify-center">
+            <div className="relative my-4 md:my-8 flex flex-col gap-4 md:w-[72%]">
                 <div className="flex flex-col md:flex-row gap-2 items-center justify-start">
                     <span className="md:inline hidden w-1 h-8 bg-black dark:bg-white"></span>
                     <h1 className="inline md:hidden text-2xl font-bold">Xem gì hôm nay?</h1>
@@ -107,7 +103,10 @@ function Movies() {
                         aria-label="Tabs variants" 
                         variant="underlined" 
                         selectedKey={selectedTab}
-                        onSelectionChange={(key) => setSelectedTab(key as string)}
+                        onSelectionChange={(key) => {
+                            setSelectedTab(key as string);
+                            setPage(1);
+                        }}
                         size="md"
                         className="md:text-lg text-md font-semibold ml-0 md:ml-4"
                     >
@@ -151,15 +150,15 @@ function Movies() {
                 
                 {selectedTab === 'nowplaying' && (
                     <div className="flex flex-col items-center">
-                        <div className="min-h-screen gap-4 md:gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8">
+                        <div className="gap-4 md:gap-8 grid grid-cols-2 sm:grid-cols-4 p-2">
                             {isFetchingMovies ? (
                                 Array.from({ length: 16 }).map((_, index) => (
-                                    <CardSkeleton key={index} />
+                                    <CardMovieSkeleton key={index} />
                                 ))
                             ) : (
                                 pagedNowPlayingMovies.map((movie, index) => (
                                     <BlurFade key={index} delay={index * 0.05} inView>
-                                        <CardLayout movie={movie} index={index} key={index} width="w-52" height="h-64" />
+                                        <CardMovie movie={movie} index={index} key={index} />
                                     </BlurFade>
                                 ))
                             )}
@@ -179,15 +178,15 @@ function Movies() {
                 
                 {selectedTab === 'coming-soon' && (
                     <div className="flex flex-col items-center">
-                        <div className="min-h-screen gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
+                        <div className="gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
                             {isFetchingMovies ? (
                                 Array.from({ length: 16 }).map((_, index) => (
-                                    <CardSkeleton key={index} />
+                                    <CardMovieSkeleton key={index} />
                                 ))
                             ) : (
                                 pagedUpcomingMovies.map((movie, index) => (
                                     <BlurFade key={index} delay={index * 0.05} inView>
-                                        <CardLayout movie={movie} index={index} key={index} width="w-52" height="h-64" />
+                                        <CardMovie movie={movie} index={index} key={index} />
                                     </BlurFade>
                                 ))
                             )}
@@ -207,19 +206,20 @@ function Movies() {
                 
                 {selectedTab === 'popular' && (
                     <div className="flex flex-col items-center">
-                        <div className="min-h-screen gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
+                        <div className="gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
                             {isFetchingMovies ? (
                                 Array.from({ length: 16 }).map((_, index) => (
-                                    <CardSkeleton key={index} />
+                                    <CardMovieSkeleton key={index} />
                                 ))
                             ) : (
                                 pagedPopularMovies.map((movie, index) => (
                                     <BlurFade key={index} delay={index * 0.05} inView>
-                                        <CardLayout movie={movie} index={index} key={index} width="w-52" height="h-64" />
+                                        <CardMovie movie={movie} index={index} key={index} />
                                     </BlurFade>
                                 ))
                             )}
                         </div>
+
                         <Pagination
                             page={page}
                             total={totalPopularPages}

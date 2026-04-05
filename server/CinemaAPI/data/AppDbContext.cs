@@ -43,10 +43,13 @@ namespace CinemaAPI.data
             // Many-to-Many Relationships
             modelBuilder.Entity<MovieActor>()
                 .HasKey(ma => new { ma.movie_id, ma.actor_id });
+
             modelBuilder.Entity<MovieGenre>()
                 .HasKey(mg => new { mg.movie_id, mg.genre_id });
+
             modelBuilder.Entity<BookingSnacks>()
                 .HasKey(bs => new { bs.booking_id, bs.snack_id });
+                
             modelBuilder.Entity<ShowTimeSeat>()
                 .HasKey(sts => new { sts.showtime_id, sts.seat_id });
             modelBuilder.Entity<UserVoucher>()

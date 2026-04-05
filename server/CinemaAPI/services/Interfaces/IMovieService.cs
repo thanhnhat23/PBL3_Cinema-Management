@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Models.DTOs.Response;
 
 namespace CinemaAPI.Services.Interfaces
 {
@@ -10,5 +11,6 @@ namespace CinemaAPI.Services.Interfaces
         Task AddMovie(Movie movie);
         Task UpdateMovie(int movie_id, MovieUpdateRequest request);
         Task DeleteMovie(int movie_id);
+        Task<List<ActorWithMovie>> GetActorWithMovieAsync(int id);
     }
 }

@@ -1,7 +1,7 @@
 @CinemaAPI_HostAddress = http://localhost:5143
 
 ###
-@movie_id = 1528577
+@movie_id = 1010755
 @tmdb_api_key = b656d57b7410ec76e064859fd6588e8a
 @tmdb_nowplaying = https://api.themoviedb.org/3/movie/now_playing
 @tmdb_upcoming = https://api.themoviedb.org/3/movie/upcoming
@@ -11,6 +11,7 @@
 @tmdb_actor_details = https://api.themoviedb.org/3/person/{{movie_id}}
 @tmdb_trailer = https://api.themoviedb.org/3/movie/{{movie_id}}/videos
 @tmdb_movie_details = https://api.themoviedb.org/3/movie/{{movie_id}}
+@tmdb_movie_reviews = https://api.themoviedb.org/3/movie/{{movie_id}}/reviews
 
 @Cinema_UpcomingMovies = {{CinemaAPI_HostAddress}}/api/Admin/sync-movies?type=upcoming
 @Cinema_NowPlayingMovies = {{CinemaAPI_HostAddress}}/api/Admin/sync-movies?type=nowplaying
@@ -34,10 +35,13 @@
 # GET {{tmdb_actor_details}}?api_key={{tmdb_api_key}}&language=vi-VN
 # Content-Type: application/json
 
-GET {{tmdb_trailer}}?api_key={{tmdb_api_key}}&language=vi-VN&include_video_language=vi,en
-Content-Type: application/json
+# GET {{tmdb_trailer}}?api_key={{tmdb_api_key}}&language=vi-VN&include_video_language=vi,en
+# Content-Type: application/json
 
 # GET {{tmdb_movie_details}}?api_key={{tmdb_api_key}}&language=vi-VN
+# Content-Type: application/json
+
+# GET {{tmdb_movie_reviews}}?api_key={{tmdb_api_key}}
 # Content-Type: application/json
 
 # POST {{Cinema_PopularMovies}}

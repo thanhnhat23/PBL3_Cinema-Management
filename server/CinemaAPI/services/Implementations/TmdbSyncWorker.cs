@@ -32,6 +32,7 @@ public class TmdbSyncWorker : BackgroundService
                 {
                     // Check if Genres table has data, if not, sync genres first
                     var genresCount = await dbContext.Genres.CountAsync(stoppingToken);
+
                     if (genresCount == 0)
                     {
                         _logger.LogInformation("Genres table is empty. Syncing genres first...");
@@ -47,6 +48,12 @@ public class TmdbSyncWorker : BackgroundService
                     await tmdbService.SyncMovieAsync("nowplaying");
                     await tmdbService.SyncMovieAsync("upcoming");
                     await tmdbService.SyncMovieAsync("popular");
+
+                    // Check release dates and update movie status if needed
+                    await tmdbService.UpdateMovieStatusesAsync();
+
+                    // Sync reviews
+                    await tmdbService.SyncReviewsAsync();
 
                     _logger.LogInformation("Synchronization completed successfully.");
                 }

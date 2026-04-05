@@ -103,10 +103,9 @@ namespace CinemaAPI.Controllers
                 if (string.IsNullOrWhiteSpace(token))
                     return BadRequest(new { Message = "Verification token is required." });
 
-                // Create dummy email for DTO (backend only uses token)
-                var request = new VerifyEmailRequest("verify-by-token", token);
+                var request = new VerifyEmailRequest(token);
                 var response = await _authService.VerifyEmailAsync(request);
-                
+
                 if (!response)
                     return BadRequest(new { Message = "Email verification failed. The token may be invalid or expired." });
 
@@ -184,6 +183,85 @@ namespace CinemaAPI.Controllers
             {
                 return StatusCode(500, $"An error occurred in authController.ResetPassword: {ex.Message}");
             }
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                var response = await _authService.ChangePasswordAsync(request, userId);
+                if (!response)
+                    return BadRequest(new { Message = "Failed to change password. Please check your current password." });
+
+                return Ok(new { Message = "Password changed successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in authController.ChangePassword: {ex.Message}");
+            }
+        }
+
+        [HttpPost("change-email")]
+        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailRequest request)
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                var response = await _authService.ChangeEmailAsync(request, userId);
+                if (!response)
+                    return BadRequest(new { Message = "Failed to change email. Please check your password and new email." });
+
+                return Ok(new { Message = "Email changed successfully. Please verify your new email address." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in authController.ChangeEmail: {ex.Message}");
+            }
+        }
+
+        [HttpPost("change-birthdate")]
+        public async Task<IActionResult> ChangeBirthday([FromBody] ChangeBirthdayRequest request)
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                var response = await _authService.ChangeBirthdayAsync(request, userId);
+                if (!response)
+                    return BadRequest(new { Message = "Failed to change birthday. Please check your password and new birthday." });
+
+                return Ok(new { Message = "Birthday changed successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in authController.ChangeBirthday: {ex.Message}");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("upload-avatar")]
+        public async Task<IActionResult> UploadAvatar([FromForm] IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new { Message = "Avatar file is required." });
+            }
+
+            var userId = GetUserIdFromToken();
+            var url = await _authService.UploadUserAvatar(userId, file);
+            if (url == null) return BadRequest("Upload failed or user not found.");
+            return Ok(new { avatarUrl = url });
+        }
+
+        // Helper method to extract user_id from JWT token
+        private Guid GetUserIdFromToken()
+        {
+            var userIdValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                              ?? User.FindFirst("user_id")?.Value;
+            if (string.IsNullOrWhiteSpace(userIdValue))
+                throw new Exception("Invalid token claims.");
+            return Guid.Parse(userIdValue);
         }
     }
 }

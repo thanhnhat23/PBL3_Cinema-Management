@@ -33,8 +33,13 @@ namespace CinemaAPI.Models
         public decimal discountValue { get; set; } = 0;
         public decimal maxDiscountAmount { get; set; } = 0;
         public decimal minOrderValue { get; set; } = 0;
+
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime startDate { get; set; } = DateTime.UtcNow;
+
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime endDate { get; set; } = DateTime.UtcNow.AddMonths(1);
+
         public bool isHoliday { get; set; } = false;
 
         [NotMapped]

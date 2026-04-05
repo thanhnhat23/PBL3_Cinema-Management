@@ -8,6 +8,9 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Options;
 
 namespace CinemaAPI.Services.Implementations
 {
@@ -16,12 +19,22 @@ namespace CinemaAPI.Services.Implementations
         private readonly AppDbContext _dbContext;
         private readonly IConfiguration _config;
         private readonly IEmailService _emailService;
+        private readonly CloudinaryDotNet.Cloudinary _cloudinary;
 
-        public AuthService(AppDbContext dbContext, IConfiguration config, IEmailService emailService)
+        public AuthService(
+            AppDbContext dbContext,
+            IConfiguration config,
+            IEmailService emailService,
+            IOptions<CloudinaryConfig> cloudinaryOptions
+        )
         {
             _dbContext = dbContext;
             _config = config;
             _emailService = emailService;
+
+            var cloudinaryConfig = cloudinaryOptions.Value;
+            var account = new Account(cloudinaryConfig.CloudName, cloudinaryConfig.ApiKey, cloudinaryConfig.ApiSecret);
+            _cloudinary = new Cloudinary(account);
         }
 
         public async Task<AuthResponse?> LoginAsync(LoginRequest request)
@@ -132,7 +145,6 @@ namespace CinemaAPI.Services.Implementations
             try
             {
                 var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
-                    u.email == request.email &&
                     u.verificationToken == request.verificationToken);
 
                 if (user == null)
@@ -237,6 +249,194 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
+        public async Task<bool> ChangePasswordAsync(ChangePasswordRequest request, Guid userId)
+        {
+            try
+            {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == userId);
+
+                if (user == null)
+                    return false; // User not found
+
+                if (!BCrypt.Net.BCrypt.Verify(request.currentPassword, user.passwordHash))
+                    throw new Exception("Current password is incorrect."); // Current password is incorrect
+
+                user.passwordHash = BCrypt.Net.BCrypt.HashPassword(request.newPassword);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ChangePasswordAsync Error: {ex.Message}");
+                throw new Exception($"An error occurred during password change. {ex.Message}");
+            }
+        }
+
+        public async Task<bool> ChangeEmailAsync(ChangeEmailRequest request, Guid userId)
+        {
+            try
+            {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == userId);
+
+                if (user == null)
+                    return false; // User not found
+
+                if (user.email != request.currentEmail)
+                    throw new Exception("Current email does not match."); // Current email does not match
+
+                if (!BCrypt.Net.BCrypt.Verify(request.password, user.passwordHash))
+                    throw new Exception("Password is incorrect."); // Password is incorrect
+
+                var existingEmail = await _dbContext.Users.AnyAsync(u => u.email == request.newEmail);
+                var address = new System.Net.Mail.MailAddress(request.newEmail);
+
+                if (existingEmail)
+                    throw new Exception("Email already exists"); // Email already exists
+                if (address.Address != request.newEmail)
+                    throw new Exception("Invalid email format"); // Invalid email format
+
+                user.email = request.newEmail;
+                user.isEmailVerified = false;
+
+                // Generate a secure token for email verification link
+                var token = Guid.NewGuid().ToString("N").Substring(0, 32);
+                user.verificationToken = token;
+                user.verificationTokenExpires = DateTime.UtcNow.AddMinutes(5);
+
+                await _dbContext.SaveChangesAsync();
+
+                await _emailService.SendEmailVerificationAsync(user.email, token);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ChangeEmailAsync Error: {ex.Message}");
+                throw new Exception($"An error occurred during email change. {ex.Message}");
+            }
+        }
+
+        public async Task<bool> ChangeBirthdayAsync(ChangeBirthdayRequest request, Guid userId)
+        {
+            try
+            {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == userId);
+
+                if (user == null)
+                    return false; // User not found
+
+                user.birthDate = request.newBirthDate;
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ChangeBirthdayAsync Error: {ex.Message}");
+                throw new Exception($"An error occurred during birthday change. {ex.Message}");
+            }
+        }
+
+        public async Task<string?> UploadUserAvatar(Guid userId, IFormFile file)
+        {
+            try
+            {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == userId);
+                if (user == null)
+                    throw new Exception("User not found.");
+
+                var previousAvatarPath = user.avatar_path;
+
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    Folder = "cinema-management/avatars",
+                    Transformation = new Transformation().Effect("sharpen:150").Width(1000).Crop("scale").Chain().Quality("auto").Chain().FetchFormat("auto")
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    if (!string.IsNullOrWhiteSpace(previousAvatarPath)
+                        && TryExtractCloudinaryPublicId(previousAvatarPath, out var previousPublicId))
+                    {
+                        var deleteParams = new DeletionParams(previousPublicId)
+                        {
+                            Invalidate = true
+                        };
+
+                        await _cloudinary.DestroyAsync(deleteParams);
+                    }
+
+                    user.avatar_path = uploadResult.SecureUrl.ToString();
+                    await _dbContext.SaveChangesAsync();
+                    return user.avatar_path;
+                }
+                else
+                {
+                    throw new Exception("Failed to upload avatar.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UploadUserAvatar Error: {ex.Message}");
+                throw new Exception($"An error occurred while uploading the avatar. {ex.Message}");
+            }
+        }
+
+        private static bool TryExtractCloudinaryPublicId(string url, out string publicId)
+        {
+            publicId = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return false;
+            }
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                return false;
+            }
+
+            if (!uri.Host.Contains("res.cloudinary.com", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            var segments = uri.AbsolutePath
+                .Trim('/')
+                .Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+            var uploadIndex = Array.IndexOf(segments, "upload");
+            if (uploadIndex < 0 || uploadIndex + 1 >= segments.Length)
+            {
+                return false;
+            }
+
+            var startIndex = uploadIndex + 1;
+            if (segments[startIndex].Length > 1
+                && segments[startIndex][0] == 'v'
+                && int.TryParse(segments[startIndex][1..], out _))
+            {
+                startIndex++;
+            }
+
+            if (startIndex >= segments.Length)
+            {
+                return false;
+            }
+
+            var idParts = segments[startIndex..].ToArray();
+            var lastPart = idParts[^1];
+            var dotIndex = lastPart.LastIndexOf('.');
+            if (dotIndex > 0)
+            {
+                idParts[^1] = lastPart[..dotIndex];
+            }
+
+            publicId = string.Join('/', idParts);
+            return !string.IsNullOrWhiteSpace(publicId);
+        }
+
         public string GenerateJwtToken(User user)
         {
             try
@@ -250,9 +450,9 @@ namespace CinemaAPI.Services.Implementations
                     new Claim("role", user.role.ToString())
                 };
 
-                var jwtKey = _config["Jwt:Key"];
-                var issuer = _config["Jwt:Issuer"];
-                var audience = _config["Jwt:Audience"];
+                var jwtKey = _config["Jwt:Key"] ?? throw new Exception("JWT Key is not configured");
+                var issuer = _config["Jwt:Issuer"] ?? throw new Exception("JWT Issuer is not configured");
+                var audience = _config["Jwt:Audience"] ?? throw new Exception("JWT Audience is not configured");
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

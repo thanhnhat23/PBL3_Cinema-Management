@@ -467,7 +467,7 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime>("refundAt")
+                    b.Property<DateTime?>("refundAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("refund_code")

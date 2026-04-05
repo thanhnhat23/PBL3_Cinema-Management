@@ -1,6 +1,7 @@
 using CinemaAPI.data;
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Models.DTOs.Response;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -105,5 +106,17 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception($"An error occurred while deleting the movie: {ex.Message}");
             }
         }
+
+        public async Task<List<ActorWithMovie>> GetActorWithMovieAsync(int id) =>
+            await _dbContext.MovieActors
+                .Where(ma => ma.movie_id == id)
+                .Include(ma => ma.Actor)
+                .Select(ma => new ActorWithMovie
+                {
+                    Actor = ma.Actor,
+                    char_name = ma.char_name,
+                    order = ma.order
+                })
+                .ToListAsync();
     }
 }
