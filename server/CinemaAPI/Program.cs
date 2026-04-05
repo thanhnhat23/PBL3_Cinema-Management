@@ -44,16 +44,21 @@ builder.Services.AddSingleton<MongoDbContext>();
 // Configure Gemini
 builder.Services.Configure<GeminiConfig>(builder.Configuration.GetSection("Gemini"));
 
+// Configure Cloudinary
+builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("Cloudinary"));
+
 // Configure Services
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ICinemaService, CinemaService>();
+builder.Services.AddScoped<IService, Service>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IActorService, ActorService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();

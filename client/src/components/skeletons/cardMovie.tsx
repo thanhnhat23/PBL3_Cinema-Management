@@ -1,6 +1,6 @@
 import { Card, CardFooter, CardHeader, Skeleton } from "@heroui/react";
 
-export default function CardSkeleton() {
+export default function CardMovieSkeleton() {
     
     return (
         <>

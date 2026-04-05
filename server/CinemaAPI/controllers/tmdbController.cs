@@ -7,7 +7,6 @@ namespace CinemaAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    // localhost:5143/api/v1/movie/sync-genres
     public class tmdbController : ControllerBase
     {
         private readonly ITmdbService _tmdbService;
@@ -47,6 +46,20 @@ namespace CinemaAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in tmdbController.SyncMovie: {ex.Message}");
+            }
+        }
+
+        [HttpPost("sync-reviews")]
+        public async Task<IActionResult> SyncReviews()
+        {
+            try
+            {
+                await _tmdbService.SyncReviewsAsync();
+                return Ok("Reviews synchronized successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in tmdbController.SyncReviews: {ex.Message}");
             }
         }
     }

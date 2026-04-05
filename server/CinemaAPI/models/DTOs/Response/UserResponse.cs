@@ -9,6 +9,7 @@ namespace CinemaAPI.Models.DTOs
         public string email { get; set; } = null!;
         public DateTime birthDate { get; set; }
         public int age { get; set; }
+        public string? avatar_path { get; set; }
         public UserType role { get; set; }
         public DateTime createAt { get; set; }
         public bool isEmailVerified { get; set; }

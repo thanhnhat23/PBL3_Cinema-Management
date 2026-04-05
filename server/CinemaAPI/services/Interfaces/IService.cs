@@ -3,7 +3,7 @@ using CinemaAPI.Models.DTOs;
 
 namespace CinemaAPI.Services.Interfaces
 {
-    public interface ICinemaService
+    public interface IService
     {
         Task<string> GetRoomsAsync(string? searchKeyword = null);
         Task<string> GetSnacksAsync(string? searchKeyword = null);

@@ -1,9 +1,22 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import Swal from 'sweetalert2';
 import { addToast } from '@heroui/toast';
 
+export interface AuthUser {
+    id: string;
+    username: string;
+    email: string;
+    role: string;
+    avatar?: string;
+    birthDate: Date;
+    age: number;
+    createdAt: Date;
+    isEmailVerified: boolean;
+}
+
 export const useAuthStore = create<{
-    authUser: null | { id: string; username: string; email: string; role: string, avatar?: string };
+    authUser: null | AuthUser;
     isSigningUp: boolean;
     isSigningIn: boolean;
     isVerifyingEmail: boolean;
@@ -11,6 +24,11 @@ export const useAuthStore = create<{
     isResettingPassword: boolean;
     isCheckingResetPassword: boolean;
     isCheckingAuth: boolean;
+    isChangingPassword: boolean;
+    isChangingEmail: boolean;
+    isChangingBirthdate: boolean;
+    isChangingAvatar: boolean;
+    
     checkAuth: () => Promise<void>;
     signin: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
@@ -19,8 +37,12 @@ export const useAuthStore = create<{
     forgotPassword: (email: string) => Promise<void>;
     resetPassword: (email: string, newPassword: string) => Promise<void>;
     checkResetPassword: (email: string, resetToken: string) => Promise<void>;
+    changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+    changeEmail: (newEmail: string) => Promise<void>;
+    changeBirthdate: (newBirthDate: string) => Promise<void>;
+    changeAvatar: (newAvatar: File | null) => Promise<void>;
 }>((set) => ({
-    authUser: null as null | { id: string; username: string; email: string; role: string, avatar?: string },
+    authUser: null as null | AuthUser,
 
     isSigningUp: false,
     isSigningIn: false,
@@ -29,6 +51,10 @@ export const useAuthStore = create<{
     isResettingPassword: false,
     isCheckingResetPassword: false,
     isCheckingAuth: true,
+    isChangingPassword: false,
+    isChangingEmail: false,
+    isChangingBirthdate: false,
+    isChangingAvatar: false,
 
     checkAuth: async () => {
         try {
@@ -52,7 +78,11 @@ export const useAuthStore = create<{
                     username: data.userName,
                     email: data.email,
                     role: data.role,
-                    avatar: data.avatar_path
+                    avatar: data.avatar_path,
+                    birthDate: new Date(data.birthDate),
+                    age: data.age,
+                    createdAt: new Date(data.createAt),
+                    isEmailVerified: data.isEmailVerified,
                 };
 
                 set({ authUser: user });
@@ -85,23 +115,28 @@ export const useAuthStore = create<{
                     username: userName,
                     email: email,
                     role: role,
+                    avatar: data.avatar_path,
+                    birthDate: new Date(data.birthDate),
+                    age: data.age,
+                    createdAt: new Date(data.createAt),
+                    isEmailVerified: data.isEmailVerified,
                 };
                 localStorage.setItem('authUser', JSON.stringify(user));
 
                 set({ authUser: user });
 
-                addToast({
-                    title: 'Thành công',
-                    description: 'Đăng nhập thành công! Chào mừng bạn trở lại.',
-                    color: 'success',
+                Swal.fire({
+                    title: "Đăng nhập thành công! Chào mừng bạn trở lại.",
+                    icon: "success",
+                    draggable: true
                 });
             }
         } catch (error) {
             console.log('Error in signin: ', error);
-            addToast({
-                title: 'Lỗi',
-                description: 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin đăng nhập và thử lại.',
-                color: 'danger',
+            Swal.fire({
+                icon: "error",
+                title: "Đăng nhập thất bại!",
+                text: "Vui lòng kiểm tra thông tin đăng nhập và thử lại.",
             });
         } finally {
             set({ isSigningIn: false });
@@ -111,13 +146,11 @@ export const useAuthStore = create<{
     logout: async () => {
         try {
             const token = localStorage.getItem('token');
-            
-            // Xóa token ngay lập tức để tránh sử dụng token cũ
+
             localStorage.removeItem('token');
             localStorage.removeItem('authUser');
             set({ authUser: null });
             
-            // Gọi API logout để blacklist token trên server
             if (token) {
                 await _axios.post('v1/auth/logout', {}, {
                     headers: {
@@ -126,18 +159,17 @@ export const useAuthStore = create<{
                 });
             }
 
-            addToast({
-                title: 'Thành công',
-                description: 'Đăng xuất thành công! Hẹn gặp lại bạn sau.',
-                color: 'success',
+            Swal.fire({
+                title: "Đăng xuất thành công! Hẹn gặp lại bạn sau.",
+                icon: "success",
+                draggable: true
             });
         } catch (error) {
             console.log('Error in logout: ', error);
-            // Vẫn hiển thị thành công vì đã xóa token ở client
-            addToast({
-                title: 'Thành công',
-                description: 'Đăng xuất thành công! Hẹn gặp lại bạn sau.',
-                color: 'success',
+            Swal.fire({
+                icon: "error",
+                title: "Đăng xuất thất bại!",
+                text: "Đã xảy ra lỗi khi đăng xuất. Vui lòng thử lại.",
             });
         }
     },
@@ -151,7 +183,7 @@ export const useAuthStore = create<{
                 throw new Error('Invalid birthdate');
             }
 
-            const response = await _axios.post('v1/auth/register', {
+            await _axios.post('v1/auth/register', {
                 userName: username,
                 email,
                 password,
@@ -159,17 +191,17 @@ export const useAuthStore = create<{
                 role: 'User'
             });
 
-            addToast({
+            Swal.fire({
                 title: 'Thành công',
-                description: 'Đăng ký thành công! Vui lòng kiểm tra email để xác minh tài khoản của bạn.',
-                color: 'success',
+                text: 'Đăng ký thành công! Vui lòng kiểm tra email để xác minh tài khoản của bạn.',
+                icon: 'success',
             });
         } catch (error) {
             console.log('Error in signup: ', error);
-            addToast({
+            Swal.fire({
                 title: 'Lỗi',
-                description: 'Đăng ký thất bại. Vui lòng kiểm tra email hoa.',
-                color: 'danger',
+                text: 'Đăng ký thất bại. Vui lòng kiểm tra email hoa.',
+                icon: 'error',
             });
         } finally {
             set({ isSigningUp: false });
@@ -179,21 +211,19 @@ export const useAuthStore = create<{
     verifyEmail: async (userId: string, verificationCode: string) => {
         try {
             set({ isVerifyingEmail: true });
-            const response = await _axios.post('v1/auth/verify-email', { userId, verificationCode });
+            await _axios.post('v1/auth/verify-email', { userId, verificationCode });
 
-            if (response.data?.data) {
-                addToast({
-                    title: 'Thành công',
-                    description: 'Xác minh email thành công! Bạn có thể đăng nhập ngay bây giờ.',
-                    color: 'success',
-                });
-            }
+            Swal.fire({
+                title: 'Thành công',
+                text: 'Xác minh email thành công! Bạn có thể đăng nhập ngay bây giờ.',
+                icon: 'success',
+            });
         } catch (error) {
             console.log('Error in verifyEmail: ', error);
-            addToast({
+            Swal.fire({
                 title: 'Lỗi',
-                description: 'Xác minh email thất bại. Vui lòng thử lại.',
-                color: 'danger',
+                text: 'Xác minh email thất bại. Vui lòng thử lại.',
+                icon: 'error',
             });
         } finally {
             set({ isVerifyingEmail: false });
@@ -203,21 +233,19 @@ export const useAuthStore = create<{
     forgotPassword: async (email: string) => {
         try {
             set({ isForgottingPassword: true });
+            await _axios.post('v1/auth/forgot-password', { email });
 
-            const response = await _axios.post('v1/auth/forgot-password', { email });
-            if (response.data?.data) {
-                addToast({
-                    title: 'Thành công',
-                    description: 'Đã gửi liên kết đặt lại mật khẩu! Vui lòng kiểm tra email của bạn.',
-                    color: 'success',
-                });
-            }
+            Swal.fire({
+                title: 'Thành công',
+                text: 'Đã gửi liên kết đặt lại mật khẩu! Vui lòng kiểm tra email của bạn.',
+                icon: 'success',
+            });
         } catch (error) {
             console.log('Error in forgotPassword: ', error);
-            addToast({
+            Swal.fire({
                 title: 'Lỗi',
-                description: 'Gửi liên kết đặt lại mật khẩu thất bại. Vui lòng thử lại.',
-                color: 'danger',
+                text: 'Gửi liên kết đặt lại mật khẩu thất bại. Vui lòng thử lại.',
+                icon: 'error',
             });
         } finally {
             set({ isForgottingPassword: false });
@@ -227,20 +255,19 @@ export const useAuthStore = create<{
     checkResetPassword: async (email: string, resetToken: string) => {
         try {
             set({ isCheckingResetPassword: true });
-            const response = await _axios.post('v1/auth/check-reset-password', { email, resetToken });
-            if (response.data?.data) {
-                addToast({
-                    title: 'Thành công',
-                    description: 'Mã đặt lại mật khẩu hợp lệ! Bạn có thể tiếp tục đặt lại mật khẩu mới.',
-                    color: 'success',
-                });
-            }
+            await _axios.post('v1/auth/check-reset-password', { email, resetToken });
+
+            Swal.fire({
+                title: 'Thành công',
+                text: 'Mã đặt lại mật khẩu hợp lệ! Bạn có thể tiếp tục đặt lại mật khẩu mới.',
+                icon: 'success',
+            });
         } catch (error) {
             console.log('Error in checkResetPassword: ', error);
-            addToast({
+            Swal.fire({
                 title: 'Lỗi',
-                description: 'Mã đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng thử lại.',
-                color: 'danger',
+                text: 'Mã đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng thử lại.',
+                icon: 'error',
             });
         } finally {
             set({ isCheckingResetPassword: false });
@@ -250,23 +277,147 @@ export const useAuthStore = create<{
     resetPassword: async (email: string, newPassword: string) => {
         try {
             set({ isResettingPassword: true });
-            const response = await _axios.post('v1/auth/reset-password', { email, newPassword });
-            if (response.data?.data) {
-                addToast({
-                    title: 'Thành công',
-                    description: 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.',
-                    color: 'success',
-                });
-            }
+            await _axios.post('v1/auth/reset-password', { email, newPassword });
+
+            Swal.fire({
+                title: 'Thành công',
+                text: 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.',
+                icon: 'success',
+            });
         } catch (error) {
             console.log('Error in resetPassword: ', error);
-            addToast({
+            Swal.fire({
                 title: 'Lỗi',
-                description: 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.',
-                color: 'danger',
+                text: 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.',
+                icon: 'error',
             });
         } finally {
             set({ isResettingPassword: false });
+        }
+    },
+
+    changePassword: async (currentPassword: string, newPassword: string) => {
+        try {
+            set({ isChangingPassword: true });
+            await _axios.post('v1/auth/change-password', { currentPassword, newPassword });
+
+            addToast({
+                title: "Đổi mật khẩu thành công",
+                description: "Mật khẩu của bạn đã được đổi thành công.",
+                color: "success",
+                variant: "flat"
+            });
+        } catch (error) {
+            console.log('Error in changePassword: ', error);
+            
+            addToast({
+                title: "Lỗi đổi mật khẩu",
+                description: "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại.",
+                color: "danger",
+                variant: "flat"
+            });
+        } finally {
+            set({ isChangingPassword: false });
+        }
+    },
+
+    changeEmail: async (newEmail: string) => {
+        try {
+            set({ isChangingEmail: true });
+            await _axios.post('v1/auth/change-email', { newEmail });
+
+            addToast({
+                title: "Đổi email thành công",
+                description: "Email của bạn đã được đổi thành công.",
+                color: "success",
+                variant: "flat"
+            });
+        } catch (error) {
+            console.log('Error in changeEmail: ', error);
+            
+            addToast({
+                title: "Lỗi đổi email",
+                description: "Đã xảy ra lỗi khi đổi email. Vui lòng thử lại.",
+                color: "danger",
+                variant: "flat"
+            });
+        } finally {
+            set({ isChangingEmail: false });
+        }
+    },
+
+    changeBirthdate: async (newBirthDate: string) => {
+        try {
+            set({ isChangingBirthdate: true });
+            await _axios.post('v1/auth/change-birthdate', { newBirthDate: newBirthDate });
+            
+            addToast({
+                title: "Đổi ngày sinh thành công",
+                description: "Ngày sinh của bạn đã được đổi thành công.",
+                color: "success",
+                variant: "flat"
+            });
+        } catch (error) {
+            console.log('Error in changeBirthdate: ', error);
+            
+            addToast({
+                title: "Lỗi đổi ngày sinh",
+                description: "Đã xảy ra lỗi khi đổi ngày sinh. Vui lòng thử lại.",
+                color: "danger",
+                variant: "flat"
+            });
+        } finally {
+            set({ isChangingBirthdate: false });
+        }
+    },
+
+    changeAvatar: async (newAvatar: File | null) => {
+        try {
+            set({ isChangingAvatar: true });
+
+            const formData = new FormData();
+            if (newAvatar) {
+                formData.append('file', newAvatar);
+            }
+            
+            const response = await _axios.post('v1/auth/upload-avatar', formData);
+            const avatarUrl = response.data?.avatarUrl ?? response.data?.data?.avatarUrl;
+
+            if (avatarUrl) {
+                const normalizedAvatarUrl = `${avatarUrl}${avatarUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+
+                set((state) => {
+                    if (!state.authUser) {
+                        return {};
+                    }
+
+                    const updatedUser = {
+                        ...state.authUser,
+                        avatar: normalizedAvatarUrl,
+                    };
+
+                    localStorage.setItem('authUser', JSON.stringify(updatedUser));
+                    return { authUser: updatedUser };
+                });
+            }
+
+            addToast({
+                title: "Đổi ảnh đại diện thành công",
+                description: "Ảnh đại diện của bạn đã được đổi thành công.",
+                color: "success",
+                variant: "flat"
+            });
+        } catch (error) {
+            console.log('Error in changeAvatar: ', error);
+            
+            addToast({
+                title: "Lỗi đổi ảnh đại diện",
+                description: "Đã xảy ra lỗi khi đổi ảnh đại diện. Vui lòng thử lại.",
+                color: "danger",
+                variant: "flat"
+            });
+        } finally {
+            set({ isChangingAvatar: false });
         }
     },
 }));

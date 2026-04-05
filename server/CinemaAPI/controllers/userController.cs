@@ -29,6 +29,7 @@ namespace CinemaAPI.Controllers
                     email = u.email,
                     birthDate = u.birthDate,
                     age = u.age,
+                    avatar_path = u.avatar_path,
                     role = u.role,
                     createAt = u.createAt,
                     isEmailVerified = u.isEmailVerified,
@@ -59,9 +60,11 @@ namespace CinemaAPI.Controllers
                     email = user.email,
                     birthDate = user.birthDate,
                     age = user.age,
+                    avatar_path = user.avatar_path,
                     role = user.role,
                     createAt = user.createAt,
-                    isEmailVerified = user.isEmailVerified
+                    isEmailVerified = user.isEmailVerified,
+                    isBanned = user.isBanned
                 };
                 return Ok(response);
             }

@@ -35,6 +35,7 @@ namespace CinemaAPI.Models
         [Required, MaxLength(255)]
         public string passwordHash { get; set; } = null!;
 
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime birthDate { get; set; }
 
         public string? avatar_path { get; set; }
@@ -45,7 +46,10 @@ namespace CinemaAPI.Models
         public bool isBanned { get; set; } = false;
 
         public UserType role { get; set; } = UserType.User;
+
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime createAt { get; set; } = DateTime.UtcNow;
+
         public string? passwordResetToken { get; set; }
         public DateTime? resetTokenExpires { get; set; }
 

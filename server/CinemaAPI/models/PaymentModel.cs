@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
@@ -41,11 +42,13 @@ namespace CinemaAPI.Models
         [MaxLength(200)]
         public string? transaction_code { get; set; }
 
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime paidAt { get; set; }
 
         [MaxLength(200)]
         public string? refund_code { get; set; }
 
-        public DateTime refundAt { get; set; }
+        [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
+        public DateTime? refundAt { get; set; }
     }
 }

@@ -35,8 +35,8 @@ namespace CinemaAPI.Services.Implementations
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"DeleteUser Error: {ex.Message}");
-                throw new Exception($"An error occurred while deleting the user. {ex.Message}");
+                Console.WriteLine($"BannedUser Error: {ex.Message}");
+                throw new Exception($"An error occurred while banning the user. {ex.Message}");
             }
         }
     }

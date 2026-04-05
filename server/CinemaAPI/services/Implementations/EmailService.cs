@@ -93,9 +93,9 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                // Get base URL from configuration (App:BaseUrl), fallback về localhost nếu không có
+                // Get base URL from configuration (App:BaseUrl)
                 var baseUrl = _configuration["App:BaseUrl"] ?? "http://localhost:3000";
-                var verificationLink = $"{baseUrl}/verify-email?token={verificationToken}";
+                var verificationLink = $"{baseUrl}/?token={verificationToken}";
 
                 var message = new EmailMessage();
                 message.From = "MilkyWayyy Cinema <support@milkywayyy.me>";

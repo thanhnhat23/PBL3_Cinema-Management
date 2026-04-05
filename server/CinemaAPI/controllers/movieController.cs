@@ -88,5 +88,22 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in movieController.DeleteMovie: {ex.Message}");
             }
         }
+
+        [HttpGet("get-actor-with-movies/{id}")]
+        public async Task<IActionResult> GetActorWithMovie(int id)
+        {
+            try
+            {
+                var movie = await _movieService.GetActorWithMovieAsync(id);
+                if (movie == null)
+                    return NotFound("Movie not found on actor");
+
+                return Ok(movie);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in movieController.GetActorWithMovie: {ex.Message}");
+            }
+        }
     }
 }

@@ -14,6 +14,13 @@ export const _axios = axios.create({
 
 // Request interceptor
 _axios.interceptors.request.use((config) => {
+  if (config.data instanceof FormData && config.headers) {
+    if (typeof (config.headers as any).set === 'function') {
+      (config.headers as any).set('Content-Type', undefined);
+    }
+    delete (config.headers as Record<string, string>)['Content-Type'];
+  }
+
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
     if (token) {

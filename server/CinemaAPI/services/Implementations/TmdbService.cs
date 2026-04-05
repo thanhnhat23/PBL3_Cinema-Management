@@ -4,6 +4,7 @@ using CinemaAPI.Models.DTOs;
 using Microsoft.Extensions.Options;
 using CinemaAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -59,6 +60,26 @@ public class TmdbService : ITmdbService
             {
                 writer.WriteNullValue();
             }
+        }
+    }
+
+    public class DateTimeConverter : JsonConverter<DateTime>
+    {
+        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            string dateString = reader.GetString();
+
+            if (DateTime.TryParse(dateString, out DateTime result))
+            {
+                return result;
+            }
+
+            return DateTime.MinValue;
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value.ToString("yyyy-MM-dd"));
         }
     }
 
@@ -166,6 +187,69 @@ public class TmdbService : ITmdbService
         await SyncGenresAsync(newMovie.movie_id, item.genre_ids);
     }
 
+    public async Task SyncReviewsAsync()
+    {
+        if (_config == null || _config.ConfigEndpoints == null)
+            throw new Exception("TmdbConfig is missing in appsettings.json");
+
+        var api_key = _config.ApiKey;
+        var movies = await _dbContext.Movies.AsNoTracking().ToListAsync();
+
+        string endpoint = _config.ConfigEndpoints.MovieReviews;
+        var insertedCount = 0;
+
+        foreach (var movie in movies)
+        {
+            var movieReviewsEndpoint = endpoint.Replace("{movie_id}", movie.tmdb_id ?? string.Empty);
+            var url = $"{movieReviewsEndpoint}?api_key={api_key}&language=vi-VN&page=1";
+            var response = await _httpClient.GetFromJsonAsync<ReviewResponse>(url);
+
+            // TMDB may not have localized reviews for vi-VN. Fallback to en-US.
+            if (response?.Results == null || response.Results.Count == 0)
+            {
+                var fallbackUrl = $"{movieReviewsEndpoint}?api_key={api_key}&language=en-US&page=1";
+                response = await _httpClient.GetFromJsonAsync<ReviewResponse>(fallbackUrl);
+            }
+
+            if (response?.Results != null)
+            {
+                foreach (var review in response.Results)
+                {
+                    var normalizedUsername = review.author_details?.username ?? review.author;
+
+                    var existingReview = await _mongoDbContext.Reviews
+                        .Find(r => r.movie_id == movie.movie_id
+                                   && r.username == normalizedUsername
+                                   && r.comment == review.content)
+                        .AnyAsync();
+
+                    if (!existingReview)
+                    {
+                        await _mongoDbContext.Reviews.InsertOneAsync(new Review
+                        {
+                            movie_id = movie.movie_id,
+                            user_id = null,
+                            username = normalizedUsername,
+                            profile_slug = "tmdb-user",
+                            avatar_provider = "tmdb",
+                            avatar_path = review.author_details?.avatar_path,
+                            comment = review.content,
+                            rating = review.author_details?.rating ?? 0,
+                            isApproved = true,
+                            spoilerFlag = false,
+                            createAt = review.created_at,
+                            updatedAt = review.updated_at
+                        });
+
+                        insertedCount++;
+                    }
+                }
+            }
+        }
+
+        _logger.LogInformation("TMDB reviews sync completed. Inserted {InsertedCount} reviews.", insertedCount);
+    }
+
     public async Task ISyncGenresAsync()
     {
         if (_config == null || _config.ConfigEndpoints == null)
@@ -269,5 +353,34 @@ public class TmdbService : ITmdbService
                 }
             }
         }
+    }
+
+    public async Task UpdateMovieStatusesAsync()
+    {
+        var now = DateTime.UtcNow;
+
+        var moviesToUpdate = await _dbContext.Movies
+            .Where(m => m.status != MovieStatus.Ended && m.release_date.HasValue)
+            .ToListAsync();
+
+        foreach (var movie in moviesToUpdate)
+        {
+            var endDate = movie.release_date.Value.AddMonths(1).AddDays(15);
+
+            if (now < movie.release_date.Value)
+            {
+                movie.status = MovieStatus.Upcoming;
+            }
+            else if (now >= movie.release_date.Value && now <= endDate)
+            {
+                movie.status = MovieStatus.Released;
+            }
+            else if (now > endDate)
+            {
+                movie.status = MovieStatus.Ended;
+            }
+        }
+
+        await _dbContext.SaveChangesAsync();
     }
 }

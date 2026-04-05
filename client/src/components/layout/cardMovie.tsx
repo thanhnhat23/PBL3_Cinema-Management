@@ -13,19 +13,24 @@ import {
     DialogTitle,
 } from "../ui/dialog";
 import { useMovieStore, type Movie } from "@/stores/useMovieStore";
+import { SparklesText } from "../ui/texts/sparkles-text";
 
 interface DataMovieProps {
   movie: Movie;
   index: number;
   width?: string;
   height?: string;
+  widthCard?: string;
+  heightCard?: string;
 }
 
-export const CardLayout = ({
+export const CardMovie = ({
     movie,
     index,
     width = "w-52",
-    height = "h-72"
+    height = "h-72",
+    widthCard,
+    heightCard,
 }: DataMovieProps) => {
     const router = useRouter();
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -38,7 +43,7 @@ export const CardLayout = ({
     
     return (
         <Link
-            href="#"
+            href={`/movies/${movie.movie_id}`}
             onClick={(event) => {
                 if ((event.target as HTMLElement).closest("[data-card-action]")) {
                     event.preventDefault();
@@ -46,7 +51,7 @@ export const CardLayout = ({
             }}
             key={index}
         >
-            <Card radius="md" className="group relative">
+            <Card radius="md" className={`${widthCard} ${heightCard} group relative`}>
                 <div className="absolute opacity-0 transition delay-50 duration-300 ease-in-out group-hover:opacity-100 hidden md:flex flex-col items-center justify-center backdrop-blur-xs w-full h-full gap-4 z-20">
                     <button
                         data-card-action
@@ -91,15 +96,24 @@ export const CardLayout = ({
                             </DialogHeader>
                             {isTrailerOpen === index && (
                                 <div className="w-full aspect-video">
-                                    <iframe
-                                        src={`https://www.youtube.com/embed/${movie.trailer_url}?autoplay=1&mute=0&playsinline=1&rel=0`}
-                                        title="YouTube video player"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        referrerPolicy="strict-origin-when-cross-origin"
-                                        allowFullScreen
-                                        loading="lazy"
-                                        className="w-full h-full"
-                                    ></iframe>
+                                    {movie.trailer_url ? (
+                                        <iframe
+                                            src={`https://www.youtube.com/embed/${movie.trailer_url}?autoplay=1&mute=0&playsinline=1&rel=0`}
+                                            title="YouTube video player"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            referrerPolicy="strict-origin-when-cross-origin"
+                                            allowFullScreen
+                                            loading="lazy"
+                                            className="w-full h-full"
+                                        >
+                                        </iframe>
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-[url(https://i.pinimg.com/736x/47/6d/1f/476d1f93226290a680ae3e281ae408bd.jpg)] bg-cover bg-center rounded">
+                                            <SparklesText className="text-neutral-800 text-2xl md:text-6xl">
+                                                Trailer chưa có sẵn
+                                            </SparklesText> 
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </DialogContent>

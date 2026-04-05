@@ -50,6 +50,7 @@ namespace CinemaAPI.Models
         public decimal finalAmount { get; set; }
         public BookingStatus status { get; set; }
 
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime createAt { get; set; } = DateTime.UtcNow;
 
     }
