@@ -140,24 +140,35 @@ var app = builder.Build();
 // Use Gzip Compression
 app.UseResponseCompression();
 
-// Auto-migrate database on startup
+// Auto-migrate in Development/Docker by default. Production can opt in via Database:AutoMigrate=true.
+var shouldAutoMigrate = app.Configuration.GetValue<bool?>("Database:AutoMigrate")
+    ?? app.Environment.IsDevelopment()
+    || app.Environment.EnvironmentName == "Docker";
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<AppDbContext>();
-        var logger = services.GetRequiredService<ILogger<Program>>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
 
-        logger.LogInformation("Applying database migrations...");
-        context.Database.Migrate();
-        logger.LogInformation("Database migrations completed successfully.");
-    }
-    catch (Exception ex)
+    if (!shouldAutoMigrate)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
-        throw;
+        logger.LogInformation("Skipping automatic database migrations. Set Database:AutoMigrate=true to enable.");
+    }
+    else
+    {
+        try
+        {
+            var context = services.GetRequiredService<AppDbContext>();
+
+            logger.LogInformation("Applying database migrations...");
+            context.Database.Migrate();
+            logger.LogInformation("Database migrations completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred while migrating the database.");
+            throw;
+        }
     }
 }
 
