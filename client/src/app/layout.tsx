@@ -16,12 +16,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://milkywayyy.me"),
+  applicationName: "MilkyWayyy Cinema",
+
   title: {
     default: "MilkyWayyy Cinema",
     template: "%s | MilkyWayyy Cinema",
   },
 
-  description: "Book movie tickets online at MilkyWayyy Cinema. Browse latest movies, check showtimes, and reserve seats. Fast booking, secure payment, and exclusive deals.",
+  alternates: {
+    canonical: "/",
+  },
+
+  description: "Nơi đặt vé xem phim trực tuyến tại MilkyWayyy Cinema. Duyệt phim mới nhất, kiểm tra lịch chiếu và đặt chỗ ngồi. Đặt vé nhanh chóng, thanh toán an toàn và ưu đãi độc quyền. Lưu ý: Đây là một dự án đồ án Công nghệ phần mềm 2026, không phải một trang web thương mại thực sự.",
+
+  category: "entertainment",
+
+  verification: {
+    google: "BDMQ5FjIluw49croN__9bJmrph52opWUnbi3--maFbc",
+  },
 
   robots: {
     index: true,
@@ -33,7 +46,7 @@ export const metadata: Metadata = {
     },
   },
 
-  keywords: ["cinema", "movies", "tickets", "booking"],
+  keywords: ["cinema", "movies", "tickets", "booking", "reviews", "MilkyWayyy Cinema", "milkywayyy"],
   icons: {
     icon: "/logo.ico",
     apple: "/logo.png",
@@ -41,23 +54,27 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    images: ["https://i.pinimg.com/1200x/5a/4c/ab/5a4cab7414e67e62325985fcabf478d9.jpg"],
+    title: "MilkyWayyy Cinema",
+    description: "Website đồ án Công nghệ phần mềm 2026 - Đặt vé xem phim trực tuyến tại MilkyWayyy Cinema. Duyệt phim mới nhất, kiểm tra lịch chiếu và đặt chỗ ngồi. Đặt vé nhanh chóng, thanh toán an toàn và ưu đãi độc quyền.",
+    images: ["https://i.pinimg.com/1200x/99/0f/ae/990fae21b0a8c52347bc45269ce1a7aa.jpg"],
     creator: "@thanhnhat06",
   },
 
   openGraph: {
-  title: "MilkyWayyy Cinema",
-  description: "Book tickets and manage your cinema experience",
-  url: "https://milkywayyy.me",
-  images: [
-    {
-      url: "https://i.pinimg.com/1200x/5a/4c/ab/5a4cab7414e67e62325985fcabf478d9.jpg",
-      width: 1200,
-      height: 630,
-    }
-  ],
-  type: "website",
-}
+    title: "MilkyWayyy Cinema",
+    siteName: "MilkyWayyy Cinema",
+    description: "Website đồ án Công nghệ phần mềm 2026 - Đặt vé xem phim trực tuyến tại MilkyWayyy Cinema. Duyệt phim mới nhất, kiểm tra lịch chiếu và đặt chỗ ngồi. Đặt vé nhanh chóng, thanh toán an toàn và ưu đãi độc quyền.",
+    url: "https://milkywayyy.me",
+    locale: "vi_VN",
+    images: [
+      {
+        url: "https://i.pinimg.com/1200x/99/0f/ae/990fae21b0a8c52347bc45269ce1a7aa.jpg",
+        width: 1200,
+        height: 630,
+      }
+    ],
+    type: "website",
+  }
 };
 
 export default function RootLayout({
@@ -66,7 +83,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="vi" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
