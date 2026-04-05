@@ -1,172 +1,109 @@
-using CinemaAPI.Models.DTOs;
-using CinemaAPI.Models;
-using CinemaAPI.Services.Interfaces;
 using CinemaAPI.data;
+using CinemaAPI.Models;
+using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services.Implementations
 {
+<<<<<<<< HEAD:server/CinemaAPI/services/Implementations/Service.cs
     public class Service : IService
+========
+     public class CinemaService : ICinemaService
+>>>>>>>> 7bd3e0f8d4b8d900de8b97b0c4911b5c79e3d30a:server/CinemaAPI/services/Implementations/CinemaService.cs
     {
-        private readonly AppDbContext _dbContext;
+         private readonly AppDbContext _dbContext;
 
+<<<<<<<< HEAD:server/CinemaAPI/services/Implementations/Service.cs
         public Service(AppDbContext dbContext)
+========
+         public CinemaService(AppDbContext dbContext)
+>>>>>>>> 7bd3e0f8d4b8d900de8b97b0c4911b5c79e3d30a:server/CinemaAPI/services/Implementations/CinemaService.cs
         {
             _dbContext = dbContext;
         }
+         public async Task<List<Cinema>> GetAllCinemas() =>
+            await _dbContext.Cinemas
+                .Include(c => c.Rooms)
+                .Include(c => c.Location)
+                .ToListAsync();
 
-        public async Task<string> GetRoomsAsync(string? searchKeyword = null)
+        public async Task<Cinema?> GetCinemaById(int cinema_id) =>
+            await _dbContext.Cinemas
+                .Include(c => c.Rooms)
+                .Include(c => c.Location)
+                .FirstOrDefaultAsync( c => c.cinema_id == cinema_id);
+
+        public async Task AddCinema(CinemaCreateRequest request)
         {
-            var query = _dbContext.Rooms
-                        .Include(r => r.Cinema)
-                        .ThenInclude(l => l.Location)
-                        .AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchKeyword))
+            try
             {
-                // Case-insensitive search
-                var keywordLower = searchKeyword.ToLower();
-                query = query.Where(r => r.Cinema.name.ToLower().Contains(keywordLower) || r.Cinema.Location.city.ToLower().Contains(keywordLower));
+                var cinema = new Cinema
+                {   
+                    location_id = request.location_id,
+                    name = request.name,
+                    address = request.address,
+                    phone_number = request.phone_number,
+                    latitude = request.latitude,
+                    longitude = request.longitude,
+                    description = request.description,
+                    image_overview = request.image_overview
+                };
+                _dbContext.Cinemas.Add(cinema);
+                await _dbContext.SaveChangesAsync();                                          
+        }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding cinema: {ex.Message}");
+                throw new Exception($"An error occurred while adding the cinema: {ex.Message}");
             }
-            else
-            {
-                query = query.Take(20);
-            }
-
-            var rooms = await query.Select(r => new
-            {
-                Name = r.Cinema.name,
-                Address = r.Cinema.address,
-                City = r.Cinema.Location.city,
-                Description = r.Cinema.description,
-                PhoneNumber = r.Cinema.phone_number,
-                Room = r.nameRoom,
-                RoomLayout = r.roomLayoutType,
-                RoomPrice = r.price,
-            })
-                        .ToListAsync();
-
-            var result = string.Join("\n", rooms.Select(r =>
-               $"Rạp: {r.Name}, Địa chỉ: {r.Address}, Thành phố: {r.City}, Mô tả: {r.Description}, Hotline: {r.PhoneNumber}, Phòng: {r.Room}, Định dạng phòng: {r.RoomLayout}, Giá vé: {r.RoomPrice}"
-            ));
-
-            return result;
         }
 
-        public async Task<string> GetSnacksAsync(string? searchKeyword = null)
+        public async Task UpdateCinema(int cinema_id, CinemaUpdateRequest request)
         {
-            var query = _dbContext.Snacks.AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchKeyword))
+            try
             {
-                // Case-insensitive search
-                var keywordLower = searchKeyword.ToLower();
-                query = query.Where(s => s.name.ToLower().Contains(keywordLower) || s.type.ToString().ToLower().Contains(keywordLower));
+            var cinema = await _dbContext.Cinemas.FindAsync(cinema_id);
+            if (cinema == null) return;
+
+            cinema.name = request.name;
+            cinema.address = request.address;
+            cinema.location_id = request.location_id;
+            cinema.phone_number = request.phone_number;
+            cinema.latitude = request.latitude;
+            cinema.longitude = request.longitude;
+            cinema.description = request.description;
+            cinema.image_overview = request.image_overview;
+
+            await _dbContext.SaveChangesAsync();
+        }
+        catch(Exception ex)
+            {
+                Console.WriteLine($"Error updating cinema: {ex.Message}");
+                throw new Exception($"An error occurred while updating the cinema: {ex.Message}");
             }
-
-            var snacks = await query.Select(s => new
-            {
-                s.name,
-                s.type,
-                s.price
-            })
-                        .ToListAsync();
-
-            var result = string.Join("\n", snacks.Select(s =>
-               $"Tên món: {s.name}, Loại: {s.type}, Giá: {s.price}"
-            ));
-
-            return result;
         }
-
-        public async Task<string> GetShowtimesAsync(string? searchKeyword = null)
+        public async Task DeleteCinema(int cinema_id)
         {
-            throw new Exception("Not implemented yet");
-        }
-
-        public async Task<string> GetMoviesAsync(string? searchKeyword = null)
-        {
-            var query = _dbContext.Movies
-                        .Include(m => m.MovieGenres)
-                            .ThenInclude(mg => mg.Genre)
-                        .Include(m => m.MovieActors)
-                            .ThenInclude(ma => ma.Actor)
-                        .AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchKeyword))
+            try
             {
-                // Case-insensitive search with better matching
-                var keywordLower = searchKeyword.ToLower();
-                query = query.Where(m => m.title.ToLower().Contains(keywordLower));
+            var cinema = await _dbContext.Cinemas
+                .Include(c => c.Rooms)
+                .FirstOrDefaultAsync(c => c.cinema_id == cinema_id);
+                //.Include(c => c.Inventories)
+            if (cinema == null) throw new Exception("Cinema not found");
+
+            _dbContext.Rooms.RemoveRange(cinema.Rooms);
+            //_dbContext.Inventories.RemoveRange(cinema.Inventories);
+            _dbContext.Cinemas.Remove(cinema);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch(Exception ex)
+            {
+                Console.WriteLine($"Error deleting cinema: {ex.Message}");
+                throw new Exception($"An error occurred while deleting the cinema: {ex.Message}");
             }
-            else
-                query = query.Where(m => m.status == MovieStatus.Released || m.status == MovieStatus.Upcoming)
-                            .OrderByDescending(m => m.release_date)
-                            .Take(30);
-
-            var movies = await query.Select(m => new
-            {
-                m.title,
-                m.overview,
-                m.release_date,
-                m.end_date,
-                m.vote_average,
-                m.vote_count,
-                m.runtime,
-                m.status,
-                genres = m.MovieGenres.Select(mg => mg.Genre.name).ToList(),
-                actors = m.MovieActors.Select(ma => ma.Actor.name).ToList()
-            })
-            .ToListAsync();
-
-            var result = string.Join("\n", movies.Select(m =>
-                   $"Phim: {m.title}, Mô tả: {m.overview}, Ngày chiếu: {m.release_date?.ToShortDateString() ?? ""}-{m.end_date?.ToShortDateString() ?? ""}, Đánh giá: {m.vote_average}/10, Thời lượng: {m.runtime}p, Thể loại: {string.Join(", ", m.genres)}, Diễn viên: {string.Join(", ", m.actors)}"
-            ));
-
-            return result;
-        }
-
-        public async Task<string> GetGenresAsync(string? searchKeyword = null)
-        {
-            var genres = await _dbContext.Genres
-                        .Select(g => new { g.name })
-                        .ToListAsync();
-
-            var result = string.Join("\n", genres.Select(g =>
-               $"Tên thể loại: {g.name}"
-            ));
-
-            return result;
-        }
-
-        public async Task<string> GetActorsAsync(string? searchKeyword = null)
-        {
-            var query = _dbContext.Actors.AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchKeyword))
-            {
-                // Case-insensitive search
-                var keywordLower = searchKeyword.ToLower();
-                query = query.Where(a => a.name.ToLower().Contains(keywordLower));
-            }
-            else
-                query = query.Take(30);
-
-            var actors = await query.Select(a => new
-            {
-                a.name,
-                a.biography,
-                a.place_of_birth,
-                a.gender,
-                a.birthday,
-            })
-            .ToListAsync();
-
-            var result1 = string.Join("\n", actors.Select(a =>
-               $"Tên diễn viên: {a.name}, Tiểu sử: {a.biography}, Nơi sinh: {a.place_of_birth}, Giới tính: {a.gender}"
-            ));
-
-            return result1;
         }
     }
 }
+

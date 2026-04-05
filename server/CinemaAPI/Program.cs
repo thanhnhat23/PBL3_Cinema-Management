@@ -59,6 +59,13 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<ISnackService, SnackService>();
+builder.Services.AddScoped<IComboDetail, ComboDetailService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();

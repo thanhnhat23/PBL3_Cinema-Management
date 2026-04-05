@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260209110846_UpdateUser")]
-    partial class UpdateUser
+    [Migration("20260210163707_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -761,6 +761,9 @@ namespace CinemaAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
+
+                    b.Property<bool>("isBanned")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("isEmailVerified")
                         .HasColumnType("tinyint(1)");

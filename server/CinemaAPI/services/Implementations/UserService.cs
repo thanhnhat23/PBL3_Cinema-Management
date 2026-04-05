@@ -15,28 +15,30 @@ namespace CinemaAPI.Services.Implementations
             _dbContext = dbContext;
         }
 
+        // Get all users
         public async Task<List<User>> GetAllUsers() =>
             await _dbContext.Users.ToListAsync();
 
-        public async Task<User?> GetUserById(Guid userId) =>
-            await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == userId);
+        // Get user by ID
+        public async Task<User?> GetUserById(Guid user_id) =>
+            await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == user_id);
 
-        public async Task BannedUser(Guid userId, bool isBanned)
+        // Ban or unban user
+        public async Task BannedUser(Guid user_id, bool isBanned)
         {
             try
             {
-                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == userId);
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == user_id);
+                if (user == null)
+                    throw new KeyNotFoundException("User not found");
 
-                if (user != null)
-                {
-                    user.isBanned = isBanned;
-                    await _dbContext.SaveChangesAsync();
-                }
+                user.isBanned = isBanned;
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"BannedUser Error: {ex.Message}");
-                throw new Exception($"An error occurred while banning the user. {ex.Message}");
+                Console.WriteLine($"Error banning/unbanning user: {ex.Message}");
+                throw new ApplicationException("An error occurred while updating the user's ban status.", ex);
             }
         }
     }

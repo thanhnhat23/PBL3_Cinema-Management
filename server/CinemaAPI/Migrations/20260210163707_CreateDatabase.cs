@@ -62,12 +62,12 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     code = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    description = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
+                    description = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     type = table.Column<int>(type: "int", nullable: false),
-                    discountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    maxDiscountAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    minOrderValue = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    discountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    maxDiscountAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    minOrderValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     startDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     endDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     isHoliday = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -190,6 +190,7 @@ namespace CinemaAPI.Migrations
                     passwordHash = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     birthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    isBanned = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     role = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     createAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),

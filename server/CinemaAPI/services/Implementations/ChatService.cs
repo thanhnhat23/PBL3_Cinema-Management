@@ -12,10 +12,10 @@ namespace CinemaAPI.Services.Implementations
         private readonly IService _Service;
         private readonly IGeminiService _geminiService;
 
-        public ChatService(MongoDbContext mongoDbContext, IService service, IGeminiService geminiService)
+        public ChatService(MongoDbContext mongoDbContext, IService Service, IGeminiService geminiService)
         {
             _mongoDbContext = mongoDbContext;
-            _Service = service;
+            _Service = Service;
             _geminiService = geminiService;
         }
 
