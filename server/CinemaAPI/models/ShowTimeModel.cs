@@ -28,5 +28,6 @@ namespace CinemaAPI.Models
 
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
+        public DateOnly? deleted_at { get; set; }
     }
 }

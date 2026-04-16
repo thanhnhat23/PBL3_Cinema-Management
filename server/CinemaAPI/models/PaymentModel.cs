@@ -47,5 +47,6 @@ namespace CinemaAPI.Models
         public string? refund_code { get; set; }
 
         public DateTime refundAt { get; set; }
+        public DateOnly? deleted_at { get; set; }
     }
 }

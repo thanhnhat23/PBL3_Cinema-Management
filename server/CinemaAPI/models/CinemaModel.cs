@@ -41,5 +41,6 @@ namespace CinemaAPI.Models
 
         [MaxLength(100)]
         public string image_overview { get; set; } = null!;
+        public DateOnly? deleted_at { get; set; }
     }
 }

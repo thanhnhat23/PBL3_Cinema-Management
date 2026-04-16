@@ -44,5 +44,6 @@ namespace CinemaAPI.Models
 
         public int row { get; set; }
         public int column { get; set; }
+        public DateOnly? deleted_at { get; set; }
     }
 }

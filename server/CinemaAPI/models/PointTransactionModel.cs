@@ -29,5 +29,6 @@ namespace CinemaAPI.Models
         public int amount { get; set; }
         public PointType type { get; set; }
         public DateTime occurredAt { get; set; } = DateTime.UtcNow;
+        public DateOnly? deleted_at { get; set; }
     }
 }

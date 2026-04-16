@@ -13,5 +13,6 @@ namespace CinemaAPI.Models
 
         [Required, MaxLength(100)]
         public string name { get; set; } = null!;
+        public DateOnly? deleted_at { get; set; }
     }
 }

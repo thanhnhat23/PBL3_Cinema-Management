@@ -7,7 +7,7 @@ Content-Type: application/json
   "password": "12345678"
 }
 
-### 2. CHAT MESSAGE
+### 2. CHAT MESSAGE 
 POST http://localhost:5143/api/v1/chat/message
 <<<<<<< HEAD
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZWNhMmRmZDMtYThiZi00MzBjLThjNjctNWIxZDM2ZGU0ZmRhIiwidXNlck5hbWUiOiJhYmMiLCJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJleHAiOjE3NzA1NDMxNjgsImlzcyI6IkNpbmVtYUFQSSIsImF1ZCI6IkNpbmVtYUNsaWVudCJ9.xgVUGgdp_ILBpRnSAaX9HMOZh5WhIqnH2L3FF9dTTYI

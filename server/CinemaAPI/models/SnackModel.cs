@@ -32,5 +32,6 @@ namespace CinemaAPI.Models
         public decimal price { get; set; }
 
         public string? imageUrl { get; set; }
+        public DateOnly? deleted_at { get; set; }
     }
 }

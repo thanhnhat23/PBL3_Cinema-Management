@@ -12,5 +12,6 @@ namespace CinemaAPI.Models
         public int genre_id { get; set; }
         [ForeignKey("genre_id")]
         public virtual Genre Genre { get; set; } = null!;
+        public DateOnly? deleted_at { get; set; }
     }
 }

@@ -51,6 +51,7 @@ namespace CinemaAPI.Models
         public BookingStatus status { get; set; }
 
         public DateTime createAt { get; set; } = DateTime.UtcNow;
+        public DateOnly? deleted_at { get; set; }
 
     }
 }

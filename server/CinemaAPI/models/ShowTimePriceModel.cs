@@ -14,5 +14,6 @@ namespace CinemaAPI.Models
         public virtual ShowTime ShowTime{ get; set; } = null!;
 
         public decimal base_price { get; set; }
+        public DateOnly? deleted_at { get; set; }
     }
 }

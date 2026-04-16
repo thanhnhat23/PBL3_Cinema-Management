@@ -37,5 +37,6 @@ namespace CinemaAPI.Models
         public string? hold_token { get; set; }
         public DateTime? hold_expires_at { get; set; }
         public string? held_by_user { get; set; }
+        public DateOnly? deleted_at { get; set; }
     }
 }

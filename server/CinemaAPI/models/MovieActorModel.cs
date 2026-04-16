@@ -15,5 +15,6 @@ namespace CinemaAPI.Models
 
         public string char_name { get; set; } = null!;
         public int order { get; set; } // Order of appearance in credits
+        public DateOnly? deleted_at { get; set; }
     }
 }

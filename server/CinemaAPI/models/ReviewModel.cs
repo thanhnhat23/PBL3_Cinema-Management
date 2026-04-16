@@ -24,5 +24,6 @@ namespace CinemaAPI.Models
         public bool spoilerFlag { get; set; } = false;
         public DateTime createAt { get; set; } = DateTime.UtcNow;
         public DateTime updatedAt { get; set;}
+        public DateOnly? deleted_at { get; set; }
     }
 }

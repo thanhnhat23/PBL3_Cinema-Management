@@ -30,5 +30,6 @@ namespace CinemaAPI.Models
         public string role { get; set; } = null!; // "user" or "assistant"
         public string message { get; set; } = null!;
         public DateTime timestamp { get; set; } = DateTime.UtcNow;
+        public DateOnly? deleted_at { get; set; }
     }
 }

@@ -13,5 +13,6 @@ namespace CinemaAPI.Models
         public virtual Snack Snack { get; set; } = null!;
 
         public int quantity { get; set; }
+        public DateOnly? deleted_at { get; set; }
     }
 }
