@@ -107,31 +107,19 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task DeleteRoom(int room_id)
+        public async Task DeleteRoom(int room_id, RoomDeleteRequest request)
         {
-            using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var room = await _dbContext.Rooms
-                            .Include(r => r.Seats)
-                            .Include(r => r.Showtimes)
-                            .FirstOrDefaultAsync(r => r.room_id == room_id);
+                var room = await _dbContext.Rooms.FindAsync(room_id);
+                if (room == null)
+                    throw new Exception("Room not found");
 
-                if (room == null) throw new Exception("Room not found");
-
-                if (room.Showtimes.Any())
-                    throw new Exception("Cannot delete a room that has showtimes. Please delete the showtimes first.");
-
-                // Delete associated seats first
-                _dbContext.Seats.RemoveRange(room.Seats);
-                _dbContext.Rooms.Remove(room);
-
+                room.deleted_at = request.deleted_at;
                 await _dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 Console.WriteLine($"DeleteRoom Error: {ex.Message}");
                 throw new Exception($"An error occurred while deleting the room: {ex.Message}");
             }
