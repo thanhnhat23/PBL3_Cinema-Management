@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddMemoryCache();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -44,18 +45,24 @@ builder.Services.AddSingleton<MongoDbContext>();
 // Configure Gemini
 builder.Services.Configure<GeminiConfig>(builder.Configuration.GetSection("Gemini"));
 
+// Configure Cloudinary
+builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("Cloudinary"));
+
 // Configure Services
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ICinemaService, CinemaService>();
+builder.Services.AddScoped<IService, Service>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IActorService, ActorService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<ICinemaService, CinemaService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IComboDetail, ComboDetailService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
@@ -135,24 +142,35 @@ var app = builder.Build();
 // Use Gzip Compression
 app.UseResponseCompression();
 
-// Auto-migrate database on startup
+// Auto-migrate in Development/Docker by default. Production can opt in via Database:AutoMigrate=true.
+var shouldAutoMigrate = app.Configuration.GetValue<bool?>("Database:AutoMigrate")
+    ?? app.Environment.IsDevelopment()
+    || app.Environment.EnvironmentName == "Docker";
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<AppDbContext>();
-        var logger = services.GetRequiredService<ILogger<Program>>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
 
-        logger.LogInformation("Applying database migrations...");
-        context.Database.Migrate();
-        logger.LogInformation("Database migrations completed successfully.");
-    }
-    catch (Exception ex)
+    if (!shouldAutoMigrate)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
-        throw;
+        logger.LogInformation("Skipping automatic database migrations. Set Database:AutoMigrate=true to enable.");
+    }
+    else
+    {
+        try
+        {
+            var context = services.GetRequiredService<AppDbContext>();
+
+            logger.LogInformation("Applying database migrations...");
+            context.Database.Migrate();
+            logger.LogInformation("Database migrations completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred while migrating the database.");
+            throw;
+        }
     }
 }
 
@@ -168,6 +186,8 @@ app.UseHttpsRedirection();
 // app.MapHub<ChatHub>("/chathub");
 
 app.UseCors("AllowReactApp");
+
+app.MapMethods("/ping", new[] { "GET", "HEAD" }, () => Results.Ok());
 
 app.UseAuthentication();
 app.UseAuthorization();

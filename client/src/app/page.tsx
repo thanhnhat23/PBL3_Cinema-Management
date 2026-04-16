@@ -1,68 +1,103 @@
 "use client";
 
-import { CardLayout } from "@/components/layout/card";
+import { CardMovie } from "@/components/layout/cardMovie";
 import dynamic from "next/dynamic";
 import { ChevronRight } from "../components/icons/chevron-right";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Tab, Tabs, Image } from "@heroui/react";
 import { Cctv } from "../components/icons/cctv";
 import { TrendingUpIcon } from "../components/icons/trending-up";
 import { FlameIcon, type FlameIconHandle } from "../components/icons/flame";
 import { useMovieStore } from "@/stores/useMovieStore";
-import CardSkeleton from "@/components/skeletons/card";
+import CardSkeleton from "@/components/skeletons/cardMovie";
 import { Meteors } from "@/components/ui/effects/meteors";
 import { Iphone } from "@/components/ui/iphone";
 import { SparklesText } from "@/components/ui/texts/sparkles-text";
 import { AuroraText } from "@/components/ui/texts/aurora-text";
 import { Highlighter } from "@/components/ui/texts/highlighter";
 import Link from "next/link";
+import { _axios } from "@/lib/axios";
+import Swal from "sweetalert2";
 
 const Carousel = dynamic(() => import("@/components/layout/carousel"), {
   ssr: true,
 });
 
-export default function Home() {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [selectedTab, setSelectedTab] = useState<string>('nowplaying');
-  const flameRef = useRef<FlameIconHandle | null>(null);
-  const trendingRef = useRef<FlameIconHandle | null>(null);
-  const router = useRouter();
+export default function HomePage() {
+    return (
+    <Suspense>
+        <Home />
+    </Suspense>
+    );
+}
 
-  const { 
-      fetchAllMovies,
-      movies,
-      isFetchingMovies,
-  } = useMovieStore();
+function Home() {
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+    const [selectedTab, setSelectedTab] = useState<string>('nowplaying');
+    const flameRef = useRef<FlameIconHandle | null>(null);
+    const trendingRef = useRef<FlameIconHandle | null>(null);
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
-  useEffect(() => {
-      if (hoveredItem === 'popular') {
-          flameRef.current?.startAnimation();
-      } else {
-          flameRef.current?.stopAnimation();
-      }
-      if (hoveredItem === 'upcoming') {
-          trendingRef.current?.startAnimation();
-      } else {
-          trendingRef.current?.stopAnimation();
-      }
-  }, [hoveredItem]);
+    const { 
+        fetchMoviesByStatus,
+        fetchPopularMovies,
+        moviesByStatusMap,
+        popularMovies,
+        isFetchingMoviesByStatus,
+        isFetchingPopularMovies,
+    } = useMovieStore();
 
-  useEffect(() => {
-      fetchAllMovies();
-  }, [fetchAllMovies]);
+    useEffect(() => {
+        const verifyEmail = async () => {
+            try {
+                const token = searchParams.get('token');
+                if (!token) return;
+                await _axios.post('/v1/auth/verify-email', { verificationToken: token });
 
-  const nowPlayingMovies = useMemo(() => {
-      return movies.filter(movie => movie.status === 0).sort((a, b) => Math.abs(new Date(a.release_date).getTime() - new Date().getTime()) - Math.abs(new Date(b.release_date).getTime() - new Date().getTime())).slice(0, 8);
-  }, [movies]);
+                Swal.fire({
+                    title: 'Thành công',
+                    text: 'Xác minh email thành công! Bạn có thể đăng nhập ngay bây giờ.',
+                    icon: 'success',
+                });
+            } catch (error) {
+                console.log('Error verifying email: ', error);
+                Swal.fire({
+                    title: 'Lỗi',
+                    text: 'Xác minh email thất bại. Vui lòng thử lại.',
+                    icon: 'error',
+                });
+            }
+        };
+        verifyEmail();
+    }, [searchParams]);
 
-  const upcomingMovies = useMemo(() => {
-      return movies.filter(movie => movie.status === 1).sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime()).slice(0, 8);
-  }, [movies]);
+    useEffect(() => {
+        if (hoveredItem === 'popular') {
+            flameRef.current?.startAnimation();
+        } else {
+            flameRef.current?.stopAnimation();
+        }
+        if (hoveredItem === 'upcoming') {
+            trendingRef.current?.startAnimation();
+        } else {
+            trendingRef.current?.stopAnimation();
+        }
+    }, [hoveredItem]);
 
-  const popularMovies = useMemo(() => {
-      return [...movies].sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0)).slice(0, 8);
-  }, [movies]);
+    useEffect(() => {
+        fetchMoviesByStatus(0, 8);
+        fetchMoviesByStatus(1, 8);
+        fetchPopularMovies(8);
+    }, [fetchMoviesByStatus, fetchPopularMovies]);
+
+    const nowPlayingMovies = moviesByStatusMap[0] ?? [];
+    const upcomingMovies = moviesByStatusMap[1] ?? [];
+    const isLoadingNowPlaying = isFetchingMoviesByStatus;
+    const isLoadingUpcoming = isFetchingMoviesByStatus;
+    const isLoadingPopular = isFetchingPopularMovies;
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-0 md:py-6">
@@ -123,13 +158,13 @@ export default function Home() {
         
         {selectedTab === 'nowplaying' && (
             <div className="min-h-screen gap-4 md:gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                {isFetchingMovies ? (
+                {isLoadingNowPlaying ? (
                     Array.from({ length: 8 }).map((_, index) => (
                         <CardSkeleton key={index} />
                     ))
                 ) : (
                     nowPlayingMovies.map((movie, index) => (
-                      <CardLayout movie={movie} index={index} key={index} />
+                      <CardMovie movie={movie} index={index} key={index} />
                     ))
                 )}
             </div>
@@ -137,13 +172,13 @@ export default function Home() {
         
         {selectedTab === 'coming-soon' && (
             <div className="min-h-screen gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                {isFetchingMovies ? (
+                {isLoadingUpcoming ? (
                     Array.from({ length: 8 }).map((_, index) => (
                         <CardSkeleton key={index} />
                     ))
                 ) : (
                     upcomingMovies.map((movie, index) => (
-                      <CardLayout movie={movie} index={index} key={index} />
+                      <CardMovie movie={movie} index={index} key={index} />
                     )) 
                 )}
             </div>
@@ -151,13 +186,13 @@ export default function Home() {
         
         {selectedTab === 'popular' && (
             <div className="min-h-screen gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                {isFetchingMovies ? (
+                {isLoadingPopular ? (
                     Array.from({ length: 8 }).map((_, index) => (
                         <CardSkeleton key={index} />
                     ))
                 ) : (
                     popularMovies.map((movie, index) => (
-                      <CardLayout movie={movie} index={index} key={index} />
+                      <CardMovie movie={movie} index={index} key={index} />
                     ))
                 )}
             </div>
@@ -191,7 +226,7 @@ export default function Home() {
                 <Image 
                     src="https://cdn.galaxycine.vn/media/2026/2/3/tang-qua-nam-moi-3_1770109637475.jpg" 
                     alt="Voucher Tết" 
-                    className="w-72 h-36 md:w-150 md:h-76 object-cover object-top rounded-lg"
+                    className="w-72 h-36 md:w-150 md:h-76 object-cover object-top rounded-lg border border-gray-300 shadow-md"
                 />
                 <h2 className="text-center mt-2 text-md md:text-lg font-medium md:font-bold">Tết Mã Ngập Quà – Năm Mới Nở Hoa</h2>
             </div>
@@ -200,16 +235,16 @@ export default function Home() {
                 <Image 
                     src="https://www.galaxycine.vn/media/2025/9/4/momo-galaxy-2_1756958593143.jpg" 
                     alt="Voucher MoMo"  
-                    className="w-72 h-36 md:w-150 md:h-76 object-cover object-top rounded-lg"
+                    className="w-72 h-36 md:w-150 md:h-76 object-cover object-top rounded-lg border border-gray-300 shadow-md"
                 />
-                <h2 className="text-center mt-2 text-md md:text-lg font-medium md:font-bold">Galaxy Cinema Và MoMo Tặng Bắp Nước Miễn Phí</h2>
+                <h2 className="text-center mt-2 text-md md:text-lg font-medium md:font-bold">MilkyWayyy Cinema Và MoMo Tặng Bắp Nước Miễn Phí</h2>
             </div>
 
-            <div className="flex flex-col item-center">
+            <div className="flex flex-col items-center">
                 <Image 
                     src="https://www.galaxycine.vn/media/2025/1/22/bangqltv-digital-1135x660_1737516350592.jpg" 
                     alt="Ưu Đãi Thành Viên Galaxy Cinema 2026" 
-                    className="w-72 h-36 md:w-150 md:h-76 object-cover object-top rounded-lg"
+                    className="w-72 h-36 md:w-150 md:h-76 object-cover object-top rounded-lg border border-gray-300 shadow-md"
                 />
                 <h2 className="text-center mt-2 text-md md:text-lg font-medium md:font-bold">Ưu Đãi Thành Viên Galaxy Cinema 2026</h2>
             </div>

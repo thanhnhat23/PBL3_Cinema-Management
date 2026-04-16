@@ -18,31 +18,63 @@ export interface Movie {
     status: 0 | 1 | 2; // Released = 0, Upcoming = 1, Ended = 2
 }
 
+export interface ActorWithMovie {
+    Actor: {
+        actor_id: number;
+        name: string;
+        biography?: string | null;
+        birthday?: Date | null;
+        place_of_birth?: string | null;
+        profile_path?: string | null;
+        gender?: number | null;
+    };
+    char_name: string;
+    order: number;
+}
+
 export const useMovieStore = create<{
     movies: Movie[]; // All movies
+    moviesByStatus: Movie[];
+    moviesByStatusMap: Partial<Record<Movie['status'], Movie[]>>;
+    popularMovies: Movie[];
+    actorWithMovies: ActorWithMovie[];
     selectedMovie: Movie | null; // Currently selected movie
 
     isFetchingMovies: boolean;
+    isFetchingMoviesByStatus: boolean;
+    isFetchingPopularMovies: boolean;
     isFetchingMovieDetails: boolean;
     isCreatingMovie: boolean;
     isUpdatingMovie: boolean;
     isDeletingMovie: boolean;
+    isFetchingActorWithMovies: boolean;
 
     fetchAllMovies: () => Promise<void>;
+    fetchMoviesByStatus: (status: Movie['status'], limit?: number) => Promise<void>;
+    fetchPopularMovies: (limit?: number) => Promise<void>;
     fetchMovieById: (movieId: number) => Promise<void>;
     createMovie: (movieData: Partial<Movie>) => Promise<void>;
     updateMovie: (movieId: number, movieData: Partial<Movie>) => Promise<void>;
     deleteMovie: (movieId: number) => Promise<void>;
+    fetchActorWithMovies: (movieId: number) => Promise<void>;
     clearSelectedMovie: () => void;
+    clearActorWithMovies: () => void;
     getStatusLabel: (status: Movie['status']) => string;
 }>((set) => ({
     movies: [],
+    moviesByStatus: [],
+    moviesByStatusMap: {},
+    popularMovies: [],
+    actorWithMovies: [],
     selectedMovie: null,
     isFetchingMovies: false,
+    isFetchingMoviesByStatus: false,
+    isFetchingPopularMovies: false,
     isFetchingMovieDetails: false,
     isCreatingMovie: false,
     isUpdatingMovie: false,
     isDeletingMovie: false,
+    isFetchingActorWithMovies: false,
 
     fetchAllMovies: async () => {
         const currentMovies = useMovieStore.getState().movies;
@@ -61,6 +93,48 @@ export const useMovieStore = create<{
             console.error('Error fetching all movies:', error);
         } finally {
             set({ isFetchingMovies: false });
+        }
+    },
+
+    fetchMoviesByStatus: async (status: Movie['status'], limit: number = 8) => {
+        try {
+            set({ isFetchingMoviesByStatus: true });
+
+            const response = await _axios.get('/v1/movie/get-by-status', {
+                params: { status, limit },
+            });
+
+            if (response.data) {
+                set((state) => ({
+                    moviesByStatus: response.data,
+                    moviesByStatusMap: {
+                        ...state.moviesByStatusMap,
+                        [status]: response.data,
+                    },
+                }));
+            }
+        } catch (error) {
+            console.error(`Error fetching movies by status ${status}:`, error);
+        } finally {
+            set({ isFetchingMoviesByStatus: false });
+        }
+    },
+
+    fetchPopularMovies: async (limit: number = 8) => {
+        try {
+            set({ isFetchingPopularMovies: true });
+
+            const response = await _axios.get('/v1/movie/get-popular', {
+                params: { limit },
+            });
+
+            if (response.data) {
+                set({ popularMovies: response.data });
+            }
+        } catch (error) {
+            console.error('Error fetching popular movies:', error);
+        } finally {
+            set({ isFetchingPopularMovies: false });
         }
     },
 
@@ -133,8 +207,28 @@ export const useMovieStore = create<{
         }
     },
 
+    fetchActorWithMovies: async (movieId: number) => {
+        try {
+            set({ isFetchingActorWithMovies: true });
+
+            const response = await _axios.get(`/v1/movie/get-actor-with-movies/${movieId}`);
+
+            if (response.data) {
+                set({ actorWithMovies: response.data });
+            }
+        } catch (error) {
+            console.error(`Error fetching actors with movie ID ${movieId}:`, error);
+        } finally {
+            set({ isFetchingActorWithMovies: false });
+        }
+    },
+
     clearSelectedMovie: () => {
         set({ selectedMovie: null });
+    },
+
+    clearActorWithMovies: () => {
+        set({ actorWithMovies: [] });
     },
 
     getStatusLabel: (status: Movie['status']) => {
@@ -148,11 +242,5 @@ export const useMovieStore = create<{
             default:
                 return 'Unknown';
         }
-    },
-
-    filterMoviesByStatus: (status: 0 | 1 | 2) => {
-        set((state) => ({
-            movies: state.movies.filter(m => m.status === status)
-        }));
     },
 }));

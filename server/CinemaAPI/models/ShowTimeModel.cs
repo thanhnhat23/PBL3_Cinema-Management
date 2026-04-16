@@ -26,7 +26,10 @@ namespace CinemaAPI.Models
         [ForeignKey("movie_id")]
         public virtual Movie Movie { get; set; } = null!;
 
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime startTime { get; set; }
+
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime endTime { get; set; }
         public DateOnly? deleted_at { get; set; }
     }

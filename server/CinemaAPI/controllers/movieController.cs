@@ -47,6 +47,34 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("get-by-status")]
+        public async Task<IActionResult> GetMoviesByStatus([FromQuery] int status, [FromQuery] int limit = 10)
+        {
+            try
+            {
+                var movies = await _movieService.GetMoviesByStatusAsync(status, limit);
+                return Ok(movies);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in movieController.GetMoviesByStatus: {ex.Message}");
+            }
+        }
+
+        [HttpGet("get-popular")]
+        public async Task<IActionResult> GetPopularMovies([FromQuery] int limit = 10)
+        {
+            try
+            {
+                var movies = await _movieService.GetPopularMoviesAsync(limit);
+                return Ok(movies);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in movieController.GetPopularMovies: {ex.Message}");
+            }
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> AddMovie([FromBody] Movie movie)
         {
@@ -86,6 +114,23 @@ namespace CinemaAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in movieController.DeleteMovie: {ex.Message}");
+            }
+        }
+
+        [HttpGet("get-actor-with-movies/{id}")]
+        public async Task<IActionResult> GetActorWithMovie(int id)
+        {
+            try
+            {
+                var movie = await _movieService.GetActorWithMovieAsync(id);
+                if (movie == null)
+                    return NotFound("Movie not found on actor");
+
+                return Ok(movie);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in movieController.GetActorWithMovie: {ex.Message}");
             }
         }
     }

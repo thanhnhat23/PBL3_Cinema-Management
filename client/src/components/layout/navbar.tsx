@@ -1,8 +1,8 @@
 'use client'
 
 import Link from "next/link"
+import Image from "next/image";
 import { 
-    Avatar,
     Dropdown,
     DropdownTrigger,
     DropdownMenu,
@@ -26,20 +26,22 @@ import { FlameIcon, type FlameIconHandle } from "../icons/flame";
 import { Cctv } from "../icons/cctv";
 import { TrendingUpIcon } from "../icons/trending-up";
 import { ChevronDown } from "../icons/chevron-down";
-import { ChevronRight } from "../icons/chevron-right";
 import { ThemeToggler } from "@/components/ui/effects/themeToggler";
 import { SunMedium } from "../icons/sun-medium";
 import { Moon } from "../icons/moon";
 import { GitHubStarsButton } from "@/components/ui/github-stars";
 import { MapPin } from "../icons/map-pin";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { FormLayout } from './buttonForm';
-import { Image } from "@heroui/react";
+import { useDialogStore } from "@/stores/useDialogStore";
+import { useRouter } from "next/navigation";
+import { AvatarElement } from "../ui/avatar";
 
 export default function NavbarLayout() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
     const [isDark, setIsDark] = useState(false);
+    const { setOpenDialog } = useDialogStore();
+    const router = useRouter();
     const flameRef = useRef<FlameIconHandle | null>(null);
     const trendingRef = useRef<FlameIconHandle | null>(null);
     const themeTogglerRef = useRef<HTMLButtonElement>(null);
@@ -82,12 +84,6 @@ export default function NavbarLayout() {
         'MilkyWayyy Nha Trang VinCom', 'MilkyWayyy J97 Centrer'
     ]
 
-    const key = [
-        'adventure', 'fantasy', 'animation', 'drama', 'horror', 'action',
-        'comedy', 'history', 'western', 'thriller', 'crime', 'documentary',
-        'sciencefiction', 'mystery', 'music', 'romance', 'family', 'war', 'tvshow'
-    ];
-
     return (
         <Navbar shouldHideOnScroll isBordered onMenuOpenChange={setIsMenuOpen} classNames={{ base: 'md:py-8'}}>
             <NavbarContent justify="start">
@@ -104,9 +100,10 @@ export default function NavbarLayout() {
                             className="sm:font-bold text-inherit text-2xl inline-block"
                         >
                             <Image
-                                isBlurred
                                 src="/logo.png"
                                 alt="Logo"
+                                width={250}
+                                height={250}
                                 className="object-fill min-w-18 w-18 md:min-w-36 md:w-36"
                             />
                         </Link>
@@ -114,14 +111,15 @@ export default function NavbarLayout() {
                 </NavbarBrand>
             </NavbarContent>
 
-            {/* Logo for mobile view (centered) */}
+            {/* Logo for mobile view */}
             <NavbarContent justify="center" className="sm:hidden">
                 <NavbarBrand>
                     <Link href="/">
                         <Image
-                            isBlurred
                             src="/logo.png"
                             alt="Logo"
+                            width={250}
+                            height={250}
                             className="object-fill w-18 h-auto"
                         />
                     </Link>
@@ -182,42 +180,19 @@ export default function NavbarLayout() {
                     </DropdownMenu>
                 </Dropdown>
 
-                {/* <Dropdown> */}
-                    <NavbarItem>
-                        {/* <DropdownTrigger> */}
-                            <Button
-                                disableRipple
-                                className="group p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
-                                radius="sm"
-                                variant="light"
-                            >
-                                Thể loại
-                            </Button>
-                        {/* </DropdownTrigger> */}
-                    </NavbarItem>
-                    {/* <DropdownMenu 
-                        aria-label="Category menu"
-                        classNames={{
-                            list: "grid grid-cols-3 gap-0 w-150"
-                        }}
-                    >
-                        {categorys.map((category, index) => (
-                            <DropdownItem 
-                                key={key[index]}
-                                className="group"
-                                startContent={<ChevronRight animate={hoveredItem === key[index]} size={16} />}
-                                href="#"
-                                onMouseEnter={() => setHoveredItem(key[index])}
-                                onMouseLeave={() => setHoveredItem(null)}
-                            >
-                                {category}
-                            </DropdownItem>
-                        ))}
-                    </DropdownMenu> */}
-                {/* </Dropdown> */}
+                <NavbarItem>
+                        <Button
+                            disableRipple
+                            className="group p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
+                            radius="sm"
+                            variant="light"
+                        >
+                            Thể loại
+                        </Button>
+                </NavbarItem>
 
                 <NavbarItem>
-                    <Link href="#"
+                    <Link href="/actors"
                         className="p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
                     >
                         Diễn viên
@@ -225,7 +200,7 @@ export default function NavbarLayout() {
                 </NavbarItem>
 
                 <NavbarItem>
-                    <Link href="#"
+                    <Link href="/reviews"
                         className="p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
                     >
                         Review
@@ -251,11 +226,11 @@ export default function NavbarLayout() {
                     <DropdownMenu aria-label="Category menu">
                         {cinema.map((cinema, index) => (
                             <DropdownItem 
-                                key={key[index]}
+                                key={index}
                                 className="group"
-                                startContent={<MapPin animate={hoveredItem === key[index]} size={16} />}
+                                startContent={<MapPin animate={hoveredItem === String(index)} size={16} />}
                                 href="#"
-                                onMouseEnter={() => setHoveredItem(key[index])}
+                                onMouseEnter={() => setHoveredItem(String(index))}
                                 onMouseLeave={() => setHoveredItem(null)}
                             >
                                 {cinema}
@@ -280,18 +255,18 @@ export default function NavbarLayout() {
                     <Dropdown>
                         <NavbarItem className="sm:pl-10 pl-0">
                             <DropdownTrigger>
-                                <Avatar 
-                                    isBordered 
-                                    as="button"
-                                    color="primary" 
-                                    size="sm"
-                                    src={authUser.avatar || "https://i.pinimg.com/1200x/dc/00/eb/dc00ebc8d85a3cf802aecb502cf7e212.jpg"} 
-                                />
+                                <div>
+                                    <AvatarElement 
+                                        authUser={authUser} 
+                                        widthDeco="w-13" 
+                                        translatex="-translate-x-1.5"
+                                    />
+                                </div>
                             </DropdownTrigger>
                         </NavbarItem>
 
                         <DropdownMenu aria-label="User menu" variant="flat">
-                            <DropdownItem key="#" className="h-14 gap-2">
+                            <DropdownItem key="#" className="h-14 gap-2" showDivider>
                                 <p className="font-semibold">Đăng nhập với</p>
                                 <p>{authUser.email}</p>
                             </DropdownItem>
@@ -320,17 +295,19 @@ export default function NavbarLayout() {
                                 Đổi theme
                             </DropdownItem>
 
-                            <DropdownItem 
-                                key='dashboard' 
-                                startContent={<LayoutDashboard animate={hoveredItem === 'dashboard'} size={18} />}
-                                showDivider
-                                className="group"
-                                href="#"
-                                onMouseEnter={() => setHoveredItem('dashboard')}
-                                onMouseLeave={() => setHoveredItem(null)}
-                            >
-                                Dashboard
-                            </DropdownItem>
+                            {Number(authUser.role) < 2 ? (
+                                <DropdownItem 
+                                    key='dashboard' 
+                                    startContent={<LayoutDashboard animate={hoveredItem === 'dashboard'} size={18} />}
+                                    showDivider
+                                    className="group"
+                                    href="/dashboard"
+                                    onMouseEnter={() => setHoveredItem('dashboard')}
+                                    onMouseLeave={() => setHoveredItem(null)}
+                                >
+                                    Dashboard
+                                </DropdownItem>
+                            ) : null}
 
                             <DropdownItem 
                                 key='ticket'
@@ -353,7 +330,10 @@ export default function NavbarLayout() {
                                 href="#"
                                 onMouseEnter={() => setHoveredItem('logout')}
                                 onMouseLeave={() => setHoveredItem(null)}
-                                onClick={() => logout()}
+                                onClick={() => {
+                                    logout();
+                                    router.push('/');
+                                }}
                             >
                                 Đăng xuất
                             </DropdownItem>
@@ -361,7 +341,12 @@ export default function NavbarLayout() {
                     </Dropdown>
                 ) : (
                     <NavbarItem>
-                        <FormLayout />
+                        <Button 
+                            variant="ghost"
+                            onClick={() => setOpenDialog('signin')}
+                        >
+                            Đăng nhập
+                        </Button>
                     </NavbarItem>
                 )}
 
@@ -434,41 +419,18 @@ export default function NavbarLayout() {
                     </DropdownMenu>
                 </Dropdown>
 
-                
-                {/* <Dropdown> */}
-                    <NavbarMenuItem>
-                        {/* <DropdownTrigger> */}
-                            <Button
-                                disableRipple
-                                className="group text-lg bg-transparent data-[hover=true]:bg-transparent dark:hover:text-zinc-300 hover:text-zinc-600"
-                                endContent={<ChevronDown size={16} />}
-                                radius="sm"
-                                variant="light"
-                            >
-                                Thể loại
-                            </Button>
-                        {/* </DropdownTrigger> */}
-                    </NavbarMenuItem>
-                    {/* <DropdownMenu 
-                        aria-label="Category menu"
-                        classNames={{
-                            list: "grid grid-cols-2 gap-0 max-h-100"
-                        }}
+            
+                <NavbarMenuItem>
+                    <Button
+                        disableRipple
+                        className="group text-lg bg-transparent data-[hover=true]:bg-transparent dark:hover:text-zinc-300 hover:text-zinc-600"
+                        endContent={<ChevronDown size={16} />}
+                        radius="sm"
+                        variant="light"
                     >
-                        {categorys.map((category, index) => (
-                            <DropdownItem 
-                                key={key[index]}
-                                className="group text-md"
-                                startContent={<ChevronRight size={16} />}
-                                href="#"
-                                onMouseEnter={() => setHoveredItem(key[index])}
-                                onMouseLeave={() => setHoveredItem(null)}
-                            >
-                                {category}
-                            </DropdownItem>
-                        ))}
-                    </DropdownMenu> */}
-                {/* </Dropdown> */}
+                        Thể loại
+                    </Button>
+                </NavbarMenuItem>
 
                 <NavbarMenuItem className="p-2 pl-4">
                     <Link href="#" className="text-lg">
@@ -495,11 +457,11 @@ export default function NavbarLayout() {
                     <DropdownMenu aria-label="Category menu">
                         {cinema.map((cinema, index) => (
                             <DropdownItem 
-                                key={key[index]}
+                                key={index}
                                 className="group text-md"
-                                startContent={<MapPin animate={hoveredItem === key[index]} size={16} />}
+                                startContent={<MapPin animate={hoveredItem === String(index)} size={16} />}
                                 href="#"
-                                onMouseEnter={() => setHoveredItem(key[index])}
+                                onMouseEnter={() => setHoveredItem(String(index))}
                                 onMouseLeave={() => setHoveredItem(null)}
                             >
                                 {cinema}

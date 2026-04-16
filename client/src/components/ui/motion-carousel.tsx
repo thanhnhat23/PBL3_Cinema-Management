@@ -120,7 +120,7 @@ function MotionCarousel(props: PropType) {
                     width={3000}
                     height={900}
                     priority={priority}
-                    className="w-full h-full object-fill rounded-none md:rounded-lg cursor-pointer"
+                    className="w-full h-full object-cover object-center md:object-fill rounded-none md:rounded-lg cursor-pointer"
                   />
                 </motion.div>
               </motion.div>

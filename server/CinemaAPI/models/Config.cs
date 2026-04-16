@@ -18,11 +18,19 @@ namespace CinemaAPI.Models
         public string Credits { get; set; } = null!;
         public string MovieDetails { get; set; } = null!;
         public string Videos { get; set; } = null!;
+        public string MovieReviews { get; set; } = null!;
     }
 
     public class GeminiConfig
     {
         public string ApiKey { get; set; } = null!;
         public string Model { get; set; } = "gemini-2.5-flash";
+    }
+
+    public class CloudinaryConfig
+    {
+        public string CloudName { get; set; } = null!;
+        public string ApiKey { get; set; } = null!;
+        public string ApiSecret { get; set; } = null!;
     }
 }

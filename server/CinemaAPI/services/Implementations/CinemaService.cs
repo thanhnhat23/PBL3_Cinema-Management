@@ -16,15 +16,16 @@ namespace CinemaAPI.Services.Implementations
         }
          public async Task<List<Cinema>> GetAllCinemas() =>
             await _dbContext.Cinemas
-                .Include(c => c.Rooms)
+                .AsNoTracking()
                 .Include(c => c.Location)
+                .OrderBy(c => c.cinema_id)
                 .ToListAsync();
 
         public async Task<Cinema?> GetCinemaById(int cinema_id) =>
             await _dbContext.Cinemas
-                .Include(c => c.Rooms)
+                .AsNoTracking()
                 .Include(c => c.Location)
-                .FirstOrDefaultAsync( c => c.cinema_id == cinema_id);
+                .FirstOrDefaultAsync(c => c.cinema_id == cinema_id);
 
         public async Task AddCinema(CinemaCreateRequest request)
         {

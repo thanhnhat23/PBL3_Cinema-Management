@@ -19,6 +19,8 @@ export default function Carousel() {
     }));
 
     return (
-        <MotionCarousel slides={SLIDES} options={OPTIONS} />
+        <div>
+            <MotionCarousel slides={SLIDES} options={OPTIONS} />
+        </div>
     )
 }

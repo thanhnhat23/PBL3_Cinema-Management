@@ -35,7 +35,10 @@ namespace CinemaAPI.Models
         public ShowTimeSeatStatus status { get; set; }
 
         public string? hold_token { get; set; }
+
+        [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
         public DateTime? hold_expires_at { get; set; }
+        
         public string? held_by_user { get; set; }
         public DateOnly? deleted_at { get; set; }
     }

@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json.Serialization;
 
 namespace CinemaAPI.Models
 {
@@ -22,6 +23,7 @@ namespace CinemaAPI.Models
         public List<ChatMessage> messages { get; set; } = new();
 
         [BsonElement("createdAt")]
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime createdAt { get; set; } = DateTime.UtcNow;
     }
 
@@ -29,6 +31,8 @@ namespace CinemaAPI.Models
     {
         public string role { get; set; } = null!; // "user" or "assistant"
         public string message { get; set; } = null!;
+
+        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime timestamp { get; set; } = DateTime.UtcNow;
         public DateOnly? deleted_at { get; set; }
     }

@@ -2,6 +2,7 @@ using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
 using CinemaAPI.data;
 using CinemaAPI.Services.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 
 namespace CinemaAPI.Services.Implementations
@@ -11,12 +12,15 @@ namespace CinemaAPI.Services.Implementations
         private readonly MongoDbContext _mongoDbContext;
         private readonly IService _Service;
         private readonly IGeminiService _geminiService;
+        private readonly IMemoryCache _cache;
+        private const int MaxLlmContextLength = 4000;
 
-        public ChatService(MongoDbContext mongoDbContext, IService Service, IGeminiService geminiService)
+        public ChatService(MongoDbContext mongoDbContext, IService Service, IGeminiService geminiService, IMemoryCache cache)
         {
             _mongoDbContext = mongoDbContext;
             _Service = Service;
             _geminiService = geminiService;
+            _cache = cache;
         }
 
         // Logic ChatBot: Input -> Check Info User -> Search Database -> Analytis Result -> Answer User
@@ -42,25 +46,27 @@ namespace CinemaAPI.Services.Implementations
             // Only load data relevant to query
             if (msgLower.Contains("phim") || msgLower.Contains("movie"))
             {
-                db += await _Service.GetMoviesAsync(searchKeyword);
+                db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
                 if (string.IsNullOrWhiteSpace(db) && !string.IsNullOrEmpty(searchKeyword))
-                    db += await _Service.GetMoviesAsync(null);
+                    db += await GetCachedDataAsync("movies", null, () => _Service.GetMoviesAsync(null));
             }
             else if (msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
-                db += await _Service.GetRoomsAsync(searchKeyword);
+                db += await GetCachedDataAsync("rooms", searchKeyword, () => _Service.GetRoomsAsync(searchKeyword));
             else if (msgLower.Contains("ăn")
                     || msgLower.Contains("đồ ăn")
                     || msgLower.Contains("snack")
                     || msgLower.Contains("bỏng")
                     || msgLower.Contains("nước uống")
                     || msgLower.Contains("drink"))
-                db += await _Service.GetSnacksAsync(searchKeyword);
+                db += await GetCachedDataAsync("snacks", searchKeyword, () => _Service.GetSnacksAsync(searchKeyword));
             else if (msgLower.Contains("thể loại") || msgLower.Contains("genre"))
-                db += await _Service.GetGenresAsync(searchKeyword);
+                db += await GetCachedDataAsync("genres", searchKeyword, () => _Service.GetGenresAsync(searchKeyword));
             else if (msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
-                db += await _Service.GetActorsAsync(searchKeyword);
+                db += await GetCachedDataAsync("actors", searchKeyword, () => _Service.GetActorsAsync(searchKeyword));
             else
-                db += await _Service.GetMoviesAsync(searchKeyword);
+                db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
+
+            db = TrimContext(db, MaxLlmContextLength);
 
             // NODE 4: GENERATE ANSWER
             string reply = await _geminiService.GenerateResponseAsync(message, db);
@@ -91,6 +97,26 @@ namespace CinemaAPI.Services.Implementations
                 ExtractedInfo = new Dictionary<string, string>(),
                 isInfoComplete = true
             };
+        }
+
+        private async Task<string> GetCachedDataAsync(string category, string? keyword, Func<Task<string>> factory)
+        {
+            var cacheKey = $"chat:{category}:{keyword?.Trim().ToLowerInvariant() ?? "all"}";
+            if (_cache.TryGetValue(cacheKey, out string? cached) && !string.IsNullOrWhiteSpace(cached))
+            {
+                return cached;
+            }
+
+            var data = await factory();
+            _cache.Set(cacheKey, data, TimeSpan.FromMinutes(3));
+            return data;
+        }
+
+        private static string TrimContext(string? content, int maxLength)
+        {
+            if (string.IsNullOrWhiteSpace(content)) return string.Empty;
+            if (content.Length <= maxLength) return content;
+            return content[..maxLength] + "...";
         }
 
         // Helper method to extract search keywords from message

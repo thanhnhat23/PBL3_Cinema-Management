@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
+    [Index(nameof(genre_id))]
     public class MovieGenre
     {
         public int movie_id { get; set; }

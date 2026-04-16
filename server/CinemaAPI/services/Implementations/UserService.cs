@@ -26,11 +26,19 @@ namespace CinemaAPI.Services.Implementations
         // Ban or unban user
         public async Task BannedUser(Guid user_id, bool isBanned)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == user_id);
-            if (user != null)
+            try
             {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == user_id);
+                if (user == null)
+                    throw new KeyNotFoundException("User not found");
+
                 user.isBanned = isBanned;
                 await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error banning/unbanning user: {ex.Message}");
+                throw new ApplicationException("An error occurred while updating the user's ban status.", ex);
             }
         }
     }

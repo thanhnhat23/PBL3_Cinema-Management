@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 
 namespace CinemaAPI.Models
 {
@@ -41,6 +40,8 @@ namespace CinemaAPI.Models
 
         [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
         public DateTime? release_date { get; set; }
+        
+        [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
         public DateTime? end_date { get; set; }
 
         [MaxLength(500)]
