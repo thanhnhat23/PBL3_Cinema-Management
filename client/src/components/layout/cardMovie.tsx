@@ -45,6 +45,11 @@ export const CardMovie = ({
         <Link
             href={`/movies/${movie.movie_id}`}
             onClick={(event) => {
+                if (isTrailerOpen === index) {
+                    event.preventDefault();
+                    return;
+                }
+
                 if ((event.target as HTMLElement).closest("[data-card-action]")) {
                     event.preventDefault();
                 }

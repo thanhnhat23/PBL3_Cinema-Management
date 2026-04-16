@@ -16,10 +16,23 @@ namespace CinemaAPI.Services.Implementations
         }
 
         public async Task<List<Booking>> GetAllBookings() =>
-            await _dbContext.Bookings.ToListAsync();
+            await _dbContext.Bookings
+                .AsNoTracking()
+                .Include(b => b.User)
+                .Include(b => b.ShowTime)
+                    .ThenInclude(st => st.Room)
+                        .ThenInclude(r => r.Cinema)
+                .OrderByDescending(b => b.createAt)
+                .ToListAsync();
 
         public async Task<Booking?> GetBookingById(int booking_id) =>
-            await _dbContext.Bookings.FirstOrDefaultAsync(b => b.booking_id == booking_id);
+            await _dbContext.Bookings
+                .AsNoTracking()
+                .Include(b => b.User)
+                .Include(b => b.ShowTime)
+                    .ThenInclude(st => st.Room)
+                        .ThenInclude(r => r.Cinema)
+                .FirstOrDefaultAsync(b => b.booking_id == booking_id);
 
         public async Task AddBooking(Booking booking)
         {

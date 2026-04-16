@@ -10,6 +10,8 @@ using System.Text.Json.Serialization;
 
 public class TmdbService : ITmdbService
 {
+    private const int MaxSyncPages = 10;
+
     private readonly HttpClient _httpClient;
     // SQL
     private readonly AppDbContext _dbContext;
@@ -96,7 +98,7 @@ public class TmdbService : ITmdbService
         else if (endpointType == "popular") endpoint = _config.ConfigEndpoints.Popular;
         else throw new ArgumentException("Invalid endpointType specified.");
 
-        for (int page = 1; page <= 10; page++)
+        for (int page = 1; page <= MaxSyncPages; page++)
         {
             var options = new JsonSerializerOptions
             {
@@ -110,28 +112,30 @@ public class TmdbService : ITmdbService
             {
                 try
                 {
+                    var incomingTmdbIds = response.Results
+                        .Select(item => item.Id.ToString())
+                        .ToHashSet();
+
+                    var existingTmdbIds = await _dbContext.Movies
+                        .AsNoTracking()
+                        .Where(movie => movie.tmdb_id != null && incomingTmdbIds.Contains(movie.tmdb_id))
+                        .Select(movie => movie.tmdb_id!)
+                        .ToHashSetAsync();
+
                     foreach (var item in response.Results)
                     {
-                        if (string.IsNullOrWhiteSpace(item.title)
-                            || string.IsNullOrWhiteSpace(item.overview)
-                            || string.IsNullOrWhiteSpace(item.backdrop_path)
-                            || string.IsNullOrWhiteSpace(item.poster_path)
-                            || item.title.Length < 2
-                            || item.overview.Length < 10
-                            || !item.release_date.HasValue
-                            || item.release_date.Value.Year < 2025
-                        ) continue;
+                        if (!IsValidMovieItem(item))
+                        {
+                            continue;
+                        }
 
-                        // Check if movie already exists
-                        var existingMovie = await _dbContext.Movies.FirstOrDefaultAsync(m => m.tmdb_id == item.Id.ToString());
-
-                        if (existingMovie == null)
+                        var tmdbId = item.Id.ToString();
+                        if (!existingTmdbIds.Contains(tmdbId))
                         {
                             await ProcessNewMovie(item);
+                            existingTmdbIds.Add(tmdbId);
                         }
                     }
-
-                    await _dbContext.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -151,12 +155,16 @@ public class TmdbService : ITmdbService
         // Fetch trailer
         var trailer = _config.ConfigEndpoints.Videos.Replace("{movie_id}", item.Id.ToString());
         var url = $"{trailer}?api_key={api_key}&language=vi-VN&include_video_language=vi,en";
-        var trailerResponse = await _httpClient.GetFromJsonAsync<MovieDetailResponse>(url);
+        var trailerTask = _httpClient.GetFromJsonAsync<MovieDetailResponse>(url);
 
         // Fetch runtime
         var runtime = _config.ConfigEndpoints.MovieDetails.Replace("{movie_id}", item.Id.ToString());
         var runtimeUrl = $"{runtime}?api_key={api_key}";
-        var runtimeResponse = await _httpClient.GetFromJsonAsync<MovieDetailResponse>(runtimeUrl);
+        var runtimeTask = _httpClient.GetFromJsonAsync<MovieDetailResponse>(runtimeUrl);
+
+        await Task.WhenAll(trailerTask, runtimeTask);
+        var trailerResponse = trailerTask.Result;
+        var runtimeResponse = runtimeTask.Result;
 
 
         var newMovie = new Movie
@@ -282,21 +290,37 @@ public class TmdbService : ITmdbService
 
     public async Task SyncGenresAsync(int movie_id, List<int> genreIds)
     {
-
-        foreach (var genre in genreIds)
+        if (genreIds.Count == 0)
         {
-            var existingGenre = await _dbContext.Genres.AnyAsync(g => g.genre_id == genre);
-
-            if (existingGenre)
-            {
-                _dbContext.MovieGenres.Add(new MovieGenre
-                {
-                    movie_id = movie_id,
-                    genre_id = genre
-                });
-            }
+            return;
         }
-        await _dbContext.SaveChangesAsync();
+
+        var existingGenreIds = await _dbContext.Genres
+            .AsNoTracking()
+            .Where(genre => genreIds.Contains(genre.genre_id))
+            .Select(genre => genre.genre_id)
+            .ToHashSetAsync();
+
+        var existingMovieGenreIds = await _dbContext.MovieGenres
+            .AsNoTracking()
+            .Where(movieGenre => movieGenre.movie_id == movie_id)
+            .Select(movieGenre => movieGenre.genre_id)
+            .ToHashSetAsync();
+
+        var newLinks = genreIds
+            .Where(genreId => existingGenreIds.Contains(genreId) && !existingMovieGenreIds.Contains(genreId))
+            .Select(genreId => new MovieGenre
+            {
+                movie_id = movie_id,
+                genre_id = genreId
+            })
+            .ToList();
+
+        if (newLinks.Count > 0)
+        {
+            _dbContext.MovieGenres.AddRange(newLinks);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
     public async Task SyncActorsAsync(int movieId, string tmdbMovieId)
@@ -311,19 +335,35 @@ public class TmdbService : ITmdbService
 
         if (response?.Cast != null)
         {
-            foreach (var cast in response.Cast.OrderBy(c => c.order).Take(15))
+            var topCast = response.Cast.OrderBy(c => c.order).Take(15).Where(c => !string.IsNullOrWhiteSpace(c.name)).ToList();
+            if (topCast.Count == 0)
             {
-                var actor = await _dbContext.Actors.FirstOrDefaultAsync(a => a.actor_id == cast.Id);
-                var existingMovieActor = await _dbContext.MovieActors.AnyAsync(ma => ma.movie_id == movieId && ma.actor_id == cast.Id);
+                return;
+            }
 
-                if (string.IsNullOrWhiteSpace(cast.name)) continue;
+            var actorIds = topCast.Select(cast => cast.Id).ToHashSet();
+            var existingActorIds = await _dbContext.Actors
+                .AsNoTracking()
+                .Where(actor => actorIds.Contains(actor.actor_id))
+                .Select(actor => actor.actor_id)
+                .ToHashSetAsync();
 
-                if (actor == null)
+            var existingMovieActorIds = await _dbContext.MovieActors
+                .AsNoTracking()
+                .Where(movieActor => movieActor.movie_id == movieId)
+                .Select(movieActor => movieActor.actor_id)
+                .ToHashSetAsync();
+
+            var hasChanges = false;
+
+            foreach (var cast in topCast)
+            {
+                if (!existingActorIds.Contains(cast.Id))
                 {
                     var personUrl = $"person/{cast.Id}?api_key={api_key}&language=vi-VN";
                     var detail = await _httpClient.GetFromJsonAsync<ActorDetailResponse>(personUrl);
 
-                    actor = new Actor
+                    var actor = new Actor
                     {
                         actor_id = cast.Id,
                         name = cast.name,
@@ -335,11 +375,12 @@ public class TmdbService : ITmdbService
                     };
 
                     _dbContext.Actors.Add(actor);
-                    await _dbContext.SaveChangesAsync();
+                    existingActorIds.Add(cast.Id);
+                    hasChanges = true;
                 }
 
                 // Save to MovieActor junction table
-                if (!existingMovieActor)
+                if (!existingMovieActorIds.Contains(cast.Id))
                 {
                     _dbContext.MovieActors.Add(new MovieActor
                     {
@@ -349,10 +390,28 @@ public class TmdbService : ITmdbService
                         order = cast.order
                     });
 
-                    await _dbContext.SaveChangesAsync();
+                    existingMovieActorIds.Add(cast.Id);
+                    hasChanges = true;
                 }
             }
+
+            if (hasChanges)
+            {
+                await _dbContext.SaveChangesAsync();
+            }
         }
+    }
+
+    private static bool IsValidMovieItem(MovieItem item)
+    {
+        return !string.IsNullOrWhiteSpace(item.title)
+               && !string.IsNullOrWhiteSpace(item.overview)
+               && !string.IsNullOrWhiteSpace(item.backdrop_path)
+               && !string.IsNullOrWhiteSpace(item.poster_path)
+               && item.title.Length >= 2
+               && item.overview.Length >= 10
+               && item.release_date.HasValue
+               && item.release_date.Value.Year >= 2025;
     }
 
     public async Task UpdateMovieStatusesAsync()

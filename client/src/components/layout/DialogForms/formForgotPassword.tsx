@@ -48,17 +48,22 @@ export const FormForgotPassword = ({
     return (
         <>
             <DialogHeader>
-                <div className="flex flex-col items-center justify-center w-full mb-4">
-                    <Image 
-                        src="/logo.png" 
-                        alt="Profile image" 
-                        className="rounded-md h-36 object-cover mb-2"
-                        width={150}
-                        height={150}
-                    />
-                    <DialogTitle>
+                <div className="flex flex-col items-center justify-center w-full">
+                    <DialogTitle className="text-center text-2xl font-bold mb-2">
                         Quên mật khẩu
                     </DialogTitle>
+
+                    <div className="relative inline-flex items-center justify-center">
+                        <span className="pointer-events-none absolute h-26 w-26 rounded-full bg-purple-500/55 blur-2xl animate-pulse" />
+                        <span className="pointer-events-none absolute h-32 w-32 rounded-full bg-fuchsia-400/50 blur-3xl" />
+                        <Image 
+                            src="/logo.png" 
+                            alt="Profile image" 
+                            className="rounded-md h-36 object-cover relative z-10"
+                            width={150}
+                            height={150}
+                        />
+                    </div>
                 </div>
             </DialogHeader>
 

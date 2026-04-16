@@ -22,8 +22,9 @@ namespace CinemaAPI.Services.Implementations
                     .ThenInclude(mg => mg.Genre)
                 .Include(m => m.MovieActors)
                     .ThenInclude(ma => ma.Actor)
+                .OrderByDescending(m => m.release_date)
                 .ToListAsync();
-                
+
         public async Task<Movie?> GetMovieById(int movie_id) =>
             await _dbContext.Movies
             .Include(m => m.MovieGenres)
@@ -33,12 +34,33 @@ namespace CinemaAPI.Services.Implementations
             .Include(m => m.ShowTimes)
             .FirstOrDefaultAsync(m => m.movie_id == movie_id);
 
+        public async Task<List<Movie>> GetMoviesByStatusAsync(int status, int limit) =>
+            await _dbContext.Movies
+                .Where(m => m.status == (MovieStatus)status)
+                .OrderByDescending(m => m.release_date)
+                .Take(limit)
+                .ToListAsync();
+
+        public async Task<List<Movie>> GetPopularMoviesAsync(int limit) =>
+            await _dbContext.Movies
+                .AsNoTracking()
+                .Select(movie => new
+                {
+                    Movie = movie,
+                    ShowTimeCount = _dbContext.ShowTimes.Count(showTime => showTime.movie_id == movie.movie_id)
+                })
+                .OrderByDescending(item => item.ShowTimeCount)
+                .ThenByDescending(item => item.Movie.release_date)
+                .Take(limit)
+                .Select(item => item.Movie)
+                .ToListAsync();
+
         public async Task AddMovie(Movie movie)
         {
             _dbContext.Movies.Add(movie);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         public async Task UpdateMovie(int movie_id, MovieUpdateRequest request)
         {
             var movie = await _dbContext.Movies.FindAsync(movie_id);

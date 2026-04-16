@@ -266,7 +266,7 @@ export default function NavbarLayout() {
                         </NavbarItem>
 
                         <DropdownMenu aria-label="User menu" variant="flat">
-                            <DropdownItem key="#" className="h-14 gap-2">
+                            <DropdownItem key="#" className="h-14 gap-2" showDivider>
                                 <p className="font-semibold">Đăng nhập với</p>
                                 <p>{authUser.email}</p>
                             </DropdownItem>

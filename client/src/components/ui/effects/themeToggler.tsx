@@ -8,23 +8,29 @@ import { cn } from "@/lib/utils"
 
 interface ThemeTogglerProps extends React.ComponentPropsWithoutRef<"button"> {
   duration?: number
+  renderAs?: "auto" | "button" | "span"
 }
 
 export const ThemeToggler = forwardRef<HTMLButtonElement, ThemeTogglerProps>(({
   className,
   duration = 400,
+  renderAs = "auto",
   ...props
 }, ref) => {
   const [isDark, setIsDark] = useState(false)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const triggerRef = useRef<HTMLElement>(null)
+
+  const shouldRenderSpan =
+    renderAs === "span" ||
+    (renderAs === "auto" && Boolean(className?.split(/\s+/).includes("hidden")))
 
   useEffect(() => {
     // Merge external ref with internal ref
     if (ref) {
       if (typeof ref === 'function') {
-        ref(buttonRef.current)
+        ref(triggerRef.current as HTMLButtonElement | null)
       } else {
-        ref.current = buttonRef.current
+        ref.current = triggerRef.current as HTMLButtonElement | null
       }
     }
   }, [ref])
@@ -57,7 +63,7 @@ export const ThemeToggler = forwardRef<HTMLButtonElement, ThemeTogglerProps>(({
   }, [])
 
   const toggleTheme = useCallback(async () => {
-    if (!buttonRef.current) return
+    if (!triggerRef.current) return
 
     await document.startViewTransition(() => {
       flushSync(() => {
@@ -69,7 +75,7 @@ export const ThemeToggler = forwardRef<HTMLButtonElement, ThemeTogglerProps>(({
     }).ready
 
     const { top, left, width, height } =
-      buttonRef.current.getBoundingClientRect()
+      triggerRef.current.getBoundingClientRect()
     const x = window.innerWidth - (left + width / 2)
     const y = top + height / 2
     const maxRadius = Math.hypot(
@@ -92,9 +98,24 @@ export const ThemeToggler = forwardRef<HTMLButtonElement, ThemeTogglerProps>(({
     )
   }, [isDark, duration])
 
+  if (shouldRenderSpan) {
+    return (
+      <span
+        ref={triggerRef as React.Ref<HTMLSpanElement>}
+        onClick={toggleTheme}
+        className={cn(className)}
+        {...(props as React.HTMLAttributes<HTMLSpanElement>)}
+      >
+        {isDark ? <Sun /> : <Moon />}
+        <span className="sr-only">Toggle theme</span>
+      </span>
+    )
+  }
+
   return (
     <button
-      ref={buttonRef}
+      ref={triggerRef as React.Ref<HTMLButtonElement>}
+      type="button"
       onClick={toggleTheme}
       className={cn(className)}
       {...props}

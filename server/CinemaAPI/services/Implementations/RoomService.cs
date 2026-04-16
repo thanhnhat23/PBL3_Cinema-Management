@@ -21,7 +21,7 @@ namespace CinemaAPI.Services.Implementations
                 .Include(r => r.Cinema)
                 .ThenInclude(c => c.Location)
                 .ToListAsync();
-                
+
         // Get room by ID
         public async Task<Room?> GetRoomById(int room_id) =>
             await _dbContext.Rooms
@@ -37,7 +37,8 @@ namespace CinemaAPI.Services.Implementations
                 _dbContext.Rooms.Add(room);
                 await _dbContext.SaveChangesAsync();
 
-                var seats = new List<Seat>();
+                var totalSeats = room.row * room.column;
+                var seats = new List<Seat>(totalSeats);
                 for (int row = 1; row <= room.row; row++)
                 {
                     char rowLabel = (char)('A' + row - 1);
@@ -56,8 +57,18 @@ namespace CinemaAPI.Services.Implementations
                     }
                 }
 
-                _dbContext.Seats.AddRange(seats);
-                await _dbContext.SaveChangesAsync();
+                var previousAutoDetectChanges = _dbContext.ChangeTracker.AutoDetectChangesEnabled;
+                _dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
+                try
+                {
+                    await _dbContext.Seats.AddRangeAsync(seats);
+                    await _dbContext.SaveChangesAsync();
+                }
+                finally
+                {
+                    _dbContext.ChangeTracker.AutoDetectChangesEnabled = previousAutoDetectChanges;
+                }
+
                 await transaction.CommitAsync();
 
             }
@@ -88,7 +99,8 @@ namespace CinemaAPI.Services.Implementations
                     room.price = request.price.Value;
 
                 await _dbContext.SaveChangesAsync();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"UpdateRoom Error: {ex.Message}");
                 throw new Exception($"An error occurred while updating the room: {ex.Message}");

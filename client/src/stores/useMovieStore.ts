@@ -34,10 +34,15 @@ export interface ActorWithMovie {
 
 export const useMovieStore = create<{
     movies: Movie[]; // All movies
+    moviesByStatus: Movie[];
+    moviesByStatusMap: Partial<Record<Movie['status'], Movie[]>>;
+    popularMovies: Movie[];
     actorWithMovies: ActorWithMovie[];
     selectedMovie: Movie | null; // Currently selected movie
 
     isFetchingMovies: boolean;
+    isFetchingMoviesByStatus: boolean;
+    isFetchingPopularMovies: boolean;
     isFetchingMovieDetails: boolean;
     isCreatingMovie: boolean;
     isUpdatingMovie: boolean;
@@ -45,6 +50,8 @@ export const useMovieStore = create<{
     isFetchingActorWithMovies: boolean;
 
     fetchAllMovies: () => Promise<void>;
+    fetchMoviesByStatus: (status: Movie['status'], limit?: number) => Promise<void>;
+    fetchPopularMovies: (limit?: number) => Promise<void>;
     fetchMovieById: (movieId: number) => Promise<void>;
     createMovie: (movieData: Partial<Movie>) => Promise<void>;
     updateMovie: (movieId: number, movieData: Partial<Movie>) => Promise<void>;
@@ -55,9 +62,14 @@ export const useMovieStore = create<{
     getStatusLabel: (status: Movie['status']) => string;
 }>((set) => ({
     movies: [],
+    moviesByStatus: [],
+    moviesByStatusMap: {},
+    popularMovies: [],
     actorWithMovies: [],
     selectedMovie: null,
     isFetchingMovies: false,
+    isFetchingMoviesByStatus: false,
+    isFetchingPopularMovies: false,
     isFetchingMovieDetails: false,
     isCreatingMovie: false,
     isUpdatingMovie: false,
@@ -81,6 +93,48 @@ export const useMovieStore = create<{
             console.error('Error fetching all movies:', error);
         } finally {
             set({ isFetchingMovies: false });
+        }
+    },
+
+    fetchMoviesByStatus: async (status: Movie['status'], limit: number = 8) => {
+        try {
+            set({ isFetchingMoviesByStatus: true });
+
+            const response = await _axios.get('/v1/movie/get-by-status', {
+                params: { status, limit },
+            });
+
+            if (response.data) {
+                set((state) => ({
+                    moviesByStatus: response.data,
+                    moviesByStatusMap: {
+                        ...state.moviesByStatusMap,
+                        [status]: response.data,
+                    },
+                }));
+            }
+        } catch (error) {
+            console.error(`Error fetching movies by status ${status}:`, error);
+        } finally {
+            set({ isFetchingMoviesByStatus: false });
+        }
+    },
+
+    fetchPopularMovies: async (limit: number = 8) => {
+        try {
+            set({ isFetchingPopularMovies: true });
+
+            const response = await _axios.get('/v1/movie/get-popular', {
+                params: { limit },
+            });
+
+            if (response.data) {
+                set({ popularMovies: response.data });
+            }
+        } catch (error) {
+            console.error('Error fetching popular movies:', error);
+        } finally {
+            set({ isFetchingPopularMovies: false });
         }
     },
 

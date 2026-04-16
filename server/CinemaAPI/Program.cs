@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddMemoryCache();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -56,11 +57,12 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<ICinemaService, CinemaService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IComboDetail, ComboDetailService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
