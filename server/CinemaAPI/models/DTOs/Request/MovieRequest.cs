@@ -23,6 +23,8 @@ namespace CinemaAPI.Models.DTOs
         public string? overview { get; set; }
         public DateTime? release_date { get; set; }
         public DateTime? end_date { get; set; }
+        public bool? adult { get; set; }
+        public int? runtime { get; set; }
         public MovieStatus? status { get; set; }
     }
 }

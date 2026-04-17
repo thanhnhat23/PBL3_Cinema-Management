@@ -31,6 +31,5 @@ namespace CinemaAPI.Models
 
         [Required, MaxLength(10)]
         public string seat_code { get; set; } = null!;
-        public DateOnly? deleted_at { get; set; }
     }
 }

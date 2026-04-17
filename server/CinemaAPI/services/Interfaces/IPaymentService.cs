@@ -9,6 +9,5 @@ namespace CinemaAPI.Services.Interfaces
         Task<Payment?> GetPaymentById(int id);
         Task AddPayment(Payment payment);
         Task UpdatePayment(int id, PaymentUpdateRequest request);
-        Task DeletePayment(int id);
     }
 }

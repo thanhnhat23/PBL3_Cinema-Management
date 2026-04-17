@@ -11,8 +11,7 @@ namespace CinemaAPI.Services.Interfaces
         Task<List<Movie>> GetPopularMoviesAsync(int limit);
         Task<Movie?> GetMovieById(int movie_id);
         Task AddMovie(Movie movie);
-        Task UpdateMovie(int movie_id, MovieUpdateRequest request);
-        Task DeleteMovie(int movie_id);
+        Task<Movie> UpdateMovie(int movie_id, MovieUpdateRequest request);
         Task<List<ActorWithMovie>> GetActorWithMovieAsync(int id);
     }
 }

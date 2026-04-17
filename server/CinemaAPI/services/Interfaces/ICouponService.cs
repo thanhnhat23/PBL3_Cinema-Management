@@ -10,6 +10,5 @@ namespace CinemaAPI.Services.Interfaces
         Task<string> GenerateUniqueCouponCodeAsync();
         Task AddCoupon(Coupon coupon);
         Task UpdateCoupon(int coupon_id, CouponUpdateRequest request);
-        Task DeleteCoupon(int coupon_id);
     }
 }

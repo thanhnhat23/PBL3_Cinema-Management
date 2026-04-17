@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Implementations;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace CinemaAPI.Controllers
     public class movieController : ControllerBase
     {
         private readonly IMovieService _movieService;
+        private readonly MovieService _movieDeleteService;
 
-        public movieController(IMovieService movieService)
+        public movieController(IMovieService movieService, MovieService movieDeleteService)
         {
             _movieService = movieService;
+            _movieDeleteService = movieDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -94,8 +97,8 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _movieService.UpdateMovie(movieId, request);
-                return Ok("Movie updated successfully");
+                var movie = await _movieService.UpdateMovie(movieId, request);
+                return Ok(new { data = movie, message = "Movie updated successfully" });
             }
             catch (Exception ex)
             {
@@ -108,12 +111,26 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _movieService.DeleteMovie(movieId);
+                await _movieDeleteService.SoftDeleteMovie(movieId);
                 return Ok("Movie deleted successfully");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in movieController.DeleteMovie: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("hard-delete/{movieId}")]
+        public async Task<IActionResult> HardDeleteMovie(int movieId)
+        {
+            try
+            {
+                await _movieDeleteService.HardDeleteMovie(movieId);
+                return Ok("Movie hard deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in movieController.HardDeleteMovie: {ex.Message}");
             }
         }
 

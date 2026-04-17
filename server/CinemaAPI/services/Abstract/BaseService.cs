@@ -2,6 +2,7 @@ using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace CinemaAPI.Services.Abstract
@@ -15,36 +16,58 @@ namespace CinemaAPI.Services.Abstract
 			_dbContext = dbContext;
 		}
 
-		public virtual async Task<List<T>> GetAllAsync()
+		public virtual async Task SoftDeleteAsync(T entity, Guid? deletedBy = null)
 		{
-			return await _dbContext.Set<T>().ToListAsync();
-		}
+			var deletedAtProperty = typeof(T).GetProperty("deleted_at", BindingFlags.Public | BindingFlags.Instance);
+			var deletedByProperty = typeof(T).GetProperty("deleted_by", BindingFlags.Public | BindingFlags.Instance);
+			
+			if (deletedAtProperty == null || !deletedAtProperty.CanWrite)
+			{
+				throw new InvalidOperationException($"Type {typeof(T).Name} does not support soft delete.");
+			}
 
-		public virtual async Task<T?> GetByIdAsync(object id)
-		{
-			return await _dbContext.Set<T>().FindAsync(id);
-		}
+			if (deletedAtProperty.PropertyType == typeof(DateTime?))
+			{
+				deletedAtProperty.SetValue(entity, DateTime.UtcNow);
+			}
+			else if (deletedAtProperty.PropertyType == typeof(DateTime))
+			{
+				deletedAtProperty.SetValue(entity, DateTime.UtcNow);
+			}
+			else
+			{
+				throw new InvalidOperationException($"Type {typeof(T).Name} uses unsupported deleted_at type.");
+			}
 
-		public virtual async Task AddAsync(T entity)
-		{
-			await _dbContext.Set<T>().AddAsync(entity);
-			await _dbContext.SaveChangesAsync();
-		}
+			if (deletedByProperty != null && deletedByProperty.CanWrite)
+			{
+				if (deletedByProperty.PropertyType == typeof(Guid?))
+				{
+					deletedByProperty.SetValue(entity, deletedBy);
+				}
+				else if (deletedByProperty.PropertyType == typeof(Guid))
+				{
+					if (!deletedBy.HasValue)
+					{
+						throw new InvalidOperationException($"Type {typeof(T).Name} requires deleted_by but no value was provided.");
+					}
 
-		public virtual async Task UpdateAsync(T entity)
-		{
+					deletedByProperty.SetValue(entity, deletedBy.Value);
+				}
+				else
+				{
+					throw new InvalidOperationException($"Type {typeof(T).Name} uses unsupported deleted_by type.");
+				}
+			}
+
 			_dbContext.Set<T>().Update(entity);
 			await _dbContext.SaveChangesAsync();
 		}
 
-		public virtual async Task DeleteAsync(object id)
+		public virtual async Task HardDeleteAsync(T entity)
 		{
-			var entity = await GetByIdAsync(id);
-			if (entity != null)
-			{
-				_dbContext.Set<T>().Remove(entity);
-				await _dbContext.SaveChangesAsync();
-			}
+			_dbContext.Set<T>().Remove(entity);
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }

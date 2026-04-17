@@ -207,15 +207,17 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
                                     key={index} 
                                     className='w-full flex items-center justify-start gap-4 p-4 rounded-md shadow-sm bg-neutral-100 dark:bg-neutral-800 border-1 border-zinc-200 dark:border-zinc-700'
                                 >
-                                    <AvatarElement 
-                                        user={user}
-                                        width="w-12" 
-                                        height="h-12" 
-                                        left="left-1/2" 
-                                        translatex="-translate-x-1/2" 
-                                        widthDeco="w-15"
-                                    />
-                                    
+                                    <Link href={`/profile/${user.user_id}`}>
+                                        <AvatarElement 
+                                            user={user}
+                                            width="w-12" 
+                                            height="h-12" 
+                                            left="left-1/2" 
+                                            translatex="-translate-x-1/2" 
+                                            widthDeco="w-15"
+                                        />
+                                    </Link>
+
                                     <div className='flex items-center justify-center gap-2'>
                                         <p className='font-semibold'>{user.username}</p>
                                         <span className={`${isAdmin ? 'bg-red-500' : 'bg-green-500'} text-white text-xs font-medium px-2 py-0.5 rounded`}>

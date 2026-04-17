@@ -1,41 +1,43 @@
 using CinemaAPI.data;
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Abstract;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services.Implementations
 {
-    public class RoomService : IRoomService
+    public class RoomService : BaseService<Room>, IRoomService
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _appDbContext;
 
         public RoomService(AppDbContext dbContext)
+            : base(dbContext)
         {
-            _dbContext = dbContext;
+            _appDbContext = dbContext;
         }
 
         // Get all rooms
         public async Task<List<Room>> GetAllRooms() =>
-            await _dbContext.Rooms
+            await _appDbContext.Rooms
                 .Include(r => r.Cinema)
                 .ThenInclude(c => c.Location)
                 .ToListAsync();
 
         // Get room by ID
         public async Task<Room?> GetRoomById(int room_id) =>
-            await _dbContext.Rooms
+            await _appDbContext.Rooms
                 .Include(r => r.Cinema)
                 .ThenInclude(c => c.Location)
                 .FirstOrDefaultAsync(r => r.room_id == room_id);
 
         public async Task AddRoom(Room room)
         {
-            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            using var transaction = await _appDbContext.Database.BeginTransactionAsync();
             try
             {
-                _dbContext.Rooms.Add(room);
-                await _dbContext.SaveChangesAsync();
+                _appDbContext.Rooms.Add(room);
+                await _appDbContext.SaveChangesAsync();
 
                 var totalSeats = room.row * room.column;
                 var seats = new List<Seat>(totalSeats);
@@ -57,16 +59,16 @@ namespace CinemaAPI.Services.Implementations
                     }
                 }
 
-                var previousAutoDetectChanges = _dbContext.ChangeTracker.AutoDetectChangesEnabled;
-                _dbContext.ChangeTracker.AutoDetectChangesEnabled = false;
+                var previousAutoDetectChanges = _appDbContext.ChangeTracker.AutoDetectChangesEnabled;
+                _appDbContext.ChangeTracker.AutoDetectChangesEnabled = false;
                 try
                 {
-                    await _dbContext.Seats.AddRangeAsync(seats);
-                    await _dbContext.SaveChangesAsync();
+                    await _appDbContext.Seats.AddRangeAsync(seats);
+                    await _appDbContext.SaveChangesAsync();
                 }
                 finally
                 {
-                    _dbContext.ChangeTracker.AutoDetectChangesEnabled = previousAutoDetectChanges;
+                    _appDbContext.ChangeTracker.AutoDetectChangesEnabled = previousAutoDetectChanges;
                 }
 
                 await transaction.CommitAsync();
@@ -82,7 +84,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task UpdateRoom(int room_id, RoomUpdateRequest request)
         {
-            var room = await _dbContext.Rooms.FindAsync(room_id);
+            var room = await _appDbContext.Rooms.FindAsync(room_id);
 
             if (room == null)
                 throw new Exception("Room not found");
@@ -98,7 +100,7 @@ namespace CinemaAPI.Services.Implementations
                 if (request.price.HasValue)
                     room.price = request.price.Value;
 
-                await _dbContext.SaveChangesAsync();
+                await _appDbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -107,21 +109,44 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task DeleteRoom(int room_id, RoomDeleteRequest request)
+        public async Task SoftDeleteRoom(int room_id)
         {
             try
             {
-                var room = await _dbContext.Rooms.FindAsync(room_id);
+                var room = await _appDbContext.Rooms.FindAsync(room_id);
                 if (room == null)
                     throw new Exception("Room not found");
 
-                room.deleted_at = request.deleted_at;
-                await _dbContext.SaveChangesAsync();
+                await SoftDeleteAsync(room);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"DeleteRoom Error: {ex.Message}");
+                Console.WriteLine($"SoftDeleteRoom Error: {ex.Message}");
                 throw new Exception($"An error occurred while deleting the room: {ex.Message}");
+            }
+        }
+
+        public async Task HardDeleteRoom(int room_id)
+        {
+            try
+            {
+                var room = await _appDbContext.Rooms
+                    .Include(r => r.Seats)
+                    .Include(r => r.Showtimes)
+                    .FirstOrDefaultAsync(r => r.room_id == room_id);
+
+                if (room == null)
+                    throw new Exception("Room not found");
+
+                if (room.Showtimes.Any() || room.Seats.Any())
+                    throw new Exception("Cannot hard delete room that already has showtimes or seats.");
+
+                await HardDeleteAsync(room);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"HardDeleteRoom Error: {ex.Message}");
+                throw new Exception($"An error occurred while hard deleting the room: {ex.Message}");
             }
         }
     }

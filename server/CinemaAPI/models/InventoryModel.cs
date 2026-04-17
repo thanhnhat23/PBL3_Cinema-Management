@@ -14,6 +14,5 @@ namespace CinemaAPI.Models
         public virtual Cinema Cinema { get; set; } = null!;
 
         public int quantity { get; set; }
-        public DateOnly? deleted_at { get; set; }
     }
 }

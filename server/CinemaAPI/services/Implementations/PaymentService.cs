@@ -1,16 +1,18 @@
 using CinemaAPI.data;
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Abstract;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services.Implementations
 {
-    public class PaymentService : IPaymentService
-    { 
-        private readonly AppDbContext _dbContext;
+    public class PaymentService : BaseService<Payment>, IPaymentService
+    {
+        private new readonly AppDbContext _dbContext;
 
         public PaymentService(AppDbContext dbContext)
+            : base(dbContext)
         {
             _dbContext = dbContext;
         }
@@ -37,7 +39,7 @@ namespace CinemaAPI.Services.Implementations
                 }
 
                 await _dbContext.Payments.AddAsync(payment);
-                await _dbContext.SaveChangesAsync();    
+                await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
             catch (Exception ex)
@@ -72,26 +74,6 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 throw new Exception("Failed to update payment", ex);
-            }
-        }
-        public async Task DeletePayment(int payment_id)
-        {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    var payment = await _dbContext.Payments.FindAsync(payment_id);
-                    if (payment == null) throw new Exception("Payment not found");
-
-                    _dbContext.Payments.Remove(payment);
-                    await _dbContext.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception("Failed to delete payment", ex);
-                }
             }
         }
     }

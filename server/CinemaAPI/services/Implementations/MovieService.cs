@@ -2,16 +2,18 @@ using CinemaAPI.data;
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
 using CinemaAPI.Models.DTOs.Response;
+using CinemaAPI.Services.Abstract;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services.Implementations
 {
-    public class MovieService : IMovieService
+    public class MovieService : BaseService<Movie>, IMovieService
     {
-        private readonly AppDbContext _dbContext;
+        private new readonly AppDbContext _dbContext;
 
         public MovieService(AppDbContext dbContext)
+            : base(dbContext)
         {
             _dbContext = dbContext;
         }
@@ -61,7 +63,7 @@ namespace CinemaAPI.Services.Implementations
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateMovie(int movie_id, MovieUpdateRequest request)
+        public async Task<Movie> UpdateMovie(int movie_id, MovieUpdateRequest request)
         {
             var movie = await _dbContext.Movies.FindAsync(movie_id);
 
@@ -82,10 +84,17 @@ namespace CinemaAPI.Services.Implementations
                 if (request.end_date.HasValue)
                     movie.end_date = request.end_date.Value;
 
+                if (request.adult.HasValue)
+                    movie.adult = request.adult.Value;
+
+                if (request.runtime.HasValue)
+                    movie.runtime = request.runtime.Value;
+
                 if (request.status.HasValue)
                     movie.status = request.status.Value;
 
                 await _dbContext.SaveChangesAsync();
+                return movie;
             }
             catch (Exception ex)
             {
@@ -94,7 +103,16 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task DeleteMovie(int movie_id)
+        public async Task SoftDeleteMovie(int movie_id)
+        {
+            var movie = await _dbContext.Movies.FindAsync(movie_id);
+            if (movie == null)
+                throw new Exception("Movie not found.");
+
+            await SoftDeleteAsync(movie);
+        }
+
+        public async Task HardDeleteMovie(int movie_id)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
@@ -124,8 +142,8 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"DeleteMovie Error: {ex.Message}");
-                throw new Exception($"An error occurred while deleting the movie: {ex.Message}");
+                Console.WriteLine($"HardDeleteMovie Error: {ex.Message}");
+                throw new Exception($"An error occurred while hard deleting the movie: {ex.Message}");
             }
         }
 

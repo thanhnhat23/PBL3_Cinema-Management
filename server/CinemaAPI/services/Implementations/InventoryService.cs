@@ -1,16 +1,18 @@
 using CinemaAPI.data;
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Abstract;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services.Implementations
 {
-    public class InventoryService : IInventoryService
+    public class InventoryService : BaseService<Inventory>, IInventoryService
     {
-        private readonly AppDbContext _dbContext;
+        private new readonly AppDbContext _dbContext;
 
         public InventoryService(AppDbContext dbContext)
+            : base(dbContext)
         {
             _dbContext = dbContext;
         }
@@ -69,16 +71,5 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("An error occurred while updating the inventory. Please try again.");
             }
         }
-
-        public async Task DeleteInventory(int cinema_id, int snack_id)
-        {
-            var inventory = await _dbContext.Inventories
-                .FirstOrDefaultAsync(i => i.cinema_id == cinema_id && i.snack_id == snack_id);
-            if (inventory == null)
-                throw new Exception("Inventory not found");
-
-            _dbContext.Inventories.Remove(inventory);
-            await _dbContext.SaveChangesAsync();
-        }   
     }
 }

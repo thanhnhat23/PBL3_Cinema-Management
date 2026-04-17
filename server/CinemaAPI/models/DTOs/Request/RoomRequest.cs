@@ -19,6 +19,6 @@ namespace CinemaAPI.Models.DTOs
 
     public class RoomDeleteRequest
     {
-        public DateOnly deleted_at { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+        public DateTime deleted_at { get; set; } = DateTime.UtcNow;
     }
 }

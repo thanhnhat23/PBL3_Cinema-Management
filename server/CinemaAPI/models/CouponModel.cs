@@ -46,6 +46,7 @@ namespace CinemaAPI.Models
         public bool IsActive => DateTime.UtcNow >= startDate && DateTime.UtcNow <= endDate;
 
         public string? applies_to { get; set; } // Ticket, Snack, Both
-        public DateOnly? deleted_at { get; set; }
+        public DateTime? deleted_at { get; set; }
+        public Guid? deleted_by { get; set; }
     }
 }

@@ -85,18 +85,5 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in paymentController.UpdatePayment: {ex.Message}");
             }
         }
-        [HttpDelete("delete/{paymentId}")]
-        public async Task<IActionResult> DeletePayment(int paymentId)
-        {
-            try
-            {
-                await _paymentService.DeletePayment(paymentId);
-                return Ok("Payment deleted successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in paymentController.DeletePayment: {ex.Message}");
-            }
-        }
     }
 }

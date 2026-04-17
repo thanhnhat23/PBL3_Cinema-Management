@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Implementations;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,11 @@ namespace CinemaAPI.Controllers
     public class combodetailController : ControllerBase
     {
         private readonly IComboDetail combodetailService;
-        public combodetailController(IComboDetail combodetailService)
+        private readonly ComboDetailService comboDetailDeleteService;
+        public combodetailController(IComboDetail combodetailService, ComboDetailService comboDetailDeleteService)
         {
             this.combodetailService = combodetailService;
+            this.comboDetailDeleteService = comboDetailDeleteService;
         }
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllComboDetails()
@@ -80,12 +83,26 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await combodetailService.DeleteComboDetail(combo_detail_id);
+                await comboDetailDeleteService.SoftDeleteComboDetail(combo_detail_id);
                 return Ok("Combo detail deleted successfully");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in combodetailController.DeleteComboDetail: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("hard-delete/{combo_detail_id}")]
+        public async Task<IActionResult> HardDeleteComboDetail(int combo_detail_id)
+        {
+            try
+            {
+                await comboDetailDeleteService.HardDeleteComboDetail(combo_detail_id);
+                return Ok("Combo detail hard deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in combodetailController.HardDeleteComboDetail: {ex.Message}");
             }
         }
     }

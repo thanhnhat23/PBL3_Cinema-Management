@@ -77,10 +77,10 @@ export default function LayoutRooms() {
                             </button>
                         </DropdownTrigger>
                         <DropdownMenu>
-                            <DropdownItem key="view" startContent={<Eye size={16} />}>View</DropdownItem>
-                            <DropdownItem key="edit" startContent={<PenLine size={16} />}>Edit</DropdownItem>
+                            <DropdownItem key="view" startContent={<Eye size={16} />}>Xem</DropdownItem>
+                            <DropdownItem key="edit" startContent={<PenLine size={16} />}>Sửa</DropdownItem>
                             <DropdownItem key="delete" className="text-danger" color="danger" startContent={<Trash size={16} />}>
-                                Delete
+                                Xóa
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>

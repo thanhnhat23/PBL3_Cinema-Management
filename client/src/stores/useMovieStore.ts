@@ -54,7 +54,7 @@ export const useMovieStore = create<{
     fetchPopularMovies: (limit?: number) => Promise<void>;
     fetchMovieById: (movieId: number) => Promise<void>;
     createMovie: (movieData: Partial<Movie>) => Promise<void>;
-    updateMovie: (movieId: number, movieData: Partial<Movie>) => Promise<void>;
+    updateMovie: (movieId: number, movieData: Partial<Movie>) => Promise<Movie | null>;
     deleteMovie: (movieId: number) => Promise<void>;
     fetchActorWithMovies: (movieId: number) => Promise<void>;
     clearSelectedMovie: () => void;
@@ -175,17 +175,21 @@ export const useMovieStore = create<{
             set({ isUpdatingMovie: true });
 
             const response = await _axios.put(`/v1/movie/update/${movieId}`, movieData);
+            const updatedMovie = response.data?.data ?? response.data ?? null;
 
-            if (response.data?.data) {
+            if (updatedMovie) {
                 set((state) => ({
                     movies: state.movies.map((movie) =>
-                        movie.movie_id === movieId ? response.data.data : movie
+                        movie.movie_id === movieId ? updatedMovie : movie
                     ),
-                    selectedMovie: response.data.data,
+                    selectedMovie: updatedMovie,
                 }));
             }
+
+            return updatedMovie;
         } catch (error) {
             console.error(`Error updating movie with ID ${movieId}:`, error);
+            return null;
         } finally {
             set({ isUpdatingMovie: false });
         }

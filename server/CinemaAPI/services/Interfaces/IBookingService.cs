@@ -9,6 +9,5 @@ namespace CinemaAPI.Services.Interfaces
         Task<Booking?> GetBookingById(int booking_id);
         Task AddBooking(Booking booking);
         Task UpdateBooking(int booking_id, BookingUpdateRequest request);
-        Task DeleteBooking(int booking_id);
     }
 }
