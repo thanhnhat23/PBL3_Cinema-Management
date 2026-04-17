@@ -126,6 +126,7 @@ function Movies() {
                     <span className="md:inline hidden w-1 h-8 bg-black dark:bg-white"></span>
                     <h1 className="inline md:hidden text-2xl font-bold">Xem gì hôm nay?</h1>
                     <h1 className="md:inline hidden text-3xl font-bold">Phim</h1>
+                    
                     <Tabs 
                         key="tabs" 
                         aria-label="Tabs variants" 

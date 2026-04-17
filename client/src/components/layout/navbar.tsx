@@ -206,14 +206,11 @@ export default function NavbarLayout() {
                 </Dropdown>
 
                 <NavbarItem>
-                        <Button
-                            disableRipple
-                            className={NAV_BUTTON_CLASS}
-                            radius="sm"
-                            variant="light"
-                        >
-                            Thể loại
-                        </Button>
+                    <Link href="/category"
+                        className={NAV_BUTTON_CLASS}
+                    >
+                        Thể loại
+                    </Link>
                 </NavbarItem>
 
                 <NavbarItem>
@@ -430,15 +427,11 @@ export default function NavbarLayout() {
 
             
                 <NavbarMenuItem>
-                    <Button
-                        disableRipple
-                        className={MOBILE_BUTTON_CLASS}
-                        endContent={<ChevronDown size={16} />}
-                        radius="sm"
-                        variant="light"
+                    <Link href="/category"
+                        className={`${MOBILE_BUTTON_CLASS} flex items-center px-3.5`}
                     >
                         Thể loại
-                    </Button>
+                    </Link>
                 </NavbarMenuItem>
 
                 <NavbarMenuItem className="p-2 pl-4">

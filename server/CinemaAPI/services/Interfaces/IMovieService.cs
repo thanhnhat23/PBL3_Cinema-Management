@@ -7,6 +7,7 @@ namespace CinemaAPI.Services.Interfaces
     public interface IMovieService
     {
         Task<List<Movie>> GetAllMovies();
+        Task<List<Movie>> GetMoviesByGenreAsync(int genreId, int limit);
         Task<List<Movie>> GetMoviesByStatusAsync(int status, int limit);
         Task<List<Movie>> GetPopularMoviesAsync(int limit);
         Task<Movie?> GetMovieById(int movie_id);

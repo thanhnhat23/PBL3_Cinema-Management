@@ -64,6 +64,26 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("get-by-genre")]
+        public async Task<IActionResult> GetMoviesByGenre([FromQuery] int genreId, [FromQuery] int limit = 1000)
+        {
+            try
+            {
+                if (genreId <= 0)
+                    return BadRequest("genreId must be greater than 0.");
+
+                if (limit <= 0)
+                    return BadRequest("limit must be greater than 0.");
+
+                var movies = await _movieService.GetMoviesByGenreAsync(genreId, limit);
+                return Ok(movies);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in movieController.GetMoviesByGenre: {ex.Message}");
+            }
+        }
+
         [HttpGet("get-popular")]
         public async Task<IActionResult> GetPopularMovies([FromQuery] int limit = 10)
         {

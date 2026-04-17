@@ -36,6 +36,14 @@ namespace CinemaAPI.Services.Implementations
             .Include(m => m.ShowTimes)
             .FirstOrDefaultAsync(m => m.movie_id == movie_id);
 
+        public async Task<List<Movie>> GetMoviesByGenreAsync(int genreId, int limit) =>
+            await _dbContext.Movies
+                .AsNoTracking()
+                .Where(m => m.MovieGenres.Any(mg => mg.genre_id == genreId))
+                .OrderByDescending(m => m.release_date)
+                .Take(limit)
+                .ToListAsync();
+
         public async Task<List<Movie>> GetMoviesByStatusAsync(int status, int limit) =>
             await _dbContext.Movies
                 .Where(m => m.status == (MovieStatus)status)
