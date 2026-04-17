@@ -10,7 +10,7 @@ export interface Cinema {
     longitude: number;
     phone_number: string;
     description?: string | null;
-    image_overview: string;
+    image_overview?: string;
     location?: {
         location_id: number;
         city: string;
@@ -26,7 +26,7 @@ interface ApiCinema {
     longitude: number;
     phone_number: string;
     description?: string | null;
-    image_overview: string;
+    image_overview?: string;
     location?: {
         location_id: number;
         city: string;
