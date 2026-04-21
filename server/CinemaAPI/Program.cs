@@ -48,6 +48,9 @@ builder.Services.Configure<GeminiConfig>(builder.Configuration.GetSection("Gemin
 // Configure Cloudinary
 builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("Cloudinary"));
 
+// Configure VNPAY
+builder.Services.Configure<VnpayConfig>(builder.Configuration.GetSection("Vnpay"));
+
 // Configure Services
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<RoomService>();

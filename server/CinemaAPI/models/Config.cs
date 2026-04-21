@@ -33,4 +33,17 @@ namespace CinemaAPI.Models
         public string ApiKey { get; set; } = null!;
         public string ApiSecret { get; set; } = null!;
     }
+
+    public class VnpayConfig
+    {
+        public string vnp_TmnCode { get; set; } = null!;
+        public string vnp_HashSecret { get; set; } = null!;
+        public string vnp_Url { get; set; } = null!;
+        public string vnp_Api { get; set; } = null!;
+        public string vnp_ReturnUrl { get; set; } = null!;
+        public string vnp_Version { get; set; } = null!;
+        public string vnp_Command { get; set; } = null!;
+        public string vnp_CurrCode { get; set; } = null!;
+        public string vnp_Locale { get; set; } = null!;
+    }
 }
