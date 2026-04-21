@@ -9,6 +9,12 @@ namespace CinemaAPI.Services.Implementations
 {
     public class ChatService : IChatService
     {
+        private static readonly HashSet<string> RemoveWords = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "cho", "phim", "movie", "rạp", "cinema", "bao giờ", "khi nào", "ở đâu", "có", "không",
+            "chiếu", "gì", "thế nào", "như thế nào", "thông", "tin", "về", "thông tin", "tôi", "bạn", "em", "anh"
+        };
+
         private readonly MongoDbContext _mongoDbContext;
         private readonly IService _Service;
         private readonly IGeminiService _geminiService;
@@ -101,7 +107,7 @@ namespace CinemaAPI.Services.Implementations
 
         private async Task<string> GetCachedDataAsync(string category, string? keyword, Func<Task<string>> factory)
         {
-            var cacheKey = $"chat:{category}:{keyword?.Trim().ToLowerInvariant() ?? "all"}";
+            var cacheKey = RagCacheKeys.Build("chat", category, keyword);
             if (_cache.TryGetValue(cacheKey, out string? cached) && !string.IsNullOrWhiteSpace(cached))
             {
                 return cached;
@@ -123,10 +129,8 @@ namespace CinemaAPI.Services.Implementations
         private string? ExtractSearchKeyword(string message)
         {
             // Remove common words to extract potential movie/cinema names
-            var removeWords = new[] { "cho", "phim", "movie", "rạp", "cinema", "bao giờ", "khi nào", "ở đâu", "có", "không", "chiếu", "gì", "thế nào", "như thế nào", "thông", "tin", "về", "thông tin", "cho", "tôi", "bạn", "em", "anh" };
-
             var words = message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var filteredWords = words.Where(w => !removeWords.Contains(w.ToLower()) && w.Length > 1).ToList();
+            var filteredWords = words.Where(w => !RemoveWords.Contains(w) && w.Length > 1).ToList();
 
             // Return last 1-2 words (usually contains the movie/cinema name)
             if (filteredWords.Count >= 2)

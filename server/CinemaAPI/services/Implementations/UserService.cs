@@ -17,11 +17,11 @@ namespace CinemaAPI.Services.Implementations
 
         // Get all users
         public async Task<List<User>> GetAllUsers() =>
-            await _dbContext.Users.ToListAsync();
+            await _dbContext.Users.AsNoTracking().ToListAsync();
 
         // Get user by ID
         public async Task<User?> GetUserById(Guid user_id) =>
-            await _dbContext.Users.FirstOrDefaultAsync(u => u.user_id == user_id);
+            await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.user_id == user_id);
 
         // Ban or unban user
         public async Task BannedUser(Guid user_id, bool isBanned)

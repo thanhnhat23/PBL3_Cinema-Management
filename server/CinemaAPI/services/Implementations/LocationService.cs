@@ -5,7 +5,7 @@ using CinemaAPI.Services.Abstract;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CinemaAPI.Services.Interfaces
+namespace CinemaAPI.Services.Implementations
 {
     public class LocationService : BaseService<Location>, ILocationService
     {
@@ -19,11 +19,11 @@ namespace CinemaAPI.Services.Interfaces
 
         // Get all locations
         public async Task<List<Location>> GetAllLocations() =>
-            await _dbContext.Locations.ToListAsync();
+            await _dbContext.Locations.AsNoTracking().ToListAsync();
 
         // Get location by ID
-        public async Task<List<Location?>> GetLocationById(int location_id) =>
-            await _dbContext.Locations.Where(l => l.location_id == location_id).ToListAsync();
+        public async Task<Location?> GetLocationById(int location_id) =>
+            await _dbContext.Locations.AsNoTracking().FirstOrDefaultAsync(l => l.location_id == location_id);
 
         public async Task AddLocation(Location location)
         {
@@ -31,6 +31,7 @@ namespace CinemaAPI.Services.Interfaces
             {
                 _dbContext.Locations.Add(location);
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {
@@ -49,6 +50,7 @@ namespace CinemaAPI.Services.Interfaces
                     locations.city = location.city;
 
                     await _dbContext.SaveChangesAsync();
+                    RagCacheKeys.Invalidate("rooms");
                 }
 
             }
@@ -68,6 +70,7 @@ namespace CinemaAPI.Services.Interfaces
                 if (location != null)
                 {
                     await SoftDeleteAsync(location);
+                    RagCacheKeys.Invalidate("rooms");
                 }
             }
             catch (Exception ex)

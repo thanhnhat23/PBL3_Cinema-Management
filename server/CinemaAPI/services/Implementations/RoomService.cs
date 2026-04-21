@@ -20,6 +20,7 @@ namespace CinemaAPI.Services.Implementations
         // Get all rooms
         public async Task<List<Room>> GetAllRooms() =>
             await _appDbContext.Rooms
+                .AsNoTracking()
                 .Include(r => r.Cinema)
                 .ThenInclude(c => c.Location)
                 .ToListAsync();
@@ -27,6 +28,7 @@ namespace CinemaAPI.Services.Implementations
         // Get room by ID
         public async Task<Room?> GetRoomById(int room_id) =>
             await _appDbContext.Rooms
+                .AsNoTracking()
                 .Include(r => r.Cinema)
                 .ThenInclude(c => c.Location)
                 .FirstOrDefaultAsync(r => r.room_id == room_id);
@@ -72,6 +74,7 @@ namespace CinemaAPI.Services.Implementations
                 }
 
                 await transaction.CommitAsync();
+                RagCacheKeys.Invalidate("rooms");
 
             }
             catch (Exception ex)
@@ -101,6 +104,7 @@ namespace CinemaAPI.Services.Implementations
                     room.price = request.price.Value;
 
                 await _appDbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {
@@ -118,6 +122,7 @@ namespace CinemaAPI.Services.Implementations
                     throw new Exception("Room not found");
 
                 await SoftDeleteAsync(room);
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {
@@ -142,6 +147,7 @@ namespace CinemaAPI.Services.Implementations
                     throw new Exception("Cannot hard delete room that already has showtimes or seats.");
 
                 await HardDeleteAsync(room);
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {

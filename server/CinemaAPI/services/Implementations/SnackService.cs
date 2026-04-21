@@ -19,6 +19,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<List<Snack>> GetAllSnacks() =>
             await _dbContext.Snacks
+                .AsNoTracking()
                 .Include(s => s.BookingSnacks)
                 .Include(s => s.ComboDetails)
                 .Include(s => s.Inventory)
@@ -26,6 +27,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<Snack?> GetSnackById(int snack_id) =>
             await _dbContext.Snacks
+                .AsNoTracking()
                 .Include(s => s.BookingSnacks)
                 .Include(s => s.ComboDetails)
                 .Include(s => s.Inventory)
@@ -39,6 +41,7 @@ namespace CinemaAPI.Services.Implementations
             {
                 _dbContext.Snacks.Add(snack);
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("snacks");
                 await transaction.CommitAsync();
             }
             catch (Exception ex)
@@ -65,6 +68,7 @@ namespace CinemaAPI.Services.Implementations
                 if (request.imageUrl != null)
                     snack.imageUrl = request.imageUrl;
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("snacks");
             }
             catch (Exception ex)
             {
@@ -87,6 +91,7 @@ namespace CinemaAPI.Services.Implementations
                     throw new Exception("Cannot delete snack that is associated with bookings, combo details, or inventory records.");
 
                 await SoftDeleteAsync(snackToDelete);
+                RagCacheKeys.Invalidate("snacks");
             }
             catch (Exception ex)
             {
@@ -110,6 +115,7 @@ namespace CinemaAPI.Services.Implementations
                     throw new Exception("Cannot hard delete snack that is associated with bookings, combo details, or inventory records.");
 
                 await HardDeleteAsync(snackToDelete);
+                RagCacheKeys.Invalidate("snacks");
             }
             catch (Exception ex)
             {

@@ -46,6 +46,7 @@ namespace CinemaAPI.Services.Implementations
                 };
                 _dbContext.Cinemas.Add(cinema);
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {
@@ -71,6 +72,7 @@ namespace CinemaAPI.Services.Implementations
                 cinema.image_overview = request.image_overview;
 
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {
@@ -86,6 +88,7 @@ namespace CinemaAPI.Services.Implementations
                 if (cinema == null) throw new Exception("Cinema not found");
 
                 await SoftDeleteAsync(cinema);
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {
@@ -109,6 +112,7 @@ namespace CinemaAPI.Services.Implementations
                     throw new Exception("Cannot hard delete cinema that already has rooms or inventory records.");
 
                 await HardDeleteAsync(cinema);
+                RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {

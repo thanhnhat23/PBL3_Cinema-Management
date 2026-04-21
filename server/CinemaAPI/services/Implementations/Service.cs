@@ -25,7 +25,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<string> GetRoomsAsync(string? searchKeyword = null)
         {
-            var cacheKey = $"service:rooms:{searchKeyword?.Trim().ToLowerInvariant() ?? "all"}";
+            var cacheKey = RagCacheKeys.Build("service", "rooms", searchKeyword);
             if (_cache.TryGetValue(cacheKey, out string? cachedRooms) && !string.IsNullOrWhiteSpace(cachedRooms))
             {
                 return cachedRooms;
@@ -73,7 +73,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<string> GetSnacksAsync(string? searchKeyword = null)
         {
-            var cacheKey = $"service:snacks:{searchKeyword?.Trim().ToLowerInvariant() ?? "all"}";
+            var cacheKey = RagCacheKeys.Build("service", "snacks", searchKeyword);
             if (_cache.TryGetValue(cacheKey, out string? cachedSnacks) && !string.IsNullOrWhiteSpace(cachedSnacks))
             {
                 return cachedSnacks;
@@ -117,7 +117,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<string> GetMoviesAsync(string? searchKeyword = null)
         {
-            var cacheKey = $"service:movies:{searchKeyword?.Trim().ToLowerInvariant() ?? "all"}";
+            var cacheKey = RagCacheKeys.Build("service", "movies", searchKeyword);
             if (_cache.TryGetValue(cacheKey, out string? cachedMovies) && !string.IsNullOrWhiteSpace(cachedMovies))
             {
                 return cachedMovies;
@@ -169,7 +169,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<string> GetGenresAsync(string? searchKeyword = null)
         {
-            const string cacheKey = "service:genres:all";
+            var cacheKey = RagCacheKeys.Build("service", "genres", searchKeyword);
             if (_cache.TryGetValue(cacheKey, out string? cachedGenres) && !string.IsNullOrWhiteSpace(cachedGenres))
             {
                 return cachedGenres;
@@ -192,7 +192,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<string> GetActorsAsync(string? searchKeyword = null)
         {
-            var cacheKey = $"service:actors:{searchKeyword?.Trim().ToLowerInvariant() ?? "all"}";
+            var cacheKey = RagCacheKeys.Build("service", "actors", searchKeyword);
             if (_cache.TryGetValue(cacheKey, out string? cachedActors) && !string.IsNullOrWhiteSpace(cachedActors))
             {
                 return cachedActors;

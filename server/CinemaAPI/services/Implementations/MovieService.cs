@@ -20,6 +20,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<List<Movie>> GetAllMovies() =>
             await _dbContext.Movies
+                .AsNoTracking()
                 .Include(m => m.MovieGenres)
                     .ThenInclude(mg => mg.Genre)
                 .Include(m => m.MovieActors)
@@ -29,6 +30,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<Movie?> GetMovieById(int movie_id) =>
             await _dbContext.Movies
+            .AsNoTracking()
             .Include(m => m.MovieGenres)
                 .ThenInclude(mg => mg.Genre)
             .Include(m => m.MovieActors)
@@ -46,6 +48,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<List<Movie>> GetMoviesByStatusAsync(int status, int limit) =>
             await _dbContext.Movies
+                .AsNoTracking()
                 .Where(m => m.status == (MovieStatus)status)
                 .OrderByDescending(m => m.release_date)
                 .Take(limit)
@@ -69,6 +72,7 @@ namespace CinemaAPI.Services.Implementations
         {
             _dbContext.Movies.Add(movie);
             await _dbContext.SaveChangesAsync();
+            RagCacheKeys.Invalidate("movies");
         }
 
         public async Task<Movie> UpdateMovie(int movie_id, MovieUpdateRequest request)
@@ -102,6 +106,7 @@ namespace CinemaAPI.Services.Implementations
                     movie.status = request.status.Value;
 
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("movies");
                 return movie;
             }
             catch (Exception ex)
@@ -118,6 +123,7 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("Movie not found.");
 
             await SoftDeleteAsync(movie);
+                RagCacheKeys.Invalidate("movies");
         }
 
         public async Task HardDeleteMovie(int movie_id)
@@ -146,6 +152,7 @@ namespace CinemaAPI.Services.Implementations
 
                 await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
+                RagCacheKeys.Invalidate("movies");
             }
             catch (Exception ex)
             {
@@ -157,6 +164,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<List<ActorWithMovie>> GetActorWithMovieAsync(int id) =>
             await _dbContext.MovieActors
+                .AsNoTracking()
                 .Where(ma => ma.movie_id == id)
                 .Include(ma => ma.Actor)
                 .Select(ma => new ActorWithMovie
