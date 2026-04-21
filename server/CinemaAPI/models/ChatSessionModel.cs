@@ -7,6 +7,7 @@ namespace CinemaAPI.Models
     public class ChatSession
     {
         [BsonId]
+        [BsonIgnoreIfNull]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? session_id { get; set; }
 

@@ -21,12 +21,23 @@ interface SendMessageResponse {
 	Data: ChatApiData;
 }
 
+interface ChatHistoryMessageApi {
+	role: ChatRole;
+	message: string;
+	timestamp: string;
+}
+
+interface ChatHistoryResponse {
+	messages: ChatHistoryMessageApi[];
+}
+
 export const useChatBotStore = create<{
 	messages: ChatMessage[];
 	isSending: boolean;
 	extractedInfo: Record<string, string>;
 	isInfoComplete: boolean;
 	sendMessage: (message: string) => Promise<void>;
+	loadHistory: () => Promise<void>;
 	clearChat: () => void;
 }>((set) => ({
 	messages: [],
@@ -85,6 +96,24 @@ export const useChatBotStore = create<{
 			}));
 		} finally {
 			set({ isSending: false });
+		}
+	},
+
+	loadHistory: async () => {
+		try {
+			const response = await _axios.get<{ Message: string; Data: ChatHistoryResponse }>('/v1/chat/history');
+			const messages = response.data?.Data?.messages ?? [];
+
+			set({
+				messages: messages.map((item, index) => ({
+					id: `${item.role}-${item.timestamp}-${index}`,
+					role: item.role,
+					content: item.message,
+					createdAt: item.timestamp,
+				})),
+			});
+		} catch (error) {
+			console.error('Error loading chat history:', error);
 		}
 	},
 

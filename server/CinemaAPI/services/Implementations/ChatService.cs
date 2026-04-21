@@ -3,6 +3,8 @@ using CinemaAPI.Models.DTOs;
 using CinemaAPI.data;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace CinemaAPI.Services.Implementations
@@ -19,89 +21,194 @@ namespace CinemaAPI.Services.Implementations
         private readonly IService _Service;
         private readonly IGeminiService _geminiService;
         private readonly IMemoryCache _cache;
+        private readonly IHostEnvironment _hostEnvironment;
         private const int MaxLlmContextLength = 4000;
 
-        public ChatService(MongoDbContext mongoDbContext, IService Service, IGeminiService geminiService, IMemoryCache cache)
+        public ChatService(MongoDbContext mongoDbContext, IService Service, IGeminiService geminiService, IMemoryCache cache, IHostEnvironment hostEnvironment)
         {
             _mongoDbContext = mongoDbContext;
             _Service = Service;
             _geminiService = geminiService;
             _cache = cache;
+            _hostEnvironment = hostEnvironment;
         }
 
         // Logic ChatBot: Input -> Check Info User -> Search Database -> Analytis Result -> Answer User
         // If missing info -> Ask User -> Loop until complete info -> Final Answer
         public async Task<ChatResponse> ProcessChatAsync(string user_id, string message)
         {
-            // NODE 1: INPUT MESSAGE FROM USER
+            try
+            {
+                // NODE 1: INPUT MESSAGE FROM USER
+                if (!Guid.TryParse(user_id, out var userId))
+                    throw new ArgumentException("Invalid user_id format");
+
+                var session = await _mongoDbContext.ChatSessions
+                    .Find(s => s.user_id == userId && s.status == "active")
+                    .FirstOrDefaultAsync()
+                    ?? new ChatSession { user_id = userId };
+
+                var msgLower = message.ToLower();
+
+                if (TryGetGreetingReply(msgLower, out var greetingReply))
+                {
+                    session.messages.Add(new ChatMessage
+                    {
+                        role = "user",
+                        message = message,
+                        timestamp = DateTime.UtcNow
+                    });
+
+                    session.messages.Add(new ChatMessage
+                    {
+                        role = "assistant",
+                        message = greetingReply,
+                        timestamp = DateTime.UtcNow
+                    });
+
+                    if (string.IsNullOrWhiteSpace(session.session_id))
+                    {
+                        session.session_id = ObjectId.GenerateNewId().ToString();
+                    }
+
+                    await _mongoDbContext.ChatSessions.ReplaceOneAsync(
+                        s => s.user_id == session.user_id && s.status == "active",
+                        session,
+                        new ReplaceOptions { IsUpsert = true }
+                    );
+
+                    return new ChatResponse
+                    {
+                        reply = greetingReply,
+                        ExtractedInfo = new Dictionary<string, string>(),
+                        isInfoComplete = true,
+                        ErrorDetail = null
+                    };
+                }
+
+                // NODE 2 & 3: SEARCH DATABASE BASED ON MESSAGE CONTENT
+                string db = "";
+
+                // Extract keyword for searching
+                string? searchKeyword = ExtractSearchKeyword(message);
+
+                // Only load data relevant to query
+                if (msgLower.Contains("phim") || msgLower.Contains("movie"))
+                {
+                    db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
+                    if (string.IsNullOrWhiteSpace(db) && !string.IsNullOrEmpty(searchKeyword))
+                        db += await GetCachedDataAsync("movies", null, () => _Service.GetMoviesAsync(null));
+                }
+                else if (msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
+                    db += await GetCachedDataAsync("rooms", searchKeyword, () => _Service.GetRoomsAsync(searchKeyword));
+                else if (msgLower.Contains("ăn")
+                        || msgLower.Contains("đồ ăn")
+                        || msgLower.Contains("snack")
+                        || msgLower.Contains("bỏng")
+                        || msgLower.Contains("nước uống")
+                        || msgLower.Contains("drink"))
+                    db += await GetCachedDataAsync("snacks", searchKeyword, () => _Service.GetSnacksAsync(searchKeyword));
+                else if (msgLower.Contains("thể loại") || msgLower.Contains("genre"))
+                    db += await GetCachedDataAsync("genres", searchKeyword, () => _Service.GetGenresAsync(searchKeyword));
+                else if (msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
+                    db += await GetCachedDataAsync("actors", searchKeyword, () => _Service.GetActorsAsync(searchKeyword));
+                else
+                    db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
+
+                db = TrimContext(db, MaxLlmContextLength);
+
+                // NODE 4: GENERATE ANSWER
+                string reply;
+                string? errorDetail = null;
+                try
+                {
+                    reply = await _geminiService.GenerateResponseAsync(message, db);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error generating chat response: {ex.Message}");
+                    reply = "Xin lỗi, hiện tại trợ lý đang bận hoặc chưa sẵn sàng. Vui lòng thử lại sau ít phút.";
+                    if (_hostEnvironment.IsDevelopment())
+                        errorDetail = $"GeminiService: {ex.Message}";
+                }
+
+                session.messages.Add(new ChatMessage
+                {
+                    role = "user",
+                    message = message,
+                    timestamp = DateTime.UtcNow
+                });
+
+                session.messages.Add(new ChatMessage
+                {
+                    role = "assistant",
+                    message = reply,
+                    timestamp = DateTime.UtcNow
+                });
+
+                if (string.IsNullOrWhiteSpace(session.session_id))
+                {
+                    session.session_id = ObjectId.GenerateNewId().ToString();
+                }
+
+                await _mongoDbContext.ChatSessions.ReplaceOneAsync(
+                    s => s.user_id == session.user_id && s.status == "active",
+                    session,
+                    new ReplaceOptions { IsUpsert = true }
+                );
+
+                return new ChatResponse
+                {
+                    reply = reply,
+                    ExtractedInfo = new Dictionary<string, string>(),
+                    isInfoComplete = true,
+                    ErrorDetail = errorDetail
+                };
+            }
+            catch (ArgumentException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error in chat service: {ex.Message}");
+                return new ChatResponse
+                {
+                    reply = "Xin lỗi, hiện tại tôi không thể xử lý yêu cầu này. Vui lòng thử lại sau.",
+                    ExtractedInfo = new Dictionary<string, string>(),
+                    isInfoComplete = false,
+                    ErrorDetail = _hostEnvironment.IsDevelopment() ? ex.Message : null
+                };
+            }
+        }
+
+        public async Task<ChatHistoryResponse> GetChatHistoryAsync(string user_id)
+        {
             if (!Guid.TryParse(user_id, out var userId))
-                throw new ArgumentException("Invalid user_id format");
+            {
+                return new ChatHistoryResponse();
+            }
 
             var session = await _mongoDbContext.ChatSessions
                 .Find(s => s.user_id == userId && s.status == "active")
-                .FirstOrDefaultAsync()
-                ?? new ChatSession { user_id = userId };
+                .FirstOrDefaultAsync();
 
-            // NODE 2 & 3: SEARCH DATABASE BASED ON MESSAGE CONTENT
-            var msgLower = message.ToLower();
-            string db = "";
-
-            // Extract keyword for searching
-            string? searchKeyword = ExtractSearchKeyword(message);
-
-            // Only load data relevant to query
-            if (msgLower.Contains("phim") || msgLower.Contains("movie"))
+            if (session == null || session.messages.Count == 0)
             {
-                db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
-                if (string.IsNullOrWhiteSpace(db) && !string.IsNullOrEmpty(searchKeyword))
-                    db += await GetCachedDataAsync("movies", null, () => _Service.GetMoviesAsync(null));
+                return new ChatHistoryResponse();
             }
-            else if (msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
-                db += await GetCachedDataAsync("rooms", searchKeyword, () => _Service.GetRoomsAsync(searchKeyword));
-            else if (msgLower.Contains("ăn")
-                    || msgLower.Contains("đồ ăn")
-                    || msgLower.Contains("snack")
-                    || msgLower.Contains("bỏng")
-                    || msgLower.Contains("nước uống")
-                    || msgLower.Contains("drink"))
-                db += await GetCachedDataAsync("snacks", searchKeyword, () => _Service.GetSnacksAsync(searchKeyword));
-            else if (msgLower.Contains("thể loại") || msgLower.Contains("genre"))
-                db += await GetCachedDataAsync("genres", searchKeyword, () => _Service.GetGenresAsync(searchKeyword));
-            else if (msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
-                db += await GetCachedDataAsync("actors", searchKeyword, () => _Service.GetActorsAsync(searchKeyword));
-            else
-                db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
 
-            db = TrimContext(db, MaxLlmContextLength);
-
-            // NODE 4: GENERATE ANSWER
-            string reply = await _geminiService.GenerateResponseAsync(message, db);
-
-            session.messages.Add(new ChatMessage
+            return new ChatHistoryResponse
             {
-                role = "user",
-                message = message,
-                timestamp = DateTime.UtcNow
-            });
-
-            session.messages.Add(new ChatMessage
-            {
-                role = "assistant",
-                message = reply,
-                timestamp = DateTime.UtcNow
-            });
-
-            await _mongoDbContext.ChatSessions.ReplaceOneAsync(
-                s => s.user_id == session.user_id && s.status == "active",
-                session,
-                new ReplaceOptions { IsUpsert = true }
-            );
-
-            return new ChatResponse
-            {
-                reply = reply,
-                ExtractedInfo = new Dictionary<string, string>(),
-                isInfoComplete = true
+                messages = session.messages
+                    .OrderBy(message => message.timestamp)
+                    .Select(message => new ChatHistoryMessageDto
+                    {
+                        role = message.role,
+                        message = message.message,
+                        timestamp = message.timestamp
+                    })
+                    .ToList()
             };
         }
 
@@ -139,6 +246,39 @@ namespace CinemaAPI.Services.Implementations
                 return filteredWords[0];
 
             return null;
+        }
+
+        private static bool TryGetGreetingReply(string message, out string reply)
+        {
+            var normalized = message.Trim().ToLowerInvariant();
+
+            if (string.IsNullOrWhiteSpace(normalized))
+            {
+                reply = string.Empty;
+                return false;
+            }
+
+            var greetingKeywords = new[]
+            {
+                "hi",
+                "hello",
+                "hey",
+                "yo",
+                "xin chào",
+                "chào",
+                "chao",
+                "hello bot",
+                "hi bot"
+            };
+
+            if (greetingKeywords.Any(keyword => normalized == keyword || normalized.StartsWith(keyword + " ")))
+            {
+                reply = "Chào bạn, mình là trợ lý MilkyWayyy đây. Bạn cần mình tìm phim, xem lịch chiếu hay hỗ trợ gì nào?";
+                return true;
+            }
+
+            reply = string.Empty;
+            return false;
         }
     }
 }

@@ -53,5 +53,33 @@ namespace CinemaAPI.Controllers
                 });
             }
         }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetHistory()
+        {
+            try
+            {
+                var userId = User.FindFirst("user_id")?.Value;
+
+                if (string.IsNullOrEmpty(userId))
+                    return Unauthorized(new { Message = "User not authenticated" });
+
+                var response = await _chatService.GetChatHistoryAsync(userId);
+
+                return Ok(new
+                {
+                    Message = "Chat history loaded successfully",
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred while loading chat history",
+                    Error = ex.Message
+                });
+            }
+        }
     }
 }
