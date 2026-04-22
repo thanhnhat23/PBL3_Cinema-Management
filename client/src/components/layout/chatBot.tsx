@@ -15,7 +15,7 @@ import {
 
 import { useChatBotStore } from "@/stores/useChatBot";
 import { Bot } from "../icons/bot";
-import { Send, Trash2 } from "lucide-react";
+import { Send } from "lucide-react";
 
 function TypingIndicator() {
     return (
@@ -27,6 +27,22 @@ function TypingIndicator() {
             </div>
         </div>
     );
+}
+
+function formatChatTimestamp(value: string) {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return new Intl.DateTimeFormat("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    }).format(date);
 }
 
 export default function ChatBot() {
@@ -91,60 +107,67 @@ export default function ChatBot() {
                             </div>
                         ) : (
                             messages.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className={`max-w-[85%] rounded-2xl px-3 py-2 leading-relaxed border-1 ${
-                                        item.role === 'user'
-                                            ? 'ml-auto rounded-tr-xs bg-primary text-primary-foreground'
-                                            : 'rounded-tl-xs bg-neutral-100 text-neutral-800 dark:bg-white/8 dark:text-white/90'
-                                    }`}
-                                >
-                                    {item.role === 'assistant' ? (
-                                        <ReactMarkdown
-                                            remarkPlugins={[remarkGfm]}
-                                            components={{
-                                                p: ({ children }) => (
-                                                    <p className="mb-2 last:mb-0">{children}</p>
-                                                ),
-                                                ul: ({ children }) => (
-                                                    <ul className="mb-2 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>
-                                                ),
-                                                ol: ({ children }) => (
-                                                    <ol className="mb-2 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>
-                                                ),
-                                                li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-                                                strong: ({ children }) => (
-                                                    <strong className="font-semibold text-neutral-900 dark:text-white">{children}</strong>
-                                                ),
-                                                em: ({ children }) => <em className="italic text-inherit">{children}</em>,
-                                                a: ({ children, href }) => (
-                                                    <a
-                                                        href={href}
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="text-blue-700 underline decoration-blue-500/50 underline-offset-2 hover:text-blue-800 dark:text-sky-300 dark:decoration-sky-300/60 dark:hover:text-sky-200"
-                                                    >
-                                                        {children}
-                                                    </a>
-                                                ),
-                                                code: ({ children }) => (
-                                                    <code className="rounded-md bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] text-neutral-800 dark:bg-white/10 dark:text-white">
-                                                        {children}
-                                                    </code>
-                                                ),
-                                                blockquote: ({ children }) => (
-                                                    <blockquote className="border-l-2 border-neutral-300 pl-3 text-neutral-600 dark:border-white/20 dark:text-white/75">
-                                                        {children}
-                                                    </blockquote>
-                                                ),
-                                                br: () => <br />,
-                                            }}
-                                        >
-                                            {item.content}
-                                        </ReactMarkdown>
-                                    ) : (
-                                        <span>{item.content}</span>
-                                    )}
+                                <div key={item.id} className={`flex max-w-[85%] flex-col gap-1 ${item.role === 'user' ? 'ml-auto items-end' : 'items-start'}`}>
+                                    <div
+                                        className={`rounded-2xl border-1 px-3 py-2 leading-relaxed ${
+                                            item.role === 'user'
+                                                ? 'rounded-tr-xs bg-primary text-primary-foreground'
+                                                : 'rounded-tl-xs bg-neutral-100 text-neutral-800 dark:bg-white/8 dark:text-white/90'
+                                        }`}
+                                    >
+                                        {item.role === 'assistant' ? (
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={{
+                                                    p: ({ children }) => (
+                                                        <p className="mb-2 last:mb-0">{children}</p>
+                                                    ),
+                                                    ul: ({ children }) => (
+                                                        <ul className="mb-2 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>
+                                                    ),
+                                                    ol: ({ children }) => (
+                                                        <ol className="mb-2 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>
+                                                    ),
+                                                    li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                                                    strong: ({ children }) => (
+                                                        <strong className="font-semibold text-neutral-900 dark:text-white">{children}</strong>
+                                                    ),
+                                                    em: ({ children }) => <em className="italic text-inherit">{children}</em>,
+                                                    a: ({ children, href }) => (
+                                                        <a
+                                                            href={href}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            className="text-blue-700 underline decoration-blue-500/50 underline-offset-2 hover:text-blue-800 dark:text-sky-300 dark:decoration-sky-300/60 dark:hover:text-sky-200"
+                                                        >
+                                                            {children}
+                                                        </a>
+                                                    ),
+                                                    code: ({ children }) => (
+                                                        <code className="rounded-md bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] text-neutral-800 dark:bg-white/10 dark:text-white">
+                                                            {children}
+                                                        </code>
+                                                    ),
+                                                    blockquote: ({ children }) => (
+                                                        <blockquote className="border-l-2 border-neutral-300 pl-3 text-neutral-600 dark:border-white/20 dark:text-white/75">
+                                                            {children}
+                                                        </blockquote>
+                                                    ),
+                                                    br: () => <br />,
+                                                }}
+                                            >
+                                                {item.content}
+                                            </ReactMarkdown>
+                                        ) : (
+                                            <p className="whitespace-pre-wrap wrap-break-word">{item.content}</p>
+                                        )}
+                                    </div>
+
+                                    <span
+                                        className={`px-1 text-[11px] leading-none text-neutral-500 dark:text-neutral-400`}
+                                    >
+                                        {formatChatTimestamp(item.createdAt)}
+                                    </span>
                                 </div>
                             ))
                         )}

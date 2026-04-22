@@ -14,7 +14,8 @@ namespace CinemaAPI.Services.Implementations
         private static readonly HashSet<string> RemoveWords = new(StringComparer.OrdinalIgnoreCase)
         {
             "cho", "phim", "movie", "rạp", "cinema", "bao giờ", "khi nào", "ở đâu", "có", "không",
-            "chiếu", "gì", "thế nào", "như thế nào", "thông", "tin", "về", "thông tin", "tôi", "bạn", "em", "anh"
+            "chiếu", "gì", "thế nào", "như thế nào", "thông", "tin", "về", "thông tin", "tôi", "bạn", "em", "anh",
+            "còn", "thêm", "nữa", "tiếp", "vậy", "thế", "nhé", "lịch", "suất", "giờ"
         };
 
         private readonly MongoDbContext _mongoDbContext;
@@ -91,26 +92,39 @@ namespace CinemaAPI.Services.Implementations
 
                 // Extract keyword for searching
                 string? searchKeyword = ExtractSearchKeyword(message);
+                string? resolvedCategory = ResolveCategoryFromHistory(message, session.messages);
+                string conversationContext = BuildConversationContext(session.messages, message);
+
+                if (string.IsNullOrWhiteSpace(searchKeyword) && !string.IsNullOrWhiteSpace(resolvedCategory))
+                {
+                    searchKeyword = ExtractSearchKeyword(GetMostRecentUserMessage(session.messages) ?? message);
+                }
 
                 // Only load data relevant to query
-                if (msgLower.Contains("phim") || msgLower.Contains("movie"))
+                if (resolvedCategory == "movies" || msgLower.Contains("phim") || msgLower.Contains("movie"))
                 {
                     db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
                     if (string.IsNullOrWhiteSpace(db) && !string.IsNullOrEmpty(searchKeyword))
                         db += await GetCachedDataAsync("movies", null, () => _Service.GetMoviesAsync(null));
                 }
-                else if (msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
+                else if (resolvedCategory == "showtimes"
+                        || msgLower.Contains("lịch chiếu")
+                        || msgLower.Contains("suất chiếu")
+                        || msgLower.Contains("giờ chiếu")
+                        || msgLower.Contains("showtime"))
+                    db += await GetCachedDataAsync("showtimes", searchKeyword, () => _Service.GetShowtimesAsync(searchKeyword));
+                else if (resolvedCategory == "rooms" || msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
                     db += await GetCachedDataAsync("rooms", searchKeyword, () => _Service.GetRoomsAsync(searchKeyword));
-                else if (msgLower.Contains("ăn")
+                else if (resolvedCategory == "snacks" || msgLower.Contains("ăn")
                         || msgLower.Contains("đồ ăn")
                         || msgLower.Contains("snack")
                         || msgLower.Contains("bỏng")
                         || msgLower.Contains("nước uống")
                         || msgLower.Contains("drink"))
                     db += await GetCachedDataAsync("snacks", searchKeyword, () => _Service.GetSnacksAsync(searchKeyword));
-                else if (msgLower.Contains("thể loại") || msgLower.Contains("genre"))
+                else if (resolvedCategory == "genres" || msgLower.Contains("thể loại") || msgLower.Contains("genre"))
                     db += await GetCachedDataAsync("genres", searchKeyword, () => _Service.GetGenresAsync(searchKeyword));
-                else if (msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
+                else if (resolvedCategory == "actors" || msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
                     db += await GetCachedDataAsync("actors", searchKeyword, () => _Service.GetActorsAsync(searchKeyword));
                 else
                     db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
@@ -122,7 +136,7 @@ namespace CinemaAPI.Services.Implementations
                 string? errorDetail = null;
                 try
                 {
-                    reply = await _geminiService.GenerateResponseAsync(message, db);
+                    reply = await _geminiService.GenerateResponseAsync(message, db, conversationContext);
                 }
                 catch (Exception ex)
                 {
@@ -230,6 +244,106 @@ namespace CinemaAPI.Services.Implementations
             if (string.IsNullOrWhiteSpace(content)) return string.Empty;
             if (content.Length <= maxLength) return content;
             return content[..maxLength] + "...";
+        }
+
+        private static string BuildConversationContext(IReadOnlyList<ChatMessage> messages, string currentMessage, int maxMessages = 6)
+        {
+            var recentMessages = messages
+                .TakeLast(maxMessages)
+                .Select(message => $"{message.role}: {message.message}")
+                .ToList();
+
+            recentMessages.Add($"user: {currentMessage}");
+            return string.Join(Environment.NewLine, recentMessages);
+        }
+
+        private static string? GetMostRecentUserMessage(IReadOnlyList<ChatMessage> messages)
+        {
+            return messages
+                .LastOrDefault(message => message.role == "user")
+                ?.message;
+        }
+
+        private static string? ResolveCategoryFromHistory(string message, IReadOnlyList<ChatMessage> messages)
+        {
+            var currentCategory = DetectCategory(message);
+            if (!string.IsNullOrWhiteSpace(currentCategory))
+            {
+                return currentCategory;
+            }
+
+            if (!LooksLikeFollowUp(message))
+            {
+                return null;
+            }
+
+            foreach (var previousUserMessage in messages.Reverse())
+            {
+                if (previousUserMessage.role != "user")
+                {
+                    continue;
+                }
+
+                var previousCategory = DetectCategory(previousUserMessage.message);
+                if (!string.IsNullOrWhiteSpace(previousCategory))
+                {
+                    return previousCategory;
+                }
+            }
+
+            return null;
+        }
+
+        private static string? DetectCategory(string message)
+        {
+            var normalized = message.ToLowerInvariant();
+
+            if (normalized.Contains("lịch chiếu") || normalized.Contains("suất chiếu") || normalized.Contains("giờ chiếu") || normalized.Contains("showtime"))
+            {
+                return "showtimes";
+            }
+
+            if (normalized.Contains("diễn viên") || normalized.Contains("actor") || normalized.Contains("cast"))
+            {
+                return "actors";
+            }
+
+            if (normalized.Contains("phòng") || normalized.Contains("room") || normalized.Contains("giá"))
+            {
+                return "rooms";
+            }
+
+            if (normalized.Contains("ăn") || normalized.Contains("đồ ăn") || normalized.Contains("snack") || normalized.Contains("bỏng") || normalized.Contains("nước uống") || normalized.Contains("drink"))
+            {
+                return "snacks";
+            }
+
+            if (normalized.Contains("thể loại") || normalized.Contains("genre"))
+            {
+                return "genres";
+            }
+
+            if (normalized.Contains("phim") || normalized.Contains("movie"))
+            {
+                return "movies";
+            }
+
+            return null;
+        }
+
+        private static bool LooksLikeFollowUp(string message)
+        {
+            var normalized = message.Trim().ToLowerInvariant();
+
+            return normalized.StartsWith("còn ")
+                || normalized.StartsWith("con ")
+                || normalized.StartsWith("thế ")
+                || normalized.StartsWith("vậy ")
+                || normalized.StartsWith("tiếp ")
+                || normalized.StartsWith("nữa ")
+                || normalized == "còn"
+                || normalized == "thế"
+                || normalized == "vậy";
         }
 
         // Helper method to extract search keywords from message

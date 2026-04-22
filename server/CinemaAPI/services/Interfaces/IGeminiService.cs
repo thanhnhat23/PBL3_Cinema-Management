@@ -3,7 +3,7 @@ namespace CinemaAPI.Services.Interfaces
     public interface IGeminiService
     {
         Task<GeminiExtractionResult> AnalyzeIntentAndExtractAsync(string message, Dictionary<string, string> currentContext);
-        Task<string> GenerateResponseAsync(string userPrompt, string sqlContext);
+        Task<string> GenerateResponseAsync(string userPrompt, string sqlContext, string conversationContext);
     }
 
     public class GeminiExtractionResult

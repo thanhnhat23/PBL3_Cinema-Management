@@ -112,7 +112,59 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<string> GetShowtimesAsync(string? searchKeyword = null)
         {
-            throw new Exception("Not implemented yet");
+            var cacheKey = RagCacheKeys.Build("service", "showtimes", searchKeyword);
+            if (_cache.TryGetValue(cacheKey, out string? cachedShowtimes) && !string.IsNullOrWhiteSpace(cachedShowtimes))
+            {
+                return cachedShowtimes;
+            }
+
+            var query = _dbContext.ShowTimes
+                .Include(showTime => showTime.Movie)
+                .Include(showTime => showTime.Room)
+                    .ThenInclude(room => room.Cinema)
+                        .ThenInclude(cinema => cinema.Location)
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchKeyword))
+            {
+                var keywordLower = searchKeyword.ToLower();
+                query = query.Where(showTime =>
+                    showTime.Movie.title.ToLower().Contains(keywordLower)
+                    || showTime.Room.Cinema.name.ToLower().Contains(keywordLower)
+                    || showTime.Room.Cinema.Location.city.ToLower().Contains(keywordLower)
+                    || showTime.Room.nameRoom.ToLower().Contains(keywordLower));
+
+                query = query.OrderBy(showTime => showTime.startTime).Take(SearchLimit * 2);
+            }
+            else
+            {
+                var now = DateTime.UtcNow;
+                query = query
+                    .Where(showTime => showTime.startTime >= now)
+                    .OrderBy(showTime => showTime.startTime)
+                    .Take(DefaultLimit);
+            }
+
+            var showtimes = await query.Select(showTime => new
+            {
+                MovieTitle = showTime.Movie.title,
+                CinemaName = showTime.Room.Cinema.name,
+                City = showTime.Room.Cinema.Location.city,
+                RoomName = showTime.Room.nameRoom,
+                RoomLayout = showTime.Room.roomLayoutType,
+                StartTime = showTime.startTime,
+                EndTime = showTime.endTime,
+                Price = showTime.Room.price
+            }).ToListAsync();
+
+            var result = string.Join("\n", showtimes.Select(showTime =>
+                $"Phim: {Shorten(showTime.MovieTitle, 120)}, Rạp: {Shorten(showTime.CinemaName, 100)}, Thành phố: {Shorten(showTime.City, 60)}, Phòng: {Shorten(showTime.RoomName, 40)} ({showTime.RoomLayout}), Giờ chiếu: {showTime.StartTime:HH:mm dd/MM/yyyy} - {showTime.EndTime:HH:mm dd/MM/yyyy}, Giá tham khảo: {showTime.Price}"
+            ));
+
+            var output = Truncate(result, MaxOutputLength);
+            _cache.Set(cacheKey, output, TimeSpan.FromMinutes(5));
+            return output;
         }
 
         public async Task<string> GetMoviesAsync(string? searchKeyword = null)
