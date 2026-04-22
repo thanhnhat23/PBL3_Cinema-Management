@@ -9,6 +9,5 @@ namespace CinemaAPI.Services.Interfaces
         Task<Inventory?> GetInventoryById(int cinema_id, int snack_id);
         Task AddInventory(Inventory inventory);
         Task UpdateInventory(int cinema_id, int snack_id, InventoryUpdateRequest request);
-        Task DeleteInventory(int cinema_id, int snack_id);
     }
 }

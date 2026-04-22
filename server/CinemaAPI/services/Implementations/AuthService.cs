@@ -41,7 +41,7 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                var user = _dbContext.Users.FirstOrDefault(u => u.userName == request.userName);
+                var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.userName == request.userName);
 
                 // Verify password
                 if (user == null || !BCrypt.Net.BCrypt.Verify(request.password, user.passwordHash))
@@ -177,15 +177,15 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                var user = _dbContext.Users.FirstOrDefault(u => u.email == request.email);
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.email == request.email);
                 if (user == null) return false;
 
-                var token = new Random().Next(100000, 999999).ToString();
+                var token = Random.Shared.Next(100000, 999999).ToString();
                 // Ensure token is unique
                 var existingToken = await _dbContext.Users.AnyAsync(u => u.passwordResetToken == token);
                 if (existingToken)
                 {
-                    token = new Random().Next(100000, 999999).ToString();
+                    token = Random.Shared.Next(100000, 999999).ToString();
                 }
                 user.passwordResetToken = token;
                 user.resetTokenExpires = DateTime.UtcNow.AddMinutes(5);

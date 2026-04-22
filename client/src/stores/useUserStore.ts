@@ -13,19 +13,73 @@ export interface User {
     isBanned: boolean;
     isVerified: boolean;
     role: string;
+    age: number;
+}
+
+interface ApiUser {
+    user_id?: string;
+    userName?: string;
+    username?: string;
+    birthDate: Date;
+    email: string;
+    profile_slug?: string;
+    avatar_provider?: string;
+    avatar_path?: string | null;
+    createAt?: Date;
+    createdAt?: Date;
+    isBanned: boolean;
+    isEmailVerified?: boolean;
+    isVerified?: boolean;
+    role: string;
+    age: number;
 }
 
 export const useUserStore = create<{
     user: User | null;
+    users: User[];
+    isFetchingAllUsers: boolean;
     isFetchingUserByUserId: boolean;
     isBannedUser: boolean;
 
+    fetchAllUsers: () => Promise<void>;
     fetchUserById: (userId: string) => Promise<void>;
     banUser: (userId: string) => Promise<void>;
 }>(( set) => ({
     user: null,
+    users: [],
+    isFetchingAllUsers: false,
     isFetchingUserByUserId: false,
     isBannedUser: false,
+
+    fetchAllUsers: async () => {
+        try {
+            set({ isFetchingAllUsers: true });
+
+            const response = await _axios.get('/v1/user/get-all');
+
+            const users: User[] = (response.data as ApiUser[] ?? []).map((data) => ({
+                user_id: data.user_id ?? "",
+                username: data.userName ?? data.username ?? "",
+                birthDate: data.birthDate,
+                email: data.email,
+                profile_slug: data.profile_slug ?? data.user_id ?? "",
+                avatar_provider: data.avatar_provider ?? "local",
+                avatar_path: data.avatar_path,
+                createdAt: data.createAt ?? data.createdAt ?? new Date(0),
+                isBanned: data.isBanned,
+                isVerified: data.isEmailVerified ?? data.isVerified ?? false,
+                role: data.role,
+                age: data.age ?? 0
+            }));
+
+            set({ users });
+        } catch (error) {
+            console.error("Failed to fetch all users:", error);
+        } finally {
+            set({ isFetchingAllUsers: false });
+        }
+    },
+
 
     fetchUserById: async (userId: string) => {
         try {
@@ -48,6 +102,7 @@ export const useUserStore = create<{
                         isBanned: data.isBanned,
                         isVerified: data.isEmailVerified,
                         role: data.role,
+                        age: data.age
                     },
                 });
             }

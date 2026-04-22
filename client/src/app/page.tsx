@@ -3,7 +3,7 @@
 import { CardMovie } from "@/components/layout/cardMovie";
 import dynamic from "next/dynamic";
 import { ChevronRight } from "../components/icons/chevron-right";
-import { useState, useRef, useEffect, useMemo, Suspense } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Tab, Tabs, Image } from "@heroui/react";
@@ -42,9 +42,12 @@ function Home() {
     const searchParams = useSearchParams();
 
     const { 
-        fetchAllMovies,
-        movies,
-        isFetchingMovies,
+        fetchMoviesByStatus,
+        fetchPopularMovies,
+        moviesByStatusMap,
+        popularMovies,
+        isFetchingMoviesByStatus,
+        isFetchingPopularMovies,
     } = useMovieStore();
 
     useEffect(() => {
@@ -85,20 +88,16 @@ function Home() {
     }, [hoveredItem]);
 
     useEffect(() => {
-        fetchAllMovies();
-    }, [fetchAllMovies]);
+        fetchMoviesByStatus(0, 8);
+        fetchMoviesByStatus(1, 8);
+        fetchPopularMovies(8);
+    }, [fetchMoviesByStatus, fetchPopularMovies]);
 
-    const nowPlayingMovies = useMemo(() => {
-        return movies.filter(movie => movie.status === 0).sort((a, b) => Math.abs(new Date(a.release_date).getTime() - new Date().getTime()) - Math.abs(new Date(b.release_date).getTime() - new Date().getTime())).slice(0, 8);
-    }, [movies]);
-
-    const upcomingMovies = useMemo(() => {
-        return movies.filter(movie => movie.status === 1).sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime()).slice(0, 8);
-    }, [movies]);
-
-    const popularMovies = useMemo(() => {
-        return [...movies].sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0)).slice(0, 8);
-    }, [movies]);
+    const nowPlayingMovies = moviesByStatusMap[0] ?? [];
+    const upcomingMovies = moviesByStatusMap[1] ?? [];
+    const isLoadingNowPlaying = isFetchingMoviesByStatus;
+    const isLoadingUpcoming = isFetchingMoviesByStatus;
+    const isLoadingPopular = isFetchingPopularMovies;
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-0 md:py-6">
@@ -159,7 +158,7 @@ function Home() {
         
         {selectedTab === 'nowplaying' && (
             <div className="min-h-screen gap-4 md:gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                {isFetchingMovies ? (
+                {isLoadingNowPlaying ? (
                     Array.from({ length: 8 }).map((_, index) => (
                         <CardSkeleton key={index} />
                     ))
@@ -173,7 +172,7 @@ function Home() {
         
         {selectedTab === 'coming-soon' && (
             <div className="min-h-screen gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                {isFetchingMovies ? (
+                {isLoadingUpcoming ? (
                     Array.from({ length: 8 }).map((_, index) => (
                         <CardSkeleton key={index} />
                     ))
@@ -187,7 +186,7 @@ function Home() {
         
         {selectedTab === 'popular' && (
             <div className="min-h-screen gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                {isFetchingMovies ? (
+                {isLoadingPopular ? (
                     Array.from({ length: 8 }).map((_, index) => (
                         <CardSkeleton key={index} />
                     ))

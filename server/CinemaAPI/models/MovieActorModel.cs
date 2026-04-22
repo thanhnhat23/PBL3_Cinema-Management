@@ -14,6 +14,6 @@ namespace CinemaAPI.Models
         public virtual Actor Actor { get; set; } = null!;
 
         public string char_name { get; set; } = null!;
-        public int order { get; set; }
+        public int order { get; set; } // Order of appearance in credits
     }
 }

@@ -4,10 +4,13 @@ import { HeroUIProvider } from '@heroui/react'
 import { ToastProvider } from "@heroui/toast";
 import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useChatBotStore } from '@/stores/useChatBot';
 import { AuthDialog } from '@/components/layout/formDialog';
 import FooterLayout from '@/components/layout/footer';
 import NavbarLayout from '@/components/layout/navbar';
+import ChatBot from '@/components/layout/chatBot';
 import { usePathname } from 'next/navigation';
+
 
 function AuthInitializer({ children }: { children: React.ReactNode }) {
   const checkAuth = useAuthStore((state) => state.checkAuth);
@@ -22,6 +25,21 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
 export function Providers({children}: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isHideNavFooter = pathname === '/dashboard';
+
+  const { authUser, isCheckingAuth } = useAuthStore();
+  const { loadHistory, clearChat } = useChatBotStore();
+
+  useEffect(() => {
+    if (!isCheckingAuth && authUser?.id) {
+      void loadHistory();
+    }
+  }, [authUser?.id, isCheckingAuth, loadHistory]);
+
+  useEffect(() => {
+    if (!isCheckingAuth && !authUser) {
+      clearChat();
+    }
+  }, [authUser, isCheckingAuth, clearChat]);
   
   return (
     <HeroUIProvider>
@@ -31,6 +49,7 @@ export function Providers({children}: { children: React.ReactNode }) {
         {children}
         {isHideNavFooter ? null : <FooterLayout />}
         <AuthDialog />
+        {!isCheckingAuth && authUser ? <ChatBot /> : null}
       </AuthInitializer>
     </HeroUIProvider>
   )

@@ -24,6 +24,9 @@ function Movies() {
     const searchParams = useSearchParams();
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
     const [page, setPage] = useState<number>(1);
+    const [hasLoadedNowPlaying, setHasLoadedNowPlaying] = useState<boolean>(false);
+    const [hasLoadedComingSoon, setHasLoadedComingSoon] = useState<boolean>(false);
+    const [hasLoadedPopular, setHasLoadedPopular] = useState<boolean>(false);
     const pageSize = 16;
 
     const tabParam = searchParams.get('tab');
@@ -38,9 +41,12 @@ function Movies() {
     const trendingRef = useRef<FlameIconHandle | null>(null);
 
     const { 
-        fetchAllMovies,
-        movies,
-        isFetchingMovies,
+        fetchMoviesByStatus,
+        fetchPopularMovies,
+        moviesByStatusMap,
+        popularMovies,
+        isFetchingMoviesByStatus,
+        isFetchingPopularMovies,
     } = useMovieStore();
 
     useEffect(() => {
@@ -57,20 +63,42 @@ function Movies() {
     }, [hoveredItem]);
 
     useEffect(() => {
-        fetchAllMovies();
-    }, [fetchAllMovies]);
+        const fetchDataByTab = async () => {
+            const fetchLimit = 10000;
 
-    const nowPlayingMovies = useMemo(() => {
-        return movies.filter(movie => movie.status === 0).sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0));
-    }, [movies]);
+            if (selectedTab === 'nowplaying' && !hasLoadedNowPlaying) {
+                await fetchMoviesByStatus(0, fetchLimit);
+                setHasLoadedNowPlaying(true);
+                return;
+            }
 
-    const upcomingMovies = useMemo(() => {
-        return movies.filter(movie => movie.status === 1).sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0));
-    }, [movies]);
+            if (selectedTab === 'coming-soon' && !hasLoadedComingSoon) {
+                await fetchMoviesByStatus(1, fetchLimit);
+                setHasLoadedComingSoon(true);
+                return;
+            }
 
-    const popularMovies = useMemo(() => {
-        return [...movies].sort((a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0));
-    }, [movies]);
+            if (selectedTab === 'popular' && !hasLoadedPopular) {
+                await fetchPopularMovies(fetchLimit);
+                setHasLoadedPopular(true);
+            }
+        };
+
+        fetchDataByTab();
+    }, [
+        selectedTab,
+        fetchMoviesByStatus,
+        fetchPopularMovies,
+        hasLoadedNowPlaying,
+        hasLoadedComingSoon,
+        hasLoadedPopular,
+    ]);
+
+    const nowPlayingMovies = useMemo(() => moviesByStatusMap[0] ?? [], [moviesByStatusMap]);
+    const upcomingMovies = useMemo(() => moviesByStatusMap[1] ?? [], [moviesByStatusMap]);
+    const isLoadingNowPlaying = selectedTab === 'nowplaying' && isFetchingMoviesByStatus;
+    const isLoadingUpcoming = selectedTab === 'coming-soon' && isFetchingMoviesByStatus;
+    const isLoadingPopular = selectedTab === 'popular' && isFetchingPopularMovies;
 
     const totalNowPlayingPages = Math.max(1, Math.ceil(nowPlayingMovies.length / pageSize));
     const totalUpcomingPages = Math.max(1, Math.ceil(upcomingMovies.length / pageSize));
@@ -98,6 +126,7 @@ function Movies() {
                     <span className="md:inline hidden w-1 h-8 bg-black dark:bg-white"></span>
                     <h1 className="inline md:hidden text-2xl font-bold">Xem gì hôm nay?</h1>
                     <h1 className="md:inline hidden text-3xl font-bold">Phim</h1>
+                    
                     <Tabs 
                         key="tabs" 
                         aria-label="Tabs variants" 
@@ -151,7 +180,7 @@ function Movies() {
                 {selectedTab === 'nowplaying' && (
                     <div className="flex flex-col items-center">
                         <div className="gap-4 md:gap-8 grid grid-cols-2 sm:grid-cols-4 p-2">
-                            {isFetchingMovies ? (
+                            {isLoadingNowPlaying ? (
                                 Array.from({ length: 16 }).map((_, index) => (
                                     <CardMovieSkeleton key={index} />
                                 ))
@@ -179,7 +208,7 @@ function Movies() {
                 {selectedTab === 'coming-soon' && (
                     <div className="flex flex-col items-center">
                         <div className="gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                            {isFetchingMovies ? (
+                            {isLoadingUpcoming ? (
                                 Array.from({ length: 16 }).map((_, index) => (
                                     <CardMovieSkeleton key={index} />
                                 ))
@@ -207,7 +236,7 @@ function Movies() {
                 {selectedTab === 'popular' && (
                     <div className="flex flex-col items-center">
                         <div className="gap-8 grid grid-cols-2 sm:grid-cols-4 p-2 md:pt-8 ">
-                            {isFetchingMovies ? (
+                            {isLoadingPopular ? (
                                 Array.from({ length: 16 }).map((_, index) => (
                                     <CardMovieSkeleton key={index} />
                                 ))

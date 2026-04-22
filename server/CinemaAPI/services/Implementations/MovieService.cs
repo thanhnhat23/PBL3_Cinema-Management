@@ -2,30 +2,35 @@ using CinemaAPI.data;
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
 using CinemaAPI.Models.DTOs.Response;
+using CinemaAPI.Services.Abstract;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services.Implementations
 {
-    public class MovieService : IMovieService
+    public class MovieService : BaseService<Movie>, IMovieService
     {
-        private readonly AppDbContext _dbContext;
+        private new readonly AppDbContext _dbContext;
 
         public MovieService(AppDbContext dbContext)
+            : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
         public async Task<List<Movie>> GetAllMovies() =>
             await _dbContext.Movies
+                .AsNoTracking()
                 .Include(m => m.MovieGenres)
                     .ThenInclude(mg => mg.Genre)
                 .Include(m => m.MovieActors)
                     .ThenInclude(ma => ma.Actor)
+                .OrderByDescending(m => m.release_date)
                 .ToListAsync();
-                
+
         public async Task<Movie?> GetMovieById(int movie_id) =>
             await _dbContext.Movies
+            .AsNoTracking()
             .Include(m => m.MovieGenres)
                 .ThenInclude(mg => mg.Genre)
             .Include(m => m.MovieActors)
@@ -33,13 +38,44 @@ namespace CinemaAPI.Services.Implementations
             .Include(m => m.ShowTimes)
             .FirstOrDefaultAsync(m => m.movie_id == movie_id);
 
+        public async Task<List<Movie>> GetMoviesByGenreAsync(int genreId, int limit) =>
+            await _dbContext.Movies
+                .AsNoTracking()
+                .Where(m => m.MovieGenres.Any(mg => mg.genre_id == genreId))
+                .OrderByDescending(m => m.release_date)
+                .Take(limit)
+                .ToListAsync();
+
+        public async Task<List<Movie>> GetMoviesByStatusAsync(int status, int limit) =>
+            await _dbContext.Movies
+                .AsNoTracking()
+                .Where(m => m.status == (MovieStatus)status)
+                .OrderByDescending(m => m.release_date)
+                .Take(limit)
+                .ToListAsync();
+
+        public async Task<List<Movie>> GetPopularMoviesAsync(int limit) =>
+            await _dbContext.Movies
+                .AsNoTracking()
+                .Select(movie => new
+                {
+                    Movie = movie,
+                    ShowTimeCount = _dbContext.ShowTimes.Count(showTime => showTime.movie_id == movie.movie_id)
+                })
+                .OrderByDescending(item => item.ShowTimeCount)
+                .ThenByDescending(item => item.Movie.release_date)
+                .Take(limit)
+                .Select(item => item.Movie)
+                .ToListAsync();
+
         public async Task AddMovie(Movie movie)
         {
             _dbContext.Movies.Add(movie);
             await _dbContext.SaveChangesAsync();
+            RagCacheKeys.Invalidate("movies");
         }
-        
-        public async Task UpdateMovie(int movie_id, MovieUpdateRequest request)
+
+        public async Task<Movie> UpdateMovie(int movie_id, MovieUpdateRequest request)
         {
             var movie = await _dbContext.Movies.FindAsync(movie_id);
 
@@ -60,10 +96,18 @@ namespace CinemaAPI.Services.Implementations
                 if (request.end_date.HasValue)
                     movie.end_date = request.end_date.Value;
 
+                if (request.adult.HasValue)
+                    movie.adult = request.adult.Value;
+
+                if (request.runtime.HasValue)
+                    movie.runtime = request.runtime.Value;
+
                 if (request.status.HasValue)
                     movie.status = request.status.Value;
 
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("movies");
+                return movie;
             }
             catch (Exception ex)
             {
@@ -72,7 +116,17 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task DeleteMovie(int movie_id)
+        public async Task SoftDeleteMovie(int movie_id)
+        {
+            var movie = await _dbContext.Movies.FindAsync(movie_id);
+            if (movie == null)
+                throw new Exception("Movie not found.");
+
+            await SoftDeleteAsync(movie);
+                RagCacheKeys.Invalidate("movies");
+        }
+
+        public async Task HardDeleteMovie(int movie_id)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
@@ -98,17 +152,19 @@ namespace CinemaAPI.Services.Implementations
 
                 await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
+                RagCacheKeys.Invalidate("movies");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"DeleteMovie Error: {ex.Message}");
-                throw new Exception($"An error occurred while deleting the movie: {ex.Message}");
+                Console.WriteLine($"HardDeleteMovie Error: {ex.Message}");
+                throw new Exception($"An error occurred while hard deleting the movie: {ex.Message}");
             }
         }
 
         public async Task<List<ActorWithMovie>> GetActorWithMovieAsync(int id) =>
             await _dbContext.MovieActors
+                .AsNoTracking()
                 .Where(ma => ma.movie_id == id)
                 .Include(ma => ma.Actor)
                 .Select(ma => new ActorWithMovie

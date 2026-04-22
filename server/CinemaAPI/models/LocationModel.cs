@@ -13,5 +13,7 @@ namespace CinemaAPI.Models
 
         [Required, MaxLength(100)]
         public string city { get; set; } = null!;
+        public DateTime? deleted_at { get; set; }
+        public Guid? deleted_by { get; set; }
     }
 }

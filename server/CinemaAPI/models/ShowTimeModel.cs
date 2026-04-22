@@ -31,5 +31,8 @@ namespace CinemaAPI.Models
 
         [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime endTime { get; set; }
+        public DateTime? deleted_at { get; set; }
+
+        public Guid? deleted_by { get; set; }
     }
 }

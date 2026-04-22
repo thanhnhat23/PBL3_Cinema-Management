@@ -9,7 +9,7 @@ namespace CinemaAPI.Controllers
     [Route("api/v1/[controller]")]
     public class bookingController : ControllerBase
     {
-        private readonly IBookingService _bookingService;       
+        private readonly IBookingService _bookingService;
         public bookingController(IBookingService bookingService)
         {
             _bookingService = bookingService;
@@ -28,7 +28,7 @@ namespace CinemaAPI.Controllers
             }
         }
         [HttpGet("get/{bookingId}")]
-        public async Task<IActionResult> GetBooking(int bookingId)      
+        public async Task<IActionResult> GetBooking(int bookingId)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace CinemaAPI.Controllers
             }
         }
         [HttpPost("create")]
-        public async Task<IActionResult> CreateBooking( [FromBody] BookingCreateRequest request)
+        public async Task<IActionResult> CreateBooking([FromBody] BookingCreateRequest request)
         {
             try
             {
@@ -70,20 +70,6 @@ namespace CinemaAPI.Controllers
             }
         }
         //[HttpPut("update/{bookingId}")]
-       // public async Task<IActionResult> UpdateBooking(in)
-       [HttpDelete("delete/{bookingId}")]
-        public async Task<IActionResult> DeleteBooking(int bookingId)
-        {
-            try
-            {
-                await _bookingService.DeleteBooking(bookingId);
-                return Ok("Booking deleted successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in bookingController.DeleteBooking: {ex.Message}");
-            }
-        }
-        
-}
+        // public async Task<IActionResult> UpdateBooking(in)
+    }
 }

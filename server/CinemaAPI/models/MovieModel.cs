@@ -72,5 +72,7 @@ namespace CinemaAPI.Models
                 return MovieStatus.Released;
             }
         }
+        public DateTime? deleted_at { get; set; }
+        public Guid? deleted_by { get; set; }
     }
 }

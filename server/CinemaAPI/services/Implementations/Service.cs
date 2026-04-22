@@ -3,23 +3,38 @@ using CinemaAPI.Models;
 using CinemaAPI.Services.Interfaces;
 using CinemaAPI.data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CinemaAPI.Services.Implementations
 {
     public class Service : IService
     {
-        private readonly AppDbContext _dbContext;
+        private const int DefaultLimit = 20;
+        private const int SearchLimit = 10;
+        private const int MaxOutputLength = 4000;
+        private const int MaxTextLength = 180;
 
-        public Service(AppDbContext dbContext)
+        private readonly AppDbContext _dbContext;
+        private readonly IMemoryCache _cache;
+
+        public Service(AppDbContext dbContext, IMemoryCache cache)
         {
             _dbContext = dbContext;
+            _cache = cache;
         }
 
         public async Task<string> GetRoomsAsync(string? searchKeyword = null)
         {
+            var cacheKey = RagCacheKeys.Build("service", "rooms", searchKeyword);
+            if (_cache.TryGetValue(cacheKey, out string? cachedRooms) && !string.IsNullOrWhiteSpace(cachedRooms))
+            {
+                return cachedRooms;
+            }
+
             var query = _dbContext.Rooms
                         .Include(r => r.Cinema)
                         .ThenInclude(l => l.Location)
+                        .AsNoTracking()
                         .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchKeyword))
@@ -27,10 +42,11 @@ namespace CinemaAPI.Services.Implementations
                 // Case-insensitive search
                 var keywordLower = searchKeyword.ToLower();
                 query = query.Where(r => r.Cinema.name.ToLower().Contains(keywordLower) || r.Cinema.Location.city.ToLower().Contains(keywordLower));
+                query = query.Take(SearchLimit);
             }
             else
             {
-                query = query.Take(20);
+                query = query.Take(DefaultLimit);
             }
 
             var rooms = await query.Select(r => new
@@ -47,14 +63,22 @@ namespace CinemaAPI.Services.Implementations
                         .ToListAsync();
 
             var result = string.Join("\n", rooms.Select(r =>
-               $"Rạp: {r.Name}, Địa chỉ: {r.Address}, Thành phố: {r.City}, Mô tả: {r.Description}, Hotline: {r.PhoneNumber}, Phòng: {r.Room}, Định dạng phòng: {r.RoomLayout}, Giá vé: {r.RoomPrice}"
+               $"Rạp: {Shorten(r.Name, 80)}, Địa chỉ: {Shorten(r.Address, 120)}, Thành phố: {Shorten(r.City, 60)}, Mô tả: {Shorten(r.Description, MaxTextLength)}, Hotline: {Shorten(r.PhoneNumber, 20)}, Phòng: {Shorten(r.Room, 40)}, Định dạng phòng: {r.RoomLayout}, Giá vé: {r.RoomPrice}"
             ));
 
-            return result;
+            var output = Truncate(result, MaxOutputLength);
+            _cache.Set(cacheKey, output, TimeSpan.FromMinutes(5));
+            return output;
         }
 
         public async Task<string> GetSnacksAsync(string? searchKeyword = null)
         {
+            var cacheKey = RagCacheKeys.Build("service", "snacks", searchKeyword);
+            if (_cache.TryGetValue(cacheKey, out string? cachedSnacks) && !string.IsNullOrWhiteSpace(cachedSnacks))
+            {
+                return cachedSnacks;
+            }
+
             var query = _dbContext.Snacks.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchKeyword))
@@ -62,6 +86,11 @@ namespace CinemaAPI.Services.Implementations
                 // Case-insensitive search
                 var keywordLower = searchKeyword.ToLower();
                 query = query.Where(s => s.name.ToLower().Contains(keywordLower) || s.type.ToString().ToLower().Contains(keywordLower));
+                query = query.Take(SearchLimit);
+            }
+            else
+            {
+                query = query.Take(DefaultLimit);
             }
 
             var snacks = await query.Select(s => new
@@ -73,24 +102,85 @@ namespace CinemaAPI.Services.Implementations
                         .ToListAsync();
 
             var result = string.Join("\n", snacks.Select(s =>
-               $"Tên món: {s.name}, Loại: {s.type}, Giá: {s.price}"
+                    $"Tên món: {Shorten(s.name, 80)}, Loại: {s.type}, Giá: {s.price}"
             ));
 
-            return result;
+            var output = Truncate(result, MaxOutputLength);
+            _cache.Set(cacheKey, output, TimeSpan.FromMinutes(5));
+            return output;
         }
 
         public async Task<string> GetShowtimesAsync(string? searchKeyword = null)
         {
-            throw new Exception("Not implemented yet");
+            var cacheKey = RagCacheKeys.Build("service", "showtimes", searchKeyword);
+            if (_cache.TryGetValue(cacheKey, out string? cachedShowtimes) && !string.IsNullOrWhiteSpace(cachedShowtimes))
+            {
+                return cachedShowtimes;
+            }
+
+            var query = _dbContext.ShowTimes
+                .Include(showTime => showTime.Movie)
+                .Include(showTime => showTime.Room)
+                    .ThenInclude(room => room.Cinema)
+                        .ThenInclude(cinema => cinema.Location)
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchKeyword))
+            {
+                var keywordLower = searchKeyword.ToLower();
+                query = query.Where(showTime =>
+                    showTime.Movie.title.ToLower().Contains(keywordLower)
+                    || showTime.Room.Cinema.name.ToLower().Contains(keywordLower)
+                    || showTime.Room.Cinema.Location.city.ToLower().Contains(keywordLower)
+                    || showTime.Room.nameRoom.ToLower().Contains(keywordLower));
+
+                query = query.OrderBy(showTime => showTime.startTime).Take(SearchLimit * 2);
+            }
+            else
+            {
+                var now = DateTime.UtcNow;
+                query = query
+                    .Where(showTime => showTime.startTime >= now)
+                    .OrderBy(showTime => showTime.startTime)
+                    .Take(DefaultLimit);
+            }
+
+            var showtimes = await query.Select(showTime => new
+            {
+                MovieTitle = showTime.Movie.title,
+                CinemaName = showTime.Room.Cinema.name,
+                City = showTime.Room.Cinema.Location.city,
+                RoomName = showTime.Room.nameRoom,
+                RoomLayout = showTime.Room.roomLayoutType,
+                StartTime = showTime.startTime,
+                EndTime = showTime.endTime,
+                Price = showTime.Room.price
+            }).ToListAsync();
+
+            var result = string.Join("\n", showtimes.Select(showTime =>
+                $"Phim: {Shorten(showTime.MovieTitle, 120)}, Rạp: {Shorten(showTime.CinemaName, 100)}, Thành phố: {Shorten(showTime.City, 60)}, Phòng: {Shorten(showTime.RoomName, 40)} ({showTime.RoomLayout}), Giờ chiếu: {showTime.StartTime:HH:mm dd/MM/yyyy} - {showTime.EndTime:HH:mm dd/MM/yyyy}, Giá tham khảo: {showTime.Price}"
+            ));
+
+            var output = Truncate(result, MaxOutputLength);
+            _cache.Set(cacheKey, output, TimeSpan.FromMinutes(5));
+            return output;
         }
 
         public async Task<string> GetMoviesAsync(string? searchKeyword = null)
         {
+            var cacheKey = RagCacheKeys.Build("service", "movies", searchKeyword);
+            if (_cache.TryGetValue(cacheKey, out string? cachedMovies) && !string.IsNullOrWhiteSpace(cachedMovies))
+            {
+                return cachedMovies;
+            }
+
             var query = _dbContext.Movies
                         .Include(m => m.MovieGenres)
                             .ThenInclude(mg => mg.Genre)
                         .Include(m => m.MovieActors)
                             .ThenInclude(ma => ma.Actor)
+                        .AsNoTracking()
                         .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchKeyword))
@@ -98,11 +188,12 @@ namespace CinemaAPI.Services.Implementations
                 // Case-insensitive search with better matching
                 var keywordLower = searchKeyword.ToLower();
                 query = query.Where(m => m.title.ToLower().Contains(keywordLower));
+                query = query.OrderByDescending(m => m.release_date).Take(SearchLimit);
             }
             else
                 query = query.Where(m => m.status == MovieStatus.Released || m.status == MovieStatus.Upcoming)
                             .OrderByDescending(m => m.release_date)
-                            .Take(30);
+                            .Take(DefaultLimit);
 
             var movies = await query.Select(m => new
             {
@@ -120,27 +211,45 @@ namespace CinemaAPI.Services.Implementations
             .ToListAsync();
 
             var result = string.Join("\n", movies.Select(m =>
-                   $"Phim: {m.title}, Mô tả: {m.overview}, Ngày chiếu: {m.release_date?.ToShortDateString() ?? ""}-{m.end_date?.ToShortDateString() ?? ""}, Đánh giá: {m.vote_average}/10, Thời lượng: {m.runtime}p, Thể loại: {string.Join(", ", m.genres)}, Diễn viên: {string.Join(", ", m.actors)}"
+                   $"Phim: {Shorten(m.title, 120)}, Mô tả: {Shorten(m.overview, MaxTextLength)}, Ngày chiếu: {m.release_date?.ToShortDateString() ?? ""}-{m.end_date?.ToShortDateString() ?? ""}, Đánh giá: {m.vote_average}/10, Thời lượng: {m.runtime}p, Thể loại: {string.Join(", ", m.genres)}, Diễn viên: {string.Join(", ", m.actors)}"
             ));
 
-            return result;
+            var output = Truncate(result, MaxOutputLength);
+            _cache.Set(cacheKey, output, TimeSpan.FromMinutes(5));
+            return output;
         }
 
         public async Task<string> GetGenresAsync(string? searchKeyword = null)
         {
+            var cacheKey = RagCacheKeys.Build("service", "genres", searchKeyword);
+            if (_cache.TryGetValue(cacheKey, out string? cachedGenres) && !string.IsNullOrWhiteSpace(cachedGenres))
+            {
+                return cachedGenres;
+            }
+
             var genres = await _dbContext.Genres
+                        .AsNoTracking()
                         .Select(g => new { g.name })
+                        .Take(DefaultLimit)
                         .ToListAsync();
 
             var result = string.Join("\n", genres.Select(g =>
-               $"Tên thể loại: {g.name}"
+               $"Tên thể loại: {Shorten(g.name, 100)}"
             ));
 
-            return result;
+            var output = Truncate(result, MaxOutputLength);
+            _cache.Set(cacheKey, output, TimeSpan.FromMinutes(10));
+            return output;
         }
 
         public async Task<string> GetActorsAsync(string? searchKeyword = null)
         {
+            var cacheKey = RagCacheKeys.Build("service", "actors", searchKeyword);
+            if (_cache.TryGetValue(cacheKey, out string? cachedActors) && !string.IsNullOrWhiteSpace(cachedActors))
+            {
+                return cachedActors;
+            }
+
             var query = _dbContext.Actors.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchKeyword))
@@ -148,9 +257,10 @@ namespace CinemaAPI.Services.Implementations
                 // Case-insensitive search
                 var keywordLower = searchKeyword.ToLower();
                 query = query.Where(a => a.name.ToLower().Contains(keywordLower));
+                query = query.Take(SearchLimit);
             }
             else
-                query = query.Take(30);
+                query = query.Take(DefaultLimit);
 
             var actors = await query.Select(a => new
             {
@@ -163,10 +273,26 @@ namespace CinemaAPI.Services.Implementations
             .ToListAsync();
 
             var result1 = string.Join("\n", actors.Select(a =>
-               $"Tên diễn viên: {a.name}, Tiểu sử: {a.biography}, Nơi sinh: {a.place_of_birth}, Giới tính: {a.gender}"
+               $"Tên diễn viên: {Shorten(a.name, 100)}, Tiểu sử: {Shorten(a.biography, MaxTextLength)}, Nơi sinh: {Shorten(a.place_of_birth, 100)}, Giới tính: {a.gender}"
             ));
 
-            return result1;
+            var output = Truncate(result1, MaxOutputLength);
+            _cache.Set(cacheKey, output, TimeSpan.FromMinutes(5));
+            return output;
+        }
+
+        private static string Truncate(string? input, int maxLength)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+            if (input.Length <= maxLength) return input;
+            return input[..maxLength] + "...";
+        }
+
+        private static string Shorten(string? input, int maxLength)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+            if (input.Length <= maxLength) return input;
+            return input[..maxLength] + "...";
         }
     }
 }

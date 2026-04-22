@@ -67,34 +67,21 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in inventoryController.CreateInventory: {ex.Message}");
             }
         }
-    
 
-    [HttpPut("update/{cinemaId}/{snackId}")]
-    public async Task<IActionResult> UpdateInventory(int cinemaId, int snackId, [FromBody] InventoryUpdateRequest request)
-    {
-        try
-        {
-            await _inventoryService.UpdateInventory(cinemaId, snackId, request);
-            return Ok("Inventory updated successfully");
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"An error occurred in inventoryController.UpdateInventory: {ex.Message}");
-        }
-    }
 
-    [HttpDelete("delete/{cinemaId}/{snackId}")]
-    public async Task<IActionResult> DeleteInventory(int cinemaId, int snackId)
-    {
-        try
+        [HttpPut("update/{cinemaId}/{snackId}")]
+        public async Task<IActionResult> UpdateInventory(int cinemaId, int snackId, [FromBody] InventoryUpdateRequest request)
         {
-            await _inventoryService.DeleteInventory(cinemaId, snackId);
-            return Ok("Inventory deleted successfully");
+            try
+            {
+                await _inventoryService.UpdateInventory(cinemaId, snackId, request);
+                return Ok("Inventory updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in inventoryController.UpdateInventory: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"An error occurred in inventoryController.DeleteInventory: {ex.Message}");
-        }
+
     }
-    }
-} 
+}

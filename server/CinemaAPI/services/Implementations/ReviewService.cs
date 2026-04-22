@@ -43,12 +43,12 @@ namespace CinemaAPI.Services.Implementations
             if (request.rating < 0 || request.rating > 10)
                 throw new Exception("Rating must be between 0 and 10.");
 
-            var user = await _dbContext.Users.FindAsync(request.user_id);
+            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.user_id == request.user_id);
             if (user == null)
                 throw new Exception($"User with ID {request.user_id} not found.");
 
-            var movie = await _dbContext.Movies.FirstOrDefaultAsync(m => m.movie_id == request.movie_id);
-            if (movie == null)
+            var movieExists = await _dbContext.Movies.AsNoTracking().AnyAsync(m => m.movie_id == request.movie_id);
+            if (!movieExists)
                 throw new Exception($"Movie with ID {request.movie_id} not found.");
 
             var review = new Review
@@ -69,8 +69,26 @@ namespace CinemaAPI.Services.Implementations
 
             await _mongoDbContext.Reviews.InsertOneAsync(review);
 
-            movie.vote_count += 1;
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                var updateCount = await _dbContext.Movies
+                    .Where(m => m.movie_id == request.movie_id)
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.vote_count, m => m.vote_count + 1));
+
+                if (updateCount == 0)
+                    throw new Exception($"Movie with ID {request.movie_id} not found.");
+            }
+            catch
+            {
+                if (!string.IsNullOrWhiteSpace(review.review_id))
+                {
+                    await _mongoDbContext.Reviews.DeleteOneAsync(r => r.review_id == review.review_id);
+                }
+
+                throw;
+            }
+
+            RagCacheKeys.Invalidate("movies");
         }
 
         public async Task UpdateReview(string review_id, ReviewUpdateRequest request)
@@ -95,10 +113,13 @@ namespace CinemaAPI.Services.Implementations
 
             updates.Add(Builders<Review>.Update.Set(r => r.updatedAt, DateTime.UtcNow));
 
-            await _mongoDbContext.Reviews.UpdateOneAsync(
+            var result = await _mongoDbContext.Reviews.UpdateOneAsync(
                 r => r.review_id == review_id,
                 Builders<Review>.Update.Combine(updates)
             );
+
+            if (result.MatchedCount == 0)
+                throw new Exception($"Review with ID {review_id} not found.");
         }
 
         public async Task BannedReview(string review_id)

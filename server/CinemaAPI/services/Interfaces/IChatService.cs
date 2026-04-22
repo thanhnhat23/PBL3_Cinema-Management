@@ -6,5 +6,6 @@ namespace CinemaAPI.Services.Interfaces
     public interface IChatService
     {
         Task<ChatResponse> ProcessChatAsync(string user_id, string message);
+        Task<ChatHistoryResponse> GetChatHistoryAsync(string user_id);
     }
 }

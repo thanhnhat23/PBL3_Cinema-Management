@@ -14,6 +14,10 @@ export interface Actor {
     char_name?: string | null;
 }
 
+export type ActorUpdatePayload = Omit<Partial<Actor>, "birthday"> & {
+    birthday?: string | null;
+};
+
 export const useActorStore = create<{
     actors: Actor[]; // All actors
     movieWithActors: Actor[];
@@ -25,8 +29,8 @@ export const useActorStore = create<{
     isUpdateingActor: boolean;
 
     fetchAllActors: () => Promise<void>;
-    fetchActorById: (actorId: number) => Promise<void>;
-    updateActor: (actorId: number, actorData: Partial<Actor>) => Promise<void>;
+    fetchActorById: (actorId: number) => Promise<Actor | null>;
+    updateActor: (actorId: number, actorData: ActorUpdatePayload) => Promise<void>;
     fetchMovieWithActors: (movieId: number) => Promise<void>;
     fetchCharacterWithActors: (movieId: number) => Promise<void>;
     clearSelectedActor: () => void;
@@ -67,20 +71,32 @@ export const useActorStore = create<{
 
             if (response.data) {
                 set({ selectedActor: response.data });
+                return response.data;
             }
+
+            return null;
         } catch (error) {
             console.error(`Error fetching actor with ID ${actorId}:`, error);
+            return null;
         } finally {
             set({ isFetchingActorDetails: false });
         }
     },
 
-    updateActor: async (actorId: number, actorData: Partial<Actor>) => {
+    updateActor: async (actorId: number, actorData: ActorUpdatePayload) => {
         try {
             set({ isUpdateingActor: true });
             await _axios.put(`/v1/actor/update/${actorId}`, actorData);
-            // Refresh the actor details after update
-            await useActorStore.getState().fetchActorById(actorId);
+
+            const refreshedActor = await useActorStore.getState().fetchActorById(actorId);
+
+            if (refreshedActor) {
+                set((state) => ({
+                    actors: state.actors.map((actor) =>
+                        actor.actor_id === actorId ? refreshedActor : actor
+                    ),
+                }));
+            }
         } catch (error) {
             console.error(`Error updating actor with ID ${actorId}:`, error);
         } finally {

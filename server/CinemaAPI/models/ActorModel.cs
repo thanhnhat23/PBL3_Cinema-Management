@@ -35,5 +35,7 @@ namespace CinemaAPI.Models
         public ActorGender gender { get; set; }
 
         public DateOnly? birthday { get; set; }
+        public DateTime? deleted_at { get; set; }
+        public Guid? deleted_by { get; set; }
     }
 }

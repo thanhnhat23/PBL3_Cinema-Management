@@ -34,8 +34,6 @@ namespace CinemaAPI.Models
 
         [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime createAt { get; set; } = DateTime.UtcNow;
-
-        [JsonConverter(typeof(TmdbService.DateTimeConverter))]
-        public DateTime updatedAt { get; set;} = DateTime.UtcNow;
+        public DateTime updatedAt { get; set;}
     }
 }

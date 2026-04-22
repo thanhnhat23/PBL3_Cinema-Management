@@ -17,13 +17,14 @@ namespace CinemaAPI.Services.Implementations
         }
 
         public async Task<List<Actor>> GetAllActorsAsync() =>
-            await _dbContext.Actors.ToListAsync();
+            await _dbContext.Actors.AsNoTracking().ToListAsync();
 
         public async Task<Actor?> GetActorByIdAsync(int id) =>
-            await _dbContext.Actors.FindAsync(id);
+            await _dbContext.Actors.AsNoTracking().FirstOrDefaultAsync(a => a.actor_id == id);
 
         public async Task<List<MovieWithActor>> GetMovieWithActorAsync(int id) =>
             await _dbContext.MovieActors
+                .AsNoTracking()
                 .Where(ma => ma.actor_id == id)
                 .Include(ma => ma.Movie)
                 .Select(ma => new MovieWithActor
@@ -34,6 +35,7 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task<List<CharacterWithActor>> GetCharacterWithActorAsync(int id) =>
             await _dbContext.MovieActors
+                .AsNoTracking()
                 .Where(ma => ma.actor_id == id)
                 .Select(ma => new CharacterWithActor
                 {
@@ -61,6 +63,7 @@ namespace CinemaAPI.Services.Implementations
 
                 _dbContext.Actors.Update(actor);
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("actors", "movies");
             }
             catch (Exception ex)
             {

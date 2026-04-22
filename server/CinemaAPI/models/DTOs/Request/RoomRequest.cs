@@ -16,4 +16,9 @@ namespace CinemaAPI.Models.DTOs
         public RoomLayoutType? roomLayoutType { get; set; }
         public decimal? price { get; set; }
     }
+
+    public class RoomDeleteRequest
+    {
+        public DateTime deleted_at { get; set; } = DateTime.UtcNow;
+    }
 }

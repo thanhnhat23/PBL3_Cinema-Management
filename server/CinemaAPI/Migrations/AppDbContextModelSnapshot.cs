@@ -37,6 +37,12 @@ namespace CinemaAPI.Migrations
                     b.Property<DateOnly?>("birthday")
                         .HasColumnType("date");
 
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("gender")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -172,6 +178,12 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("description")
                         .HasMaxLength(5000)
                         .HasColumnType("varchar(5000)");
@@ -217,6 +229,12 @@ namespace CinemaAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("combo_id"));
 
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("quantity")
                         .HasColumnType("int");
 
@@ -244,6 +262,12 @@ namespace CinemaAPI.Migrations
                     b.Property<string>("code")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("description")
                         .IsRequired()
@@ -330,6 +354,12 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("location_id");
 
                     b.ToTable("Locations");
@@ -350,6 +380,12 @@ namespace CinemaAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("end_date")
                         .HasColumnType("datetime(6)");
@@ -467,7 +503,7 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime?>("refundAt")
+                    b.Property<DateTime>("refundAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("refund_code")
@@ -546,6 +582,12 @@ namespace CinemaAPI.Migrations
 
                     b.Property<int>("column")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("nameRoom")
                         .IsRequired()
@@ -630,6 +672,12 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("showtime_id"));
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("endTime")
                         .HasColumnType("datetime(6)");
@@ -721,6 +769,12 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("snack_id"));
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("imageUrl")
                         .HasColumnType("longtext");

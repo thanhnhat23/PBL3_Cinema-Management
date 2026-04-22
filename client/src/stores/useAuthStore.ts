@@ -41,7 +41,7 @@ export const useAuthStore = create<{
     changeEmail: (newEmail: string) => Promise<void>;
     changeBirthdate: (newBirthDate: string) => Promise<void>;
     changeAvatar: (newAvatar: File | null) => Promise<void>;
-}>((set) => ({
+}>((set, get) => ({
     authUser: null as null | AuthUser,
 
     isSigningUp: false,
@@ -110,20 +110,25 @@ export const useAuthStore = create<{
 
                 localStorage.setItem('token', token);
 
-                const user = {
-                    id: user_id,
-                    username: userName,
-                    email: email,
-                    role: role,
-                    avatar: data.avatar_path,
-                    birthDate: new Date(data.birthDate),
-                    age: data.age,
-                    createdAt: new Date(data.createAt),
-                    isEmailVerified: data.isEmailVerified,
-                };
-                localStorage.setItem('authUser', JSON.stringify(user));
+                // Fetch profile right away so navbar gets latest avatar/role immediately.
+                await get().checkAuth();
 
-                set({ authUser: user });
+                if (!get().authUser) {
+                    const fallbackUser = {
+                        id: user_id,
+                        username: userName,
+                        email: email,
+                        role: role,
+                        avatar: data.avatar_path,
+                        birthDate: new Date(data.birthDate),
+                        age: data.age,
+                        createdAt: new Date(data.createAt),
+                        isEmailVerified: data.isEmailVerified,
+                    };
+
+                    localStorage.setItem('authUser', JSON.stringify(fallbackUser));
+                    set({ authUser: fallbackUser });
+                }
 
                 Swal.fire({
                     title: "Đăng nhập thành công! Chào mừng bạn trở lại.",

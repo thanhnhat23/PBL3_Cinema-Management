@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddMemoryCache();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -47,25 +48,39 @@ builder.Services.Configure<GeminiConfig>(builder.Configuration.GetSection("Gemin
 // Configure Cloudinary
 builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("Cloudinary"));
 
+// Configure VNPAY
+builder.Services.Configure<VnpayConfig>(builder.Configuration.GetSection("Vnpay"));
+
 // Configure Services
 builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IService, Service>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<CouponService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<MovieService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<LocationService>();
+builder.Services.AddScoped<ICinemaService, CinemaService>();
+builder.Services.AddScoped<CinemaService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
+builder.Services.AddScoped<SnackService>();
 builder.Services.AddScoped<IComboDetail, ComboDetailService>();
+builder.Services.AddScoped<ComboDetailService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<InventoryService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<PaymentService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();
