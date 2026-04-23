@@ -32,15 +32,20 @@ import { Moon } from "../icons/moon";
 import { GitHubStarsButton } from "@/components/ui/github-stars";
 import { MapPin } from "../icons/map-pin";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useCinemaStore } from "@/stores/useCinemaStore";
 import { useDialogStore } from "@/stores/useDialogStore";
 import { useRouter } from "next/navigation";
 import { AvatarElement } from "../ui/avatar";
+
+const NAV_BUTTON_CLASS = "group p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600";
+const MOBILE_BUTTON_CLASS = "group text-lg bg-transparent data-[hover=true]:bg-transparent dark:hover:text-zinc-300 hover:text-zinc-600";
 
 export default function NavbarLayout() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
     const [isDark, setIsDark] = useState(false);
     const { setOpenDialog } = useDialogStore();
+    const { cinemas, fetchAllCinemas } = useCinemaStore();
     const router = useRouter();
     const flameRef = useRef<FlameIconHandle | null>(null);
     const trendingRef = useRef<FlameIconHandle | null>(null);
@@ -74,15 +79,55 @@ export default function NavbarLayout() {
         return () => observer.disconnect();
     }, []);
 
+    useEffect(() => {
+        fetchAllCinemas();
+    }, [fetchAllCinemas]);
+
     const handleThemeToggle = () => {
         themeTogglerRef.current?.click();
     };
 
-    const cinema = [
-        'MilkyWayyy Đà Nẵng', 'MilkyWayyy - HaNoi Center', 'MilkyWayyy HCM',
-        'MilkyWayyy AeonMall Huế', 'MilkyWayyy Vinh', 'MilkyWayyy Plaza Hải Phòng',
-        'MilkyWayyy Nha Trang VinCom', 'MilkyWayyy J97 Centrer'
-    ]
+    const desktopMovieItems = [
+        {
+            key: 'nowplaying',
+            label: 'Phim Đang Chiếu',
+            href: '/movies?tab=nowplaying',
+            icon: <Cctv animate={hoveredItem === 'nowplaying'} size={16} />,
+        },
+        {
+            key: 'upcoming',
+            label: 'Phim Sắp Chiếu',
+            href: '/movies?tab=coming-soon',
+            icon: <TrendingUpIcon ref={trendingRef} size={16} />,
+        },
+        {
+            key: 'popular',
+            label: 'Phim Hot',
+            href: '/movies?tab=popular',
+            icon: <FlameIcon ref={flameRef} size={16} />,
+        },
+    ];
+
+    const mobileMovieItems = [
+        {
+            key: 'nowplaying',
+            label: 'Phim Đang Chiếu',
+            href: '/movies?tab=now-playing',
+            icon: <Cctv size={16} />,
+        },
+        {
+            key: 'upcoming',
+            label: 'Phim Sắp Chiếu',
+            href: '/movies?tab=coming-soon',
+            icon: <TrendingUpIcon size={16} />,
+        },
+        {
+            key: 'popular',
+            label: 'Phim Hot',
+            href: '/movies?tab=popular',
+            icon: <FlameIcon size={16} />,
+        },
+    ];
 
     return (
         <Navbar shouldHideOnScroll isBordered onMenuOpenChange={setIsMenuOpen} classNames={{ base: 'md:py-8'}}>
@@ -133,7 +178,7 @@ export default function NavbarLayout() {
                         <DropdownTrigger>
                             <Button
                                 disableRipple
-                                className="group p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
+                                className={NAV_BUTTON_CLASS}
                                 endContent={<ChevronDown animate={hoveredItem === 'phim'} size={16} />}
                                 onMouseEnter={() => setHoveredItem('phim')}
                                 onMouseLeave={() => setHoveredItem(null)}
@@ -145,55 +190,32 @@ export default function NavbarLayout() {
                         </DropdownTrigger>
                     </NavbarItem>
                     <DropdownMenu>
-                        <DropdownItem 
-                            key='nowplaying'
-                            startContent={<Cctv animate={hoveredItem === 'nowplaying'} size={16} />}
-                            className="group"
-                            href="/movies?tab=nowplaying"
-                            onMouseEnter={() => setHoveredItem('nowplaying')}
-                            onMouseLeave={() => setHoveredItem(null)}
-                        >
-                            Phim Đang Chiếu
-                        </DropdownItem>
-
-                        <DropdownItem 
-                            key='upcoming'
-                            startContent={<TrendingUpIcon ref={trendingRef} size={16} />}
-                            className="group"
-                            href="/movies?tab=coming-soon"
-                            onMouseEnter={() => setHoveredItem('upcoming')}
-                            onMouseLeave={() => setHoveredItem(null)}
-                        >
-                            Phim Sắp Chiếu
-                        </DropdownItem>
-
-                        <DropdownItem 
-                            key='popular'
-                            startContent={<FlameIcon ref={flameRef} size={16} />}
-                            className="group"
-                            href="/movies?tab=popular"
-                            onMouseEnter={() => setHoveredItem('popular')}
-                            onMouseLeave={() => setHoveredItem(null)}
-                        >
-                            Phim Hot
-                        </DropdownItem>
+                        {desktopMovieItems.map((item) => (
+                            <DropdownItem
+                                key={item.key}
+                                startContent={item.icon}
+                                className="group"
+                                href={item.href}
+                                onMouseEnter={() => setHoveredItem(item.key)}
+                                onMouseLeave={() => setHoveredItem(null)}
+                            >
+                                {item.label}
+                            </DropdownItem>
+                        ))}
                     </DropdownMenu>
                 </Dropdown>
 
                 <NavbarItem>
-                        <Button
-                            disableRipple
-                            className="group p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
-                            radius="sm"
-                            variant="light"
-                        >
-                            Thể loại
-                        </Button>
+                    <Link href="/category"
+                        className={NAV_BUTTON_CLASS}
+                    >
+                        Thể loại
+                    </Link>
                 </NavbarItem>
 
                 <NavbarItem>
                     <Link href="/actors"
-                        className="p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
+                        className={NAV_BUTTON_CLASS}
                     >
                         Diễn viên
                     </Link>
@@ -201,7 +223,7 @@ export default function NavbarLayout() {
 
                 <NavbarItem>
                     <Link href="/reviews"
-                        className="p-0 text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
+                        className={NAV_BUTTON_CLASS}
                     >
                         Review
                     </Link>
@@ -212,7 +234,7 @@ export default function NavbarLayout() {
                         <DropdownTrigger>
                             <Button
                                 disableRipple
-                                className="group text-base bg-transparent data-[hover=true]:bg-transparent font-semibold dark:hover:text-zinc-300 hover:text-zinc-600"
+                                className={NAV_BUTTON_CLASS}
                                 endContent={<ChevronDown animate={hoveredItem === 'rap'} size={16} />}
                                 onMouseEnter={() => setHoveredItem('rap')}
                                 onMouseLeave={() => setHoveredItem(null)}
@@ -224,16 +246,16 @@ export default function NavbarLayout() {
                         </DropdownTrigger>
                     </NavbarItem>
                     <DropdownMenu aria-label="Category menu">
-                        {cinema.map((cinema, index) => (
+                        {cinemas.map((cinema) => (
                             <DropdownItem 
-                                key={index}
+                                key={cinema.cinema_id}
                                 className="group"
-                                startContent={<MapPin animate={hoveredItem === String(index)} size={16} />}
-                                href="#"
-                                onMouseEnter={() => setHoveredItem(String(index))}
+                                startContent={<MapPin animate={hoveredItem === `cinema-${cinema.cinema_id}`} size={16} />}
+                                href={`/cinemas/${cinema.cinema_id}`}
+                                onMouseEnter={() => setHoveredItem(`cinema-${cinema.cinema_id}`)}
                                 onMouseLeave={() => setHoveredItem(null)}
                             >
-                                {cinema}
+                                {cinema.name}
                             </DropdownItem>
                         ))}
                     </DropdownMenu>
@@ -380,7 +402,7 @@ export default function NavbarLayout() {
                         <DropdownTrigger>
                             <Button
                                 disableRipple
-                                className="group text-lg bg-transparent data-[hover=true]:bg-transparent dark:hover:text-zinc-300 hover:text-zinc-600"
+                                className={MOBILE_BUTTON_CLASS}
                                 endContent={<ChevronDown size={16} />}
                                 radius="sm"
                                 variant="light"
@@ -390,51 +412,37 @@ export default function NavbarLayout() {
                         </DropdownTrigger>
                     </NavbarMenuItem>
                     <DropdownMenu>
-                        <DropdownItem 
-                            key='nowplaying'
-                            startContent={<Cctv size={16} />}
-                            className="group text-md"
-                            href="/movies?tab=now-playing"
-                        >
-                            Phim Đang Chiếu
-                        </DropdownItem>
-
-                        <DropdownItem 
-                            key='upcoming'
-                            startContent={<TrendingUpIcon size={16} />}
-                            className="group text-md"
-                            href="/movies?tab=coming-soon"
-                        >
-                            Phim Sắp Chiếu
-                        </DropdownItem>
-
-                        <DropdownItem 
-                            key='popular'
-                            startContent={<FlameIcon size={16} />}
-                            className="group text-md"
-                            href="/movies?tab=popular"
-                        >
-                            Phim Hot
-                        </DropdownItem>
+                        {mobileMovieItems.map((item) => (
+                            <DropdownItem
+                                key={item.key}
+                                startContent={item.icon}
+                                className="group text-md"
+                                href={item.href}
+                            >
+                                {item.label}
+                            </DropdownItem>
+                        ))}
                     </DropdownMenu>
                 </Dropdown>
 
             
                 <NavbarMenuItem>
-                    <Button
-                        disableRipple
-                        className="group text-lg bg-transparent data-[hover=true]:bg-transparent dark:hover:text-zinc-300 hover:text-zinc-600"
-                        endContent={<ChevronDown size={16} />}
-                        radius="sm"
-                        variant="light"
+                    <Link href="/category"
+                        className={`${MOBILE_BUTTON_CLASS} flex items-center px-3.5`}
                     >
                         Thể loại
-                    </Button>
+                    </Link>
                 </NavbarMenuItem>
 
                 <NavbarMenuItem className="p-2 pl-4">
-                    <Link href="#" className="text-lg">
+                    <Link href="/actors" className="text-lg">
                         Diễn viên
+                    </Link>
+                </NavbarMenuItem>
+
+                <NavbarMenuItem className="p-2 pl-4">
+                    <Link href="/reviews" className="text-lg">
+                        Review
                     </Link>
                 </NavbarMenuItem>
 
@@ -443,7 +451,7 @@ export default function NavbarLayout() {
                         <DropdownTrigger>
                             <Button
                                 disableRipple
-                                className="group text-lg"
+                                className={MOBILE_BUTTON_CLASS}
                                 endContent={<ChevronDown animate={hoveredItem === 'theloai'} size={16} />}
                                 onMouseEnter={() => setHoveredItem('theloai')}
                                 onMouseLeave={() => setHoveredItem(null)}
@@ -455,16 +463,16 @@ export default function NavbarLayout() {
                         </DropdownTrigger>
                     </NavbarMenuItem>
                     <DropdownMenu aria-label="Category menu">
-                        {cinema.map((cinema, index) => (
+                        {cinemas.map((cinema) => (
                             <DropdownItem 
-                                key={index}
+                                key={cinema.cinema_id}
                                 className="group text-md"
-                                startContent={<MapPin animate={hoveredItem === String(index)} size={16} />}
-                                href="#"
-                                onMouseEnter={() => setHoveredItem(String(index))}
+                                startContent={<MapPin animate={hoveredItem === `cinema-mobile-${cinema.cinema_id}`} size={16} />}
+                                href={`/cinemas/${cinema.cinema_id}`}
+                                onMouseEnter={() => setHoveredItem(`cinema-mobile-${cinema.cinema_id}`)}
                                 onMouseLeave={() => setHoveredItem(null)}
                             >
-                                {cinema}
+                                {cinema.name}
                             </DropdownItem>
                         ))}
                     </DropdownMenu>

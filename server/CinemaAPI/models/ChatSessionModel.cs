@@ -7,6 +7,7 @@ namespace CinemaAPI.Models
     public class ChatSession
     {
         [BsonId]
+        [BsonIgnoreIfNull]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? session_id { get; set; }
 
@@ -34,6 +35,5 @@ namespace CinemaAPI.Models
 
         [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime timestamp { get; set; } = DateTime.UtcNow;
-        public DateOnly? deleted_at { get; set; }
     }
 }

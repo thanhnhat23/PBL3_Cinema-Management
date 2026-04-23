@@ -15,6 +15,5 @@ namespace CinemaAPI.Models
         public bool isUsed { get; set; } = false;
         public DateTime? usedAt { get; set; } = null;
         public DateTime assignedAt { get; set; } = DateTime.UtcNow;
-        public DateOnly? deleted_at { get; set; }
     }
 }

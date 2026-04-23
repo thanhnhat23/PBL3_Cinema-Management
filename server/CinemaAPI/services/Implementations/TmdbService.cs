@@ -3,6 +3,7 @@ using CinemaAPI.Services.Interfaces;
 using CinemaAPI.Models.DTOs;
 using Microsoft.Extensions.Options;
 using CinemaAPI.Models;
+using CinemaAPI.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using System.Text.Json;
@@ -285,6 +286,7 @@ public class TmdbService : ITmdbService
             }
 
             await _dbContext.SaveChangesAsync();
+            RagCacheKeys.Invalidate("genres");
         }
     }
 
@@ -320,6 +322,7 @@ public class TmdbService : ITmdbService
         {
             _dbContext.MovieGenres.AddRange(newLinks);
             await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("movies");
         }
     }
 
@@ -335,7 +338,13 @@ public class TmdbService : ITmdbService
 
         if (response?.Cast != null)
         {
-            var topCast = response.Cast.OrderBy(c => c.order).Take(15).Where(c => !string.IsNullOrWhiteSpace(c.name)).ToList();
+            var topCast = response.Cast
+                .Where(c => c != null)
+                .Select(c => c!)
+                .OrderBy(c => c.order)
+                .Take(15)
+                .Where(c => !string.IsNullOrWhiteSpace(c.name))
+                .ToList();
             if (topCast.Count == 0)
             {
                 return;
@@ -398,6 +407,7 @@ public class TmdbService : ITmdbService
             if (hasChanges)
             {
                 await _dbContext.SaveChangesAsync();
+                RagCacheKeys.Invalidate("actors", "movies");
             }
         }
     }
@@ -424,13 +434,19 @@ public class TmdbService : ITmdbService
 
         foreach (var movie in moviesToUpdate)
         {
-            var endDate = movie.release_date.Value.AddMonths(1).AddDays(15);
+            if (!movie.release_date.HasValue)
+            {
+                continue;
+            }
 
-            if (now < movie.release_date.Value)
+            var releaseDate = movie.release_date.Value;
+            var endDate = releaseDate.AddMonths(1).AddDays(15);
+
+            if (now < releaseDate)
             {
                 movie.status = MovieStatus.Upcoming;
             }
-            else if (now >= movie.release_date.Value && now <= endDate)
+            else if (now <= endDate)
             {
                 movie.status = MovieStatus.Released;
             }
@@ -441,5 +457,6 @@ public class TmdbService : ITmdbService
         }
 
         await _dbContext.SaveChangesAsync();
+        RagCacheKeys.Invalidate("movies");
     }
 }

@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Implementations;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,12 @@ namespace CinemaAPI.Controllers
     public class cinemaController : ControllerBase
     {
         private readonly ICinemaService _cinemaService;
-        public cinemaController(ICinemaService cinemaService){
+        private readonly CinemaService _cinemaDeleteService;
+        public cinemaController(ICinemaService cinemaService, CinemaService cinemaDeleteService)
+        {
             _cinemaService = cinemaService;
-        }   
+            _cinemaDeleteService = cinemaDeleteService;
+        }
 
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllCinemas()
@@ -71,19 +75,33 @@ namespace CinemaAPI.Controllers
             {
                 return StatusCode(500, $"An error occurred in cinemaController.UpdateCinema: {ex.Message}");
             }
-    }
+        }
 
         [HttpDelete("delete/{cinemaId}")]
         public async Task<IActionResult> DeleteCinema(int cinemaId)
         {
             try
             {
-                await _cinemaService.DeleteCinema(cinemaId);
+                await _cinemaDeleteService.SoftDeleteCinema(cinemaId);
                 return Ok("Cinema deleted successfully");
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in cinemaController.DeleteCinema: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("hard-delete/{cinemaId}")]
+        public async Task<IActionResult> HardDeleteCinema(int cinemaId)
+        {
+            try
+            {
+                await _cinemaDeleteService.HardDeleteCinema(cinemaId);
+                return Ok("Cinema hard deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in cinemaController.HardDeleteCinema: {ex.Message}");
             }
         }
     }

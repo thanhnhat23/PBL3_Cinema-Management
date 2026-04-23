@@ -3,7 +3,7 @@ using CinemaAPI.Models.DTOs;
 
 namespace CinemaAPI.Services.Interfaces
 {
-      public interface ICinemaService
+    public interface ICinemaService
     {
         // Read
         Task<List<Cinema>> GetAllCinemas();
@@ -12,7 +12,5 @@ namespace CinemaAPI.Services.Interfaces
         Task AddCinema(CinemaCreateRequest request);
         // Update
         Task UpdateCinema(int cinema_id, CinemaUpdateRequest request);
-        // Delete
-        Task DeleteCinema(int cinema_id);
     }
 }

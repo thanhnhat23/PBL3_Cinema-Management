@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Implementations;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,12 @@ namespace CinemaAPI.Controllers
     public class couponController : ControllerBase
     {
         private readonly ICouponService _couponService;
+        private readonly CouponService _couponDeleteService;
 
-        public couponController(ICouponService couponService)
+        public couponController(ICouponService couponService, CouponService couponDeleteService)
         {
             _couponService = couponService;
+            _couponDeleteService = couponDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -98,12 +101,26 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _couponService.DeleteCoupon(couponId);
+                await _couponDeleteService.SoftDeleteCoupon(couponId);
                 return Ok("Coupon deleted successfully.");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in couponController.DeleteCoupon: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("hard-delete/{couponId}")]
+        public async Task<IActionResult> HardDeleteCoupon(int couponId)
+        {
+            try
+            {
+                await _couponDeleteService.HardDeleteCoupon(couponId);
+                return Ok("Coupon hard deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.HardDeleteCoupon: {ex.Message}");
             }
         }
     }

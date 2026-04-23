@@ -1,6 +1,6 @@
 import type { Key } from "react";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     Dropdown,
     DropdownItem,
@@ -17,8 +17,21 @@ import {
 import { EllipsisVertical, Eye, House, PenLine, Trash } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 import { useCinemaStore, type Cinema } from "@/stores/useCinemaStore";
+import { useLocationStore } from "@/stores/useLocationStore";
 import DataTableAdmin, { type AdminColumn } from "../dataTable";
 
 const columns: AdminColumn[] = [
@@ -31,13 +44,59 @@ const columns: AdminColumn[] = [
 ];
 
 export default function LayoutCinemas() {
-    const { cinemas, isFetchingCinemas, fetchAllCinemas } = useCinemaStore();
+    const { cinemas, isFetchingCinemas, fetchAllCinemas, isUpdatingCinema, updateCinema } = useCinemaStore();
+    const { locations, fetchAllLocations } = useLocationStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedCinema, setSelectedCinema] = useState<Cinema | null>(null);
+    const drawerContainerRef = useRef<HTMLDivElement | null>(null);
+    const [editForm, setEditForm] = useState({
+        location_id: "",
+        name: "",
+        address: "",
+        phone_number: "",
+        latitude: "",
+        longitude: "",
+        description: "",
+        image_overview: "",
+    });
+
+    const handleOpenEdit = useCallback((cinema: Cinema) => {
+        setSelectedCinema(cinema);
+        setEditForm({
+            location_id: String(cinema.location_id ?? ""),
+            name: cinema.name ?? "",
+            address: cinema.address ?? "",
+            phone_number: cinema.phone_number ?? "",
+            latitude: String(cinema.latitude ?? ""),
+            longitude: String(cinema.longitude ?? ""),
+            description: cinema.description ?? "",
+            image_overview: cinema.image_overview ?? "",
+        });
+        onEditOpen();
+    }, [onEditOpen]);
+
+    const handleSaveCinema = async () => {
+        if (!selectedCinema) return;
+
+        await updateCinema(selectedCinema.cinema_id, {
+            location_id: Number(editForm.location_id),
+            name: editForm.name.trim(),
+            address: editForm.address.trim(),
+            phone_number: editForm.phone_number.trim(),
+            latitude: Number(editForm.latitude),
+            longitude: Number(editForm.longitude),
+            description: editForm.description.trim(),
+            image_overview: editForm.image_overview.trim(),
+        });
+
+        onEditOpenChange();
+    };
 
     useEffect(() => {
         fetchAllCinemas();
-    }, [fetchAllCinemas]);
+        fetchAllLocations();
+    }, [fetchAllCinemas, fetchAllLocations]);
 
     const renderCell = useCallback((cinema: Cinema, columnKey: Key) => {
         const cellValue = cinema[columnKey as keyof Cinema];
@@ -83,9 +142,15 @@ export default function LayoutCinemas() {
                             >
                                 Xem
                             </DropdownItem>
-                            <DropdownItem key="edit" startContent={<PenLine size={16} />}>Edit</DropdownItem>
+                            <DropdownItem
+                                key="edit"
+                                startContent={<PenLine size={16} />}
+                                onPress={() => handleOpenEdit(cinema)}
+                            >
+                                Sửa
+                            </DropdownItem>
                             <DropdownItem key="delete" className="text-danger" color="danger" startContent={<Trash size={16} />}>
-                                Delete
+                                Xóa
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -93,7 +158,7 @@ export default function LayoutCinemas() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [onOpen]);
+    }, [handleOpenEdit, onOpen]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -174,6 +239,155 @@ export default function LayoutCinemas() {
                             <DrawerFooter>
                                 <button onClick={onClose} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
                                     Đóng
+                                </button>
+                            </DrawerFooter>
+                        </>
+                    )}
+                </DrawerContent>
+            </Drawer>
+
+            <Drawer isOpen={isEditOpen} onOpenChange={onEditOpenChange} classNames={{ base: "bg-sidebar" }}>
+                <DrawerContent>
+                    {() => (
+                        <>
+                            <DrawerHeader className="flex flex-col gap-1">
+                                Sửa rạp phim
+                            </DrawerHeader>
+
+                            <DrawerBody>
+                                <p className="text-sm text-zinc-500">Thực hiện các thay đổi cho rạp phim</p>
+
+                                <div ref={drawerContainerRef} className="grid gap-4 py-2">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="name" className="text-right">
+                                            Tên rạp
+                                        </Label>
+
+                                        <Input
+                                            id="name"
+                                            value={editForm.name}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="location_id" className="text-right">
+                                            Thành phố
+                                        </Label>
+
+                                        <Select
+                                            value={editForm.location_id}
+                                            onValueChange={(value) => setEditForm((prev) => ({ ...prev, location_id: value }))}
+                                        >
+                                            <SelectTrigger className="col-span-3 w-full bg-sidebar">
+                                                <SelectValue placeholder="Chọn thành phố" />
+                                            </SelectTrigger>
+
+                                            <SelectContent container={drawerContainerRef.current}>
+                                                <SelectGroup>
+                                                    <SelectLabel>Danh sách thành phố</SelectLabel>
+                                                    {locations.map((location) => (
+                                                        <SelectItem key={location.location_id} value={String(location.location_id)}>
+                                                            {location.city}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="address" className="text-right">
+                                            Địa chỉ
+                                        </Label>
+
+                                        <Input
+                                            id="address"
+                                            value={editForm.address}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, address: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="phone_number" className="text-right">
+                                            Số điện thoại
+                                        </Label>
+
+                                        <Input
+                                            id="phone_number"
+                                            value={editForm.phone_number}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, phone_number: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="latitude" className="text-right">
+                                            Vĩ độ
+                                        </Label>
+
+                                        <Input
+                                            id="latitude"
+                                            type="number"
+                                            value={editForm.latitude}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, latitude: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="longitude" className="text-right">
+                                            Kinh độ
+                                        </Label>
+
+                                        <Input
+                                            id="longitude"
+                                            type="number"
+                                            value={editForm.longitude}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, longitude: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-start gap-4">
+                                        <Label htmlFor="description" className="text-right pt-2">
+                                            Mô tả
+                                        </Label>
+
+                                        <Textarea
+                                            id="description"
+                                            value={editForm.description}
+                                            placeholder="Nhập mô tả rạp phim"
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, description: event.target.value }))}
+                                            className="col-span-3 text-sm min-h-auto"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="image_overview" className="text-right">
+                                            Ảnh mô tả
+                                        </Label>
+
+                                        <Input
+                                            id="image_overview"
+                                            value={editForm.image_overview}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, image_overview: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+                                </div>
+                            </DrawerBody>
+
+                            <DrawerFooter>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveCinema}
+                                    disabled={isUpdatingCinema}
+                                    className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
+                                >
+                                    {isUpdatingCinema ? "Đang lưu..." : "Lưu thay đổi"}
                                 </button>
                             </DrawerFooter>
                         </>

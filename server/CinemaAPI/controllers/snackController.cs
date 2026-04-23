@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Implementations;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace CinemaAPI.Controllers
     public class snackController : ControllerBase
     {
         private readonly ISnackService _snackService;
+        private readonly SnackService _snackDeleteService;
 
-        public snackController(ISnackService snackService)
+        public snackController(ISnackService snackService, SnackService snackDeleteService)
         {
             _snackService = snackService;
+            _snackDeleteService = snackDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -85,7 +88,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _snackService.DeleteSnackById(snackId);
+                await _snackDeleteService.SoftDeleteSnackById(snackId);
                 return Ok("Snack deleted successfully");
             }
             catch (Exception ex)
@@ -93,5 +96,19 @@ namespace CinemaAPI.Controllers
                 return StatusCode(0, "");
             }
         }
+
+        [HttpDelete("hard-delete/{snackId}")]
+        public async Task<IActionResult> HardDeleteSnack(int snackId)
+        {
+            try
+            {
+                await _snackDeleteService.HardDeleteSnackById(snackId);
+                return Ok("Snack hard deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in snackController.HardDeleteSnack: {ex.Message}");
+            }
+        }
     }
-}      
+}

@@ -15,6 +15,5 @@ namespace CinemaAPI.Models
 
         public int quantity { get; set; }
         public decimal price { get; set; }
-        public DateOnly? deleted_at { get; set; }
     }
 }

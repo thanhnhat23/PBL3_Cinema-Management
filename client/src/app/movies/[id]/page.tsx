@@ -11,6 +11,7 @@ import { FaStar } from "react-icons/fa";
 import Link from "next/link";
 import { SparklesText } from "@/components/ui/texts/sparkles-text";
 import { AvatarElement } from "@/components/ui/avatar";
+import DetailPageSkeleton from "@/components/skeletons/detailPage";
 
 export default function MoviePage() {
     const [expandedReviews, setExpandedReviews] = useState<Set<string>>(new Set());
@@ -21,7 +22,8 @@ export default function MoviePage() {
         clearSelectedMovie,
         clearActorWithMovies,
         selectedMovie,
-        actorWithMovies 
+        actorWithMovies,
+        isFetchingMovieDetails
     } = useMovieStore();
 
     const { fetchReviewByMovieId, clearReviews, reviews } = useReviewStore();
@@ -49,6 +51,10 @@ export default function MoviePage() {
     }, [fetchMovieById, fetchActorWithMovies, fetchReviewByMovieId, clearSelectedMovie, clearActorWithMovies, clearReviews, movieId]);
 
     const sortedActors = [...actorWithMovies].sort((a, b) => a.order - b.order);
+
+    if (isFetchingMovieDetails || !selectedMovie) {
+        return <DetailPageSkeleton />;
+    }
 
     const toggleReviewExpand = (reviewId: string) => {
         const newExpanded = new Set(expandedReviews);

@@ -1,6 +1,6 @@
 import type { Key } from "react";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     Chip,
     Dropdown,
@@ -16,6 +16,17 @@ import {
 } from "@heroui/react";
 import { EllipsisVertical, Eye, Hamburger, PenLine, Trash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 import { useSnackStore, type Snack } from "@/stores/useSnackStore";
 import DataTableAdmin, { type AdminColumn } from "../dataTable";
@@ -49,9 +60,41 @@ const getSnackTypeText = (type: number) => {
 };
 
 export default function LayoutFood() {
-    const { snacks, isFetchingSnacks, fetchAllSnacks } = useSnackStore();
+    const { snacks, isFetchingSnacks, fetchAllSnacks, updateSnack, isUpdatingSnack } = useSnackStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedSnack, setSelectedSnack] = useState<Snack | null>(null);
+    const drawerContainerRef = useRef<HTMLDivElement | null>(null);
+    const [editForm, setEditForm] = useState({
+        name: "",
+        type: "0",
+        price: "",
+        imageUrl: "",
+    });
+
+    const handleOpenEdit = useCallback((snack: Snack) => {
+        setSelectedSnack(snack);
+        setEditForm({
+            name: snack.name ?? "",
+            type: String(snack.type ?? 0),
+            price: String(snack.price ?? ""),
+            imageUrl: snack.imageUrl ?? "",
+        });
+        onEditOpen();
+    }, [onEditOpen]);
+
+    const handleSaveSnack = async () => {
+        if (!selectedSnack) return;
+
+        await updateSnack(selectedSnack.snack_id, {
+            name: editForm.name.trim(),
+            type: Number(editForm.type) as Snack["type"],
+            price: Number(editForm.price),
+            imageUrl: editForm.imageUrl.trim() || null,
+        });
+
+        onEditOpenChange();
+    };
 
     useEffect(() => {
         fetchAllSnacks();
@@ -106,7 +149,13 @@ export default function LayoutFood() {
                             >
                                 Xem
                             </DropdownItem>
-                            <DropdownItem key="edit" startContent={<PenLine size={16} />}>Sửa</DropdownItem>
+                            <DropdownItem
+                                key="edit"
+                                startContent={<PenLine size={16} />}
+                                onPress={() => handleOpenEdit(snack)}
+                            >
+                                Sửa
+                            </DropdownItem>
                             <DropdownItem key="delete" className="text-danger" color="danger" startContent={<Trash size={16} />}>
                                 Xóa
                             </DropdownItem>
@@ -116,7 +165,7 @@ export default function LayoutFood() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [onOpen]);
+    }, [handleOpenEdit, onOpen]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -186,6 +235,99 @@ export default function LayoutFood() {
                             <DrawerFooter>
                                 <button onClick={onClose} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
                                     Đóng
+                                </button>
+                            </DrawerFooter>
+                        </>
+                    )}
+                </DrawerContent>
+            </Drawer>
+
+            <Drawer isOpen={isEditOpen} onOpenChange={onEditOpenChange} classNames={{ base: "bg-sidebar" }}>
+                <DrawerContent>
+                    {() => (
+                        <>
+                            <DrawerHeader className="flex flex-col gap-1">
+                                Sửa đồ ăn
+                            </DrawerHeader>
+
+                            <DrawerBody>
+                                <p className="text-sm text-zinc-500">Thực hiện các thay đổi cho món ăn</p>
+
+                                <div ref={drawerContainerRef} className="grid gap-4 py-2">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="name" className="text-right">
+                                            Tên món
+                                        </Label>
+
+                                        <Input
+                                            id="name"
+                                            value={editForm.name}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="type" className="text-right">
+                                            Loại
+                                        </Label>
+
+                                        <Select
+                                            value={editForm.type}
+                                            onValueChange={(value) => setEditForm((prev) => ({ ...prev, type: value }))}
+                                        >
+                                            <SelectTrigger className="col-span-3 w-full bg-sidebar">
+                                                <SelectValue placeholder="Chọn loại" />
+                                            </SelectTrigger>
+
+                                            <SelectContent container={drawerContainerRef.current}>
+                                                <SelectGroup>
+                                                    <SelectLabel>Loại đồ ăn</SelectLabel>
+                                                    <SelectItem value="0">Food</SelectItem>
+                                                    <SelectItem value="1">Drink</SelectItem>
+                                                    <SelectItem value="2">Combo</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="price" className="text-right">
+                                            Giá
+                                        </Label>
+
+                                        <Input
+                                            id="price"
+                                            type="number"
+                                            value={editForm.price}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, price: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="imageUrl" className="text-right">
+                                            Ảnh
+                                        </Label>
+
+                                        <Input
+                                            id="imageUrl"
+                                            value={editForm.imageUrl}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+                                </div>
+                            </DrawerBody>
+
+                            <DrawerFooter>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveSnack}
+                                    disabled={isUpdatingSnack}
+                                    className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
+                                >
+                                    {isUpdatingSnack ? "Đang lưu..." : "Lưu thay đổi"}
                                 </button>
                             </DrawerFooter>
                         </>

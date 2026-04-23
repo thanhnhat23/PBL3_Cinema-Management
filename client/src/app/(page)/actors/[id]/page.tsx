@@ -10,12 +10,14 @@ import { UserRound } from "@/components/icons/user-round";
 import { Chip, Breadcrumbs, BreadcrumbItem } from "@heroui/react";
 import { CalendarDays, MapPin, VenusAndMars, CircleEllipsis, House, UserCheck } from 'lucide-react';
 import Image from "next/image";
+import DetailPageSkeleton from "@/components/skeletons/detailPage";
 
 export default function ActorDetailPage() {
     const { 
         selectedActor, 
         movieWithActors,
         characterWithActors, 
+        isFetchingActorDetails,
         fetchActorById, 
         fetchMovieWithActors,
         fetchCharacterWithActors
@@ -32,6 +34,10 @@ export default function ActorDetailPage() {
 
     const colorChip = ["success", "warning", "danger"];
     const textColor = ["text-green-100", "text-yellow-100", "text-red-100"];
+
+    if (isFetchingActorDetails || !selectedActor) {
+        return <DetailPageSkeleton />;
+    }
 
     return (
         <div className="min-h-screen relative flex flex-col items-center p-4 md:p-8">

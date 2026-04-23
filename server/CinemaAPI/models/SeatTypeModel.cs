@@ -21,6 +21,5 @@ namespace CinemaAPI.Models
         public virtual ICollection<ShowTimePrice> ShowTimePrices { get; set; } = new List<ShowTimePrice>();
 
         public SeatEnum type_name { get; set; } = SeatEnum.Single;
-        public DateOnly? deleted_at { get; set; }
     }
 }

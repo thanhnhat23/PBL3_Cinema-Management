@@ -14,7 +14,7 @@ import {
     DrawerFooter,
     useDisclosure,
 } from "@heroui/react";
-import { EllipsisVertical, Eye, MessageCircle, PenLine, Trash } from "lucide-react";
+import { Ban, EllipsisVertical, Eye, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 import { AvatarElement } from "@/components/ui/avatar";
@@ -107,6 +107,7 @@ export default function LayoutReviews() {
                             <DropdownItem
                                 key="view"
                                 startContent={<Eye size={18} />}
+                                showDivider
                                 onPress={() => {
                                     setSelectedReview(review);
                                     onOpen();
@@ -114,8 +115,10 @@ export default function LayoutReviews() {
                             >
                                 Xem
                             </DropdownItem>
-                            <DropdownItem key="edit" startContent={<PenLine size={18} />} showDivider>Sửa</DropdownItem>
-                            <DropdownItem key="delete" startContent={<Trash size={18} />}>Xóa</DropdownItem>
+
+                            <DropdownItem key="delete" startContent={<Ban size={18} />} className="text-danger" color="danger">
+                                Cấm
+                            </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 );

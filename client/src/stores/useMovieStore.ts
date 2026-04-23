@@ -36,11 +36,13 @@ export const useMovieStore = create<{
     movies: Movie[]; // All movies
     moviesByStatus: Movie[];
     moviesByStatusMap: Partial<Record<Movie['status'], Movie[]>>;
+    moviesByGenre: Movie[];
     popularMovies: Movie[];
     actorWithMovies: ActorWithMovie[];
     selectedMovie: Movie | null; // Currently selected movie
 
     isFetchingMovies: boolean;
+    isFetchingMoviesByGenre: boolean;
     isFetchingMoviesByStatus: boolean;
     isFetchingPopularMovies: boolean;
     isFetchingMovieDetails: boolean;
@@ -50,11 +52,12 @@ export const useMovieStore = create<{
     isFetchingActorWithMovies: boolean;
 
     fetchAllMovies: () => Promise<void>;
+    fetchMoviesByGenre: (genreId: number, limit?: number) => Promise<void>;
     fetchMoviesByStatus: (status: Movie['status'], limit?: number) => Promise<void>;
     fetchPopularMovies: (limit?: number) => Promise<void>;
     fetchMovieById: (movieId: number) => Promise<void>;
     createMovie: (movieData: Partial<Movie>) => Promise<void>;
-    updateMovie: (movieId: number, movieData: Partial<Movie>) => Promise<void>;
+    updateMovie: (movieId: number, movieData: Partial<Movie>) => Promise<Movie | null>;
     deleteMovie: (movieId: number) => Promise<void>;
     fetchActorWithMovies: (movieId: number) => Promise<void>;
     clearSelectedMovie: () => void;
@@ -64,10 +67,12 @@ export const useMovieStore = create<{
     movies: [],
     moviesByStatus: [],
     moviesByStatusMap: {},
+    moviesByGenre: [],
     popularMovies: [],
     actorWithMovies: [],
     selectedMovie: null,
     isFetchingMovies: false,
+    isFetchingMoviesByGenre: false,
     isFetchingMoviesByStatus: false,
     isFetchingPopularMovies: false,
     isFetchingMovieDetails: false,
@@ -93,6 +98,25 @@ export const useMovieStore = create<{
             console.error('Error fetching all movies:', error);
         } finally {
             set({ isFetchingMovies: false });
+        }
+    },
+
+    fetchMoviesByGenre: async (genreId: number, limit: number = 1000) => {
+        try {
+            set({ isFetchingMoviesByGenre: true });
+
+            const response = await _axios.get('/v1/movie/get-by-genre', {
+                params: { genreId, limit },
+            });
+
+            if (response.data) {
+                set({ moviesByGenre: response.data });
+            }
+        } catch (error) {
+            console.error(`Error fetching movies by genre ${genreId}:`, error);
+            set({ moviesByGenre: [] });
+        } finally {
+            set({ isFetchingMoviesByGenre: false });
         }
     },
 
@@ -175,17 +199,21 @@ export const useMovieStore = create<{
             set({ isUpdatingMovie: true });
 
             const response = await _axios.put(`/v1/movie/update/${movieId}`, movieData);
+            const updatedMovie = response.data?.data ?? response.data ?? null;
 
-            if (response.data?.data) {
+            if (updatedMovie) {
                 set((state) => ({
                     movies: state.movies.map((movie) =>
-                        movie.movie_id === movieId ? response.data.data : movie
+                        movie.movie_id === movieId ? updatedMovie : movie
                     ),
-                    selectedMovie: response.data.data,
+                    selectedMovie: updatedMovie,
                 }));
             }
+
+            return updatedMovie;
         } catch (error) {
             console.error(`Error updating movie with ID ${movieId}:`, error);
+            return null;
         } finally {
             set({ isUpdatingMovie: false });
         }

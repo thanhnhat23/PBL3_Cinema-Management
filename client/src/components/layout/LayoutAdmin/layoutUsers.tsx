@@ -2,7 +2,7 @@ import type { Key } from "react";
 
 import { useCallback, useEffect } from "react";
 import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
-import { EllipsisVertical, Eye, PenLine, Trash, User } from "lucide-react";
+import { EllipsisVertical, Eye, Ban, User } from "lucide-react";
 
 import { AvatarElement } from "@/components/ui/avatar";
 import { useUserStore, type User as AppUser } from "@/stores/useUserStore";
@@ -116,9 +116,13 @@ export default function LayoutUsers() {
                             </button>
                         </DropdownTrigger>
                         <DropdownMenu>
-                            <DropdownItem key="view" startContent={<Eye size={18} />}>Xem</DropdownItem>
-                            <DropdownItem key="edit" startContent={<PenLine size={18} />} showDivider>Sửa</DropdownItem>
-                            <DropdownItem key="delete" startContent={<Trash size={18} />}>Xóa</DropdownItem>
+                            <DropdownItem key="view" startContent={<Eye size={18} />} showDivider>
+                                Xem
+                            </DropdownItem>
+
+                            <DropdownItem key="delete" startContent={<Ban size={18} />} className="text-danger" color="danger">
+                                Cấm
+                            </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 );

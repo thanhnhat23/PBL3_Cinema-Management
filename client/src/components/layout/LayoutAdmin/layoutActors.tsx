@@ -1,6 +1,6 @@
 import type { Key } from "react";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     Chip,
     Dropdown,
@@ -15,9 +15,20 @@ import {
     DrawerFooter,
     useDisclosure,
 } from "@heroui/react";
-import { EllipsisVertical, Eye, PenLine, Speech, Trash } from "lucide-react";
+import { CalendarIcon, EllipsisVertical, Eye, PenLine, Speech, Trash } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
 
 import { useActorStore, type Actor } from "@/stores/useActorStore";
 import DataTableAdmin, { type AdminColumn } from "../dataTable";
@@ -56,11 +67,68 @@ export default function LayoutActors() {
         characterWithActors,
         isFetchingActors,
         fetchAllActors,
+        fetchActorById,
         fetchMovieWithActors,
         fetchCharacterWithActors,
+        updateActor,
+        isUpdateingActor,
     } = useActorStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedActor, setSelectedActor] = useState<Actor | null>(null);
+    const popoverContainerRef = useRef<HTMLDivElement | null>(null);
+    const [editForm, setEditForm] = useState({
+        biography: "",
+        birthday: "",
+        place_of_birth: "",
+    });
+
+    const parseLocalDate = (value?: string) => {
+        if (!value) return undefined;
+
+        const [year, month, day] = value.split("-").map(Number);
+        if (!year || !month || !day) return undefined;
+
+        const date = new Date(year, month - 1, day);
+        return Number.isNaN(date.getTime()) ? undefined : date;
+    };
+
+    const toDateInputValue = (value?: Date | string | null) => {
+        if (!value) return "";
+
+        if (typeof value === "string") {
+            const dateOnlyMatch = value.match(/^(\d{4}-\d{2}-\d{2})/);
+            if (dateOnlyMatch) return dateOnlyMatch[1];
+        }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        return format(date, "yyyy-MM-dd");
+    };
+
+    const birthdayValue = parseLocalDate(editForm.birthday);
+
+    const handleOpenEdit = useCallback((actor: Actor) => {
+        setSelectedActor(actor);
+        setEditForm({
+            biography: actor.biography ?? "",
+            birthday: toDateInputValue(actor.birthday),
+            place_of_birth: actor.place_of_birth ?? "",
+        });
+        onEditOpen();
+    }, [onEditOpen]);
+
+    const handleSaveActor = async () => {
+        if (!selectedActor) return;
+
+        await updateActor(selectedActor.actor_id, {
+            biography: editForm.biography.trim(),
+            birthday: editForm.birthday || null,
+            place_of_birth: editForm.place_of_birth.trim(),
+        });
+
+        onEditOpenChange();
+    };
 
     useEffect(() => {
         fetchAllActors();
@@ -85,7 +153,7 @@ export default function LayoutActors() {
                 );
             }
             case "birthday":
-                return actor.birthday ? <span>{new Date(String(actor.birthday)).toLocaleDateString("vi-VN")}</span> : <span>N/A</span>;
+                return actor.birthday ? <span>{toDateInputValue(actor.birthday).split("-").reverse().join("/")}</span> : <span>N/A</span>;
             case "place_of_birth":
                 return <span>{actor.place_of_birth ?? "N/A"}</span>;
             case "actions":
@@ -98,12 +166,14 @@ export default function LayoutActors() {
                                 <EllipsisVertical size={18} />
                             </button>
                         </DropdownTrigger>
+
                         <DropdownMenu>
                             <DropdownItem
                                 key="view"
                                 startContent={<Eye size={18} />}
                                 onPress={async () => {
-                                    setSelectedActor(actor);
+                                    await fetchActorById(actor.actor_id);
+                                    setSelectedActor(useActorStore.getState().selectedActor);
                                     await Promise.all([
                                         fetchMovieWithActors(actor.actor_id),
                                         fetchCharacterWithActors(actor.actor_id),
@@ -113,15 +183,25 @@ export default function LayoutActors() {
                             >
                                 Xem
                             </DropdownItem>
-                            <DropdownItem key="edit" startContent={<PenLine size={18} />} showDivider>Sửa</DropdownItem>
-                            <DropdownItem key="delete" startContent={<Trash size={18} />}>Xóa</DropdownItem>
+                            <DropdownItem
+                                key="edit"
+                                startContent={<PenLine size={18} />}
+                                showDivider
+                                onPress={() => handleOpenEdit(actor)}
+                            >
+                                Sửa
+                            </DropdownItem>
+
+                            <DropdownItem key="delete" startContent={<Trash size={18} />}>
+                                Xóa
+                            </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 );
             default:
                 return String(cellValue ?? "");
         }
-    }, [fetchCharacterWithActors, fetchMovieWithActors, onOpen]);
+    }, [fetchActorById, fetchCharacterWithActors, fetchMovieWithActors, handleOpenEdit, onOpen]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -236,6 +316,96 @@ export default function LayoutActors() {
                             <DrawerFooter>
                                 <button onClick={onClose} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
                                     Đóng
+                                </button>
+                            </DrawerFooter>
+                        </>
+                    )}
+                </DrawerContent>
+            </Drawer>
+
+            <Drawer isOpen={isEditOpen} onOpenChange={onEditOpenChange} classNames={{ base: "bg-sidebar" }}>
+                <DrawerContent>
+                    {() => (
+                        <>
+                            <DrawerHeader className="flex flex-col gap-1">
+                                Sửa diễn viên
+                            </DrawerHeader>
+
+                            <DrawerBody>
+                                <p className="text-sm text-zinc-500">Thực hiện các thay đổi cho diễn viên</p>
+
+                                <div ref={popoverContainerRef} className="grid gap-4 py-2">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="birthday" className="text-right">
+                                            Ngày sinh
+                                        </Label>
+
+                                        <div className="col-span-3">
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        variant="outline"
+                                                        data-empty={!birthdayValue}
+                                                        className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
+                                                    >
+                                                        <CalendarIcon />
+                                                        {birthdayValue ? format(birthdayValue, "PPP") : <span>Chọn ngày</span>}
+                                                    </Button>
+                                                </PopoverTrigger>
+
+                                                <PopoverContent container={popoverContainerRef.current} className="w-auto p-0">
+                                                    <Calendar
+                                                        mode="single"
+                                                        selected={birthdayValue}
+                                                        onSelect={(selectedDate) => {
+                                                            setEditForm((prev) => ({
+                                                                ...prev,
+                                                                birthday: selectedDate ? format(selectedDate, "yyyy-MM-dd") : "",
+                                                            }));
+                                                        }}
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="place_of_birth" className="text-right">
+                                            Nơi sinh
+                                        </Label>
+
+                                        <Input
+                                            id="place_of_birth"
+                                            value={editForm.place_of_birth}
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, place_of_birth: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-start gap-4">
+                                        <Label htmlFor="biography" className="text-right pt-2">
+                                            Tiểu sử
+                                        </Label>
+
+                                        <Textarea
+                                            id="biography"
+                                            value={editForm.biography}
+                                            placeholder="Nhập tiểu sử diễn viên"
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, biography: event.target.value }))}
+                                            className="col-span-3 text-sm min-h-auto"
+                                        />
+                                    </div>
+                                </div>
+                            </DrawerBody>
+
+                            <DrawerFooter>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveActor}
+                                    disabled={isUpdateingActor}
+                                    className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
+                                >
+                                    {isUpdateingActor ? "Đang lưu..." : "Lưu thay đổi"}
                                 </button>
                             </DrawerFooter>
                         </>

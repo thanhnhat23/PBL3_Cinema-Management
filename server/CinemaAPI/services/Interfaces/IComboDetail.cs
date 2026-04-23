@@ -9,6 +9,5 @@ namespace CinemaAPI.Services.Interfaces
         Task<ComboDetail?> GetComboDetailById(int combo_detail_id);
         Task AddComboDetail(ComboDetail comboDetail);
         Task UpdateComboDetail(int combo_detail_id, ComboDetailUpdateRequest request);
-        Task DeleteComboDetail(int combo_detail_id);
     }
 }

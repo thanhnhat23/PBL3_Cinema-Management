@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Implementations;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace CinemaAPI.Controllers
     public class roomController : ControllerBase
     {
         private readonly IRoomService _roomService;
+        private readonly RoomService _roomDeleteService;
 
-        public roomController(IRoomService roomService)
+        public roomController(IRoomService roomService, RoomService roomDeleteService)
         {
             _roomService = roomService;
+            _roomDeleteService = roomDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -91,12 +94,26 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _roomService.DeleteRoom(roomId);
+                await _roomDeleteService.SoftDeleteRoom(roomId);
                 return Ok("Room deleted successfully.");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in roomController.DeleteRoom: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("hard-delete/{roomId}")]
+        public async Task<IActionResult> HardDeleteRoom(int roomId)
+        {
+            try
+            {
+                await _roomDeleteService.HardDeleteRoom(roomId);
+                return Ok("Room hard deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in roomController.HardDeleteRoom: {ex.Message}");
             }
         }
     }

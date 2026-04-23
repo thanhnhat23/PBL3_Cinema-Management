@@ -1,5 +1,6 @@
 using CinemaAPI.Models;
 using CinemaAPI.Models.DTOs;
+using CinemaAPI.Services.Implementations;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace CinemaAPI.Controllers
     public class locationController : ControllerBase
     {
         private readonly ILocationService _locationService;
+        private readonly LocationService _locationDeleteService;
 
-        public locationController(ILocationService locationService)
+        public locationController(ILocationService locationService, LocationService locationDeleteService)
         {
             _locationService = locationService;
+            _locationDeleteService = locationDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -55,7 +58,7 @@ namespace CinemaAPI.Controllers
                 var location = new Location
                 {
                     city = request.city,
-                    
+
                 };
 
                 await _locationService.AddLocation(location);
@@ -75,7 +78,7 @@ namespace CinemaAPI.Controllers
                 var location = new Location
                 {
                     city = request.city,
-                    
+
                 };
 
                 await _locationService.UpdateLocation(locationId, location);
@@ -92,12 +95,26 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _locationService.DeleteLocation(locationId);
+                await _locationDeleteService.SoftDeleteLocation(locationId);
                 return Ok("Location deleted successfully");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in locationController.DeleteLocation: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("hard-delete/{locationId}")]
+        public async Task<IActionResult> HardDeleteLocation(int locationId)
+        {
+            try
+            {
+                await _locationDeleteService.HardDeleteLocation(locationId);
+                return Ok("Location hard deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in locationController.HardDeleteLocation: {ex.Message}");
             }
         }
     }
