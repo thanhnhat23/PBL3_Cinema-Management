@@ -64,20 +64,17 @@ namespace CinemaAPI.Services.Implementations
         }
         public async Task DeleteComboDetail(int combo_detail_id)
         {
-            using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
                 var comboDetail = await _dbContext.ComboDetails.FindAsync(combo_detail_id);
-                if (comboDetail == null) 
+                if (comboDetail == null)
                     throw new Exception("Combo detail not found");
 
-                _dbContext.ComboDetails.Remove(comboDetail);
+                comboDetail.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
                 await _dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 Console.WriteLine($"Error deleting combo detail: {ex.Message}");
                 throw new Exception("An error occurred while deleting the combo detail. Please try again.");
             }

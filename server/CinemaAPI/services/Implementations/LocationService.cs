@@ -62,11 +62,10 @@ namespace CinemaAPI.Services.Interfaces
             try
             {
                 var location = await _dbContext.Locations.FindAsync(location_id);
-            if (location != null)
-            {
-                _dbContext.Locations.Remove(location);
+                if (location == null)
+                    throw new Exception("Location not found");
+                location.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
                 await _dbContext.SaveChangesAsync();
-            }
             }
             catch (Exception ex)
             {
@@ -74,6 +73,5 @@ namespace CinemaAPI.Services.Interfaces
                 throw new Exception("An error in location delete ", ex);
             }
         }
-    
     }
 }

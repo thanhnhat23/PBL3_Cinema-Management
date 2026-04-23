@@ -74,23 +74,17 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
-                var snackToDelete = await _dbContext.Snacks
-                    .Include(s => s.BookingSnacks)
-                    .Include(s => s.ComboDetails)
-                    .Include(s => s.Inventory)
-                    .FirstOrDefaultAsync(s => s.snack_id == snack_id);
-                if (snackToDelete == null) throw new Exception("Snack not found");
-                if (snackToDelete.BookingSnacks.Any())
-                    throw new Exception("Cannot delete a snack that is associated with bookings. Please delete the associated bookings first.");
-
-                _dbContext.Snacks.Remove(snackToDelete);
+                var snack = await _dbContext.Snacks.FindAsync(snack_id);
+                if (snack == null)
+                    throw new Exception("Snack not found");
+                snack.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"DeleteSnack Error: {ex.Message}");
-                throw new Exception($"An error occurred while deleting the snack: {ex.Message}");
+                Console.WriteLine($"Error deleting snack: {ex.Message}");
+                throw new Exception("An error occurred while deleting the snack. Please try again.", ex);
+            }
         }
     }
-}
 }

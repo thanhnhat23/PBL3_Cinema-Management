@@ -76,22 +76,19 @@ namespace CinemaAPI.Services.Implementations
         }
         public async Task DeletePayment(int payment_id)
         {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+           try
             {
-                try
-                {
-                    var payment = await _dbContext.Payments.FindAsync(payment_id);
-                    if (payment == null) throw new Exception("Payment not found");
-
-                    _dbContext.Payments.Remove(payment);
-                    await _dbContext.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception("Failed to delete payment", ex);
-                }
+                var payment = await _dbContext.Payments.FindAsync(payment_id);
+                if (payment == null)
+                    throw new Exception("Payment not found");
+                payment.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                await _dbContext.SaveChangesAsync();
+            
+            }
+          catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting payment: {ex.Message}");
+                throw new Exception("An error occurred while deleting the payment. Please try again.", ex);
             }
         }
     }

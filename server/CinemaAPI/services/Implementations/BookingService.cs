@@ -79,21 +79,16 @@ namespace CinemaAPI.Services.Implementations
             }
                 public async Task DeleteBooking(int booking_id)
                 {
-                    using var transaction = await _dbContext.Database.BeginTransactionAsync();
                     try
                     {
-                        var booking = await _dbContext.Bookings.FirstOrDefaultAsync(b => b.booking_id == booking_id);
-
-                        if (booking == null)
-                            throw new Exception("Booking not found"); 
-
-                        _dbContext.Bookings.Remove(booking);
-                        await _dbContext.SaveChangesAsync();
-                        await transaction.CommitAsync();
+                    var booking = await _dbContext.Bookings.FindAsync(booking_id);   
+                    if (booking == null)
+                        throw new Exception("Booking not found");
+                    booking.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                    await _dbContext.SaveChangesAsync();
                     }
                     catch (Exception e)
                     {
-                        await transaction.RollbackAsync();
                         Console.WriteLine($"Error in BookingService.DeleteBooking: {e.Message}");
                         throw new Exception("An error occurred while deleting the booking.");
                     }

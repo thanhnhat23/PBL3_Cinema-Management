@@ -107,7 +107,7 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task DeleteRoom(int room_id, RoomDeleteRequest request)
+        public async Task DeleteRoom(int room_id)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace CinemaAPI.Services.Implementations
                 if (room == null)
                     throw new Exception("Room not found");
 
-                room.deleted_at = request.deleted_at;
+                room.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)

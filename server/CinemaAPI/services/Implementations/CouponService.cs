@@ -84,11 +84,20 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task DeleteCoupon(int coupon_id)
         {
-            var coupon = await _dbContext.Coupons.FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
-            if (coupon != null)
+           try
             {
-                _dbContext.Coupons.Remove(coupon);
+                var coupon = await _dbContext.Coupons.FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
+
+                if (coupon == null)
+                    throw new Exception("Coupon not found");
+
+               coupon.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
                 await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting coupon: {ex.Message}");
+                throw new Exception($"An error occurred while deleting the coupon: {ex.Message}");
             }
         }
     }

@@ -72,13 +72,21 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task DeleteInventory(int cinema_id, int snack_id)
         {
-            var inventory = await _dbContext.Inventories
-                .FirstOrDefaultAsync(i => i.cinema_id == cinema_id && i.snack_id == snack_id);
-            if (inventory == null)
-                throw new Exception("Inventory not found");
+            try
+            {
+                var inventory = await _dbContext.Inventories
+                    .FirstOrDefaultAsync(i => i.cinema_id == cinema_id && i.snack_id == snack_id);
+                if (inventory == null)
+                    throw new Exception("Inventory not found");
 
-            _dbContext.Inventories.Remove(inventory);
-            await _dbContext.SaveChangesAsync();
+                inventory.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting inventory: {ex.Message}");
+                throw new Exception("An error occurred while deleting the inventory. Please try again.");
+            }
         }   
     }
 }

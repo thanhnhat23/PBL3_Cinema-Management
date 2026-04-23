@@ -68,6 +68,7 @@ builder.Services.AddScoped<IComboDetail, ComboDetailService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ISeatService, SeatService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();
