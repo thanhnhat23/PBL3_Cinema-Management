@@ -30,12 +30,29 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in combodetailController.GetAllComboDetails: {ex.Message}");
             }
         }
-        [HttpGet("get/{combo_detail_id}")]
-        public async Task<IActionResult> GetComboDetail(int combo_detail_id)
+        [HttpGet("get/{combo_id}")]
+        public async Task<IActionResult> GetComboDetailsByCombo(int combo_id)
         {
             try
             {
-                var comboDetail = await combodetailService.GetComboDetailById(combo_detail_id);
+                var comboDetails = await combodetailService.GetComboDetailsByComboId(combo_id);
+                if (comboDetails.Count == 0)
+                    return NotFound("Combo detail not found");
+
+                return Ok(comboDetails);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in combodetailController.GetComboDetailsByCombo: {ex.Message}");
+            }
+        }
+
+        [HttpGet("get/{combo_id}/{snack_id}")]
+        public async Task<IActionResult> GetComboDetail(int combo_id, int snack_id)
+        {
+            try
+            {
+                var comboDetail = await combodetailService.GetComboDetail(combo_id, snack_id);
                 if (comboDetail == null)
                     return NotFound("Combo detail not found");
 
@@ -65,12 +82,13 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in combodetailController.CreateComboDetail: {ex.Message}");
             }
         }
-        [HttpPut("update/{combo_detail_id}")]
-        public async Task<IActionResult> UpdateComboDetail(int combo_detail_id, [FromBody] ComboDetailUpdateRequest request)
+        
+        [HttpPut("update/{combo_id}/{snack_id}")]
+        public async Task<IActionResult> UpdateComboDetail(int combo_id, int snack_id, [FromBody] ComboDetailUpdateRequest request)
         {
             try
             {
-                await combodetailService.UpdateComboDetail(combo_detail_id, request);
+                await combodetailService.UpdateComboDetail(combo_id, snack_id, request);
                 return Ok("Combo detail updated successfully");
             }
             catch (Exception ex)
@@ -78,12 +96,13 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in combodetailController.UpdateComboDetail: {ex.Message}");
             }
         }
-        [HttpDelete("delete/{combo_detail_id}")]
-        public async Task<IActionResult> DeleteComboDetail(int combo_detail_id)
+
+        [HttpDelete("delete/{combo_id}/{snack_id}")]
+        public async Task<IActionResult> DeleteComboDetail(int combo_id, int snack_id)
         {
             try
             {
-                await comboDetailDeleteService.SoftDeleteComboDetail(combo_detail_id);
+                await comboDetailDeleteService.SoftDeleteComboDetail(combo_id, snack_id);
                 return Ok("Combo detail deleted successfully");
             }
             catch (Exception ex)
@@ -92,12 +111,12 @@ namespace CinemaAPI.Controllers
             }
         }
 
-        [HttpDelete("hard-delete/{combo_detail_id}")]
-        public async Task<IActionResult> HardDeleteComboDetail(int combo_detail_id)
+        [HttpDelete("hard-delete/{combo_id}/{snack_id}")]
+        public async Task<IActionResult> HardDeleteComboDetail(int combo_id, int snack_id)
         {
             try
             {
-                await comboDetailDeleteService.HardDeleteComboDetail(combo_detail_id);
+                await comboDetailDeleteService.HardDeleteComboDetail(combo_id, snack_id);
                 return Ok("Combo detail hard deleted successfully");
             }
             catch (Exception ex)

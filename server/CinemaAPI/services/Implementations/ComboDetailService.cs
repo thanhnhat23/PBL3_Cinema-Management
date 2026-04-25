@@ -17,17 +17,34 @@ namespace CinemaAPI.Services.Implementations
         }
         public async Task<List<ComboDetail>> GetAllComboDetails() =>
             await _dbContext.ComboDetails
+                .Include(cd => cd.ComboSnack)
                 .Include(cd => cd.Snack)
                 .ToListAsync();
-        public async Task<ComboDetail?> GetComboDetailById(int combo_detail_id) =>
+
+        public async Task<List<ComboDetail>> GetComboDetailsByComboId(int combo_id) =>
             await _dbContext.ComboDetails
+                .Include(cd => cd.ComboSnack)
                 .Include(cd => cd.Snack)
-                .FirstOrDefaultAsync(cd => cd.combo_id == combo_detail_id);
+                .Where(cd => cd.combo_id == combo_id)
+                .ToListAsync();
+
+        public async Task<ComboDetail?> GetComboDetail(int combo_id, int snack_id) =>
+            await _dbContext.ComboDetails
+                .Include(cd => cd.ComboSnack)
+                .Include(cd => cd.Snack)
+                .FirstOrDefaultAsync(cd => cd.combo_id == combo_id && cd.snack_id == snack_id);
+
         public async Task AddComboDetail(ComboDetail comboDetail)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
+                var exists = await _dbContext.ComboDetails.AnyAsync(cd =>
+                    cd.combo_id == comboDetail.combo_id && cd.snack_id == comboDetail.snack_id);
+
+                if (exists)
+                    throw new Exception("Combo detail already exists");
+
                 _dbContext.ComboDetails.Add(comboDetail);
                 await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -39,19 +56,17 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("An error occurred while adding the combo detail. Please try again.");
             }
         }
-        public async Task UpdateComboDetail(int combo_detail_id, ComboDetailUpdateRequest request)
+
+        public async Task UpdateComboDetail(int combo_id, int snack_id, ComboDetailUpdateRequest request)
         {
-            var comboDetail = await _dbContext.ComboDetails.FindAsync(combo_detail_id);
+            var comboDetail = await _dbContext.ComboDetails
+                .FirstOrDefaultAsync(cd => cd.combo_id == combo_id && cd.snack_id == snack_id);
+
             if (comboDetail == null)
                 throw new Exception("Combo detail not found");
+
             try
             {
-                if (request.combo_id.HasValue)
-                    comboDetail.combo_id = request.combo_id.Value;
-
-                if (request.snack_id.HasValue)
-                    comboDetail.snack_id = request.snack_id.Value;
-
                 if (request.quantity.HasValue)
                     comboDetail.quantity = request.quantity.Value;
 
@@ -64,12 +79,15 @@ namespace CinemaAPI.Services.Implementations
             }
 
         }
-        public async Task SoftDeleteComboDetail(int combo_detail_id)
+
+        public async Task SoftDeleteComboDetail(int combo_id, int snack_id)
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var comboDetail = await _dbContext.ComboDetails.FindAsync(combo_detail_id);
+                var comboDetail = await _dbContext.ComboDetails
+                    .FirstOrDefaultAsync(cd => cd.combo_id == combo_id && cd.snack_id == snack_id);
+
                 if (comboDetail == null)
                     throw new Exception("Combo detail not found");
 
@@ -84,11 +102,13 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task HardDeleteComboDetail(int combo_detail_id)
+        public async Task HardDeleteComboDetail(int combo_id, int snack_id)
         {
             try
             {
-                var comboDetail = await _dbContext.ComboDetails.FindAsync(combo_detail_id);
+                var comboDetail = await _dbContext.ComboDetails
+                    .FirstOrDefaultAsync(cd => cd.combo_id == combo_id && cd.snack_id == snack_id);
+
                 if (comboDetail == null)
                     throw new Exception("Combo detail not found");
 

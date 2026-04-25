@@ -31,6 +31,9 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task AddInventory(Inventory inventory)
         {
+            if (inventory.quantity < 0)
+                throw new Exception("Inventory quantity cannot be negative");
+
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
@@ -61,7 +64,12 @@ namespace CinemaAPI.Services.Implementations
                     inventory.snack_id = request.snack_id.Value;
 
                 if (request.quantity.HasValue)
+                {
+                    if (request.quantity.Value < 0)
+                        throw new Exception("Inventory quantity cannot be negative");
+
                     inventory.quantity = request.quantity.Value;
+                }
 
                 await _dbContext.SaveChangesAsync();
             }
