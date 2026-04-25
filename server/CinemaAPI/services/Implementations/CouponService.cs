@@ -86,6 +86,11 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task SoftDeleteCoupon(int coupon_id)
         {
+<<<<<<< HEAD
+           try
+            {
+                var coupon = await _dbContext.Coupons.FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
+=======
             try {
                 var coupon = await _dbContext.Coupons.FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
                 if (coupon != null)
@@ -108,10 +113,15 @@ namespace CinemaAPI.Services.Implementations
                     .Include(c => c.Bookings)
                     .Include(c => c.UserVouchers)
                     .FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
 
                 if (coupon == null)
                     throw new Exception("Coupon not found");
 
+<<<<<<< HEAD
+               coupon.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                await _dbContext.SaveChangesAsync();
+=======
                 if (coupon.Bookings.Any() || coupon.UserVouchers.Any())
                     throw new Exception("Cannot hard delete coupon that is already linked to bookings or user vouchers.");
 
@@ -121,6 +131,12 @@ namespace CinemaAPI.Services.Implementations
             {
                 Console.WriteLine($"Error hard deleting coupon: {ex.Message}");
                 throw new Exception("An error occurred while hard deleting the coupon. Please try again.");
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting coupon: {ex.Message}");
+                throw new Exception($"An error occurred while deleting the coupon: {ex.Message}");
             }
         }
     }

@@ -84,11 +84,19 @@ namespace CinemaAPI.Services.Implementations
         {
             try
             {
+<<<<<<< HEAD
+                var cinema = await _dbContext.Cinemas.FindAsync(cinema_id);
+                if (cinema == null) 
+                    throw new Exception("Cinema not found");
+                cinema.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                await _dbContext.SaveChangesAsync();
+=======
                 var cinema = await _dbContext.Cinemas.FirstOrDefaultAsync(c => c.cinema_id == cinema_id);
                 if (cinema == null) throw new Exception("Cinema not found");
 
                 await SoftDeleteAsync(cinema);
                 RagCacheKeys.Invalidate("rooms");
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
             }
             catch (Exception ex)
             {
