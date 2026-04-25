@@ -60,56 +60,5 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in seatController.GetSeatsOnRoom: {ex.Message}");
             }
         }
-
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateSeat([FromBody] SeatCreateRequest request)
-        {
-            try
-            {
-                var seat = new Seat
-                {
-                    room_id = request.room_id,
-                    type_id = request.type_id,
-                    row_index = request.row_index,
-                    column_index = request.column_index,
-                    seat_code = request.seat_code
-                };
-
-                await _seatService.AddSeat(seat);
-                return Ok("Seat created successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in seatController.CreateSeat: {ex.Message}");
-            }
-        }
-
-        [HttpPut("update/{seatId}")]
-        public async Task<IActionResult> UpdateSeat(int seatId, [FromBody] SeatUpdateRequest request)
-        {
-            try
-            {
-                await _seatService.UpdateSeat(seatId, request);
-                return Ok("Seat updated successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in seatController.UpdateSeat: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("delete/{seatId}")]
-        public async Task<IActionResult> DeleteSeat(int seatId)
-        {
-            try
-            {
-                await _seatService.DeleteSeat(seatId);
-                return Ok("Seat deleted successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in seatController.DeleteSeat: {ex.Message}");
-            }
-        }
     }
 }

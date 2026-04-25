@@ -78,7 +78,7 @@ namespace CinemaAPI.Services.Implementations
                 if (actor == null)
                     throw new Exception("Actor not found");
 
-                actor.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                actor.deleted_at = DateTime.UtcNow;
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)

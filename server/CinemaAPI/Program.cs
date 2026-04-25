@@ -80,11 +80,8 @@ builder.Services.AddScoped<InventoryService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
-<<<<<<< HEAD
-builder.Services.AddScoped<ISeatService, SeatService>();
-=======
 builder.Services.AddScoped<PaymentService>();
->>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
+builder.Services.AddScoped<ISeatService, SeatService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();

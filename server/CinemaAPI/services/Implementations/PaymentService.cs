@@ -161,23 +161,6 @@ namespace CinemaAPI.Services.Implementations
                 status = payment.status
             };
         }
-<<<<<<< HEAD
-        public async Task DeletePayment(int payment_id)
-        {
-           try
-            {
-                var payment = await _dbContext.Payments.FindAsync(payment_id);
-                if (payment == null)
-                    throw new Exception("Payment not found");
-                payment.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
-                await _dbContext.SaveChangesAsync();
-            
-            }
-          catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting payment: {ex.Message}");
-                throw new Exception("An error occurred while deleting the payment. Please try again.", ex);
-=======
 
         private string BuildPaymentUrl(Payment payment, string? returnUrlOverride, string ipAddress)
         {
@@ -225,7 +208,6 @@ namespace CinemaAPI.Services.Implementations
                 {
                     sorted[kv.Key] = kv.Value;
                 }
->>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
             }
 
             var hashData = BuildQuery(sorted, encodeValues: false);
