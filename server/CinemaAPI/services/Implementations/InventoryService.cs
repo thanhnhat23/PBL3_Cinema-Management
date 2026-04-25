@@ -79,27 +79,5 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("An error occurred while updating the inventory. Please try again.");
             }
         }
-<<<<<<< HEAD
-
-        public async Task DeleteInventory(int cinema_id, int snack_id)
-        {
-            try
-            {
-                var inventory = await _dbContext.Inventories
-                    .FirstOrDefaultAsync(i => i.cinema_id == cinema_id && i.snack_id == snack_id);
-                if (inventory == null)
-                    throw new Exception("Inventory not found");
-
-                inventory.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting inventory: {ex.Message}");
-                throw new Exception("An error occurred while deleting the inventory. Please try again.");
-            }
-        }   
-=======
->>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
     }
 }

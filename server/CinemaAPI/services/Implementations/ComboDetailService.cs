@@ -90,22 +90,11 @@ namespace CinemaAPI.Services.Implementations
                 if (comboDetail == null)
                     throw new Exception("Combo detail not found");
 
-<<<<<<< HEAD
-                comboDetail.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting combo detail: {ex.Message}");
-=======
                 await SoftDeleteAsync(comboDetail);
-                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 Console.WriteLine($"Error soft deleting combo detail: {ex.Message}");
->>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
                 throw new Exception("An error occurred while deleting the combo detail. Please try again.");
             }
         }

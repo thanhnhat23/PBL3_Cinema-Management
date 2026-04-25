@@ -134,25 +134,14 @@ namespace CinemaAPI.Services.Implementations
                 if (movie == null)
                     throw new Exception("Movie not found");
 
-                movie.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                movie.deleted_at = DateTime.UtcNow;
                 await _dbContext.SaveChangesAsync();
-<<<<<<< HEAD
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"DeleteMovie Error: {ex.Message}");
-                throw new Exception($"An error occurred while deleting the movie: {ex.Message}");
-        
-=======
-                await transaction.CommitAsync();
                 RagCacheKeys.Invalidate("movies");
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 Console.WriteLine($"HardDeleteMovie Error: {ex.Message}");
                 throw new Exception($"An error occurred while hard deleting the movie: {ex.Message}");
->>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
             }
         }
 

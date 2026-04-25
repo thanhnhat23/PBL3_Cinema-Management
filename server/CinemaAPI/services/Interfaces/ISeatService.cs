@@ -8,8 +8,5 @@ namespace CinemaAPI.Services.Interfaces
         Task<List<Seat>> GetAllSeats();
         Task<Seat?> GetSeatById(int seat_id);
         Task<List<Seat>> GetSeatOnRoom(int room_id);
-        Task AddSeat(Seat seat);
-        Task UpdateSeat(int seat_id, SeatUpdateRequest request);
-        Task DeleteSeat(int seat_id);
     }
 }
