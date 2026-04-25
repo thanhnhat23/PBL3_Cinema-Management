@@ -2,10 +2,10 @@ import type { Key } from "react";
 
 import { useCallback, useEffect } from "react";
 import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
-import { EllipsisVertical, Eye, PenLine, TicketPercent, Trash } from "lucide-react";
+import { EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
 
 import { useCouponStore, type Coupon } from "@/stores/useCouponStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const columns: AdminColumn[] = [
     { name: "ID", uid: "coupon_id", sortable: true },
@@ -93,12 +93,7 @@ export default function LayoutCoupons() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <TicketPercent />
-                Dashboard: Quản lí mã giảm giá
-            </h1>
-
+        <>
             <DataTableAdmin<Coupon>
                 columns={columns}
                 items={coupons}
@@ -113,6 +108,6 @@ export default function LayoutCoupons() {
                 searchBy={(item) => item.code}
                 renderCell={renderCell}
             />
-        </div>
+        </>
     )
 }

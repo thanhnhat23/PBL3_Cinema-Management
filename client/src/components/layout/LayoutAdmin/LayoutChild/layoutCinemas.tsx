@@ -14,7 +14,7 @@ import {
     DrawerFooter,
     useDisclosure,
 } from "@heroui/react";
-import { EllipsisVertical, Eye, House, PenLine, Trash } from "lucide-react";
+import { EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,7 @@ import {
 
 import { useCinemaStore, type Cinema } from "@/stores/useCinemaStore";
 import { useLocationStore } from "@/stores/useLocationStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const columns: AdminColumn[] = [
     { name: "ID", uid: "cinema_id", sortable: true },
@@ -161,12 +161,7 @@ export default function LayoutCinemas() {
     }, [handleOpenEdit, onOpen]);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <House />
-                Dashboard: Quản lí rạp phim
-            </h1>
-
+        <>
             <DataTableAdmin<Cinema>
                 columns={columns}
                 items={cinemas}
@@ -394,6 +389,6 @@ export default function LayoutCinemas() {
                     )}
                 </DrawerContent>
             </Drawer>
-        </div>
+        </>
     )
 }

@@ -5,7 +5,7 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/r
 import { EllipsisVertical, Eye, MapPin, PenLine, Trash } from "lucide-react";
 
 import { useLocationStore, type Location } from "@/stores/useLocationStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const columns: AdminColumn[] = [
     { name: "ID", uid: "location_id", sortable: true },
@@ -51,12 +51,7 @@ export default function LayoutLocations() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <MapPin />
-                Dashboard: Quản lí địa điểm
-            </h1>
-
+        <>
             <DataTableAdmin<Location>
                 columns={columns}
                 items={locations}
@@ -71,6 +66,6 @@ export default function LayoutLocations() {
                 searchBy={(item) => item.city}
                 renderCell={renderCell}
             />
-        </div>
+        </>
     )
 }

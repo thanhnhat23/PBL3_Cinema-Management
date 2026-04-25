@@ -70,7 +70,7 @@ export const CardMovie = ({
                         onMouseLeave={() => setHoveredItem(null)}
                         onClick={() => {
                             if (movie.status === 0 || (movie.status === 1 && OneDayLeftCurrentNow)) {
-                                router.push('/');
+                                router.push('/booking/' + movie.movie_id);
                             }
                         }}
                     >

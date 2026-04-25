@@ -15,7 +15,7 @@ import {
     DrawerFooter,
     useDisclosure,
 } from "@heroui/react";
-import { CalendarIcon, EllipsisVertical, Eye, PenLine, Speech, Trash } from "lucide-react";
+import { CalendarIcon, EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -29,9 +29,8 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-
 import { useActorStore, type Actor } from "@/stores/useActorStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const columns: AdminColumn[] = [
     { name: "ID", uid: "actor_id", sortable: true },
@@ -204,12 +203,7 @@ export default function LayoutActors() {
     }, [fetchActorById, fetchCharacterWithActors, fetchMovieWithActors, handleOpenEdit, onOpen]);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <Speech />
-                Dashboard: Quản lí diễn viên
-            </h1>
-
+        <>
             <DataTableAdmin<Actor>
                 columns={columns}
                 items={actors}
@@ -412,6 +406,6 @@ export default function LayoutActors() {
                     )}
                 </DrawerContent>
             </Drawer>
-        </div>
+        </>
     )
 }

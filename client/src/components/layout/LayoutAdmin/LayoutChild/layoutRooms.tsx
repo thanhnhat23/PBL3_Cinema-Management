@@ -5,7 +5,7 @@ import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@he
 import { DoorOpen, EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
 
 import { useRoomStore, type Room } from "@/stores/useRoomStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const columns: AdminColumn[] = [
     { name: "ID", uid: "room_id", sortable: true },
@@ -91,12 +91,7 @@ export default function LayoutRooms() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <DoorOpen />
-                Dashboard: Quản lí phòng chiếu
-            </h1>
-
+        <>
             <DataTableAdmin<Room>
                 columns={columns}
                 items={rooms}
@@ -111,6 +106,6 @@ export default function LayoutRooms() {
                 searchBy={(item) => item.nameRoom}
                 renderCell={renderCell}
             />
-        </div>
+        </>
     )
 }

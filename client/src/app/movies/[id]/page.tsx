@@ -178,7 +178,7 @@ export default function MoviePage() {
                     }`}
                     onClick={() => {
                         if (selectedMovie?.status === 0 || (selectedMovie?.status === 1 && OneDayLeftCurrentNow)) {
-                            router.push('/');
+                            router.push('/booking/' + selectedMovie.movie_id);
                         }
                     }}
                 >

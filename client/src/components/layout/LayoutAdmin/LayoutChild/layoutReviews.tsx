@@ -14,13 +14,13 @@ import {
     DrawerFooter,
     useDisclosure,
 } from "@heroui/react";
-import { Ban, EllipsisVertical, Eye, MessageCircle } from "lucide-react";
+import { Ban, EllipsisVertical, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 import { AvatarElement } from "@/components/ui/avatar";
 import { useMovieStore } from "@/stores/useMovieStore";
 import { useReviewStore, type Review } from "@/stores/useReviewStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { Star } from "@/components/icons/star";
 
 const columns: AdminColumn[] = [
@@ -128,12 +128,7 @@ export default function LayoutReviews() {
     }, [getMovieTitleById, onOpen]);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <MessageCircle />
-                Dashboard: Quản lí đánh giá
-            </h1>
-
+        <>
             <DataTableAdmin<Review>
                 columns={columns}
                 items={reviews}
@@ -225,6 +220,6 @@ export default function LayoutReviews() {
                     )}
                 </DrawerContent>
             </Drawer>
-        </div>
+        </>
     )
 }

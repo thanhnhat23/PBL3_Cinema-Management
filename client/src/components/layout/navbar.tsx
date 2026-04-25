@@ -262,7 +262,7 @@ export default function NavbarLayout() {
                 </Dropdown>
 
                 <Link
-                    href="#"
+                    href="/booking"
                     className="text-base bg-transparent data-[hover=true]:bg-transparent text-white font-semibold dark:hover:text-zinc-50 hover:text-zinc-50"
                 >
                     <NavbarItem className="flex flex-row gap-2 items-center bg-orange-400 dark:bg-orange-500 p-2 font-semibold dark:hover:bg-orange-600 hover:bg-orange-500 rounded-md">

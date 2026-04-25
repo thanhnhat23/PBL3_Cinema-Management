@@ -13,13 +13,13 @@ import {
     DrawerHeader,
     DrawerBody,
     DrawerFooter,
-    useDisclosure
+    useDisclosure,
 } from "@heroui/react";
 
-import { CalendarIcon, EllipsisVertical, Eye, PenLine, Trash, Video } from "lucide-react";
+import { CalendarIcon, EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
 import { StarIcon } from "@/components/icons/star";
 import { useMovieStore, type Movie } from "@/stores/useMovieStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import Image from 'next/image';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -43,7 +43,7 @@ import {
 } from "@/components/ui/popover"
 import { format } from "date-fns";
 
-const columns: AdminColumn[] = [
+const movieColumns: AdminColumn[] = [
     { name: "ID", uid: "movie_id", sortable: true },
     { name: "PHIM", uid: "title", sortable: true },
     { name: "THỜI LƯỢNG", uid: "runtime", sortable: true },
@@ -66,7 +66,7 @@ const getPosterSrc = (posterPath?: string | null) => {
     return `https://image.tmdb.org/t/p/w185${posterPath}`;
 };
 
-export default function LayoutMovies() {
+export default function LayoutMovie() {
     const { movies, isFetchingMovies, isUpdatingMovie, fetchAllMovies, getStatusLabel, updateMovie } = useMovieStore();
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
@@ -122,7 +122,7 @@ export default function LayoutMovies() {
         onEditOpen();
     }, [onEditOpen, syncEditForm]);
 
-    const handleSaveMovie = async () => {
+    const handleSave = async () => {
         if (!selectedMovie) return;
 
         const updatedMovie = await updateMovie(selectedMovie.movie_id, {
@@ -218,14 +218,9 @@ export default function LayoutMovies() {
     }, [getStatusLabel, handleOpenEdit, onOpen]);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <Video />
-                Dashboard: Quản lí phim
-            </h1>
-
+        <>
             <DataTableAdmin<Movie>
-                columns={columns}
+                columns={movieColumns}
                 items={movies}
                 isLoading={isFetchingMovies}
                 searchPlaceholder="Tìm theo tên phim..."
@@ -489,7 +484,7 @@ export default function LayoutMovies() {
                             <DrawerFooter>
                                 <button
                                     type="button"
-                                    onClick={handleSaveMovie}
+                                    onClick={handleSave}
                                     disabled={isUpdatingMovie}
                                     className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
                                 >
@@ -500,6 +495,6 @@ export default function LayoutMovies() {
                     )}
                 </DrawerContent>
             </Drawer>
-        </div>
+        </>
     )
 }
