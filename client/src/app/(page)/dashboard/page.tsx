@@ -21,8 +21,6 @@ import {
     Ticket, 
     Drama, 
     MapPinHouse, 
-    TicketPercent,
-    Speech,
     User,
     ChevronLeft,
     ChartNoAxesGantt,
@@ -32,7 +30,6 @@ import {
     TableOfContents,
     Database,
     LogOut,
-    MessageCircle,
     Sun,
     Moon,
     ChevronDown,
@@ -47,18 +44,14 @@ import { ThemeToggler } from '@/components/ui/effects/themeToggler';
 import { useLayoutStore } from '@/stores/useLayoutStore';
 import { LayoutAdmin } from '@/components/layout/layoutAdmin';
 
-const Management = ["Phim", "Phòng", "Vé", "Suất chiếu", "Rạp chiếu", "Khuyến mãi", "Diễn viên", "Review", "Thức ăn"] as const;
+const Management = ["Phim", "Vé", "Suất chiếu", "Rạp chiếu", "Thức ăn"] as const;
 
 type LayoutKey =
     | 'Thống kê'
     | 'Phim'
-    | 'Phòng'
     | 'Vé'
     | 'Suất chiếu'
     | 'Rạp chiếu'
-    | 'Khuyến mãi'
-    | 'Diễn viên'
-    | 'Review'
     | 'Người dùng'
     | 'Đồng bộ dữ liệu'
     | 'Thống kê doanh thu'
@@ -66,25 +59,17 @@ type LayoutKey =
 
 const ManagementLayoutMap: Record<(typeof Management)[number], LayoutKey> = {
     "Phim": 'Phim',
-    "Phòng": 'Phòng',
     "Vé": 'Vé',
     "Suất chiếu": 'Suất chiếu',
     "Rạp chiếu": 'Rạp chiếu',
-    "Khuyến mãi": 'Khuyến mãi',
-    "Diễn viên": 'Diễn viên',
-    "Review": 'Review',
     "Thức ăn": "Thức ăn"
 };
 
 const Icon: Record<(typeof Management)[number], ReactNode> = {
   "Phim": <Clapperboard />,
-  "Phòng": <House />,
   "Vé": <Ticket />,
   "Suất chiếu": <Drama />,
   "Rạp chiếu": <MapPinHouse />,
-  "Khuyến mãi": <TicketPercent />,
-  "Diễn viên": <Speech />,
-  "Review": <MessageCircle />,
   "Thức ăn": <Hamburger />
 };
 

@@ -14,6 +14,7 @@ namespace CinemaAPI.Controllers
         {
             _bookingService = bookingService;
         }
+        
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllBookings()
         {
@@ -27,6 +28,7 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in bookingController.GetAllBookings: {ex.Message}");
             }
         }
+
         [HttpGet("get/{bookingId}")]
         public async Task<IActionResult> GetBooking(int bookingId)
         {
@@ -43,33 +45,26 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in bookingController.GetBooking: {ex.Message}");
             }
         }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateBooking([FromBody] BookingCreateRequest request)
         {
             try
             {
-                var userId = Guid.Parse(request.user_id);
-                var booking = new Booking
+                var booking = await _bookingService.CreateBookingWithSnacksAsync(request);
+                return Ok(new
                 {
-                    user_id = userId,
-                    showtime_id = request.showtime_id,
-                    coupon_id = request.coupon_id,
-                    totalAmount = request.totalAmount,
-                    discountAmount = request.discountAmount,
-                    finalAmount = request.finalAmount,
-                    createAt = request.createAt ?? DateTime.Now,
-                    status = BookingStatus.Pending
-                };
-
-                await _bookingService.AddBooking(booking);
-                return Ok("Booking created successfully");
+                    booking.booking_id,
+                    booking.totalAmount,
+                    booking.discountAmount,
+                    booking.finalAmount,
+                    booking.status,
+                });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in bookingController.CreateBooking: {ex.Message}");
             }
         }
-        //[HttpPut("update/{bookingId}")]
-        // public async Task<IActionResult> UpdateBooking(in)
     }
 }

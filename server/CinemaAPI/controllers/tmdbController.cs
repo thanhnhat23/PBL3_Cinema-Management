@@ -30,8 +30,8 @@ namespace CinemaAPI.Controllers
             }
         }
 
-        [HttpPost("sync-movies")]
-        public async Task<IActionResult> SyncMovie([FromQuery] string type = "nowplaying")
+        [HttpPost("sync-movies/{type}")]
+        public async Task<IActionResult> SyncMovie(CancellationToken ct, [FromQuery] string type = "nowplaying")
         {
             if (type != "nowplaying" && type != "upcoming" && type != "popular")
             {
@@ -50,7 +50,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost("sync-reviews")]
-        public async Task<IActionResult> SyncReviews()
+        public async Task<IActionResult> SyncReviews(CancellationToken ct)
         {
             try
             {
@@ -60,6 +60,20 @@ namespace CinemaAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in tmdbController.SyncReviews: {ex.Message}");
+            }
+        }
+
+        [HttpPost("sync-update-status")]
+        public async Task<IActionResult> SyncUpdateStatus(CancellationToken ct)
+        {
+            try
+            {
+                await _tmdbService.UpdateMovieStatusesAsync();
+                return Ok("Movie statuses updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in tmdbController.SyncUpdateStatus: {ex.Message}");
             }
         }
     }

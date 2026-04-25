@@ -4,6 +4,7 @@ using CinemaAPI.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423082235_UpdateDelete")]
+    partial class UpdateDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,11 +40,8 @@ namespace CinemaAPI.Migrations
                     b.Property<DateOnly?>("birthday")
                         .HasColumnType("date");
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<string>("gender")
                         .IsRequired()
@@ -65,7 +65,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("name");
 
-                    b.ToTable("Actors", (string)null);
+                    b.ToTable("Actors");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.BlacklistedToken", b =>
@@ -89,7 +89,7 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("BlacklistedTokens", (string)null);
+                    b.ToTable("BlacklistedTokens");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Booking", b =>
@@ -144,7 +144,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("user_id", "status");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.BookingSnacks", b =>
@@ -168,7 +168,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("snack_id");
 
-                    b.ToTable("BookingSnacks", (string)null);
+                    b.ToTable("BookingSnacks");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Cinema", b =>
@@ -184,11 +184,8 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<string>("description")
                         .HasMaxLength(5000)
@@ -224,7 +221,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("name");
 
-                    b.ToTable("Cinemas", (string)null);
+                    b.ToTable("Cinemas");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ComboDetail", b =>
@@ -235,11 +232,8 @@ namespace CinemaAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("combo_id"));
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<int>("quantity")
                         .HasColumnType("int");
@@ -251,7 +245,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("snack_id");
 
-                    b.ToTable("ComboDetails", (string)null);
+                    b.ToTable("ComboDetails");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Coupon", b =>
@@ -269,11 +263,8 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<string>("description")
                         .IsRequired()
@@ -308,7 +299,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("startDate", "endDate");
 
-                    b.ToTable("Coupons", (string)null);
+                    b.ToTable("Coupons");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Genre", b =>
@@ -329,7 +320,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("genre_id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Inventory", b =>
@@ -350,7 +341,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("cinema_id");
 
-                    b.ToTable("Inventories", (string)null);
+                    b.ToTable("Inventories");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Location", b =>
@@ -366,15 +357,12 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.HasKey("location_id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Movie", b =>
@@ -393,11 +381,8 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<DateTime?>("end_date")
                         .HasColumnType("datetime(6)");
@@ -449,7 +434,7 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("status", "release_date")
                         .IsDescending(false, true);
 
-                    b.ToTable("Movies", (string)null);
+                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.MovieActor", b =>
@@ -474,7 +459,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("actor_id");
 
-                    b.ToTable("MovieActors", (string)null);
+                    b.ToTable("MovieActors");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.MovieGenre", b =>
@@ -492,7 +477,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("genre_id");
 
-                    b.ToTable("MovieGenres", (string)null);
+                    b.ToTable("MovieGenres");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Payment", b =>
@@ -553,7 +538,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("status", "paidAt");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.PointTransaction", b =>
@@ -590,7 +575,7 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("user_id", "occurredAt")
                         .IsDescending(false, true);
 
-                    b.ToTable("PointTransactions", (string)null);
+                    b.ToTable("PointTransactions");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Room", b =>
@@ -607,11 +592,8 @@ namespace CinemaAPI.Migrations
                     b.Property<int>("column")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<string>("nameRoom")
                         .IsRequired()
@@ -634,7 +616,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("roomLayoutType");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Seat", b =>
@@ -671,7 +653,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("room_id", "seat_code");
 
-                    b.ToTable("Seats", (string)null);
+                    b.ToTable("Seats");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.SeatType", b =>
@@ -692,7 +674,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("type_id");
 
-                    b.ToTable("SeatTypes", (string)null);
+                    b.ToTable("SeatTypes");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTime", b =>
@@ -703,11 +685,8 @@ namespace CinemaAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("showtime_id"));
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("endTime")
                         .HasColumnType("datetime(6)");
@@ -729,7 +708,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("room_id", "startTime");
 
-                    b.ToTable("ShowTimes", (string)null);
+                    b.ToTable("ShowTimes");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTimePrice", b =>
@@ -750,7 +729,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("showtime_id");
 
-                    b.ToTable("ShowTimePrices", (string)null);
+                    b.ToTable("ShowTimePrices");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTimeSeat", b =>
@@ -795,7 +774,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("showtime_id", "status");
 
-                    b.ToTable("ShowTimeSeats", (string)null);
+                    b.ToTable("ShowTimeSeats");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Snack", b =>
@@ -806,11 +785,8 @@ namespace CinemaAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("snack_id"));
 
-                    b.Property<DateTime?>("deleted_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("deleted_by")
-                        .HasColumnType("char(36)");
+                    b.Property<DateOnly?>("deleted_at")
+                        .HasColumnType("date");
 
                     b.Property<string>("imageUrl")
                         .HasColumnType("longtext");
@@ -829,7 +805,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("snack_id");
 
-                    b.ToTable("Snacks", (string)null);
+                    b.ToTable("Snacks");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.User", b =>
@@ -893,7 +869,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("verificationToken");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.UserVoucher", b =>
@@ -920,7 +896,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("coupon_id");
 
-                    b.ToTable("UserVouchers", (string)null);
+                    b.ToTable("UserVouchers");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Booking", b =>

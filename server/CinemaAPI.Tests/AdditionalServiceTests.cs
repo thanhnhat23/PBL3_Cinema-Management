@@ -5,7 +5,7 @@ using CinemaAPI.Services.Implementations;
 using CinemaAPI.Tests.TestInfrastructure;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
-using LocationService = CinemaAPI.Services.Interfaces.LocationService;
+using LocationService = CinemaAPI.Services.Implementations.LocationService;
 
 namespace CinemaAPI.Tests;
 
@@ -100,10 +100,6 @@ public class AdditionalServiceTests
 
         var updated = await service.GetInventoryById(1, 1);
         Assert.Equal(30, updated!.quantity);
-
-        await service.DeleteInventory(1, 1);
-        var deleted = await service.GetInventoryById(1, 1);
-        Assert.Null(deleted);
     }
 
     [Fact]
@@ -116,20 +112,60 @@ public class AdditionalServiceTests
         var service = new ComboDetailService(context);
 
         await service.AddComboDetail(TestSeedData.CreateComboDetail(1, 1));
-        var item = await service.GetComboDetailById(1);
+        var item = await service.GetComboDetail(1, 1);
         Assert.NotNull(item);
 
-        await service.UpdateComboDetail(1, new ComboDetailUpdateRequest
+        await service.UpdateComboDetail(1, 1, new ComboDetailUpdateRequest
         {
             quantity = 5,
         });
 
-        var updated = await service.GetComboDetailById(1);
+        var updated = await service.GetComboDetail(1, 1);
         Assert.Equal(5, updated!.quantity);
 
-        await service.DeleteComboDetail(1);
-        var deleted = await service.GetComboDetailById(1);
+        await service.HardDeleteComboDetail(1, 1);
+        var deleted = await service.GetComboDetail(1, 1);
         Assert.Null(deleted);
+    }
+
+    [Fact]
+    public async Task BookingService_CreateBookingWithCombo_AppliesDiscountAndDeductsCinemaInventory()
+    {
+        using var factory = new SqliteTestDbContextFactory();
+        await using var context = factory.CreateContext();
+        TestSeedData.SeedBaseCatalog(context);
+
+        var user = TestSeedData.CreateUser();
+        var showtime = TestSeedData.CreateShowTime(id: 1, movieId: 1, roomId: 1);
+        var comboSnack = TestSeedData.CreateSnack(id: 2, name: "Combo 1", type: SnackType.Combo);
+
+        context.Users.Add(user);
+        context.ShowTimes.Add(showtime);
+        context.Snacks.Add(comboSnack);
+        context.ComboDetails.Add(TestSeedData.CreateComboDetail(2, 1));
+        context.Inventories.AddRange(
+            TestSeedData.CreateInventory(snackId: 1, cinemaId: 1),
+            TestSeedData.CreateInventory(snackId: 2, cinemaId: 1));
+        await context.SaveChangesAsync();
+
+        var service = new BookingService(context);
+
+        var booking = await service.CreateBookingWithSnacksAsync(new BookingCreateRequest
+        {
+            user_id = user.user_id.ToString(),
+            showtime_id = showtime.showtime_id,
+            snacks = new List<BookingSnackRequest>
+            {
+                new() { snack_id = 2, quantity = 2 },
+            },
+        });
+
+        Assert.Equal(200000m, booking.totalAmount);
+        Assert.Equal(20000m, booking.discountAmount);
+        Assert.Equal(180000m, booking.finalAmount);
+
+        var popcornInventory = await context.Inventories.FirstAsync(item => item.snack_id == 1 && item.cinema_id == 1);
+        Assert.Equal(11, popcornInventory.quantity);
     }
 
     [Fact]

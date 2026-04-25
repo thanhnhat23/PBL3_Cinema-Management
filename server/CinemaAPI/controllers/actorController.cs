@@ -82,7 +82,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateActor(int id, [FromBody] ActorDetailRequest request)
+        public async Task<IActionResult> UpdateActor(int id, [FromBody] ActorRequest request)
         {
             try
             {

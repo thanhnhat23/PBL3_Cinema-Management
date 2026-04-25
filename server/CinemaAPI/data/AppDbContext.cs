@@ -56,6 +56,18 @@ namespace CinemaAPI.data
                 .HasKey(uv => new { uv.user_id, uv.coupon_id });
             modelBuilder.Entity<Inventory>()
                 .HasKey(inv => new { inv.snack_id, inv.cinema_id });
+            modelBuilder.Entity<ComboDetail>()
+                .HasKey(cd => new { cd.combo_id, cd.snack_id });
+            modelBuilder.Entity<ComboDetail>()
+                .HasOne(cd => cd.ComboSnack)
+                .WithMany()
+                .HasForeignKey(cd => cd.combo_id)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ComboDetail>()
+                .HasOne(cd => cd.Snack)
+                .WithMany(s => s.ComboDetails)
+                .HasForeignKey(cd => cd.snack_id)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ShowTimePrice>()
                 .HasKey(stp => new { stp.type_id, stp.showtime_id });
 

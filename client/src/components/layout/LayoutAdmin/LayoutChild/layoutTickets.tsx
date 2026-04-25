@@ -5,7 +5,7 @@ import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@he
 import { EllipsisVertical, Eye, PenLine, Trash, User } from "lucide-react";
 
 import { useBookingStore, type Booking } from "@/stores/useBookingStore";
-import DataTableAdmin, { type AdminColumn } from "../dataTable";
+import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const columns: AdminColumn[] = [
     { name: "ID", uid: "booking_id", sortable: true },
@@ -92,12 +92,7 @@ export default function LayoutTickets() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <User />
-                Dashboard: Quản lí vé
-            </h1>
-
+        <>
             <DataTableAdmin<Booking>
                 columns={columns}
                 items={bookings}
@@ -112,6 +107,6 @@ export default function LayoutTickets() {
                 searchBy={(item) => String(item.userName ?? "")}
                 renderCell={renderCell}
             />
-        </div>
+        </>
     )
 }

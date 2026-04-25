@@ -6,10 +6,9 @@ namespace CinemaAPI.Models.DTOs
         public int snack_id { get; set; }
         public int quantity { get; set; }
     }
+
     public class ComboDetailUpdateRequest
     {
-        public int? combo_id { get; set; }
-        public int? snack_id { get; set; }
         public int? quantity { get; set; }
     }
 }

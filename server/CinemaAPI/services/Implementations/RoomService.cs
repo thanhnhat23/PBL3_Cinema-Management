@@ -113,7 +113,11 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
+<<<<<<< HEAD
+        public async Task DeleteRoom(int room_id)
+=======
         public async Task SoftDeleteRoom(int room_id)
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
         {
             try
             {
@@ -121,8 +125,13 @@ namespace CinemaAPI.Services.Implementations
                 if (room == null)
                     throw new Exception("Room not found");
 
+<<<<<<< HEAD
+                room.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                await _dbContext.SaveChangesAsync();
+=======
                 await SoftDeleteAsync(room);
                 RagCacheKeys.Invalidate("rooms");
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
             }
             catch (Exception ex)
             {

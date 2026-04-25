@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 using GenericService = CinemaAPI.Services.Implementations.Service;
-using LocationService = CinemaAPI.Services.Interfaces.LocationService;
+using LocationService = CinemaAPI.Services.Implementations.LocationService;
 
 namespace CinemaAPI.Tests;
 

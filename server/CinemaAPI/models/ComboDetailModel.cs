@@ -1,14 +1,18 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
+    [PrimaryKey(nameof(combo_id), nameof(snack_id))]
     public class ComboDetail
     {
-        [Key]
         public int combo_id { get; set; }
 
+        [ForeignKey("combo_id")]
+        public virtual Snack ComboSnack { get; set; } = null!;
+
         public int snack_id { get; set; }
+
         [ForeignKey("snack_id")]
         public virtual Snack Snack { get; set; } = null!;
 

@@ -67,11 +67,18 @@ namespace CinemaAPI.Services.Implementations
             try
             {
                 var location = await _dbContext.Locations.FindAsync(location_id);
+<<<<<<< HEAD
+                if (location == null)
+                    throw new Exception("Location not found");
+                location.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
+                await _dbContext.SaveChangesAsync();
+=======
                 if (location != null)
                 {
                     await SoftDeleteAsync(location);
                     RagCacheKeys.Invalidate("rooms");
                 }
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
             }
             catch (Exception ex)
             {
@@ -79,6 +86,8 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("An error in location delete ", ex);
             }
         }
+<<<<<<< HEAD
+=======
 
         public async Task HardDeleteLocation(int location_id)
         {
@@ -103,5 +112,6 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
     }
 }

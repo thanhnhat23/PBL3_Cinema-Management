@@ -128,29 +128,22 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task HardDeleteMovie(int movie_id)
         {
-            using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var movie = await _dbContext.Movies
-                    .Include(m => m.MovieGenres)
-                    .Include(m => m.MovieActors)
-                    .Include(m => m.ShowTimes)
-                    .FirstOrDefaultAsync(m => m.movie_id == movie_id);
+                var movie = await _dbContext.Movies.FindAsync(movie_id);
+                if (movie == null)
+                    throw new Exception("Movie not found");
 
-                if (movie == null) throw new Exception("Movie not found.");
-
-                if (movie.ShowTimes.Any())
-                    throw new Exception("Cannot delete a movie that has showtimes. Please delete showtimes first.");
-
-                if (movie.MovieGenres.Any())
-                    _dbContext.MovieGenres.RemoveRange(movie.MovieGenres);
-
-                if (movie.MovieActors.Any())
-                    _dbContext.MovieActors.RemoveRange(movie.MovieActors);
-
-                _dbContext.Movies.Remove(movie);
-
+                movie.deleted_at = DateOnly.FromDateTime(DateTime.UtcNow);
                 await _dbContext.SaveChangesAsync();
+<<<<<<< HEAD
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DeleteMovie Error: {ex.Message}");
+                throw new Exception($"An error occurred while deleting the movie: {ex.Message}");
+        
+=======
                 await transaction.CommitAsync();
                 RagCacheKeys.Invalidate("movies");
             }
@@ -159,6 +152,7 @@ namespace CinemaAPI.Services.Implementations
                 await transaction.RollbackAsync();
                 Console.WriteLine($"HardDeleteMovie Error: {ex.Message}");
                 throw new Exception($"An error occurred while hard deleting the movie: {ex.Message}");
+>>>>>>> 64b54274b703aa37d89b1771b91e6500cdf8b73b
             }
         }
 

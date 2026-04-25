@@ -1,14 +1,10 @@
 'use client';
 
 import { LayoutOverview } from "./LayoutAdmin/layoutOverview";
-import LayoutMovies from "./LayoutAdmin/layoutMovies";
-import LayoutRooms from "./LayoutAdmin/layoutRooms";
-import LayoutTickets from "./LayoutAdmin/layoutTickets";
+import LayoutMovie from "./LayoutAdmin/layoutMovie";
+import LayoutTicket from "./LayoutAdmin/layoutTicket";
 import LayoutShowtimes from "./LayoutAdmin/layoutShowtimes";
-import LayoutCinemas from "./LayoutAdmin/layoutCinemas";
-import LayoutCoupons from "./LayoutAdmin/layoutCoupons";
-import LayoutActors from "./LayoutAdmin/layoutActors";
-import LayoutReviews from "./LayoutAdmin/layoutReviews";
+import LayoutLocation from "./LayoutAdmin/layoutLocation";
 import LayoutUsers from "./LayoutAdmin/layoutUsers";
 import LayoutSyncData from "./LayoutAdmin/layoutSyncData";
 import LayoutStatistics from "./LayoutAdmin/layoutStatistics";
@@ -24,14 +20,10 @@ export const LayoutAdmin = ({
     return (
         <div className="p-4">
             {openLayout === "Thống kê" && <LayoutOverview selectValue={selectValue} />}
-            {openLayout === "Phim" && <LayoutMovies />}
-            {openLayout === "Phòng" && <LayoutRooms />}
-            {openLayout === "Vé" && <LayoutTickets />}
+            {openLayout === "Phim" && <LayoutMovie />}
+            {openLayout === "Vé" && <LayoutTicket />}
             {openLayout === "Suất chiếu" && <LayoutShowtimes />}
-            {openLayout === "Rạp chiếu" && <LayoutCinemas />}
-            {openLayout === "Khuyến mãi" && <LayoutCoupons />}
-            {openLayout === "Diễn viên" && <LayoutActors />}
-            {openLayout === "Review" && <LayoutReviews />}
+            {openLayout === "Rạp chiếu" && <LayoutLocation />}
             {openLayout === "Người dùng" && <LayoutUsers />}
             {openLayout === "Đồng bộ dữ liệu" && <LayoutSyncData />}
             {openLayout === "Thống kê doanh thu" && <LayoutStatistics />}
