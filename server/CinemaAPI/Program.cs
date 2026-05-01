@@ -39,6 +39,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, Microsoft.EntityFrameworkCore.ServerVersion.AutoDetect(connectionString))
 );
 
+// Auto migrate in Development/Docker by default.
+var shouldAutoMigrate = builder.Configuration.GetValue<bool?>("Database:AutoMigrate")
+    ?? builder.Environment.IsDevelopment()
+    || builder.Environment.EnvironmentName == "Docker";
+
 // Configure MongoDB
 builder.Services.AddSingleton<MongoDbContext>();
 
