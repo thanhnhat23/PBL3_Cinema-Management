@@ -10,12 +10,13 @@ import LayoutSyncData from "./LayoutAdmin/layoutSyncData";
 import LayoutStatistics from "./LayoutAdmin/layoutStatistics";
 import LayoutFood from "./LayoutAdmin/layoutFoods";
 import React from "react";
+import { LayoutKey } from "@/stores/useLayoutStore";
 
 export const LayoutAdmin = React.memo(({
     openLayout,
     selectValue
 }: {
-    openLayout: string;
+    openLayout: LayoutKey;
     selectValue: string;
 }) => {
     return (

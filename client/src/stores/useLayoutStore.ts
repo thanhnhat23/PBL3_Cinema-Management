@@ -1,32 +1,23 @@
 import { create } from 'zustand';
 
-interface LayoutStore {
-    openLayout: 
-        'Thống kê' 
-        | 'Phim' 
-        | 'Vé' 
-        | 'Suất chiếu' 
-        | 'Rạp chiếu' 
-        | 'Người dùng'
-        | 'Đồng bộ dữ liệu'
-        | 'Thống kê doanh thu'
-        | 'Thức ăn'
-        | null;
+export type LayoutKey = 
+    | 'stats' 
+    | 'movies' 
+    | 'tickets' 
+    | 'showtimes' 
+    | 'cinemas' 
+    | 'users'
+    | 'sync'
+    | 'revenue'
+    | 'foods'
+    | null;
 
-    setOpenLayout: (layout: 
-        'Thống kê' 
-        | 'Phim' 
-        | 'Vé' 
-        | 'Suất chiếu' 
-        | 'Rạp chiếu'  
-        | 'Người dùng'
-        | 'Đồng bộ dữ liệu'
-        | 'Thống kê doanh thu'
-        | 'Thức ăn'
-        | null) => void;
+interface LayoutStore {
+    openLayout: LayoutKey;
+    setOpenLayout: (layout: LayoutKey) => void;
 }
 
 export const useLayoutStore = create<LayoutStore>((set) => ({
-    openLayout: 'Thống kê',
+    openLayout: 'stats',
     setOpenLayout: (layout) => set({ openLayout: layout }),
 }));

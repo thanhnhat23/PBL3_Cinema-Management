@@ -37,23 +37,12 @@ import { AvatarElement } from '@/components/ui/avatar';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Breadcrumbs, BreadcrumbItem, Selection } from '@heroui/react';
 import { ThemeToggler } from '@/components/ui/effects/themeToggler';
-import { useLayoutStore } from '@/stores/useLayoutStore';
+import { useLayoutStore, type LayoutKey } from '@/stores/useLayoutStore';
 import { LayoutAdmin } from '@/components/layout/layoutAdmin';
 import Link from 'next/link';
 import { useTranslation } from "react-i18next";
 
 const Management = ["movies", "tickets", "showtimes", "cinemas", "foods"] as const;
-
-type LayoutKey =
-    | 'stats'
-    | 'movies'
-    | 'tickets'
-    | 'showtimes'
-    | 'cinemas'
-    | 'users'
-    | 'sync'
-    | 'revenue'
-    | 'foods';
 
 const ManagementLayoutMap: Record<(typeof Management)[number], LayoutKey> = {
     "movies": 'movies',
@@ -381,7 +370,7 @@ export default function Dashboard() {
                                     >
                                         {THEME_CONFIG.map((theme) => (
                                             <DropdownItem
-                                                key={theme.label}
+                                                key={theme.key}
                                                 startContent={<div className={`w-3.5 h-3.5 rounded-full ${theme.color} shadow-sm`} />}
                                                 showDivider={theme.showDivider}
                                                  className="font-bold py-2.5"
