@@ -1,6 +1,9 @@
-import { Drama } from "lucide-react";
+﻿import { Drama } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function LayoutShowtimes() {
+    const { t } = useTranslation();
+
     return (
         <div className="flex flex-col gap-4">
             <div className="relative overflow-hidden rounded-sm border border-zinc-100 dark:border-zinc-800 bg-sidebar p-8 shadow-sm">
@@ -10,14 +13,14 @@ export default function LayoutShowtimes() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Suất chiếu
+                            {t('showtimes_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Lập lịch trình chiếu phim, quản lý khung giờ và phân bổ phòng chiếu cho từng tác phẩm điện ảnh.
+                            {t('showtimes_tab.desc')}
                         </p>
                     </div>
                 </div>

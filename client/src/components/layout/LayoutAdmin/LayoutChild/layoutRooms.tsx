@@ -1,4 +1,4 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { 
@@ -31,15 +31,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
-const columns: AdminColumn[] = [
+const getRoomColumns = (t: any): AdminColumn[] => [
     { name: "ID", uid: "room_id", sortable: true },
-    { name: "TÊN PHÒNG", uid: "nameRoom", sortable: true },
-    { name: "RẠP PHIM", uid: "cinema", sortable: true },
-    { name: "LOẠI PHÒNG", uid: "roomLayoutType", sortable: true },
-    { name: "GIÁ", uid: "price", sortable: true },
-    { name: "HÀNG/CỘT", uid: "row", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: t('rooms_tab.columns.name'), uid: "nameRoom", sortable: true },
+    { name: t('rooms_tab.columns.cinema'), uid: "cinema", sortable: true },
+    { name: t('rooms_tab.columns.type'), uid: "roomLayoutType", sortable: true },
+    { name: t('rooms_tab.columns.price'), uid: "price", sortable: true },
+    { name: t('rooms_tab.columns.layout'), uid: "row", sortable: true },
+    { name: t('common.actions'), uid: "actions" },
 ];
 
 const roomLayoutTypeColorMap: Record<string, "primary" | "success" | "warning" | "danger"> = {
@@ -60,6 +61,7 @@ const getRoomLayoutTypeText = (type: number) => {
 };
 
 export default function LayoutRooms() {
+    const { t } = useTranslation();
     const { rooms, isFetchingRooms, fetchAllRooms, createRoom, updateRoom, deleteRoom, isCreatingRoom, isUpdatingRoom } = useRoomStore();
     const { cinemas, fetchAllCinemas } = useCinemaStore();
     
@@ -148,7 +150,7 @@ export default function LayoutRooms() {
                 );
             }
             case "price":
-                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(room.price).toLocaleString("vi-VN")} đ</span>;
+                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(room.price).toLocaleString(t('locale_code'))} Ä‘</span>;
             case "row":
                 return <span>{`${room.row} x ${room.column}`}</span>;
             case "actions":
@@ -170,14 +172,14 @@ export default function LayoutRooms() {
                                     onOpen();
                                 }}
                             >
-                                Xem
+                                {t('common.view')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="edit" 
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(room)}
                             >
-                                Sửa
+                                {t('movie_details.edit_movie')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="delete" 
@@ -186,7 +188,7 @@ export default function LayoutRooms() {
                                 startContent={<Trash size={16} />}
                                 onPress={() => deleteRoom(room.room_id)}
                             >
-                                Xóa
+                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -194,7 +196,7 @@ export default function LayoutRooms() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [deleteRoom, onOpen, handleOpenEdit]);
+    }, [deleteRoom, onOpen, handleOpenEdit, t]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -205,28 +207,28 @@ export default function LayoutRooms() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Phòng chiếu
+                            {t('rooms_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Cấu hình sơ đồ ghế, loại phòng (IMAX, 4DX, Standard) và giá vé cơ bản cho từng phòng chiếu trong rạp.
+                            {t('rooms_tab.desc')}
                         </p>
                     </div>
                 </div>
             </div>
             <DataTableAdmin<Room>
-                columns={columns}
+                columns={getRoomColumns(t)}
                 items={rooms}
                 isLoading={isFetchingRooms}
-                searchPlaceholder="Tìm theo tên phòng..."
-                addButtonLabel="Thêm phòng"
+                searchPlaceholder={t('rooms_tab.search_placeholder')}
+                addButtonLabel={t('rooms_tab.add_room')}
                 onAdd={handleOpenAdd}
-                totalLabel={(count) => `Tổng cộng ${count} phòng chiếu`}
-                emptyLabel="Không có phòng chiếu"
-                loadingLabel="Đang tải dữ liệu phòng chiếu..."
+                totalLabel={(count) => t('rooms_tab.total_count', { count })}
+                emptyLabel={t('rooms_tab.empty_label')}
+                loadingLabel={t('rooms_tab.loading_label')}
                 defaultSort={{ column: "nameRoom", direction: "ascending" }}
                 rowKey={(item) => item.room_id}
                 searchBy={(item) => item.nameRoom}
@@ -234,12 +236,12 @@ export default function LayoutRooms() {
                 filters={[
                     {
                         uid: "cinema_id",
-                        name: "Rạp phim",
+                        name: t('rooms_tab.columns.cinema'),
                         options: cinemas.map(c => ({ name: c.name, uid: String(c.cinema_id) }))
                     },
                     {
                         uid: "roomLayoutType",
-                        name: "Loại phòng",
+                        name: t('rooms_tab.columns.type'),
                         options: [
                             { name: "Standard", uid: "0" },
                             { name: "IMAX", uid: "1" },
@@ -255,8 +257,8 @@ export default function LayoutRooms() {
                 <DrawerContent>
                     {(onClose) => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">
-                                {selectedRoom ? `Chi tiết: ${selectedRoom.nameRoom}` : "Chi tiết phòng chiếu"}
+                            <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
+                                {selectedRoom ? t('movie_details.view_details', { title: selectedRoom.nameRoom }) : t('rooms_tab.details_title')}
                             </DrawerHeader>
                             <DrawerBody>
                                 {selectedRoom ? (
@@ -268,7 +270,7 @@ export default function LayoutRooms() {
                                                 </div>
                                                 <div>
                                                     <h2 className="text-2xl font-bold tracking-tight">{selectedRoom.nameRoom}</h2>
-                                                    <p className="text-xs text-zinc-500 font-medium uppercase tracking-widest">{getRoomLayoutTypeText(selectedRoom.roomLayoutType)} Room</p>
+                                                    <p className="text-xs text-zinc-500 font-medium uppercase tracking-widest">{getRoomLayoutTypeText(selectedRoom.roomLayoutType)} {t('location_tab.rooms')}</p>
                                                 </div>
                                             </div>
                                             <div className="flex gap-2 flex-wrap">
@@ -283,7 +285,7 @@ export default function LayoutRooms() {
                                                     <Users className="text-zinc-500" size={18} />
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Rạp phim</span>
+                                                    <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">{t('rooms_tab.columns.cinema')}</span>
                                                     <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{selectedRoom.cinema?.name ?? "N/A"}</span>
                                                 </div>
                                             </div>
@@ -291,13 +293,13 @@ export default function LayoutRooms() {
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="flex items-center gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Sức chứa</span>
-                                                        <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{selectedRoom.row * selectedRoom.column} chỗ ngồi</span>
+                                                        <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">{t('rooms_tab.capacity_label')}</span>
+                                                        <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{t('rooms_tab.capacity_value', { count: selectedRoom.row * selectedRoom.column })}</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Bố cục</span>
+                                                        <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">{t('rooms_tab.layout_label')}</span>
                                                         <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{selectedRoom.row} x {selectedRoom.column}</span>
                                                     </div>
                                                 </div>
@@ -305,8 +307,8 @@ export default function LayoutRooms() {
 
                                             <div className="flex items-center justify-between p-4 rounded-xl border-1 border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-emerald-900/10">
                                                 <div className="flex flex-col">
-                                                    <span className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-500/70 uppercase tracking-wider">Giá cơ bản</span>
-                                                    <span className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{Number(selectedRoom.price).toLocaleString("vi-VN")} đ</span>
+                                                    <span className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-500/70 uppercase tracking-wider">{t('rooms_tab.price_label')}</span>
+                                                    <span className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{Number(selectedRoom.price).toLocaleString(t('locale_code'))} Ä‘</span>
                                                 </div>
                                                 <div className="p-2 bg-white dark:bg-zinc-800 rounded-full shadow-sm text-emerald-600">
                                                     <PenLine size={16} />
@@ -316,8 +318,8 @@ export default function LayoutRooms() {
 
                                         <div className="flex flex-col gap-3">
                                             <div className="flex items-center justify-between">
-                                                <Label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Sơ đồ ghế hệ thống</Label>
-                                                <Badge variant="outline" className="text-[10px] font-normal border-zinc-200 dark:border-zinc-800 text-zinc-500 italic">Auto-generated</Badge>
+                                                <Label className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{t('rooms_tab.seat_map_label')}</Label>
+                                                <Badge variant="outline" className="text-[10px] font-normal border-zinc-200 dark:border-zinc-800 text-zinc-500 italic">{t('rooms_tab.auto_generated')}</Badge>
                                             </div>
                                             <div className="relative group">
                                                 <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-zinc-900/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl pointer-events-none" />
@@ -329,7 +331,7 @@ export default function LayoutRooms() {
                                                         return (
                                                             <div 
                                                                 key={i} 
-                                                                title={`Ghế ${i+1}`}
+                                                                title={`Seat ${i+1}`}
                                                                 className={`aspect-square rounded-md transition-all duration-200 ${
                                                                     isCouple 
                                                                     ? "bg-rose-100 dark:bg-rose-900/40 border-rose-200 dark:border-rose-800" 
@@ -343,22 +345,22 @@ export default function LayoutRooms() {
                                             <div className="flex gap-4 mt-1">
                                                 <div className="flex items-center gap-1.5">
                                                     <div className="w-2.5 h-2.5 rounded-sm bg-zinc-100 dark:bg-zinc-800 border-1 border-zinc-200 dark:border-zinc-700" />
-                                                    <span className="text-[10px] text-zinc-500 font-medium">Ghế đơn</span>
+                                                    <span className="text-[10px] text-zinc-500 font-medium">{t('rooms_tab.seat_single')}</span>
                                                 </div>
                                                 <div className="flex items-center gap-1.5">
                                                     <div className="w-2.5 h-2.5 rounded-sm bg-rose-100 dark:bg-rose-900/40 border-1 border-rose-200 dark:border-rose-800" />
-                                                    <span className="text-[10px] text-zinc-500 font-medium">Ghế đôi (2 hàng cuối)</span>
+                                                    <span className="text-[10px] text-zinc-500 font-medium">{t('rooms_tab.seat_couple')}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <p>Không có dữ liệu.</p>
+                                    <p>{t('cinemas_tab.no_data')}</p>
                                 )}
                             </DrawerBody>
-                            <DrawerFooter>
-                                <button onClick={onClose} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
-                                    Đóng
+                            <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
+                                <button onClick={onClose} className="w-full font-bold border border-zinc-200 dark:border-zinc-800 rounded-lg py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer">
+                                    {t('foods_tab.close_details')}
                                 </button>
                             </DrawerFooter>
                         </>
@@ -371,23 +373,23 @@ export default function LayoutRooms() {
                 <DrawerContent>
                     {() => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">
-                                {isAdding ? "Thêm phòng chiếu mới" : `Sửa: ${selectedRoom?.nameRoom}`}
+                            <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
+                                {isAdding ? t('rooms_tab.add_new_room') : t('movie_details.edit_movie')}
                             </DrawerHeader>
                             <DrawerBody>
-                                <div ref={drawerContainerRef} className="flex flex-col gap-4 py-2">
+                                <div ref={drawerContainerRef} className="flex flex-col gap-4 py-6">
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="cinema_id">Rạp phim</Label>
+                                        <Label htmlFor="cinema_id" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('rooms_tab.columns.cinema')}</Label>
                                         <Select 
                                             value={form.cinema_id} 
                                             onValueChange={(v) => setForm(p => ({ ...p, cinema_id: v }))}
                                         >
-                                            <SelectTrigger className="bg-sidebar">
-                                                <SelectValue placeholder="Chọn rạp phim" />
+                                            <SelectTrigger className="bg-sidebar h-12 rounded-lg">
+                                                <SelectValue placeholder={t('rooms_tab.columns.cinema')} />
                                             </SelectTrigger>
                                             <SelectContent container={drawerContainerRef.current}>
                                                 <SelectGroup>
-                                                    <SelectLabel>Danh sách rạp</SelectLabel>
+                                                    <SelectLabel>{t('rooms_tab.columns.cinema')}</SelectLabel>
                                                     {cinemas.map(c => (
                                                         <SelectItem key={c.cinema_id} value={String(c.cinema_id)}>
                                                             {c.name}
@@ -399,27 +401,27 @@ export default function LayoutRooms() {
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="nameRoom">Tên phòng</Label>
+                                        <Label htmlFor="nameRoom" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('rooms_tab.name_label')}</Label>
                                         <Input 
                                             id="nameRoom" 
                                             value={form.nameRoom} 
                                             onChange={(e) => setForm(p => ({ ...p, nameRoom: e.target.value }))}
-                                            className="bg-sidebar"
+                                            className="bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="roomLayoutType">Loại phòng</Label>
+                                        <Label htmlFor="roomLayoutType" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('rooms_tab.type_label')}</Label>
                                         <Select 
                                             value={form.roomLayoutType} 
                                             onValueChange={(v) => setForm(p => ({ ...p, roomLayoutType: v }))}
                                         >
-                                            <SelectTrigger className="bg-sidebar">
-                                                <SelectValue placeholder="Chọn loại phòng" />
+                                            <SelectTrigger className="bg-sidebar h-12 rounded-lg">
+                                                <SelectValue placeholder={t('rooms_tab.type_label')} />
                                             </SelectTrigger>
                                             <SelectContent container={drawerContainerRef.current}>
                                                 <SelectGroup>
-                                                    <SelectLabel>Loại phòng</SelectLabel>
+                                                    <SelectLabel>{t('rooms_tab.type_label')}</SelectLabel>
                                                     <SelectItem value="0">Standard</SelectItem>
                                                     <SelectItem value="1">IMAX</SelectItem>
                                                     <SelectItem value="2">4DX</SelectItem>
@@ -430,36 +432,36 @@ export default function LayoutRooms() {
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="price">Giá cơ bản (VNĐ)</Label>
+                                        <Label htmlFor="price" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('rooms_tab.price_label')}</Label>
                                         <Input 
                                             id="price" 
                                             type="number"
                                             placeholder="0vnd"
                                             value={form.price} 
                                             onChange={(e) => setForm(p => ({ ...p, price: e.target.value }))}
-                                            className="bg-sidebar"
+                                            className="bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex flex-col gap-2">
-                                            <Label htmlFor="row">Số hàng</Label>
+                                            <Label htmlFor="row" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('rooms_tab.rows_label')}</Label>
                                             <Input 
                                                 id="row" 
                                                 type="number"
                                                 value={form.row} 
                                                 onChange={(e) => setForm(p => ({ ...p, row: e.target.value }))}
-                                                className="bg-sidebar"
+                                                className="bg-sidebar h-12 rounded-lg"
                                             />
                                         </div>
                                         <div className="flex flex-col gap-2">
-                                            <Label htmlFor="column">Số cột</Label>
+                                            <Label htmlFor="column" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('rooms_tab.cols_label')}</Label>
                                             <Input 
                                                 id="column" 
                                                 type="number"
                                                 value={form.column} 
                                                 onChange={(e) => setForm(p => ({ ...p, column: e.target.value }))}
-                                                className="bg-sidebar"
+                                                className="bg-sidebar h-12 rounded-lg"
                                             />
                                         </div>
                                     </div>
@@ -467,21 +469,20 @@ export default function LayoutRooms() {
                                     {!isAdding && (
                                         <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border-1 border-amber-200 dark:border-amber-900 rounded-sm">
                                             <p className="text-xs text-amber-800 dark:text-amber-400">
-                                                <strong>Lưu ý:</strong> Việc thay đổi số hàng/cột sẽ xóa toàn bộ sơ đồ ghế cũ và tạo lại mới. 
-                                                Hành động này không thể thực hiện nếu phòng đang có suất chiếu.
+                                                <strong>Note:</strong> {t('rooms_tab.edit_warning')}
                                             </p>
                                         </div>
                                     )}
                                 </div>
                             </DrawerBody>
-                            <DrawerFooter>
+                            <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
                                 <button
                                     type="button"
                                     onClick={handleSave}
                                     disabled={isCreatingRoom || isUpdatingRoom}
-                                    className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
+                                    className="w-full h-12 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black font-bold rounded-lg hover:opacity-90 transition-all shadow-lg shadow-zinc-200 dark:shadow-none disabled:opacity-50 cursor-pointer"
                                 >
-                                    {isCreatingRoom || isUpdatingRoom ? "Đang lưu..." : "Lưu thay đổi"}
+                                    {isCreatingRoom || isUpdatingRoom ? t('rooms_tab.saving') : t('rooms_tab.save_changes')}
                                 </button>
                             </DrawerFooter>
                         </>

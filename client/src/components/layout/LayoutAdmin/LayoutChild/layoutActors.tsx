@@ -1,4 +1,4 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -31,26 +31,21 @@ import {
 import { format } from "date-fns";
 import { useActorStore, type Actor } from "@/stores/useActorStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
+import { useTranslation } from "react-i18next";
 
-const columns: AdminColumn[] = [
+const getActorColumns = (t: any): AdminColumn[] => [
     { name: "ID", uid: "actor_id", sortable: true },
-    { name: "DIỄN VIÊN", uid: "name", sortable: true },
-    { name: "GIỚI TÍNH", uid: "gender", sortable: true },
-    { name: "NGÀY SINH", uid: "birthday", sortable: true },
-    { name: "NƠI SINH", uid: "place_of_birth", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: t('actors_tab.columns.name'), uid: "name", sortable: true },
+    { name: t('actors_tab.columns.gender'), uid: "gender", sortable: true },
+    { name: t('actors_tab.columns.birthday'), uid: "birthday", sortable: true },
+    { name: t('actors_tab.columns.birthplace'), uid: "place_of_birth", sortable: true },
+    { name: t('common.actions'), uid: "actions" },
 ];
 
 const genderColorMap: Record<string, "primary" | "success" | "default"> = {
     male: "primary",
     female: "success",
     other: "default",
-};
-
-const getGenderText = (gender?: number | null) => {
-    if (gender === 2) return "Male";
-    if (gender === 1) return "Female";
-    return "Other";
 };
 
 const getAvatarSrc = (profilePath?: string | null) => {
@@ -60,6 +55,7 @@ const getAvatarSrc = (profilePath?: string | null) => {
 };
 
 export default function LayoutActors() {
+    const { t } = useTranslation();
     const {
         actors,
         movieWithActors,
@@ -84,6 +80,18 @@ export default function LayoutActors() {
         birthday: "",
         place_of_birth: "",
     });
+
+    const getGenderText = useCallback((gender?: number | null) => {
+        if (gender === 2) return t('actors_tab.genders.male');
+        if (gender === 1) return t('actors_tab.genders.female');
+        return t('actors_tab.genders.other');
+    }, [t]);
+
+    const getGenderKey = useCallback((gender?: number | null) => {
+        if (gender === 2) return "male";
+        if (gender === 1) return "female";
+        return "other";
+    }, []);
 
     const parseLocalDate = (value?: string) => {
         if (!value) return undefined;
@@ -174,8 +182,9 @@ export default function LayoutActors() {
                 );
             case "gender": {
                 const genderText = getGenderText(actor.gender);
+                const genderKey = getGenderKey(actor.gender);
                 return (
-                    <Chip className="capitalize" color={genderColorMap[genderText.toLowerCase()]} size="sm" variant="flat">
+                    <Chip className="capitalize" color={genderColorMap[genderKey]} size="sm" variant="flat">
                         {genderText}
                     </Chip>
                 );
@@ -209,7 +218,7 @@ export default function LayoutActors() {
                                     onOpen();
                                 }}
                             >
-                                Xem
+                                {t('common.view')}
                             </DropdownItem>
                             <DropdownItem
                                 key="edit"
@@ -217,7 +226,7 @@ export default function LayoutActors() {
                                 showDivider
                                 onPress={() => handleOpenEdit(actor)}
                             >
-                                Sửa
+                                {t('movie_details.edit_movie')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="delete" 
@@ -229,7 +238,7 @@ export default function LayoutActors() {
                                     deleteActor(actor.actor_id);
                                 }}
                             >
-                                Xóa
+                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -237,7 +246,7 @@ export default function LayoutActors() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [fetchActorById, fetchCharacterWithActors, fetchMovieWithActors, handleOpenEdit, onOpen]);
+    }, [fetchActorById, fetchCharacterWithActors, fetchMovieWithActors, handleOpenEdit, onOpen, t, getGenderText, getGenderKey]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -248,29 +257,29 @@ export default function LayoutActors() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Diễn viên
+                            {t('actors_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Quản lý thông tin hồ sơ diễn viên, tiểu sử và danh sách các tác phẩm điện ảnh họ đã tham gia.
+                            {t('actors_tab.desc')}
                         </p>
                     </div>
                 </div>
             </div>
             
             <DataTableAdmin<Actor>
-                columns={columns}
+                columns={getActorColumns(t)}
                 items={actors}
                 isLoading={isFetchingActors}
-                searchPlaceholder="Tìm theo tên diễn viên..."
-                addButtonLabel="Thêm diễn viên"
+                searchPlaceholder={t('actors_tab.search_placeholder')}
+                addButtonLabel={t('actors_tab.add_actor')}
                 onAdd={handleOpenAdd}
-                totalLabel={(count) => `Tổng cộng ${count} diễn viên`}
-                emptyLabel="Không có diễn viên"
-                loadingLabel="Đang tải dữ liệu diễn viên..."
+                totalLabel={(count) => t('actors_tab.total_count', { count })}
+                emptyLabel={t('actors_tab.empty_label')}
+                loadingLabel={t('actors_tab.loading_label')}
                 defaultSort={{ column: "name", direction: "ascending" }}
                 rowKey={(item) => item.actor_id}
                 searchBy={(item) => item.name}
@@ -278,11 +287,11 @@ export default function LayoutActors() {
                 filters={[
                     {
                         uid: "gender",
-                        name: "Giới tính",
+                        name: t('actors_tab.gender_label'),
                         options: [
-                            { name: "Nam", uid: "2" },
-                            { name: "Nữ", uid: "1" },
-                            { name: "Khác", uid: "0" },
+                            { name: t('actors_tab.genders.male'), uid: "2" },
+                            { name: t('actors_tab.genders.female'), uid: "1" },
+                            { name: t('actors_tab.genders.other'), uid: "0" },
                         ]
                     }
                 ]}
@@ -293,7 +302,7 @@ export default function LayoutActors() {
                     {(onClose) => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
-                                {selectedActor ? `Chi tiết: ${selectedActor.name}` : "Chi tiết diễn viên"}
+                                {selectedActor ? t('movie_details.view_details', { title: selectedActor.name }) : t('actors_tab.details_title')}
                             </DrawerHeader>
  
                             <DrawerBody className="px-0">
@@ -329,7 +338,7 @@ export default function LayoutActors() {
                                                     <Badge variant="secondary" className="px-2.5 py-0.5 text-[10px] font-bold uppercase">{getGenderText(selectedActor.gender)}</Badge>
                                                     {selectedActor.birthday && (
                                                         <Badge variant="outline" className="px-2.5 py-0.5 text-[10px] font-medium border-zinc-200 dark:border-zinc-800">
-                                                            {new Date(String(selectedActor.birthday)).toLocaleDateString("vi-VN")}
+                                                            {new Date(String(selectedActor.birthday)).toLocaleDateString(t('locale_code'))}
                                                         </Badge>
                                                     )}
                                                 </div>
@@ -337,22 +346,22 @@ export default function LayoutActors() {
 
                                             <div className="grid grid-cols-1 gap-4">
                                                 <div className="flex flex-col gap-1.5 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
-                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Nơi sinh</span>
-                                                    <span className="text-sm font-semibold">{selectedActor.place_of_birth ?? "Chưa rõ"}</span>
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('actors_tab.birthplace_label')}</span>
+                                                    <span className="text-sm font-semibold">{selectedActor.place_of_birth ?? "Unknown"}</span>
                                                 </div>
                                                 
                                                 <div className="flex flex-col gap-3">
-                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Tiểu sử</span>
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('actors_tab.bio_label')}</span>
                                                     <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 italic">
-                                                        {selectedActor.biography || "Không có dữ liệu tiểu sử cho diễn viên này."}
+                                                        {selectedActor.biography || t('actors_tab.no_bio')}
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col gap-4">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Phim đã tham gia</span>
-                                                    <Badge variant="outline" className="text-[10px] font-normal">{movieWithActors.length} phim</Badge>
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('actors_tab.movies_participated')}</span>
+                                                    <Badge variant="outline" className="text-[10px] font-normal">{movieWithActors.length} films</Badge>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {movieWithActors.length > 0 ? (
@@ -362,19 +371,19 @@ export default function LayoutActors() {
                                                             </div>
                                                         ))
                                                     ) : (
-                                                        <span className="text-xs text-zinc-500">Chưa có dữ liệu.</span>
+                                                        <span className="text-xs text-zinc-500">{t('actors_tab.no_movies')}</span>
                                                     )}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center text-zinc-500 font-medium">Không có dữ liệu diễn viên.</div>
+                                    <div className="p-12 text-center text-zinc-500 font-medium">{t('actors_tab.empty_label')}</div>
                                 )}
                             </DrawerBody>
-                            <DrawerFooter>
-                                <button onClick={onClose} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
-                                    Đóng
+                            <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
+                                <button onClick={onClose} className="w-full font-bold border border-zinc-200 dark:border-zinc-800 rounded-lg py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer">
+                                    {t('foods_tab.close_details')}
                                 </button>
                             </DrawerFooter>
                         </>
@@ -386,41 +395,41 @@ export default function LayoutActors() {
                 <DrawerContent>
                     {() => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">
-                                {isAdding ? "Thêm diễn viên mới" : "Sửa diễn viên"}
+                            <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
+                                {isAdding ? t('actors_tab.add_new_actor') : t('actors_tab.edit_actor')}
                             </DrawerHeader>
                             <DrawerBody>
-                                <p className="text-sm text-zinc-500 mb-4">{isAdding ? "Nhập thông tin cho diễn viên mới" : "Thực hiện các thay đổi cho diễn viên"}</p>
+                                <p className="text-sm text-zinc-500 mb-4 py-4">{isAdding ? "Enter info for new actor" : "Make changes to actor profile"}</p>
  
                                 <div ref={popoverContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
-                                            Họ tên
+                                            {t('actors_tab.name_label')}
                                         </Label>
                                         <Input
                                             id="name"
                                             value={editForm.name}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="profile_path" className="text-right">
-                                            Profile Path
+                                            {t('actors_tab.profile_label')}
                                         </Label>
                                         <Input
                                             id="profile_path"
                                             value={editForm.profile_path}
                                             placeholder="/path/to/profile.jpg"
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, profile_path: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="birthday" className="text-right">
-                                            Ngày sinh
+                                            {t('actors_tab.birthday_label')}
                                         </Label>
 
                                         <div className="col-span-3">
@@ -429,10 +438,10 @@ export default function LayoutActors() {
                                                     <Button
                                                         variant="outline"
                                                         data-empty={!birthdayValue}
-                                                        className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
+                                                        className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar h-12"
                                                     >
                                                         <CalendarIcon />
-                                                        {birthdayValue ? format(birthdayValue, "PPP") : <span>Chọn ngày</span>}
+                                                        {birthdayValue ? format(birthdayValue, "PPP") : <span>Select date</span>}
                                                     </Button>
                                                 </PopoverTrigger>
 
@@ -454,41 +463,41 @@ export default function LayoutActors() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="place_of_birth" className="text-right">
-                                            Nơi sinh
+                                            {t('actors_tab.birthplace_label')}
                                         </Label>
 
                                         <Input
                                             id="place_of_birth"
                                             value={editForm.place_of_birth}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, place_of_birth: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-start gap-4">
                                         <Label htmlFor="biography" className="text-right pt-2">
-                                            Tiểu sử
+                                            {t('actors_tab.bio_label')}
                                         </Label>
 
                                         <Textarea
                                             id="biography"
                                             value={editForm.biography}
-                                            placeholder="Nhập tiểu sử diễn viên"
+                                            placeholder={t('actors_tab.bio_placeholder')}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, biography: event.target.value }))}
-                                            className="col-span-3 text-sm min-h-auto"
+                                            className="col-span-3 text-sm min-h-[120px]"
                                         />
                                     </div>
                                 </div>
                             </DrawerBody>
 
-                            <DrawerFooter>
+                            <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
                                 <button
                                     type="button"
                                     onClick={handleSaveActor}
                                     disabled={isUpdatingActor}
-                                    className="w-full mt-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black font-bold py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+                                    className="w-full h-12 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black font-bold rounded-lg hover:opacity-90 transition-all shadow-lg shadow-zinc-200 dark:shadow-none disabled:opacity-50 cursor-pointer"
                                 >
-                                    {isUpdatingActor ? "Đang lưu..." : "Lưu thay đổi"}
+                                    {isUpdatingActor ? t('actors_tab.saving') : t('actors_tab.save_changes')}
                                 </button>
                             </DrawerFooter>
                         </>

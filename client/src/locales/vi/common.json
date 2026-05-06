@@ -1,11 +1,23 @@
 {
+  "locale_code": "vi-VN",
   "common": {
     "success": "Thành công",
     "error": "Lỗi",
-    "loading": "Đang tải...",
+    "view": "Xem",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "save": "Lưu",
     "cancel": "Hủy",
     "confirm": "Xác nhận",
+    "search": "Tìm kiếm",
+    "status": "Trạng thái",
+    "loading": "Đang tải...",
     "currency_vnd": "VNĐ",
+    "email": "Email",
+    "actions": "Hành động",
+    "management_system": "Hệ thống quản lý",
+    "actors": "Diễn viên",
+    "reviews": "Đánh giá",
     "copyright": "© 2026 MilkyWayyy Cinema - Bản quyền đã được bảo hộ"
   },
   "navbar": {
@@ -138,7 +150,33 @@
         "back": "Quay lại",
         "next": "Tiếp theo"
     },
-    "feature_updating": "Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn."
+    "feature_updating": "Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn.",
+    "service_tab": {
+        "step1": "1. Chọn ngày chiếu",
+        "step2": "2. Chọn rạp",
+        "step3": "3. Chọn suất chiếu",
+        "no_showtimes": "Không có suất chiếu khả dụng",
+        "days": {
+            "sun": "Chủ nhật",
+            "mon": "Thứ hai",
+            "tue": "Thứ ba",
+            "wed": "Thứ tư",
+            "thu": "Thứ năm",
+            "fri": "Thứ sáu",
+            "sat": "Thứ bảy"
+        }
+    },
+    "seat_tab": {
+        "change_showtime": "Đổi suất chiếu",
+        "no_seat_info": "Không tìm thấy thông tin sơ đồ ghế",
+        "screen": "Màn hình",
+        "legend": {
+            "single": "Ghế đơn",
+            "double": "Ghế đôi",
+            "selecting": "Đang chọn",
+            "sold": "Đã bán"
+        }
+    }
   },
   "cinema_detail": {
     "address_label": "ĐỊA CHỈ:",
@@ -480,7 +518,8 @@
         "foods": "Thức ăn",
         "users": "Người dùng",
         "sync": "Đồng bộ dữ liệu",
-        "revenue": "Thống kê doanh thu"
+        "revenue": "Thống kê doanh thu",
+        "stats": "Thống kê tổng quan"
     },
     "themes": {
         "blue": "Xanh dương",
@@ -494,6 +533,69 @@
         "light_pink": "Hồng nhạt",
         "teal": "Xanh biển sáng",
         "default": "Mặc định"
+    },
+    "overview_tab": {
+        "title": "Thống kê Tổng quan",
+        "desc": "Cái nhìn toàn cảnh về hiệu suất hệ thống, số lượng dữ liệu và các chỉ số hoạt động chính của cụm rạp.",
+        "metrics": {
+            "movies": { "title": "Phim", "desc": "Tổng số lượng phim trong database" },
+            "reviews": { "title": "Đánh giá", "desc": "Tổng số lượng đánh giá trong database" },
+            "actors": { "title": "Diễn viên", "desc": "Tổng số lượng diễn viên trong database" },
+            "genres": { "title": "Thể loại", "desc": "Tổng số lượng thể loại trong database" },
+            "stat_label": "Thống kê {{item}}"
+        },
+        "admin_team": {
+            "title": "Quản trị viên",
+            "desc": "Danh sách đội ngũ điều hành hệ thống",
+            "system_cinema": "Hệ thống Cinema"
+        }
+    },
+    "charts": {
+        "movie_status": {
+            "title": "Thống kê trạng thái phim",
+            "desc": "Đang chiếu - Sắp chiếu - Đã kết thúc",
+            "label": "Phim"
+        },
+        "movie_monthly": {
+            "title": "Thống kê số lượng phim theo tháng",
+            "desc": "Cập nhật từ tháng 1 đến tháng 12"
+        },
+        "movie_genre": {
+            "title": "Thống kê xu hướng thể loại phim",
+            "desc": "Tổng số lượng phim theo từng thể loại"
+        },
+        "ticket_monthly": {
+            "title": "Thống kê số lượng vé bán ra theo tháng",
+            "desc": "Cập nhật từ tháng 1 đến tháng 12"
+        }
+    },
+    "statistics_tab": {
+        "title": "Thống kê Doanh thu",
+        "desc": "Phân tích dữ liệu bán vé, doanh thu từ dịch vụ ăn uống và theo dõi tăng trưởng tài chính của cụm rạp."
+    },
+    "data_table": {
+        "add_new": "Thêm mới",
+        "delete_selected": "Xóa mục chọn",
+        "filtering": "Đang lọc:",
+        "clear_all_filters": "Xóa tất cả lọc",
+        "page_info": "Trang {{page}} / {{pages}}",
+        "selected_count": "{{count}} Đã chọn",
+        "all_selected": "Đã chọn tất cả",
+        "deselect_all": "Hủy chọn tất cả"
+    },
+    "movie_details": {
+        "title": "PHIM",
+        "runtime": "THỜI LƯỢNG",
+        "vote_average": "ĐIỂM",
+        "vote_count": "LƯỢT ĐÁNH GIÁ",
+        "release_date": "NGÀY CHIẾU",
+        "status": "TRẠNG THÁI",
+        "minutes": "phút",
+        "search_placeholder": "Tìm theo tên phim...",
+        "add_movie": "Thêm phim",
+        "total_count": "Tổng cộng {{count}} phim",
+        "empty_label": "Không có phim",
+        "loading_label": "Đang tải dữ liệu phim..."
     }
   },
   "movie_card": {
@@ -535,5 +637,359 @@
     "sci_fi_fantasy": "KHVT & Viễn tưởng",
     "soap": "Phim dài tập",
     "talk": "Trò chuyện"
+  },
+  "movie_details": {
+    "title": "Tên phim",
+    "runtime": "Thời lượng",
+    "vote_average": "Điểm đánh giá",
+    "vote_count": "Lượt đánh giá",
+    "release_date": "Ngày phát hành",
+    "status": "Trạng thái",
+    "minutes": "phút",
+    "search_placeholder": "Tìm kiếm phim...",
+    "add_movie": "Thêm phim mới",
+    "total_count": "Tổng cộng {{count}} phim",
+    "empty_label": "Không tìm thấy phim nào",
+    "loading_label": "Đang tải danh sách phim...",
+    "details_title": "Chi tiết phim",
+    "view_details": "Chi tiết: {{title}}",
+    "edit_movie": "Sửa thông tin phim",
+    "add_new_movie": "Thêm phim mới",
+    "movie_name": "Tên phim",
+    "description": "Mô tả",
+    "enter_description": "Nhập mô tả phim",
+    "runtime_label": "Thời lượng",
+    "release_date_label": "Ngày chiếu",
+    "end_date_label": "Kết thúc",
+    "select_date": "Chọn ngày",
+    "save_changes": "Lưu thay đổi",
+    "saving": "Đang lưu...",
+    "close": "Đóng",
+    "metadata": "Siêu dữ liệu",
+    "age_limit": "Giới hạn tuổi",
+    "no_overview": "Không có mô tả cho phim này.",
+    "no_data": "Không có dữ liệu phim.",
+    "edit_desc": "Thực hiện các thay đổi cho phim"
+  },
+  "foods_tab": {
+    "title": "Quản lý Thực đơn",
+    "desc": "Cấu hình danh mục đồ ăn, thức uống và các gói combo ưu đãi.",
+    "search_placeholder": "Tìm kiếm tên món ăn, thức uống...",
+    "add_snack": "Thêm món",
+    "total_items": "Tổng cộng {{count}} sản phẩm",
+    "empty_label": "Danh sách món ăn trống",
+    "loading_label": "Đang tải dữ liệu thực đơn...",
+    "details_title": "Chi tiết sản phẩm",
+    "view_details": "Xem chi tiết",
+    "edit_snack": "Sửa món ăn",
+    "add_new_snack": "Thêm món mới",
+    "name_label": "Tên sản phẩm",
+    "name_placeholder": "VD: Bắp rang bơ phô mai...",
+    "type_label": "Phân loại",
+    "type_placeholder": "Chọn loại",
+    "price_label": "Giá bán (VNĐ)",
+    "price_placeholder": "VD: 55000",
+    "image_label": "Đường dẫn hình ảnh (URL)",
+    "image_placeholder": "https://...",
+    "close_details": "Đóng chi tiết",
+    "processing": "Đang xử lý...",
+    "save_changes": "Lưu thay đổi",
+    "types": {
+      "food": "Thức ăn",
+      "drink": "Đồ uống",
+      "combo": "Combo tiết kiệm"
+    }
+  },
+  "location_tab": {
+    "locations": "Địa điểm",
+    "cinemas": "Rạp chiếu",
+    "rooms": "Phòng chiếu"
+  },
+  "locations_tab": {
+    "title": "Quản lý Khu vực & Địa điểm",
+    "desc": "Cấu hình danh sách các tỉnh thành và địa điểm rạp phim để khách hàng dễ dàng tra cứu và đặt vé.",
+    "search_placeholder": "Tìm kiếm thành phố...",
+    "add_location": "Thêm địa điểm",
+    "total_count": "Tổng cộng {{count}} địa điểm",
+    "empty_label": "Không có địa điểm",
+    "loading_label": "Đang tải dữ liệu địa điểm...",
+    "details_title": "Chi tiết địa điểm",
+    "edit_location": "Sửa địa điểm",
+    "add_new_location": "Thêm địa điểm mới",
+    "city_label": "Tên thành phố",
+    "city_placeholder": "VD: Hồ Chí Minh, Hà Nội...",
+    "system_management": "Hệ thống quản lý",
+    "system_desc": "Địa điểm này hiện đang được sử dụng để phân loại các cụm rạp trên toàn quốc.",
+    "no_data": "Không có dữ liệu.",
+    "saving": "Đang lưu...",
+    "save_changes": "Lưu thay đổi",
+    "columns": {
+        "city": "Thành phố"
+    }
+  },
+  "cinemas_tab": {
+    "title": "Quản lý Hệ thống Rạp",
+    "desc": "Quản lý thông tin các cụm rạp, địa chỉ, hotline và cơ sở vật chất của toàn hệ thống rạp phim.",
+    "search_placeholder": "Tìm theo tên rạp...",
+    "add_cinema": "Thêm rạp phim",
+    "total_count": "Tổng cộng {{count}} rạp phim",
+    "empty_label": "Không có rạp phim",
+    "loading_label": "Đang tải dữ liệu rạp phim...",
+    "details_title": "Chi tiết rạp phim",
+    "edit_cinema": "Sửa rạp phim",
+    "add_new_cinema": "Thêm rạp phim mới",
+    "name_label": "Tên rạp",
+    "address_label": "Địa chỉ",
+    "city_label": "Thành phố",
+    "phone_label": "Số điện thoại",
+    "hotline": "Hotline",
+    "coordinates": "Tọa độ",
+    "intro_label": "Giới thiệu rạp",
+    "intro_placeholder": "Nhập mô tả rạp phim",
+    "image_label": "Ảnh mô tả",
+    "save_changes": "Lưu thay đổi",
+    "saving": "Đang lưu...",
+    "no_data": "Không có dữ liệu rạp phim.",
+    "edit_desc": "Thực hiện các thay đổi cho rạp phim",
+    "columns": {
+        "name": "Tên rạp",
+        "address": "Địa chỉ",
+        "city": "Thành phố",
+        "phone": "Số điện thoại"
+    }
+  },
+  "rooms_tab": {
+    "title": "Quản lý Phòng chiếu",
+    "desc": "Cấu hình sơ đồ ghế, loại phòng (IMAX, 4DX, Standard) và giá vé cơ bản cho từng phòng chiếu trong rạp.",
+    "search_placeholder": "Tìm theo tên phòng...",
+    "add_room": "Thêm phòng",
+    "total_count": "Tổng cộng {{count}} phòng chiếu",
+    "empty_label": "Không có phòng chiếu",
+    "loading_label": "Đang tải dữ liệu phòng chiếu...",
+    "details_title": "Chi tiết phòng chiếu",
+    "edit_room": "Sửa phòng chiếu",
+    "add_new_room": "Thêm phòng chiếu mới",
+    "name_label": "Tên phòng",
+    "type_label": "Loại phòng",
+    "price_label": "Giá cơ bản (VNĐ)",
+    "rows_label": "Số hàng",
+    "cols_label": "Số cột",
+    "layout_label": "Bố cục",
+    "capacity_label": "Sức chứa",
+    "capacity_value": "{{count}} chỗ ngồi",
+    "seat_map_label": "Sơ đồ ghế hệ thống",
+    "auto_generated": "Tự động tạo",
+    "seat_single": "Ghế đơn",
+    "seat_couple": "Ghế đôi (2 hàng cuối)",
+    "edit_warning": "Việc thay đổi số hàng/cột sẽ xóa toàn bộ sơ đồ ghế cũ và tạo lại mới. Hành động này không thể thực hiện nếu phòng đang có suất chiếu.",
+    "saving": "Đang lưu...",
+    "save_changes": "Lưu thay đổi",
+    "columns": {
+        "name": "Tên phòng",
+        "cinema": "Rạp phim",
+        "type": "Loại phòng",
+        "price": "Giá",
+        "layout": "Hàng/Cột"
+    }
+  },
+  "tickets_tab": {
+    "title": "Quản lý Giao dịch & Vé",
+    "desc": "Theo dõi lịch sử đặt vé, quản lý trạng thái thanh toán và thông tin chi tiết các giao dịch của khách hàng.",
+    "search_placeholder": "Tìm theo tên người dùng...",
+    "total_count": "Tổng cộng {{count}} vé",
+    "empty_label": "Không có vé",
+    "loading_label": "Đang tải dữ liệu vé...",
+    "details_title": "Chi tiết giao dịch vé",
+    "cancel_ticket": "Hủy vé",
+    "view_details": "Chi tiết vé",
+    "payment_info": "Thông tin thanh toán",
+    "original_price": "Giá gốc",
+    "booking_date": "Ngày đặt",
+    "total_label": "Tổng cộng",
+    "status": {
+        "pending": "Đang chờ",
+        "confirmed": "Đã xác nhận",
+        "cancelled": "Đã hủy",
+        "unknown": "Không xác định"
+    },
+    "columns": {
+        "user": "Người dùng",
+        "cinema": "Rạp phim",
+        "total": "Tổng tiền",
+        "final": "Thành tiền",
+        "status": "Trạng thái",
+        "created": "Ngày tạo"
+    }
+  },
+  "coupons_tab": {
+    "title": "Quản lý Mã giảm giá",
+    "desc": "Tạo, phát hành và quản lý các chương trình ưu đãi, mã giảm giá cho khách hàng trong các dịp đặc biệt.",
+    "search_placeholder": "Tìm theo mã giảm giá...",
+    "add_coupon": "Thêm mã mới",
+    "total_count": "Tổng cộng {{count}} mã giảm giá",
+    "empty_label": "Không có mã giảm giá",
+    "loading_label": "Đang tải dữ liệu mã giảm giá...",
+    "details_title": "Chi tiết mã giảm giá",
+    "edit_coupon": "Chỉnh sửa mã giảm giá",
+    "add_new_coupon": "Tạo mã giảm giá mới",
+    "code_label": "Mã Coupon",
+    "desc_label": "Mô tả",
+    "desc_placeholder": "VD: Giảm 50% cho đơn hàng từ 100k...",
+    "type_label": "Loại giảm giá",
+    "value_label": "Giá trị giảm",
+    "min_order_label": "Giá trị đơn tối thiểu (VNĐ)",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "category_label": "Phân loại mã",
+    "cat_normal": "Mã thông thường (Normal)",
+    "cat_holiday": "Mã sự kiện/Lễ (Holiday)",
+    "special_event": "Sự kiện đặc biệt",
+    "normal_coupon": "Mã thông thường",
+    "applied_all": "Mã giảm giá này được áp dụng cho toàn bộ các suất chiếu nếu thỏa mãn điều kiện đơn hàng tối thiểu.",
+    "no_data": "Vui lòng chọn mã giảm giá để xem thông tin.",
+    "saving": "Đang xử lý...",
+    "save_changes": "Lưu thay đổi",
+    "processing": "Đang xử lý...",
+    "create_btn": "Tạo mã",
+    "types": {
+        "percentage": "Phần trăm (%)",
+        "fixed": "Số tiền cố định (đ)"
+    },
+    "columns": {
+        "code": "Mã giảm giá",
+        "type": "Loại",
+        "value": "Giá trị giảm",
+        "min": "Giá trị tối thiểu",
+        "status": "Trạng thái",
+        "expiry": "Hết hạn"
+    }
+  },
+  "actors_tab": {
+    "title": "Quản lý Diễn viên",
+    "desc": "Quản lý thông tin hồ sơ diễn viên, tiểu sử và danh sách các tác phẩm điện ảnh họ đã tham gia.",
+    "search_placeholder": "Tìm theo tên diễn viên...",
+    "add_actor": "Thêm diễn viên",
+    "total_count": "Tổng cộng {{count}} diễn viên",
+    "empty_label": "Không có diễn viên",
+    "loading_label": "Đang tải dữ liệu diễn viên...",
+    "details_title": "Chi tiết diễn viên",
+    "edit_actor": "Sửa diễn viên",
+    "add_new_actor": "Thêm diễn viên mới",
+    "name_label": "Họ tên",
+    "gender_label": "Giới tính",
+    "birthday_label": "Ngày sinh",
+    "birthplace_label": "Nơi sinh",
+    "bio_label": "Tiểu sử",
+    "bio_placeholder": "Nhập tiểu sử diễn viên",
+    "profile_label": "Profile Path",
+    "movies_participated": "Phim đã tham gia",
+    "no_movies": "Chưa có dữ liệu.",
+    "no_bio": "Không có dữ liệu tiểu sử cho diễn viên này.",
+    "saving": "Đang lưu...",
+    "save_changes": "Lưu thay đổi",
+    "genders": {
+        "male": "Nam",
+        "female": "Nữ",
+        "other": "Khác"
+    },
+    "columns": {
+        "name": "Diễn viên",
+        "gender": "Giới tính",
+        "birthday": "Ngày sinh",
+        "birthplace": "Nơi sinh"
+    }
+  },
+  "reviews_tab": {
+    "title": "Quản lý Đánh giá",
+    "desc": "Kiểm duyệt và quản lý các đánh giá, bình luận từ người dùng để đảm bảo chất lượng nội dung cộng đồng.",
+    "search_placeholder": "Tìm theo tên người review...",
+    "total_count": "Tổng cộng {{count}} đánh giá",
+    "empty_label": "Không có đánh giá",
+    "loading_label": "Đang tải dữ liệu đánh giá...",
+    "details_title": "Chi tiết đánh giá",
+    "view_details": "Xem chi tiết",
+    "ban_user": "Ban người dùng",
+    "movie_label": "Phim",
+    "date_label": "Ngày tạo",
+    "content_label": "Nội dung đánh giá",
+    "no_comment": "Người dùng này không để lại nội dung bình luận.",
+    "no_data": "Không có dữ liệu.",
+    "status": {
+        "approved": "Đã duyệt",
+        "pending": "Chờ duyệt"
+    },
+    "columns": {
+        "user": "Người dùng",
+        "movie": "Phim",
+        "rating": "Rating",
+        "content": "Nội dung",
+        "status": "Trạng thái",
+        "created": "Ngày tạo"
+    }
+  },
+  "showtimes_tab": {
+    "title": "Quản lý Suất chiếu",
+    "desc": "Lập lịch trình chiếu phim, quản lý khung giờ và phân bổ phòng chiếu."
+  },
+  "ticket_tab": {
+    "tickets": "Vé",
+    "coupons": "Khuyến mãi"
+  },
+  "sync_tab": {
+    "title": "Đồng bộ Dữ liệu",
+    "desc": "Quản lý luồng dữ liệu từ TMDB về hệ thống nội bộ.",
+    "tasks": {
+      "upcoming": { "name": "Phim sắp chiếu", "desc": "Đồng bộ danh sách phim sắp ra mắt từ TMDB." },
+      "nowplaying": { "name": "Phim đang chiếu", "desc": "Cập nhật dữ liệu các phim hiện đang tại rạp." },
+      "popular": { "name": "Phim phổ biến", "desc": "Lấy các phim đang đứng đầu bảng xếp hạng TMDB." },
+      "reviews": { "name": "Đánh giá phim", "desc": "Cập nhật các nhận xét và điểm số từ người dùng." },
+      "status": { "name": "Trạng thái hệ thống", "desc": "Chạy tác vụ kiểm tra trạng thái dữ liệu nội bộ." }
+    },
+    "status": {
+      "ready": "Hệ thống: Sẵn sàng",
+      "syncing": "Tiến trình: Đang đồng bộ...",
+      "available": "Sẵn có",
+      "in_progress": "Đang xử lý",
+      "start": "Bắt đầu đồng bộ",
+      "stop": "Dừng tác vụ",
+      "integration": "Tích hợp TMDB",
+      "priority": "Ưu tiên: Cao",
+      "type_label": "Loại"
+    }
+  },
+  "users_tab": {
+    "title": "Quản lý Người dùng",
+    "desc": "Xem danh sách, phân quyền và quản lý trạng thái hoạt động của toàn bộ người dùng trong hệ thống.",
+    "search_placeholder": "Tìm theo tên người dùng...",
+    "add_user": "Thêm user",
+    "total_count": "Tổng cộng {{count}} người dùng",
+    "empty_label": "Không có người dùng",
+    "loading_label": "Đang tải dữ liệu người dùng...",
+    "columns": {
+      "user": "Người dùng",
+      "role": "Vai trò",
+      "age": "Tuổi",
+      "verify": "Xác minh",
+      "status": "Trạng thái",
+      "actions": "Thao tác"
+    },
+    "verify_status": {
+      "verified": "Đã xác minh",
+      "unverified": "Chưa xác minh"
+    },
+    "banned_status": {
+      "banned": "Bị khóa",
+      "active": "Hoạt động"
+    },
+    "roles": {
+      "admin": "Admin",
+      "staff": "Staff",
+      "user": "User",
+      "unknown": "Không xác định"
+    },
+    "actions": {
+      "view": "Xem",
+      "ban": "Cấm"
+    }
   }
 }

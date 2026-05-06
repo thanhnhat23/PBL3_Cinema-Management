@@ -19,6 +19,7 @@ import {
   Chip,
 } from "@heroui/react";
 import { Plus, Trash, Search, ChevronLeft, ChevronRight, Filter, ChevronDown, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type AdminColumn = {
   name: string;
@@ -84,6 +85,7 @@ export default function DataTableAdmin<T>({
   hideDeleteSelected = false,
   filters,
 }: AdminDataTableProps<T>) {
+  const { t } = useTranslation();
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<TableSelection>(new Set([]) as TableSelection);
   const [selectedFilters, setSelectedFilters] = useState<Record<string, TableSelection>>({});
@@ -212,7 +214,7 @@ export default function DataTableAdmin<T>({
                 className="group flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 px-5 py-2.5 rounded-sm cursor-pointer font-bold text-sm shadow-md hover:shadow-lg transition-all active:scale-95"
               >
                 <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
-                {addButtonLabel || "Thêm mới"}
+                {addButtonLabel || t('dashboard.data_table.add_new')}
               </button>
             )}
 
@@ -222,7 +224,7 @@ export default function DataTableAdmin<T>({
                 className="flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-1 border-rose-100 dark:border-rose-900/50 px-5 py-2.5 rounded-sm cursor-pointer font-bold text-sm hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors active:scale-95"
               >
                 <Trash size={18} />
-                Xóa mục chọn
+                {t('dashboard.data_table.delete_selected')}
               </button>
             )}
           </div>
@@ -231,7 +233,7 @@ export default function DataTableAdmin<T>({
         {/* Active Filters Display */}
         {hasActiveFilters && (
             <div className="flex flex-wrap items-center gap-2 px-1">
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mr-1">Đang lọc:</span>
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mr-1">{t('dashboard.data_table.filtering')}</span>
                 {filters?.map(f => {
                     const selection = selectedFilters[f.uid];
                     if (!selection || selection === "all" || selection.size === 0) return null;
@@ -256,7 +258,7 @@ export default function DataTableAdmin<T>({
                     onClick={onClearFilters}
                     className="text-[10px] font-black text-rose-500 uppercase tracking-tighter hover:underline cursor-pointer ml-1"
                 >
-                    Xóa tất cả lọc
+                    {t('dashboard.data_table.clear_all_filters')}
                 </button>
             </div>
         )}
@@ -265,7 +267,7 @@ export default function DataTableAdmin<T>({
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{totalLabel(filteredItems.length)}</span>
             <div className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Trang {page} / {pages}</span>
+            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.data_table.page_info', { page, pages })}</span>
           </div>
           <div className="flex gap-2">
              {filters && filters.map((f) => (
@@ -311,15 +313,15 @@ export default function DataTableAdmin<T>({
         <div className="flex items-center gap-3">
              <div className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-tighter">
                 {selectedKeys === "all"
-                    ? "ALL SELECTED"
-                    : `${selectedKeys.size} SELECTED`}
+                    ? t('dashboard.data_table.all_selected')
+                    : t('dashboard.data_table.selected_count', { count: selectedKeys.size })}
              </div>
              {hasSelection && (
                 <button 
                     onClick={() => setSelectedKeys(new Set([]) as TableSelection)}
                     className="text-[10px] font-black text-rose-500 uppercase tracking-tighter hover:underline cursor-pointer"
                 >
-                    Hủy chọn tất cả
+                    {t('dashboard.data_table.deselect_all')}
                 </button>
              )}
         </div>

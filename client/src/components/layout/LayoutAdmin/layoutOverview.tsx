@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { 
     ChartColumnDecreasing, 
@@ -23,6 +23,7 @@ import { useUserStore } from '@/stores/useUserStore';
 import { AvatarElement } from './../../ui/avatar';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslation } from "react-i18next";
 
 type MetricCard = {
     title: string;
@@ -33,52 +34,52 @@ type MetricCard = {
 
 const changeThemeColorChart = (value: string) => {
     switch(value) {             
-        case "Xanh dương": return {
+        case "blue": return {
             pie: ["#2563eb", "#3b82f6", "#60a5fa"] as [string, string, string],
             chart: "#2563eb"
         };
 
-        case "Xanh lá": return {
+        case "green": return {
             pie: ["#22c55e", "#4ade80", "#86efac"] as [string, string, string],
             chart: "#22c55e"
         };
 
-        case "Vàng": return {
+        case "yellow": return {
             pie: ["#f59e0b", "#fbbf24", "#fcd34d"] as [string, string, string],
             chart: "#f59e0b"
         };
 
-        case "Đỏ": return {
+        case "red": return {
             pie: ["#ef4444", "#f87171", "#fca5a5"] as [string, string, string],
             chart: "#ef4444"
         };
 
-        case "Hồng": return {
+        case "pink": return {
             pie: ["#ec4899", "#f472b6", "#f9a8d4"] as [string, string, string],
             chart: "#ec4899"
         };
 
-        case "Tím đậm": return {
+        case "purple": return {
             pie: ["#8b5cf6", "#a78bfa", "#c4b5fd"] as [string, string, string],
             chart: "#8b5cf6"
         };
 
-        case "Xanh lơ đậm": return {
+        case "cyan": return {
             pie: ["#0891b2", "#06b6d4", "#22d3ee"] as [string, string, string],
             chart: "#0891b2"
         };
 
-        case "Cam đào": return {
+        case "orange": return {
             pie: ["#ffcc99", "#ffd1a9", "#ffd8b9"] as [string, string, string],
             chart: "#ffcc99"
         };
 
-        case "Hồng nhạt": return {
+        case "light_pink": return {
             pie: ["#ffb6c1", "#ffc0cb", "#ffd1dc"] as [string, string, string],
             chart: "#ffb6c1"
         };
 
-        case "Xanh biển sáng": return {
+        case "teal": return {
             pie: ["#20b2aa", "#48d1cc", "#40e0d0"] as [string, string, string],
             chart: "#20b2aa"
         };
@@ -91,6 +92,7 @@ const changeThemeColorChart = (value: string) => {
 }
 
 export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
+    const { t } = useTranslation();
     const {
         totalMovies,
         totalReviews,
@@ -119,8 +121,8 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
 
     const getRoleLabel = useCallback((role: string) => {
         const normalized = String(role).toLowerCase();
-        return normalized === 'admin' || normalized === '0' ? 'Admin' : 'Staff';
-    }, []);
+        return normalized === 'admin' || normalized === '0' ? t('users_tab.roles.admin') : t('users_tab.roles.staff');
+    }, [t]);
 
     const adminOrStaffUsers = useMemo(() => {
         return users.filter((user) => isAdminOrStaffUser(user.role));
@@ -140,30 +142,30 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
 
     const metricCards = useMemo<MetricCard[]>(() => ([
         {
-            title: 'Phim',
+            title: t('dashboard.overview_tab.metrics.movies.title'),
             value: totalMovies,
-            description: 'Tổng số lượng phim trong database',
+            description: t('dashboard.overview_tab.metrics.movies.desc'),
             icon: Clapperboard,
         },
         {
-            title: 'Đánh giá',
+            title: t('dashboard.overview_tab.metrics.reviews.title'),
             value: totalReviews,
-            description: 'Tổng số lượng đánh giá trong database',
+            description: t('dashboard.overview_tab.metrics.reviews.desc'),
             icon: MessageCircle,
         },
         {
-            title: 'Diễn viên',
+            title: t('dashboard.overview_tab.metrics.actors.title'),
             value: totalActors,
-            description: 'Tổng số lượng diễn viên trong database',
+            description: t('dashboard.overview_tab.metrics.actors.desc'),
             icon: Speech,
         },
         {
-            title: 'Thể loại',
+            title: t('dashboard.overview_tab.metrics.genres.title'),
             value: totalGenres,
-            description: 'Tổng số lượng thể loại trong database',
+            description: t('dashboard.overview_tab.metrics.genres.desc'),
             icon: Grid,
         },
-    ]), [totalActors, totalGenres, totalMovies, totalReviews]);
+    ]), [t, totalActors, totalGenres, totalMovies, totalReviews]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -174,14 +176,14 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Thống kê Tổng quan
+                            {t('dashboard.overview_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Cái nhìn toàn cảnh về hiệu suất hệ thống, số lượng dữ liệu và các chỉ số hoạt động chính của cụm rạp.
+                            {t('dashboard.overview_tab.desc')}
                         </p>
                     </div>
                 </div>
@@ -211,7 +213,7 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
                             </div>
 
                             <div className="flex flex-col items-start justify-center gap-1 cursor-default">
-                                <p className='font-semibold'>Thống kê {card.title.toLowerCase()} </p>
+                                <p className='font-semibold'>{t('dashboard.overview_tab.metrics.stat_label', { item: card.title })} </p>
                                 <p className='text-sm text-gray-500'>{card.description}</p>
                             </div>
                         </div>
@@ -243,9 +245,9 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
                                 <div className='p-1.5 rounded-lg bg-red-500/10 text-red-500'>
                                     <ShieldUser size={18} />
                                 </div>
-                                Quản trị viên
+                                {t('dashboard.overview_tab.admin_team.title')}
                             </h3>
-                            <p className='text-xs text-neutral-400'>Danh sách đội ngũ điều hành hệ thống</p>
+                            <p className='text-xs text-neutral-400'>{t('dashboard.overview_tab.admin_team.desc')}</p>
                         </div>
                         <div className='flex -space-x-2'>
                             {adminOrStaffUsers.slice(0, 4).map((user, i) => (
@@ -295,7 +297,7 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
 
                                         <div className='flex flex-col'>
                                             <p className='font-bold text-sm group-hover:text-red-500 transition-colors'>{user.username}</p>
-                                            <p className='text-[11px] text-neutral-400'>{user.email || 'Hệ thống Cinema'}</p>
+                                            <p className='text-[11px] text-neutral-400'>{user.email || t('dashboard.overview_tab.admin_team.system_cinema')}</p>
                                         </div>
                                     </div>
 

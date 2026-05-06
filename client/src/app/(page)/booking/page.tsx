@@ -27,14 +27,6 @@ interface BookingSelection {
   selectedSeats: string[];
 }
 
-const STEPS = [
-  { key: "select-service", label: "Phim", icon: <Clapperboard size={20} /> },
-  { key: "select-seat", label: "Ghế", icon: <Armchair size={20} /> },
-  { key: "select-food", label: "Đồ ăn", icon: <Popcorn size={20} /> },
-  { key: "payment", label: "Thanh toán", icon: <WalletCards size={20} /> },
-  { key: "confirmation", label: "Xác nhận", icon: <BadgeCheck size={20} /> }
-];
-
 export default function BookingPage() {
   const [selection, setSelection] = useState<BookingSelection>({
     location: "",
@@ -194,7 +186,7 @@ export default function BookingPage() {
     { label: t('booking.selection.select_movie'), val: selection.movieTitle },
     { 
       label: t('booking.selection.select_showtime'), 
-      val: activeShowtime ? `${selection.showtimeDate} ${new Date(activeShowtime.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}` : "" 
+      val: activeShowtime ? `${selection.showtimeDate} ${new Date(activeShowtime.startTime).toLocaleTimeString(t('locale_code'), { hour: '2-digit', minute: '2-digit' })}` : "" 
     }
   ];
 
@@ -269,7 +261,7 @@ export default function BookingPage() {
               seats={seats}
               showtimeOptions={filteredShowtimes.map(st => ({
                 id: st.showtime_id,
-                label: new Date(st.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+                label: new Date(st.startTime).toLocaleTimeString(t('locale_code'), { hour: '2-digit', minute: '2-digit' }),
               }))}
               onSelectSeats={(s) => handleSelectionChange('selectedSeats', s)}
               onSelectShowtime={(id) => handleSelectionChange('showtimeId', id)}
@@ -321,7 +313,7 @@ export default function BookingPage() {
                         <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                           <Calendar size={14} className="text-amber-500" />
                           <span className="text-xs font-bold uppercase tracking-wider">
-                            {selection.showtimeDate} • {new Date(activeShowtime.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                            {selection.showtimeDate} • {new Date(activeShowtime.startTime).toLocaleTimeString(t('locale_code'), { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>
                       )}

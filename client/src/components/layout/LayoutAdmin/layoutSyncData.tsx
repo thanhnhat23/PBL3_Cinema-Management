@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
     CloudSync,
@@ -18,6 +18,7 @@ import { useSyncDateStore } from "@/stores/useSyncDataStore";
 import { useState, useMemo, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Progress, Button, Tooltip, Badge } from "@heroui/react";
+import { useTranslation } from "react-i18next";
 
 type SyncKind = "movie" | "review" | "status";
 type MovieSyncStatus = "upcoming" | "nowplaying" | "popular";
@@ -36,6 +37,7 @@ type SyncItem = {
 };
 
 export default function LayoutSyncData() {
+    const { t } = useTranslation();
     const [activeSyncName, setActiveSyncName] = useState<string | null>(null);
 
     const {
@@ -79,8 +81,8 @@ export default function LayoutSyncData() {
 
     const syncItems: SyncItem[] = useMemo(() => [
         {
-            name: "Phim sắp chiếu",
-            description: "Đồng bộ danh sách phim sắp ra mắt từ TMDB.",
+            name: t('sync_tab.tasks.upcoming.name'),
+            description: t('sync_tab.tasks.upcoming.desc'),
             icon: <TrendingUp size={20} />,
             kind: "movie",
             movieStatus: "upcoming",
@@ -89,8 +91,8 @@ export default function LayoutSyncData() {
             action: () => syncMovie("upcoming")
         },
         {
-            name: "Phim đang chiếu",
-            description: "Cập nhật dữ liệu các phim hiện đang tại rạp.",
+            name: t('sync_tab.tasks.nowplaying.name'),
+            description: t('sync_tab.tasks.nowplaying.desc'),
             icon: <Film size={20} />,
             kind: "movie",
             movieStatus: "nowplaying",
@@ -99,8 +101,8 @@ export default function LayoutSyncData() {
             action: () => syncMovie("nowplaying")
         },
         {
-            name: "Phim phổ biến",
-            description: "Lấy các phim đang đứng đầu bảng xếp hạng TMDB.",
+            name: t('sync_tab.tasks.popular.name'),
+            description: t('sync_tab.tasks.popular.desc'),
             icon: <Flame size={20} />,
             kind: "movie",
             movieStatus: "popular",
@@ -109,8 +111,8 @@ export default function LayoutSyncData() {
             action: () => syncMovie("popular")
         },
         {
-            name: "Đánh giá phim",
-            description: "Cập nhật các nhận xét và điểm số từ người dùng toàn cầu.",
+            name: t('sync_tab.tasks.reviews.name'),
+            description: t('sync_tab.tasks.reviews.desc'),
             icon: <MessageCircle size={20} />,
             kind: "review",
             color: "secondary",
@@ -118,15 +120,15 @@ export default function LayoutSyncData() {
             action: () => syncReviewMovie()
         },
         {
-            name: "Trạng thái hệ thống",
-            description: "Chạy tác vụ kiểm tra và cập nhật trạng thái dữ liệu nội bộ.",
+            name: t('sync_tab.tasks.status.name'),
+            description: t('sync_tab.tasks.status.desc'),
             icon: <Settings size={20} />,
             kind: "status",
             color: "default",
             loadingKey: "isSyncingStatusMovie",
             action: () => syncStatusMovie()
         }
-    ], [syncMovie, syncReviewMovie, syncStatusMovie]);
+    ], [syncMovie, syncReviewMovie, syncStatusMovie, t]);
 
     return (
         <div className="flex flex-col gap-8 p-1">
@@ -139,18 +141,18 @@ export default function LayoutSyncData() {
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="space-y-4">
                         <Badge content="Stable" color="success" variant="flat" size="sm" className="font-black tracking-widest text-[9px] uppercase px-2">
-                            <div className="flex items-center gap-2 px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-[10px] font-bold text-zinc-500 dark:text-zinc-400">
-                                <DatabaseZap size={12} className="text-amber-500" />
-                                TMDB Integration
-                            </div>
+                                        <div className="flex items-center gap-2 px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-[10px] font-bold text-zinc-500 dark:text-zinc-400">
+                                 <DatabaseZap size={12} className="text-amber-500" />
+                                 {t('sync_tab.status.integration')}
+                             </div>
                         </Badge>
                         <div className="space-y-1">
                             <h1 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white flex items-center gap-3">
                                 <CloudSync size={36} className="text-amber-500" />
-                                Đồng bộ Dữ liệu
+                                {t('sync_tab.title')}
                             </h1>
                             <p className="text-zinc-500 dark:text-zinc-400 font-medium max-w-xl leading-relaxed">
-                                Quản lý luồng dữ liệu từ TMDB về hệ thống nội bộ. Đảm bảo thông tin phim, đánh giá và trạng thái luôn được cập nhật chính xác nhất.
+                                {t('sync_tab.desc')}
                             </p>
                         </div>
                     </div>
@@ -199,7 +201,7 @@ export default function LayoutSyncData() {
                                         </div>
                                     </div>
 
-                                    <Tooltip content={loading ? "Dừng tác vụ" : "Bắt đầu đồng bộ"}>
+                                    <Tooltip content={loading ? t('sync_tab.status.stop') : t('sync_tab.status.start')}>
                                         <Button
                                             isIconOnly
                                             radius="full"
@@ -221,9 +223,9 @@ export default function LayoutSyncData() {
                                     <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-widest text-zinc-400">
                                         <div className="flex items-center gap-2">
                                             <div className={cn("w-1.5 h-1.5 rounded-full", loading ? "bg-amber-500" : "bg-emerald-500")} />
-                                            {loading ? "Process: Synchronizing..." : "System: Ready"}
+                                            {loading ? t('sync_tab.status.syncing') : t('sync_tab.status.ready')}
                                         </div>
-                                        <span>Type: {item.kind}</span>
+                                        <span>{t('sync_tab.status.type_label')}: {item.kind}</span>
                                     </div>
                                     <Progress 
                                         size="sm"
@@ -243,7 +245,7 @@ export default function LayoutSyncData() {
                                         </div>
                                         <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-400">
                                             <AlertCircle size={12} />
-                                            Priority High
+                                            {t('sync_tab.status.priority')}
                                         </div>
                                     </div>
                                     <Badge 
@@ -251,7 +253,7 @@ export default function LayoutSyncData() {
                                         variant="flat" 
                                         className="font-black text-[9px] uppercase px-2"
                                     >
-                                        {loading ? "In Progress" : "Available"}
+                                        {loading ? t('sync_tab.status.in_progress') : t('sync_tab.status.available')}
                                     </Badge>
                                 </div>
                             </div>

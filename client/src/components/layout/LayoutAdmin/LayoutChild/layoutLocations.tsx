@@ -1,4 +1,4 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import { 
@@ -19,14 +19,16 @@ import { useLocationStore, type Location } from "@/stores/useLocationStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 
-const columns: AdminColumn[] = [
+const getLocationColumns = (t: any): AdminColumn[] => [
     { name: "ID", uid: "location_id", sortable: true },
-    { name: "THÀNH PHỐ", uid: "city", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: t('locations_tab.columns.city'), uid: "city", sortable: true },
+    { name: t('common.actions'), uid: "actions" },
 ];
 
 export default function LayoutLocations() {
+    const { t } = useTranslation();
     const { 
         locations, 
         isFetchingLocations, 
@@ -105,14 +107,14 @@ export default function LayoutLocations() {
                                     onOpen();
                                 }}
                             >
-                                Xem
+                                {t('common.view')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="edit" 
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(location)}
                             >
-                                Sửa
+                                {t('movie_details.edit_movie')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="delete" 
@@ -121,7 +123,7 @@ export default function LayoutLocations() {
                                 startContent={<Trash size={16} />}
                                 onPress={() => deleteLocation(location.location_id)}
                             >
-                                Xóa
+                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -129,7 +131,7 @@ export default function LayoutLocations() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [deleteLocation, onOpen, handleOpenEdit]);
+    }, [handleOpenEdit, onOpen, deleteLocation, t]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -140,28 +142,28 @@ export default function LayoutLocations() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Khu vực & Địa điểm
+                            {t('locations_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Cấu hình danh sách các tỉnh thành và địa điểm rạp phim để khách hàng dễ dàng tra cứu và đặt vé.
+                            {t('locations_tab.desc')}
                         </p>
                     </div>
                 </div>
             </div>
             <DataTableAdmin<Location>
-                columns={columns}
+                columns={getLocationColumns(t)}
                 items={locations}
                 isLoading={isFetchingLocations}
-                searchPlaceholder="Tìm kiếm thành phố..."
-                addButtonLabel="Thêm địa điểm"
+                searchPlaceholder={t('locations_tab.search_placeholder')}
+                addButtonLabel={t('locations_tab.add_location')}
                 onAdd={handleOpenAdd}
-                totalLabel={(count) => `Tổng cộng ${count} địa điểm`}
-                emptyLabel="Không có địa điểm"
-                loadingLabel="Đang tải dữ liệu địa điểm..."
+                totalLabel={(count) => t('locations_tab.total_count', { count })}
+                emptyLabel={t('locations_tab.empty_label')}
+                loadingLabel={t('locations_tab.loading_label')}
                 defaultSort={{ column: "city", direction: "ascending" }}
                 rowKey={(item) => item.location_id}
                 searchBy={(item) => item.city}
@@ -173,7 +175,7 @@ export default function LayoutLocations() {
                     {() => (
                         <>
                             <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
-                                Chi tiết địa điểm
+                                {t('locations_tab.details_title')}
                             </DrawerHeader>
                             <DrawerBody className="py-8">
                                 {selectedLocation ? (
@@ -191,12 +193,12 @@ export default function LayoutLocations() {
                                         </div>
                                         
                                         <div className="w-full p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex flex-col gap-1">
-                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-center">Hệ thống quản lý</span>
-                                            <p className="text-sm text-zinc-500 text-center">Địa điểm này hiện đang được sử dụng để phân loại các cụm rạp trên toàn quốc.</p>
+                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-center">{t('locations_tab.system_management')}</span>
+                                            <p className="text-sm text-zinc-500 text-center">{t('locations_tab.system_desc')}</p>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center text-zinc-500">Không có dữ liệu.</div>
+                                    <div className="p-12 text-center text-zinc-500">{t('locations_tab.no_data')}</div>
                                 )}
                             </DrawerBody>
                         </>
@@ -209,17 +211,17 @@ export default function LayoutLocations() {
                     {() => (
                         <>
                             <DrawerHeader>
-                                {isAdding ? "Thêm địa điểm mới" : "Sửa địa điểm"}
+                                {isAdding ? t('locations_tab.add_new_location') : t('locations_tab.edit_location')}
                             </DrawerHeader>
                             <DrawerBody>
                                 <div className="flex flex-col gap-4 py-4">
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="city">Tên thành phố</Label>
+                                        <Label htmlFor="city">{t('locations_tab.city_label')}</Label>
                                         <Input 
                                             id="city" 
                                             value={form.city}
                                             onChange={(e) => setForm({ city: e.target.value })}
-                                            placeholder="VD: Hồ Chí Minh, Hà Nội..."
+                                            placeholder={t('locations_tab.city_placeholder')}
                                             className="bg-sidebar"
                                         />
                                     </div>
@@ -228,7 +230,7 @@ export default function LayoutLocations() {
                                         disabled={isCreatingLocation || isUpdatingLocation}
                                         className="w-full mt-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black font-bold py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
                                     >
-                                        {isCreatingLocation || isUpdatingLocation ? "Đang lưu..." : "Lưu thay đổi"}
+                                        {isCreatingLocation || isUpdatingLocation ? t('locations_tab.saving') : t('locations_tab.save_changes')}
                                     </button>
                                 </div>
                             </DrawerBody>

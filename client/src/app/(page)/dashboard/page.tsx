@@ -37,56 +37,45 @@ import { AvatarElement } from '@/components/ui/avatar';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Breadcrumbs, BreadcrumbItem, Selection } from '@heroui/react';
 import { ThemeToggler } from '@/components/ui/effects/themeToggler';
-import { useLayoutStore } from '@/stores/useLayoutStore';
+import { useLayoutStore, type LayoutKey } from '@/stores/useLayoutStore';
 import { LayoutAdmin } from '@/components/layout/layoutAdmin';
 import Link from 'next/link';
 import { useTranslation } from "react-i18next";
 
-const Management = ["Phim", "Vé", "Suất chiếu", "Rạp chiếu", "Thức ăn"] as const;
-
-type LayoutKey =
-    | 'Thống kê'
-    | 'Phim'
-    | 'Vé'
-    | 'Suất chiếu'
-    | 'Rạp chiếu'
-    | 'Người dùng'
-    | 'Đồng bộ dữ liệu'
-    | 'Thống kê doanh thu'
-    | 'Thức ăn';
+const Management = ["movies", "tickets", "showtimes", "cinemas", "foods"] as const;
 
 const ManagementLayoutMap: Record<(typeof Management)[number], LayoutKey> = {
-    "Phim": 'Phim',
-    "Vé": 'Vé',
-    "Suất chiếu": 'Suất chiếu',
-    "Rạp chiếu": 'Rạp chiếu',
-    "Thức ăn": "Thức ăn"
+    "movies": 'movies',
+    "tickets": 'tickets',
+    "showtimes": 'showtimes',
+    "cinemas": 'cinemas',
+    "foods": "foods"
 };
 
 const Icon: Record<(typeof Management)[number], ReactNode> = {
-    "Phim": <Clapperboard size={18} />,
-    "Vé": <Ticket size={18} />,
-    "Suất chiếu": <Drama size={18} />,
-    "Rạp chiếu": <MapPinHouse size={18} />,
-    "Thức ăn": <Utensils size={18} />
+    "movies": <Clapperboard size={18} />,
+    "tickets": <Ticket size={18} />,
+    "showtimes": <Drama size={18} />,
+    "cinemas": <MapPinHouse size={18} />,
+    "foods": <Utensils size={18} />
 };
 
 const THEME_CONFIG = [
-    { label: "Xanh dương", color: "bg-blue-500" },
-    { label: "Xanh lá", color: "bg-green-500" },
-    { label: "Vàng", color: "bg-yellow-500" },
-    { label: "Đỏ", color: "bg-red-500" },
-    { label: "Hồng", color: "bg-pink-500" },
-    { label: "Tím đậm", color: "bg-[#8b5cf6]" },
-    { label: "Xanh lơ đậm", color: "bg-[#0891b2]" },
-    { label: "Cam đào", color: "bg-[#ffcc99]" },
-    { label: "Hồng nhạt", color: "bg-[#ffb6c1]" },
-    { label: "Xanh biển sáng", color: "bg-[#20b2aa]", showDivider: true },
-    { label: "Mặc định", color: "bg-gray-500" },
+    { key: "blue", label: "Xanh dương", color: "bg-blue-500" },
+    { key: "green", label: "Xanh lá", color: "bg-green-500" },
+    { key: "yellow", label: "Vàng", color: "bg-yellow-500" },
+    { key: "red", label: "Đỏ", color: "bg-red-500" },
+    { key: "pink", label: "Hồng", color: "bg-pink-500" },
+    { key: "purple", label: "Tím đậm", color: "bg-[#8b5cf6]" },
+    { key: "cyan", label: "Xanh lơ đậm", color: "bg-[#0891b2]" },
+    { key: "orange", label: "Cam đào", color: "bg-[#ffcc99]" },
+    { key: "light_pink", label: "Hồng nhạt", color: "bg-[#ffb6c1]" },
+    { key: "teal", label: "Xanh biển sáng", color: "bg-[#20b2aa]", showDivider: true },
+    { key: "default", label: "Mặc định", color: "bg-gray-500" },
 ];
 
 const CHART_THEME_STORAGE_KEY = "dashboard-chart-theme";
-const CHART_THEMES = new Set(["Xanh dương", "Xanh lá", "Vàng", "Đỏ", "Hồng", "Tím đậm", "Xanh lơ đậm", "Cam đào", "Hồng nhạt", "Xanh biển sáng", "Mặc định"]);
+const CHART_THEMES = new Set(["blue", "green", "yellow", "red", "pink", "purple", "cyan", "orange", "light_pink", "teal", "default"]);
 
 export default function Dashboard() {
     const { t } = useTranslation();
@@ -97,7 +86,7 @@ export default function Dashboard() {
     const { openLayout, setOpenLayout } = useLayoutStore();
     const menuButtonRefs = useRef<Partial<Record<LayoutKey, HTMLButtonElement | null>>>({});
 
-    const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["Mặc định"]) as Selection);
+    const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["default"]) as Selection);
 
     const selectedValue = useMemo(
         () => Array.from(selectedKeys).join(", ").replace(/_/g, ""),
@@ -130,7 +119,7 @@ export default function Dashboard() {
     }, []);
 
     useEffect(() => {
-        const themeToStore = selectedValue || "Mặc định";
+        const themeToStore = selectedValue || "default";
         window.localStorage.setItem(CHART_THEME_STORAGE_KEY, themeToStore);
     }, [selectedValue]);
 
@@ -144,7 +133,7 @@ export default function Dashboard() {
     }, [setOpenLayout]);
 
     const getChartColorClass = useCallback((value: string) => {
-        return THEME_CONFIG.find(t => t.label === value)?.color || "bg-gray-500";
+        return THEME_CONFIG.find(t => t.key === value)?.color || "bg-gray-500";
     }, []);
 
     return (
@@ -179,24 +168,24 @@ export default function Dashboard() {
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarGroupLabel className='px-2 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 flex items-center gap-2'>
-                             <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                             {t('dashboard.overview')}
-                         </SidebarGroupLabel>
+                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                            {t('dashboard.overview')}
+                        </SidebarGroupLabel>
                         <SidebarMenu className="gap-1">
                             <SidebarMenuItem>
                                 <SidebarMenuButton
-                                    ref={(el) => { menuButtonRefs.current['Thống kê'] = el; }}
+                                    ref={(el) => { menuButtonRefs.current['stats'] = el; }}
                                     className={cn(
                                         "h-11 px-3 rounded-sm transition-all duration-300 font-bold text-sm",
-                                        openLayout === 'Thống kê'
+                                        openLayout === 'stats'
                                             ? "bg-amber-500/10 text-amber-600 dark:text-amber-500 shadow-sm shadow-amber-500/5"
                                             : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/5"
                                     )}
-                                    onClick={() => handleSetLayout('Thống kê')}
+                                    onClick={() => handleSetLayout('stats')}
                                 >
-                                     <ChartColumnDecreasing className={cn("size-2", openLayout === 'Thống kê' && "animate-pulse")} />
-                                     <span className="text-sm">{t('dashboard.stats_overview')}</span>
-                                     {openLayout === 'Thống kê' && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
+                                    <ChartColumnDecreasing className={cn("size-2", openLayout === 'stats' && "animate-pulse")} />
+                                    <span className="text-sm">{t('dashboard.stats_overview')}</span>
+                                    {openLayout === 'stats' && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
@@ -204,9 +193,9 @@ export default function Dashboard() {
 
                     <SidebarGroup>
                         <SidebarGroupLabel className='px-2 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 flex items-center gap-2'>
-                             <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                             {t('dashboard.system_management')}
-                         </SidebarGroupLabel>
+                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                            {t('dashboard.system_management')}
+                        </SidebarGroupLabel>
                         <SidebarMenu className="gap-1">
                             {Management.map((item, index) => {
                                 const isActive = openLayout === ManagementLayoutMap[item];
@@ -222,11 +211,11 @@ export default function Dashboard() {
                                             )}
                                             onClick={() => handleSetLayout(ManagementLayoutMap[item])}
                                         >
-                                             <div className={cn("transition-transform duration-300", isActive && "scale-110")}>
-                                                 {Icon[item]}
-                                             </div>
-                                             <span>{t(`dashboard.management.${item === 'Phim' ? 'movies' : item === 'Vé' ? 'tickets' : item === 'Suất chiếu' ? 'showtimes' : item === 'Rạp chiếu' ? 'cinemas' : 'foods'}`)}</span>
-                                             {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
+                                            <div className={cn("transition-transform duration-300", isActive && "scale-110")}>
+                                                {Icon[item]}
+                                            </div>
+                                            <span>{t(`dashboard.management.${item}`)}</span>
+                                            {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 );
@@ -236,14 +225,14 @@ export default function Dashboard() {
 
                     <SidebarGroup>
                         <SidebarGroupLabel className='px-2 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 flex items-center gap-2'>
-                             <div className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
-                             {t('dashboard.config_data')}
-                         </SidebarGroupLabel>
+                            <div className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+                            {t('dashboard.config_data')}
+                        </SidebarGroupLabel>
                         <SidebarMenu className="gap-1">
                             {[
-                                 { key: 'Người dùng', icon: <User size={18} />, label: t('dashboard.management.users') },
-                                 { key: 'Đồng bộ dữ liệu', icon: <Database size={18} />, label: t('dashboard.management.sync') },
-                                 { key: 'Thống kê doanh thu', icon: <ChartColumnDecreasing size={18} />, label: t('dashboard.management.revenue') }
+                                { key: 'users', icon: <User size={18} />, label: t('dashboard.management.users') },
+                                { key: 'sync', icon: <Database size={18} />, label: t('dashboard.management.sync') },
+                                { key: 'revenue', icon: <ChartColumnDecreasing size={18} />, label: t('dashboard.management.revenue') }
                             ].map((item) => {
                                 const isActive = openLayout === item.key;
                                 return (
@@ -292,47 +281,47 @@ export default function Dashboard() {
                                             <span className='text-sm font-semibold dark:text-white truncate max-w-30'>{authUser?.username}</span>
                                             <div className="flex items-center gap-1.5">
                                                 <div className={cn("w-2 h-2 rounded-full", Number(authUser?.role) === 0 ? "bg-rose-500" : "bg-emerald-500")} />
-                                                <span className='text-[10px] font-bold tracking-widest text-zinc-500'>{Number(authUser?.role) === 0 ? 'Admin' : 'Staff'}</span>
+                                                <span className='text-[10px] font-bold tracking-widest text-zinc-500'>{Number(authUser?.role) === 0 ? t('users_tab.roles.admin') : t('users_tab.roles.staff')}</span>
                                             </div>
                                         </div>
                                     </SidebarMenuButton>
                                 </DropdownTrigger>
 
                                 <DropdownMenu variant="flat" className="min-w-50 bg-sidebar">
-                                     <DropdownItem key="profile-header" isReadOnly className="h-14 gap-2 opacity-100">
-                                         <div className="flex flex-col">
-                                             <p className="text-xs font-bold text-zinc-400">{t('dashboard.logged_in')}</p>
-                                             <p className="text-xs font-semibold truncate">{authUser?.email}</p>
-                                         </div>
-                                     </DropdownItem>
+                                    <DropdownItem key="profile-header" isReadOnly className="h-14 gap-2 opacity-100">
+                                        <div className="flex flex-col">
+                                            <p className="text-xs font-bold text-zinc-400">{t('dashboard.logged_in')}</p>
+                                            <p className="text-xs font-semibold truncate">{authUser?.email}</p>
+                                        </div>
+                                    </DropdownItem>
 
                                     <DropdownItem
                                         key='home'
                                         startContent={<House size={18} className="text-zinc-400" />}
                                         href="/"
-                                         className="font-semibold py-2"
-                                     >
-                                         {t('dashboard.home')}
-                                     </DropdownItem>
+                                        className="font-semibold py-2"
+                                    >
+                                        {t('dashboard.home')}
+                                    </DropdownItem>
 
                                     <DropdownItem
                                         key='user'
                                         showDivider
                                         startContent={<User size={18} className="text-zinc-400" />}
                                         href={`/profile/${authUser?.id}`}
-                                         className="font-semibold py-2"
-                                     >
-                                         {t('dashboard.profile')}
-                                     </DropdownItem>
+                                        className="font-semibold py-2"
+                                    >
+                                        {t('dashboard.profile')}
+                                    </DropdownItem>
 
                                     <DropdownItem
                                         key='logout'
                                         className="text-rose-500 hover:bg-rose-500/10 font-semibold py-2"
                                         startContent={<LogOut size={18} />}
-                                         onClick={logout}
-                                     >
-                                         {t('dashboard.logout')}
-                                     </DropdownItem>
+                                        onClick={logout}
+                                    >
+                                        {t('dashboard.logout')}
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </SidebarMenuItem>
@@ -350,8 +339,8 @@ export default function Dashboard() {
 
                             <div className="flex flex-col gap-0.5">
                                 <Breadcrumbs size='lg' isDisabled className="hidden sm:flex opacity-60">
-                                    <BreadcrumbItem>Dashboard</BreadcrumbItem>
-                                    <BreadcrumbItem>{openLayout}</BreadcrumbItem>
+                                    <BreadcrumbItem>{t('navbar.dashboard')}</BreadcrumbItem>
+                                    <BreadcrumbItem>{t(`dashboard.management.${openLayout}`)}</BreadcrumbItem>
                                 </Breadcrumbs>
                             </div>
                         </div>
@@ -360,11 +349,11 @@ export default function Dashboard() {
                             <div className="hidden md:flex items-center gap-2 p-1.5 bg-sidebar rounded-sm shadow-sm border border-zinc-200/50 dark:border-white/5">
                                 <Dropdown>
                                     <DropdownTrigger>
-                                         <button className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold transition-all hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm">
-                                             <span className="text-zinc-400 uppercase tracking-widest text-[9px]">{t('dashboard.chart_color')}</span>
+                                        <button className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold transition-all hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm">
+                                            <span className="text-zinc-400 uppercase tracking-widest text-[9px]">{t('dashboard.chart_color')}</span>
                                             <div className="flex items-center gap-2 border-l border-zinc-200 dark:border-white/10 pl-2.5">
                                                 <div className={cn("w-3.5 h-3.5 rounded-full shadow-inner", getChartColorClass(selectedValue))} />
-                                                <span className="text-zinc-600 dark:text-zinc-300">{selectedValue}</span>
+                                                <span className="text-zinc-600 dark:text-zinc-300">{t(`dashboard.themes.${selectedValue}`)}</span>
                                             </div>
                                             <ChevronDown size={14} className="text-zinc-400" />
                                         </button>
@@ -381,13 +370,13 @@ export default function Dashboard() {
                                     >
                                         {THEME_CONFIG.map((theme) => (
                                             <DropdownItem
-                                                key={theme.label}
+                                                key={theme.key}
                                                 startContent={<div className={`w-3.5 h-3.5 rounded-full ${theme.color} shadow-sm`} />}
                                                 showDivider={theme.showDivider}
-                                                 className="font-bold py-2.5"
-                                             >
-                                                 {t(`dashboard.themes.${theme.label === 'Xanh dương' ? 'blue' : theme.label === 'Xanh lá' ? 'green' : theme.label === 'Vàng' ? 'yellow' : theme.label === 'Đỏ' ? 'red' : theme.label === 'Hồng' ? 'pink' : theme.label === 'Tím đậm' ? 'purple' : theme.label === 'Xanh lơ đậm' ? 'cyan' : theme.label === 'Cam đào' ? 'orange' : theme.label === 'Hồng nhạt' ? 'light_pink' : theme.label === 'Xanh biển sáng' ? 'teal' : 'default'}`)}
-                                             </DropdownItem>
+                                                className="font-bold py-2.5"
+                                            >
+                                                {t(`dashboard.themes.${theme.key}`)}
+                                            </DropdownItem>
                                         ))}
                                     </DropdownMenu>
                                 </Dropdown>
@@ -395,10 +384,10 @@ export default function Dashboard() {
                                 <div className="w-px h-6 bg-zinc-200 dark:bg-white/10 mx-1" />
 
                                 <button
-                                     className="p-2 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-xl transition-all group"
-                                     onClick={handleThemeToggle}
-                                     title={isDark ? t('dashboard.switch_light') : t('dashboard.switch_dark')}
-                                 >
+                                    className="p-2 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-xl transition-all group"
+                                    onClick={handleThemeToggle}
+                                    title={isDark ? t('dashboard.switch_light') : t('dashboard.switch_dark')}
+                                >
                                     <ThemeToggler className='hidden' ref={themeTogglerRef} />
                                     {isDark
                                         ? <Sun size={20} className="text-amber-500 group-hover:rotate-45 transition-transform" />
@@ -417,7 +406,7 @@ export default function Dashboard() {
                         <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/5 blur-[100px] -ml-48 -mb-48 pointer-events-none" />
 
                         <div className="relative z-10 h-full overflow-auto">
-                            <LayoutAdmin openLayout={openLayout ?? "Thống kê"} selectValue={selectedValue} />
+                            <LayoutAdmin openLayout={openLayout ?? "stats"} selectValue={selectedValue} />
                         </div>
                     </div>
                 </main>
