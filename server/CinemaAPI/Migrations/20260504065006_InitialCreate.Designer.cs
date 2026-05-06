@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260217142415_FixMovie")]
-    partial class FixMovie
+    [Migration("20260504065006_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,12 @@ namespace CinemaAPI.Migrations
 
                     b.Property<DateOnly?>("birthday")
                         .HasColumnType("date");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("gender")
                         .IsRequired()
@@ -175,6 +181,12 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("description")
                         .HasMaxLength(5000)
                         .HasColumnType("varchar(5000)");
@@ -215,18 +227,21 @@ namespace CinemaAPI.Migrations
             modelBuilder.Entity("CinemaAPI.Models.ComboDetail", b =>
                 {
                     b.Property<int>("combo_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("combo_id"));
-
-                    b.Property<int>("quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("snack_id")
                         .HasColumnType("int");
 
-                    b.HasKey("combo_id");
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("combo_id", "snack_id");
 
                     b.HasIndex("snack_id");
 
@@ -247,6 +262,12 @@ namespace CinemaAPI.Migrations
                     b.Property<string>("code")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("description")
                         .IsRequired()
@@ -333,6 +354,12 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("location_id");
 
                     b.ToTable("Locations");
@@ -353,6 +380,12 @@ namespace CinemaAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("end_date")
                         .HasColumnType("datetime(6)");
@@ -453,7 +486,7 @@ namespace CinemaAPI.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("payment_id"));
 
                     b.Property<decimal>("amount")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("booking_id")
                         .HasColumnType("int");
@@ -463,41 +496,67 @@ namespace CinemaAPI.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<DateTime>("paidAt")
+                    b.Property<DateTime?>("paid_at")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("provider")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime>("refundAt")
+                    b.Property<DateTime?>("refund_at")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("refund_code")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("status")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("transaction_code")
+                    b.Property<string>("vnp_BankCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("vnp_CreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("vnp_ExpireDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("vnp_IpAddr")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("vnp_OrderInfo")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("vnp_ResponseCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("vnp_SecureHash")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("vnp_TransactionNo")
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
+
+                    b.Property<string>("vnp_TxnRef")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("payment_id");
 
                     b.HasIndex("booking_id");
 
-                    b.HasIndex("paidAt");
-
                     b.HasIndex("status");
 
-                    b.HasIndex("transaction_code")
+                    b.HasIndex("vnp_TransactionNo")
                         .IsUnique();
 
-                    b.HasIndex("status", "paidAt");
+                    b.HasIndex("vnp_TxnRef")
+                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -549,6 +608,12 @@ namespace CinemaAPI.Migrations
 
                     b.Property<int>("column")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("nameRoom")
                         .IsRequired()
@@ -634,19 +699,33 @@ namespace CinemaAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("showtime_id"));
 
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("endTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("movie_id")
                         .HasColumnType("int");
 
+                    b.Property<int>("pricing_model")
+                        .HasColumnType("int");
+
                     b.Property<int>("room_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("slot_id")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("startTime")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("showtime_id");
+
+                    b.HasIndex("slot_id");
 
                     b.HasIndex("startTime");
 
@@ -683,17 +762,16 @@ namespace CinemaAPI.Migrations
                     b.Property<int>("seat_id")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
                     b.Property<int?>("booking_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("held_by_user")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("hold_expires_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("hold_token")
-                        .HasColumnType("varchar(255)");
+                    b.Property<decimal?>("price_override")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -705,8 +783,6 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("booking_id");
 
-                    b.HasIndex("hold_token");
-
                     b.HasIndex("seat_id");
 
                     b.HasIndex("showtime_id", "seat_id")
@@ -717,6 +793,42 @@ namespace CinemaAPI.Migrations
                     b.ToTable("ShowTimeSeats");
                 });
 
+            modelBuilder.Entity("CinemaAPI.Models.ShowTimeSlot", b =>
+                {
+                    b.Property<int>("slot_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("slot_id"));
+
+                    b.Property<int>("dayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
+
+                    b.Property<TimeSpan>("endTime")
+                        .HasColumnType("time(6)");
+
+                    b.Property<bool>("reusable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<TimeSpan>("startTime")
+                        .HasColumnType("time(6)");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
+                    b.HasKey("slot_id");
+
+                    b.HasIndex("dayOfWeek");
+
+                    b.ToTable("ShowTimeSlots");
+                });
+
             modelBuilder.Entity("CinemaAPI.Models.Snack", b =>
                 {
                     b.Property<int>("snack_id")
@@ -724,6 +836,12 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("snack_id"));
+
+                    b.Property<DateTime?>("deleted_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("deleted_by")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("imageUrl")
                         .HasColumnType("longtext");
@@ -890,11 +1008,19 @@ namespace CinemaAPI.Migrations
 
             modelBuilder.Entity("CinemaAPI.Models.ComboDetail", b =>
                 {
+                    b.HasOne("CinemaAPI.Models.Snack", "ComboSnack")
+                        .WithMany()
+                        .HasForeignKey("combo_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CinemaAPI.Models.Snack", "Snack")
                         .WithMany("ComboDetails")
                         .HasForeignKey("snack_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ComboSnack");
 
                     b.Navigation("Snack");
                 });
@@ -1030,15 +1156,22 @@ namespace CinemaAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CinemaAPI.Models.ShowTimeSlot", "Slot")
+                        .WithMany("ShowTimes")
+                        .HasForeignKey("slot_id")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Movie");
 
                     b.Navigation("Room");
+
+                    b.Navigation("Slot");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTimePrice", b =>
                 {
                     b.HasOne("CinemaAPI.Models.ShowTime", "ShowTime")
-                        .WithMany()
+                        .WithMany("ShowTimePrices")
                         .HasForeignKey("showtime_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1170,7 +1303,14 @@ namespace CinemaAPI.Migrations
                 {
                     b.Navigation("Bookings");
 
+                    b.Navigation("ShowTimePrices");
+
                     b.Navigation("ShowTimeSeats");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.ShowTimeSlot", b =>
+                {
+                    b.Navigation("ShowTimes");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Snack", b =>

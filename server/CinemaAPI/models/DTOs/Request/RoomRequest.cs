@@ -15,6 +15,8 @@ namespace CinemaAPI.Models.DTOs
         public string? nameRoom { get; set; }
         public RoomLayoutType? roomLayoutType { get; set; }
         public decimal? price { get; set; }
+        public int? row { get; set; }
+        public int? column { get; set; }
     }
 
     public class RoomDeleteRequest

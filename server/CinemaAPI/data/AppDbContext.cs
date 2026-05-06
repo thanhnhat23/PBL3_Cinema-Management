@@ -26,6 +26,7 @@ namespace CinemaAPI.data
         public DbSet<BookingSnacks> BookingSnacks { get; set; }
         public DbSet<Snack> Snacks { get; set; }
         public DbSet<ShowTime> ShowTimes { get; set; }
+        public DbSet<ShowTimeSlot> ShowTimeSlots { get; set; }
         public DbSet<ShowTimeSeat> ShowTimeSeats { get; set; }
         public DbSet<ShowTimePrice> ShowTimePrices { get; set; }
         public DbSet<Payment> Payments { get; set; }
@@ -70,6 +71,13 @@ namespace CinemaAPI.data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ShowTimePrice>()
                 .HasKey(stp => new { stp.type_id, stp.showtime_id });
+
+            // ShowTime -> ShowTimeSlot (optional)
+            modelBuilder.Entity<ShowTime>()
+                .HasOne(s => s.Slot)
+                .WithMany(slot => slot.ShowTimes)
+                .HasForeignKey(s => s.slot_id)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Configure one-to-one
             modelBuilder.Entity<Booking>()

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CinemaAPI.Models
 {
@@ -11,6 +12,7 @@ namespace CinemaAPI.Models
 
         public int showtime_id { get; set; }
         [ForeignKey("showtime_id")]
+        [JsonIgnore]
         public virtual ShowTime ShowTime{ get; set; } = null!;
 
         public decimal base_price { get; set; }

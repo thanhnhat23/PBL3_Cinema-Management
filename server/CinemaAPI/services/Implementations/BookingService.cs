@@ -10,11 +10,13 @@ namespace CinemaAPI.Services.Implementations
     public class BookingService : BaseService<Booking>, IBookingService
     {
         private new readonly AppDbContext _dbContext;
+        private readonly ShowTimeService _showTimeService;
 
-        public BookingService(AppDbContext dbContext)
+        public BookingService(AppDbContext dbContext, ShowTimeService showTimeService)
             : base(dbContext)
         {
             _dbContext = dbContext;
+            _showTimeService = showTimeService;
         }
 
         public async Task<List<Booking>> GetAllBookings() =>
@@ -35,6 +37,17 @@ namespace CinemaAPI.Services.Implementations
                     .ThenInclude(st => st.Room)
                         .ThenInclude(r => r.Cinema)
                 .FirstOrDefaultAsync(b => b.booking_id == booking_id);
+
+        public async Task<List<Booking>> GetBookingsByUserId(Guid user_id) =>
+            await _dbContext.Bookings
+                .AsNoTracking()
+                .Include(b => b.User)
+                .Include(b => b.ShowTime)
+                    .ThenInclude(st => st.Room)
+                        .ThenInclude(r => r.Cinema)
+                .Where(b => b.user_id == user_id)
+                .OrderByDescending(b => b.createAt)
+                .ToListAsync();
 
         public async Task AddBooking(Booking booking)
         {
@@ -61,6 +74,21 @@ namespace CinemaAPI.Services.Implementations
 
             if (showTime == null)
                 throw new Exception("Showtime not found");
+
+            // Calculate seat prices if seat_ids provided
+            decimal seatTotalAmount = 0;
+            var seatIds = request.seat_ids ?? new List<int>();
+            if (seatIds.Count > 0)
+            {
+                foreach (var seatId in seatIds)
+                {
+                    var effectivePrice = await _showTimeService.GetEffectiveSeatPrice(request.showtime_id, seatId);
+                    if (effectivePrice.HasValue)
+                        seatTotalAmount += effectivePrice.Value;
+                    else
+                        throw new Exception($"Cannot resolve price for seat {seatId}");
+                }
+            }
 
             var snackRequests = (request.snacks ?? new List<BookingSnackRequest>())
                 .Where(item => item.quantity > 0)
@@ -100,7 +128,7 @@ namespace CinemaAPI.Services.Implementations
                 var inventoryDeduction = new Dictionary<int, int>();
                 var bookingSnackRows = new List<BookingSnacks>();
 
-                decimal totalAmount = 0;
+                decimal totalAmount = seatTotalAmount;  // Start with seat prices, then add snacks
                 decimal discountAmount = 0;
 
                 foreach (var snackRequest in snackRequests)
@@ -208,6 +236,26 @@ namespace CinemaAPI.Services.Implementations
                 if (bookingSnackRows.Count > 0)
                 {
                     _dbContext.BookingSnacks.AddRange(bookingSnackRows);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                // Assign booked seats to this booking if seat_ids were provided
+                if (seatIds.Count > 0)
+                {
+                    var showtimeSeats = await _dbContext.ShowTimeSeats
+                        .Where(sts => sts.showtime_id == request.showtime_id && seatIds.Contains(sts.seat_id))
+                        .ToListAsync();
+
+                    if (showtimeSeats.Count != seatIds.Count)
+                        throw new Exception("One or more seats not found in this showtime");
+
+                    foreach (var sts in showtimeSeats)
+                    {
+                        sts.booking_id = booking.booking_id;
+                        sts.status = ShowTimeSeatStatus.Booked;
+                    }
+
+                    _dbContext.ShowTimeSeats.UpdateRange(showtimeSeats);
                     await _dbContext.SaveChangesAsync();
                 }
 

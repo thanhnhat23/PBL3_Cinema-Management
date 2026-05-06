@@ -57,15 +57,9 @@ namespace CinemaAPI.Services.Implementations
         public async Task<List<Movie>> GetPopularMoviesAsync(int limit) =>
             await _dbContext.Movies
                 .AsNoTracking()
-                .Select(movie => new
-                {
-                    Movie = movie,
-                    ShowTimeCount = _dbContext.ShowTimes.Count(showTime => showTime.movie_id == movie.movie_id)
-                })
-                .OrderByDescending(item => item.ShowTimeCount)
-                .ThenByDescending(item => item.Movie.release_date)
+                .OrderByDescending(movie => movie.vote_average)
+                .ThenByDescending(movie => movie.release_date)
                 .Take(limit)
-                .Select(item => item.Movie)
                 .ToListAsync();
 
         public async Task AddMovie(Movie movie)

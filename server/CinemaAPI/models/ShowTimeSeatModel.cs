@@ -14,7 +14,7 @@ namespace CinemaAPI.Models
 
     [Index(nameof(showtime_id), nameof(status))]
     [Index(nameof(showtime_id), nameof(seat_id), IsUnique = true)]
-    [Index(nameof(hold_token))]
+    // [Index(nameof(hold_token))]
     public class ShowTimeSeat
     {
         [Key]
@@ -26,6 +26,7 @@ namespace CinemaAPI.Models
 
         public int showtime_id { get; set; }
         [ForeignKey("showtime_id")]
+        [JsonIgnore]
         public virtual ShowTime ShowTime { get; set; } = null!;
 
         public int? booking_id { get; set; }
@@ -34,11 +35,17 @@ namespace CinemaAPI.Models
 
         public ShowTimeSeatStatus status { get; set; }
 
-        public string? hold_token { get; set; }
+        // Optional per-seat price override for this showtime (nullable). Added to support seat-level pricing.
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? price_override { get; set; }
 
-        [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
-        public DateTime? hold_expires_at { get; set; }
-        
-        public string? held_by_user { get; set; }
+        // public string? hold_token { get; set; }
+        // [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
+        // public DateTime? hold_expires_at { get; set; }
+        // public string? held_by_user { get; set; }
+
+        // dùng để xử lý concurrency khi nhiều người dùng cố gắng đặt cùng một ghế trong cùng một thời điểm
+        [Timestamp]
+        public byte[]? RowVersion { get; set; }
     }
 }

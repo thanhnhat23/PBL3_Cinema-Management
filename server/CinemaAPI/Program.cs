@@ -82,6 +82,14 @@ builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<ISeatService, SeatService>();
+builder.Services.AddScoped<IShowTimeService, ShowTimeService>();
+builder.Services.AddScoped<ShowTimeService>();
+builder.Services.AddScoped<IShowTimeSeatService, ShowTimeSeatService>();
+builder.Services.AddScoped<ShowTimeSeatService>();
+builder.Services.AddScoped<IShowTimePriceService, ShowTimePriceService>();
+builder.Services.AddScoped<ShowTimePriceService>();
+builder.Services.AddScoped<IShowTimeSlotService, ShowTimeSlotService>();
+builder.Services.AddScoped<ShowTimeSlotService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();
