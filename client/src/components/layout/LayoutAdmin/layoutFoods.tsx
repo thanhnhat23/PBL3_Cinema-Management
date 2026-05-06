@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -158,7 +158,7 @@ export default function LayoutFood() {
                 );
             }
             case "price":
-                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(snack.price).toLocaleString(t('locale_code'))} Ä‘</span>;
+                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(snack.price).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>;
             case "actions":
                 return (
                     <Dropdown classNames={{
@@ -288,7 +288,7 @@ export default function LayoutFood() {
                                                         <span className="text-[10px] font-bold uppercase tracking-widest">{t('foods_tab.price_label')}</span>
                                                     </div>
                                                     <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
-                                                        {Number(selectedSnack.price).toLocaleString(t('locale_code'))} Ä‘
+                                                        {Number(selectedSnack.price).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}
                                                     </span>
                                                 </div>
                                                 <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">

@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -399,7 +399,7 @@ export default function LayoutActors() {
                                 {isAdding ? t('actors_tab.add_new_actor') : t('actors_tab.edit_actor')}
                             </DrawerHeader>
                             <DrawerBody>
-                                <p className="text-sm text-zinc-500 mb-4 py-4">{isAdding ? "Enter info for new actor" : "Make changes to actor profile"}</p>
+                                <p className="text-sm text-zinc-500 mb-4 py-4">{isAdding ? t('actors_tab.add_actor_subtitle') : t('actors_tab.edit_actor_subtitle')}</p>
  
                                 <div ref={popoverContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -441,7 +441,7 @@ export default function LayoutActors() {
                                                         className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar h-12"
                                                     >
                                                         <CalendarIcon />
-                                                        {birthdayValue ? format(birthdayValue, "PPP") : <span>Select date</span>}
+                                                        {birthdayValue ? format(birthdayValue, "PPP") : <span>{t('actors_tab.select_date')}</span>}
                                                     </Button>
                                                 </PopoverTrigger>
 

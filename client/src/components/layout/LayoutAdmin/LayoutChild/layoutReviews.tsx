@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -233,11 +233,11 @@ export default function LayoutReviews() {
                                                     </Chip>
                                                 </div>
                                                 <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 relative shadow-sm">
-                                                    <div className="absolute -top-3 left-6 text-4xl text-zinc-200 dark:text-zinc-800 font-serif leading-none">â€œ</div>
+                                                    <div className="absolute -top-3 left-6 text-4xl text-zinc-200 dark:text-zinc-800 font-serif leading-none">“</div>
                                                     <p className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 italic relative z-10">
                                                         {selectedReview.comment || t('reviews_tab.no_comment')}
                                                     </p>
-                                                    <div className="absolute -bottom-6 right-6 text-4xl text-zinc-200 dark:text-zinc-800 font-serif leading-none rotate-180">â€œ</div>
+                                                    <div className="absolute -bottom-6 right-6 text-4xl text-zinc-200 dark:text-zinc-800 font-serif leading-none rotate-180">“</div>
                                                 </div>
                                             </div>
                                         </div>

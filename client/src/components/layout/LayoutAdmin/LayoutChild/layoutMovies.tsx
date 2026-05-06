@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -201,7 +201,7 @@ export default function LayoutMovie() {
             case "status":
                 return (
                     <Chip className="capitalize" color={statusColorMap[movie.status]} size="sm" variant="flat">
-                        {getStatusLabel(movie.status)}
+                        {t(`movie_status.${getStatusLabel(movie.status)}`)}
                     </Chip>
                 );
             case "actions":
@@ -338,7 +338,7 @@ export default function LayoutMovie() {
                                                     <h2 className="text-3xl font-bold text-white drop-shadow-md">{selectedMovie.title}</h2>
                                                     <div className="flex gap-2 flex-wrap">
                                                         <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
-                                                            {getStatusLabel(selectedMovie.status)}
+                                                            {t(`movie_status.${getStatusLabel(selectedMovie.status)}`)}
                                                         </Badge>
                                                         <Badge className="bg-yellow-500/20 text-yellow-500 border-yellow-500/30 flex gap-1 items-center">
                                                             {Number(selectedMovie.vote_average ?? 0).toFixed(1)}

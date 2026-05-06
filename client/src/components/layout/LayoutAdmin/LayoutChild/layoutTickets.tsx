@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import { 
@@ -80,9 +80,9 @@ export default function LayoutTickets() {
             case "cinemaName":
                 return <span className="text-sm text-zinc-500 font-medium">{booking.cinemaName ?? "N/A"}</span>;
             case "totalAmount":
-                return <span className="text-zinc-500 line-through text-xs">{Number(booking.totalAmount ?? 0).toLocaleString(t('locale_code'))} Ä‘</span>;
+                return <span className="text-zinc-500 line-through text-xs">{Number(booking.totalAmount ?? 0).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>;
             case "finalAmount":
-                return <span className="font-bold text-emerald-600 dark:text-emerald-500">{Number(booking.finalAmount ?? 0).toLocaleString(t('locale_code'))} Ä‘</span>;
+                return <span className="font-bold text-emerald-600 dark:text-emerald-500">{Number(booking.finalAmount ?? 0).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>;
             case "status": {
                 const label = getStatusLabel(String(booking.status));
                 const key = getStatusKey(String(booking.status));
@@ -216,13 +216,13 @@ export default function LayoutTickets() {
                                                 <div className="space-y-3">
                                                     <div className="flex justify-between items-center text-sm">
                                                         <span className="text-zinc-500">{t('tickets_tab.original_price')}</span>
-                                                        <span className="text-zinc-400 line-through">{Number(selectedBooking.totalAmount ?? 0).toLocaleString(t('locale_code'))} Ä‘</span>
+                                                        <span className="text-zinc-400 line-through">{Number(selectedBooking.totalAmount ?? 0).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>
                                                     </div>
                                                     <div className="h-px bg-emerald-100 dark:bg-emerald-900/30" />
                                                     <div className="flex justify-between items-center">
                                                         <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{t('tickets_tab.total_label')}</span>
                                                         <span className="text-xl font-black text-emerald-700 dark:text-emerald-400">
-                                                            {Number(selectedBooking.finalAmount ?? 0).toLocaleString(t('locale_code'))} Ä‘
+                                                            {Number(selectedBooking.finalAmount ?? 0).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}
                                                         </span>
                                                     </div>
                                                 </div>
