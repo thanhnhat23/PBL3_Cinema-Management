@@ -63,7 +63,7 @@ namespace CinemaAPI.Services.Implementations
 
                     await _dbContext.ShowTimeSeats.AddRangeAsync(showTimeSeats);
                     await _dbContext.SaveChangesAsync();
-                    
+
                     // Reload to get the full objects with included Seats
                     showTime = await _dbContext.ShowTimes
                         .AsNoTracking()
@@ -185,7 +185,7 @@ namespace CinemaAPI.Services.Implementations
 
             // Compute startTime from date + slot startTime
             var startTime = request.date.Date + slot.startTime;
-            
+
             // Compute endTime = startTime + movie runtime (in minutes)
             var endTime = startTime.AddMinutes(movie.runtime);
 
