@@ -16,50 +16,53 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { useTranslation } from "react-i18next";
 
 export const description = "A line chart with a label"
 
-const chartData = [
-  { month: "January", ticket: 186 },
-  { month: "February", ticket: 305 },
-  { month: "March", ticket: 237 },
-  { month: "April", ticket: 73 },
-  { month: "May", ticket: 209 },
-  { month: "June", ticket: 214 },
-  { month: "July", ticket: 186 },
-  { month: "August", ticket: 305 },
-  { month: "September", ticket: 237 },
-  { month: "October", ticket: 73 },
-  { month: "November", ticket: 209 },
-  { month: "December", ticket: 214 },
+const getChartData = (t: any) => [
+  { month: t('months.january'), ticket: 186 },
+  { month: t('months.february'), ticket: 305 },
+  { month: t('months.march'), ticket: 237 },
+  { month: t('months.april'), ticket: 73 },
+  { month: t('months.may'), ticket: 209 },
+  { month: t('months.june'), ticket: 214 },
+  { month: t('months.july'), ticket: 186 },
+  { month: t('months.august'), ticket: 305 },
+  { month: t('months.september'), ticket: 237 },
+  { month: t('months.october'), ticket: 73 },
+  { month: t('months.november'), ticket: 209 },
+  { month: t('months.december'), ticket: 214 },
 ]
 
-const getChartConfig = (color: string): ChartConfig => ({
+const getChartConfig = (color: string, t: any): ChartConfig => ({
   ticket: {
-    label: "Ticket",
+    label: t('dashboard.management.tickets'),
     color: color,
   },
 })
 
 import React from "react"
 export const ChartLineCard = React.memo(({ color }: { color: string }) => {
-  const chartConfig = getChartConfig(color);
+  const { t } = useTranslation();
+  const chartConfig = getChartConfig(color, t);
+  const data = React.useMemo(() => getChartData(t), [t]);
 
   return (
     <Card className="flex flex-col bg-sidebar">
       <CardHeader className="items-center pb-0">
         <CardTitle className="flex gap-2 items-center font-bold text-xl">
             <ChartLine size={20} />
-            Thống kê số lượng vé bán ra theo tháng
+            {t('dashboard.charts.ticket_monthly.title')}
         </CardTitle>
-        <CardDescription>Cập nhật từ tháng 1 đến tháng 12</CardDescription>
+        <CardDescription>{t('dashboard.charts.ticket_monthly.desc')}</CardDescription>
       </CardHeader>
 
       <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               top: 20,
               left: 12,

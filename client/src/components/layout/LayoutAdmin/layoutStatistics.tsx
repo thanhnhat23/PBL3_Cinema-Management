@@ -1,6 +1,8 @@
 import { ChartNoAxesCombined } from "lucide-react"
+import { useTranslation } from "react-i18next";
 
 export default function LayoutStatistics() {
+    const { t } = useTranslation();
     return (
         <div className="flex flex-col gap-4">
             <div className="relative overflow-hidden rounded-sm border border-zinc-100 dark:border-zinc-800 bg-sidebar p-8 shadow-sm">
@@ -14,10 +16,10 @@ export default function LayoutStatistics() {
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Thống kê Doanh thu
+                            {t('dashboard.statistics_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Phân tích dữ liệu bán vé, doanh thu từ dịch vụ ăn uống và theo dõi tăng trưởng tài chính của cụm rạp.
+                            {t('dashboard.statistics_tab.desc')}
                         </p>
                     </div>
                 </div>

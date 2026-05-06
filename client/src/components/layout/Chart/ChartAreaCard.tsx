@@ -16,31 +16,33 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { useTranslation } from "react-i18next";
 
 export interface AreaChartItem {
   genre: string
   movie: number
 }
 
-const getChartConfig = (color: string): ChartConfig => ({
+const getChartConfig = (color: string, t: any): ChartConfig => ({
   movie: {
-    label: "Movie",
+    label: t('dashboard.management.movies'),
     color: color,
   }
 })
 
 import React from "react"
 export const ChartAreaCard = React.memo(({ color, data }: { color: string; data: AreaChartItem[] }) => {
-  const chartConfig = getChartConfig(color);
+  const { t } = useTranslation();
+  const chartConfig = getChartConfig(color, t);
 
   return (
     <Card className="flex flex-col bg-sidebar">
       <CardHeader className="items-center pb-0">
         <CardTitle className="flex gap-2 items-center font-bold text-xl">
             <ChartArea size={20} />
-            Thống kê xu hướng thể loại phim
+            {t('dashboard.charts.movie_genre.title')}
         </CardTitle>
-        <CardDescription>Tổng số lượng phim theo từng thể loại</CardDescription>
+        <CardDescription>{t('dashboard.charts.movie_genre.desc')}</CardDescription>
       </CardHeader>
 
       <CardContent>

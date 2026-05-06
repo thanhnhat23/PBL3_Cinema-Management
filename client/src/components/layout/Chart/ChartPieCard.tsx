@@ -20,29 +20,31 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { useTranslation } from "react-i18next";
 
 export interface PieChartItem {
   status: 'released' | 'upcoming' | 'ended'
   total: number
 }
 
-const getChartConfig = (colors: [string, string, string]): ChartConfig => ({
+const getChartConfig = (colors: [string, string, string], t: any): ChartConfig => ({
   released: {
-    label: "Đang chiếu",
+    label: t('movie_status.released'),
     color: colors[0],
   },
   upcoming: {
-    label: "Sắp chiếu",
+    label: t('movie_status.upcoming'),
     color: colors[1],
   },
   ended: {
-    label: "Đã kết thúc",
+    label: t('movie_status.ended'),
     color: colors[2],
   },
 } satisfies ChartConfig)
 
 export const ChartPieCard = React.memo(({ color, data }: { color: [string, string, string]; data: PieChartItem[] }) => {
-  const chartConfig = getChartConfig(color);
+  const { t } = useTranslation();
+  const chartConfig = getChartConfig(color, t);
 
   const totalMovies = React.useMemo(() => {
     return data.reduce((acc, curr) => acc + curr.total, 0)
@@ -53,9 +55,9 @@ export const ChartPieCard = React.memo(({ color, data }: { color: [string, strin
       <CardHeader className="items-center pb-0">
         <CardTitle className="flex gap-2 items-center font-bold text-xl">
             <ChartPie size={20} />
-            Thống kê trạng thái phim
+            {t('dashboard.charts.movie_status.title')}
         </CardTitle>
-        <CardDescription>Đang chiếu - Sắp chiếu - Đã kết thúc</CardDescription>
+        <CardDescription>{t('dashboard.charts.movie_status.desc')}</CardDescription>
       </CardHeader>
       
       <CardContent className="flex-1 pb-0">
@@ -109,7 +111,7 @@ export const ChartPieCard = React.memo(({ color, data }: { color: [string, strin
                           y={(viewBox.cy || 0) + 24}
                           fill="gray"
                         >
-                          Phim
+                          {t('dashboard.charts.movie_status.label')}
                         </tspan>
                       </text>
                     )

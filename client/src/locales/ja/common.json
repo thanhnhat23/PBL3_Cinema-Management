@@ -537,6 +537,53 @@
             "desc": "システム執行チームのリスト",
             "system_cinema": "シネマシステム"
         }
+    },
+    "charts": {
+        "movie_status": {
+            "title": "映画ステータス統計",
+            "desc": "上映中 - 公開予定 - 終了",
+            "label": "映画"
+        },
+        "movie_monthly": {
+            "title": "月別映画数統計",
+            "desc": "1月から12月まで更新"
+        },
+        "movie_genre": {
+            "title": "映画ジャンル傾向統計",
+            "desc": "ジャンル別の総映画数"
+        },
+        "ticket_monthly": {
+            "title": "月別チケット販売統計",
+            "desc": "1月から12月まで更新"
+        }
+    },
+    "statistics_tab": {
+        "title": "収益統計",
+        "desc": "チケット販売データ、フードサービス収益を分析し、シネマコンプレックスの財務成長を追跡します。"
+    },
+    "data_table": {
+        "add_new": "新規追加",
+        "delete_selected": "選択項目を削除",
+        "filtering": "フィルタリング中:",
+        "clear_all_filters": "すべてのフィルターをクリア",
+        "page_info": "ページ {{page}} / {{pages}}",
+        "selected_count": "{{count}} 選択中",
+        "all_selected": "すべて選択済み",
+        "deselect_all": "選択をすべて解除"
+    },
+    "movie_details": {
+        "title": "映画",
+        "runtime": "上映時間",
+        "vote_average": "スコア",
+        "vote_count": "評価数",
+        "release_date": "公開日",
+        "status": "ステータス",
+        "minutes": "分",
+        "search_placeholder": "映画タイトルで検索...",
+        "add_movie": "映画を追加",
+        "total_count": "合計 {{count}} 作品",
+        "empty_label": "映画が見つかりません",
+        "loading_label": "映画データを読み込み中..."
     }
   },
   "movie_card": {

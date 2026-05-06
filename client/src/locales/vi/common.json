@@ -537,6 +537,53 @@
             "desc": "Danh sách đội ngũ điều hành hệ thống",
             "system_cinema": "Hệ thống Cinema"
         }
+    },
+    "charts": {
+        "movie_status": {
+            "title": "Thống kê trạng thái phim",
+            "desc": "Đang chiếu - Sắp chiếu - Đã kết thúc",
+            "label": "Phim"
+        },
+        "movie_monthly": {
+            "title": "Thống kê số lượng phim theo tháng",
+            "desc": "Cập nhật từ tháng 1 đến tháng 12"
+        },
+        "movie_genre": {
+            "title": "Thống kê xu hướng thể loại phim",
+            "desc": "Tổng số lượng phim theo từng thể loại"
+        },
+        "ticket_monthly": {
+            "title": "Thống kê số lượng vé bán ra theo tháng",
+            "desc": "Cập nhật từ tháng 1 đến tháng 12"
+        }
+    },
+    "statistics_tab": {
+        "title": "Thống kê Doanh thu",
+        "desc": "Phân tích dữ liệu bán vé, doanh thu từ dịch vụ ăn uống và theo dõi tăng trưởng tài chính của cụm rạp."
+    },
+    "data_table": {
+        "add_new": "Thêm mới",
+        "delete_selected": "Xóa mục chọn",
+        "filtering": "Đang lọc:",
+        "clear_all_filters": "Xóa tất cả lọc",
+        "page_info": "Trang {{page}} / {{pages}}",
+        "selected_count": "{{count}} Đã chọn",
+        "all_selected": "Đã chọn tất cả",
+        "deselect_all": "Hủy chọn tất cả"
+    },
+    "movie_details": {
+        "title": "PHIM",
+        "runtime": "THỜI LƯỢNG",
+        "vote_average": "ĐIỂM",
+        "vote_count": "LƯỢT ĐÁNH GIÁ",
+        "release_date": "NGÀY CHIẾU",
+        "status": "TRẠNG THÁI",
+        "minutes": "phút",
+        "search_placeholder": "Tìm theo tên phim...",
+        "add_movie": "Thêm phim",
+        "total_count": "Tổng cộng {{count}} phim",
+        "empty_label": "Không có phim",
+        "loading_label": "Đang tải dữ liệu phim..."
     }
   },
   "movie_card": {

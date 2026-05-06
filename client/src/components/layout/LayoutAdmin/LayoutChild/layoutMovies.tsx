@@ -1,4 +1,5 @@
 import type { Key } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { 
@@ -43,14 +44,14 @@ import {
 } from "@/components/ui/popover"
 import { format } from "date-fns";
 
-const movieColumns: AdminColumn[] = [
+const getMovieColumns = (t: any): AdminColumn[] => [
     { name: "ID", uid: "movie_id", sortable: true },
-    { name: "PHIM", uid: "title", sortable: true },
-    { name: "THỜI LƯỢNG", uid: "runtime", sortable: true },
-    { name: "ĐIỂM", uid: "vote_average", sortable: true },
-    { name: "LƯỢT ĐÁNH GIÁ", uid: "vote_count", sortable: true },
-    { name: "NGÀY CHIẾU", uid: "release_date", sortable: true },
-    { name: "TRẠNG THÁI", uid: "status", sortable: true },
+    { name: t('movie_details.title'), uid: "title", sortable: true },
+    { name: t('movie_details.runtime'), uid: "runtime", sortable: true },
+    { name: t('movie_details.vote_average'), uid: "vote_average", sortable: true },
+    { name: t('movie_details.vote_count'), uid: "vote_count", sortable: true },
+    { name: t('movie_details.release_date'), uid: "release_date", sortable: true },
+    { name: t('movie_details.status'), uid: "status", sortable: true },
     { name: "ACTIONS", uid: "actions" },
 ];
 
@@ -67,6 +68,7 @@ const getPosterSrc = (posterPath?: string | null) => {
 };
 
 export default function LayoutMovie() {
+    const { t } = useTranslation();
     const { movies, isFetchingMovies, isUpdatingMovie, fetchAllMovies, getStatusLabel, updateMovie } = useMovieStore();
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
@@ -189,13 +191,13 @@ export default function LayoutMovie() {
                     </User>
                 );
             case "runtime":
-                return <span>{movie.runtime} phút</span>;
+                return <span>{movie.runtime} {t('movie_details.minutes')}</span>;
             case "vote_average":
                 return <span className="font-semibold">{Number(movie.vote_average ?? 0).toFixed(1)}</span>;
             case "vote_count":
                 return <span>{movie.vote_count}</span>;
             case "release_date":
-                return <span>{new Date(String(movie.release_date)).toLocaleDateString("vi-VN")}</span>;
+                return <span>{new Date(String(movie.release_date)).toLocaleDateString(t('locale_code'))}</span>;
             case "status":
                 return (
                     <Chip className="capitalize" color={statusColorMap[movie.status]} size="sm" variant="flat">
@@ -222,7 +224,7 @@ export default function LayoutMovie() {
                                     onOpen();
                                 }}
                             >
-                                Xem
+                                {t('common.view')}
                             </DropdownItem>
 
                             <DropdownItem
@@ -233,7 +235,7 @@ export default function LayoutMovie() {
                                     handleOpenEdit(movie);
                                 }}
                             >
-                                Sửa
+                                {t('common.edit')}
                             </DropdownItem>
 
                             <DropdownItem 
@@ -246,7 +248,7 @@ export default function LayoutMovie() {
                                     deleteMovie(movie.movie_id);
                                 }}
                             >
-                                Xóa
+                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -269,24 +271,24 @@ export default function LayoutMovie() {
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Phim
+                            {t('dashboard.management.movies')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Duyệt danh sách phim, cập nhật trạng thái chiếu, và quản lý thông tin chi tiết của từng tác phẩm trong hệ thống.
+                            {t('dashboard.charts.movie_genre.desc')}
                         </p>
                     </div>
                 </div>
             </div>
             <DataTableAdmin<Movie>
-                columns={movieColumns}
+                columns={getMovieColumns(t)}
                 items={movies}
                 isLoading={isFetchingMovies}
-                searchPlaceholder="Tìm theo tên phim..."
-                addButtonLabel="Thêm phim"
+                searchPlaceholder={t('movie_details.search_placeholder')}
+                addButtonLabel={t('movie_details.add_movie')}
                 onAdd={handleOpenAdd}
-                totalLabel={(count) => `Tổng cộng ${count} phim`}
-                emptyLabel="Không có phim"
-                loadingLabel="Đang tải dữ liệu phim..."
+                totalLabel={(count) => t('movie_details.total_count', { count })}
+                emptyLabel={t('movie_details.empty_label')}
+                loadingLabel={t('movie_details.loading_label')}
                 defaultSort={{ column: "release_date", direction: "descending" }}
                 rowKey={(item) => item.movie_id}
                 searchBy={(item) => item.title}

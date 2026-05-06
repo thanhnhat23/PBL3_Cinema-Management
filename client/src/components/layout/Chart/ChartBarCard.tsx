@@ -16,31 +16,33 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { useTranslation } from "react-i18next";
 
 export interface BarChartItem {
   month: string
   movie: number
 }
 
-const getChartConfig = (color: string): ChartConfig => ({
+const getChartConfig = (color: string, t: any): ChartConfig => ({
   movie: {
-    label: "Movie",
+    label: t('dashboard.management.movies'),
     color: color,
   },
 })
 
 import React from "react"
 export const ChartBarCard = React.memo(({ color, data }: { color: string; data: BarChartItem[] }) => {
-  const chartConfig = getChartConfig(color);
+  const { t } = useTranslation();
+  const chartConfig = getChartConfig(color, t);
 
   return (
     <Card className="flex flex-col bg-sidebar">
       <CardHeader className="items-center pb-0">
         <CardTitle className="flex gap-2 items-center font-bold text-xl">
             <ChartColumnBig size={20} />
-            Thống kê số lượng phim theo tháng
+            {t('dashboard.charts.movie_monthly.title')}
         </CardTitle>
-        <CardDescription>Cập nhật từ tháng 1 đến tháng 12</CardDescription>
+        <CardDescription>{t('dashboard.charts.movie_monthly.desc')}</CardDescription>
       </CardHeader>
 
       <CardContent>

@@ -537,6 +537,53 @@
         "desc": "List of system executive team",
         "system_cinema": "Cinema System"
       }
+    },
+    "charts": {
+      "movie_status": {
+        "title": "Movie Status Statistics",
+        "desc": "Released - Upcoming - Ended",
+        "label": "Movies"
+      },
+      "movie_monthly": {
+        "title": "Monthly Movie Count Statistics",
+        "desc": "Updated from January to December"
+      },
+      "movie_genre": {
+        "title": "Movie Genre Trend Statistics",
+        "desc": "Total number of movies per genre"
+      },
+      "ticket_monthly": {
+        "title": "Monthly Ticket Sales Statistics",
+        "desc": "Updated from January to December"
+      }
+    },
+    "statistics_tab": {
+      "title": "Revenue Statistics",
+      "desc": "Analyze ticket sales data, food service revenue, and track financial growth of the cinema complex."
+    },
+    "data_table": {
+      "add_new": "Add New",
+      "delete_selected": "Delete Selected",
+      "filtering": "Filtering:",
+      "clear_all_filters": "Clear All Filters",
+      "page_info": "Page {{page}} / {{pages}}",
+      "selected_count": "{{count}} Selected",
+      "all_selected": "All Selected",
+      "deselect_all": "Deselect All"
+    },
+    "movie_details": {
+        "title": "MOVIE",
+        "runtime": "RUNTIME",
+        "vote_average": "SCORE",
+        "vote_count": "REVIEWS",
+        "release_date": "RELEASE DATE",
+        "status": "STATUS",
+        "minutes": "min",
+        "search_placeholder": "Search by movie title...",
+        "add_movie": "Add Movie",
+        "total_count": "Total {{count}} movies",
+        "empty_label": "No movies found",
+        "loading_label": "Loading movie data..."
     }
   },
   "movie_card": {
