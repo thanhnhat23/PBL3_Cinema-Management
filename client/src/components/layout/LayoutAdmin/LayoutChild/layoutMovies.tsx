@@ -1,13 +1,13 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { 
-    Chip, 
-    Dropdown, 
-    DropdownItem, 
-    DropdownMenu, 
-    DropdownTrigger, 
+import {
+    Chip,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
     User,
     Drawer,
     DrawerContent,
@@ -29,18 +29,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select"
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover"
 import { format } from "date-fns";
 
@@ -52,7 +52,7 @@ const getMovieColumns = (t: any): AdminColumn[] => [
     { name: t('movie_details.vote_count'), uid: "vote_count", sortable: true },
     { name: t('movie_details.release_date'), uid: "release_date", sortable: true },
     { name: t('movie_details.status'), uid: "status", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: t('common.actions'), uid: "actions" },
 ];
 
 const statusColorMap: Record<Movie["status"], "success" | "warning" | "danger"> = {
@@ -70,7 +70,7 @@ const getPosterSrc = (posterPath?: string | null) => {
 export default function LayoutMovie() {
     const { t } = useTranslation();
     const { movies, isFetchingMovies, isUpdatingMovie, fetchAllMovies, getStatusLabel, updateMovie } = useMovieStore();
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
     const [isAdding, setIsAdding] = useState(false);
@@ -235,11 +235,11 @@ export default function LayoutMovie() {
                                     handleOpenEdit(movie);
                                 }}
                             >
-                                {t('common.edit')}
+                                {t('movie_details.edit_movie')}
                             </DropdownItem>
 
-                            <DropdownItem 
-                                key="delete" 
+                            <DropdownItem
+                                key="delete"
                                 startContent={<Trash size={18} />}
                                 className="text-danger"
                                 color="danger"
@@ -256,7 +256,7 @@ export default function LayoutMovie() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [getStatusLabel, handleOpenEdit, onOpen]);
+    }, [getStatusLabel, handleOpenEdit, onOpen, t]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -267,7 +267,7 @@ export default function LayoutMovie() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -296,11 +296,11 @@ export default function LayoutMovie() {
                 filters={[
                     {
                         uid: "status",
-                        name: "Trạng thái",
+                        name: t('movie_details.status'),
                         options: [
-                            { name: "Released", uid: "0" },
-                            { name: "Upcoming", uid: "1" },
-                            { name: "Ended", uid: "2" },
+                            { name: t('movie_status.released'), uid: "0" },
+                            { name: t('movie_status.upcoming'), uid: "1" },
+                            { name: t('movie_status.ended'), uid: "2" },
                         ]
                     }
                 ]}
@@ -311,27 +311,27 @@ export default function LayoutMovie() {
                     {() => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
-                                {selectedMovie ? `Chi tiết: ${selectedMovie.title}` : "Chi tiết phim"}
+                                {selectedMovie ? t('movie_details.view_details', { title: selectedMovie.title }) : t('movie_details.details_title')}
                             </DrawerHeader>
-                            
+
                             <DrawerBody className="px-0">
                                 {selectedMovie ? (
                                     <div className="flex flex-col gap-0">
                                         <div className="relative w-full h-64">
-                                            <Image 
+                                            <Image
                                                 src={`https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path}`}
-                                                alt={selectedMovie.title} 
+                                                alt={selectedMovie.title}
                                                 fill
-                                                className="object-cover opacity-50 grayscale-[0.5]" 
+                                                className="object-cover opacity-50 grayscale-[0.5]"
                                             />
                                             <div className="absolute inset-0 bg-linear-to-t from-sidebar to-transparent" />
                                             <div className="absolute bottom-0 left-0 p-6 flex items-end gap-6 w-full">
                                                 <div className="relative w-32 h-48 shrink-0 shadow-2xl rounded-lg overflow-hidden border-2 border-white/10">
-                                                    <Image 
+                                                    <Image
                                                         src={getPosterSrc(selectedMovie.poster_path)}
-                                                        alt={selectedMovie.title} 
+                                                        alt={selectedMovie.title}
                                                         fill
-                                                        className="object-cover" 
+                                                        className="object-cover"
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-2 pb-2">
@@ -345,7 +345,7 @@ export default function LayoutMovie() {
                                                             <StarIcon className="w-3 h-3" />
                                                         </Badge>
                                                         <Badge variant="outline" className="text-white/60 border-white/10">
-                                                            {selectedMovie.runtime} min
+                                                            {selectedMovie.runtime} {t('movie_details.minutes')}
                                                         </Badge>
                                                     </div>
                                                 </div>
@@ -355,37 +355,37 @@ export default function LayoutMovie() {
                                         <div className="p-6 flex flex-col gap-6">
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="flex flex-col gap-1.5 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
-                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Release Date</span>
-                                                    <span className="text-sm font-semibold">{new Date(String(selectedMovie.release_date)).toLocaleDateString("vi-VN")}</span>
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('movie_details.release_date_label')}</span>
+                                                    <span className="text-sm font-semibold">{new Date(String(selectedMovie.release_date)).toLocaleDateString(t('locale_code'))}</span>
                                                 </div>
                                                 <div className="flex flex-col gap-1.5 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
-                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Vote Count</span>
-                                                    <span className="text-sm font-semibold">{selectedMovie.vote_count.toLocaleString()}</span>
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('movie_details.vote_count')}</span>
+                                                    <span className="text-sm font-semibold">{selectedMovie.vote_count.toLocaleString(t('locale_code'))}</span>
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col gap-2">
-                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Overview</span>
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('movie_details.description')}</span>
                                                 <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                                                    {selectedMovie.overview || "No overview available for this movie."}
+                                                    {selectedMovie.overview || t('movie_details.no_overview')}
                                                 </p>
                                             </div>
 
                                             <div className="flex flex-col gap-4">
-                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Metadata</span>
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('movie_details.metadata')}</span>
                                                 <div className="flex flex-wrap gap-2">
                                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-sidebar border border-zinc-200 dark:border-zinc-800 text-[11px] font-medium">
                                                         <span className="text-zinc-400">ID:</span> {selectedMovie.movie_id}
                                                     </div>
                                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-sidebar border border-zinc-200 dark:border-zinc-800 text-[11px] font-medium">
-                                                        <span className="text-zinc-400">18+:</span> {selectedMovie.adult ? "Yes" : "No"}
+                                                        <span className="text-zinc-400">{t('movie_details.age_limit')}:</span> {selectedMovie.adult ? "18+" : "All"}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center text-zinc-500">Không có dữ liệu phim.</div>
+                                    <div className="p-12 text-center text-zinc-500">{t('movie_details.no_data')}</div>
                                 )}
                             </DrawerBody>
                         </>
@@ -398,16 +398,16 @@ export default function LayoutMovie() {
                     {() => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1">
-                                {isAdding ? "Thêm phim mới" : "Sửa phim"}
+                                {isAdding ? t('movie_details.add_new_movie') : t('movie_details.edit_movie')}
                             </DrawerHeader>
 
                             <DrawerBody>
-                                <p className="text-sm text-zinc-500">Thực hiện các thay đổi cho phim</p>
+                                <p className="text-sm text-zinc-500">{t('movie_details.edit_desc')}</p>
 
                                 <div ref={popoverContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="title" className="text-right">
-                                            Tên phim
+                                            {t('movie_details.movie_name')}
                                         </Label>
 
                                         <Input
@@ -420,13 +420,13 @@ export default function LayoutMovie() {
 
                                     <div className="grid grid-cols-4 items-start gap-4">
                                         <Label htmlFor="overview" className="text-right pt-2">
-                                            Mô tả
+                                            {t('movie_details.description')}
                                         </Label>
 
                                         <Textarea
                                             id="overview"
                                             value={editForm.overview}
-                                            placeholder="Nhập mô tả phim"
+                                            placeholder={t('movie_details.enter_description')}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, overview: event.target.value }))}
                                             className="col-span-3 text-sm min-h-auto"
                                         />
@@ -434,7 +434,7 @@ export default function LayoutMovie() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="runtime" className="text-right">
-                                            Thời lượng
+                                            {t('movie_details.runtime_label')}
                                         </Label>
 
                                         <Input
@@ -449,7 +449,7 @@ export default function LayoutMovie() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="release_date" className="text-right">
-                                            Ngày chiếu
+                                            {t('movie_details.release_date_label')}
                                         </Label>
 
                                         <div className="col-span-3">
@@ -461,7 +461,7 @@ export default function LayoutMovie() {
                                                         className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
                                                     >
                                                         <CalendarIcon />
-                                                        {releaseDateValue ? format(releaseDateValue, "PPP") : <span>Chọn ngày</span>}
+                                                        {releaseDateValue ? format(releaseDateValue, "PPP") : <span>{t('movie_details.select_date')}</span>}
                                                     </Button>
                                                 </PopoverTrigger>
 
@@ -483,7 +483,7 @@ export default function LayoutMovie() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="end_date" className="text-right">
-                                            Kết thúc
+                                            {t('movie_details.end_date_label')}
                                         </Label>
 
                                         <div className="col-span-3">
@@ -495,7 +495,7 @@ export default function LayoutMovie() {
                                                         className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
                                                     >
                                                         <CalendarIcon />
-                                                        {endDateValue ? format(endDateValue, "PPP") : <span>Chọn ngày</span>}
+                                                        {endDateValue ? format(endDateValue, "PPP") : <span>{t('movie_details.select_date')}</span>}
                                                     </Button>
                                                 </PopoverTrigger>
 
@@ -517,7 +517,7 @@ export default function LayoutMovie() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="status" className="text-right">
-                                            Trạng thái
+                                            {t('movie_details.status')}
                                         </Label>
 
                                         <Select
@@ -525,15 +525,15 @@ export default function LayoutMovie() {
                                             onValueChange={(value) => setEditForm((prev) => ({ ...prev, status: value }))}
                                         >
                                             <SelectTrigger className="col-span-3 w-full bg-sidebar">
-                                                <SelectValue placeholder="Chọn trạng thái" />
+                                                <SelectValue placeholder={t('movie_details.status')} />
                                             </SelectTrigger>
 
                                             <SelectContent container={popoverContainerRef.current}>
                                                 <SelectGroup>
-                                                    <SelectLabel>Trạng thái</SelectLabel>
-                                                    <SelectItem value="0">Released</SelectItem>
-                                                    <SelectItem value="1">Upcoming</SelectItem>
-                                                    <SelectItem value="2">Ended</SelectItem>
+                                                    <SelectLabel>{t('movie_details.status')}</SelectLabel>
+                                                    <SelectItem value="0">{t('movie_status.released')}</SelectItem>
+                                                    <SelectItem value="1">{t('movie_status.upcoming')}</SelectItem>
+                                                    <SelectItem value="2">{t('movie_status.ended')}</SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -567,7 +567,7 @@ export default function LayoutMovie() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="adult" className="text-right">
-                                            Giới hạn tuổi
+                                            {t('movie_details.age_limit')}
                                         </Label>
 
                                         <Select
@@ -575,7 +575,7 @@ export default function LayoutMovie() {
                                             onValueChange={(value) => setEditForm((prev) => ({ ...prev, adult: value }))}
                                         >
                                             <SelectTrigger className="col-span-3 w-full bg-sidebar">
-                                                <SelectValue placeholder="Chọn giới hạn tuổi" />
+                                                <SelectValue placeholder={t('movie_details.age_limit')} />
                                             </SelectTrigger>
 
                                             <SelectContent container={popoverContainerRef.current}>
@@ -597,7 +597,7 @@ export default function LayoutMovie() {
                                     disabled={isUpdatingMovie}
                                     className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
                                 >
-                                    {isUpdatingMovie ? "Đang lưu..." : "Lưu thay đổi"}
+                                    {isUpdatingMovie ? t('movie_details.saving') : t('movie_details.save_changes')}
                                 </button>
                             </DrawerFooter>
                         </>

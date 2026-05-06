@@ -1,23 +1,13 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
 import { EllipsisVertical, Eye, Ban, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { AvatarElement } from "@/components/ui/avatar";
 import { useUserStore, type User as AppUser } from "@/stores/useUserStore";
 import DataTableAdmin, { type AdminColumn } from "../dataTable";
-
-const columns: AdminColumn[] = [
-    { name: "ID", uid: "user_id", sortable: true },
-    { name: "NGƯỜI DÙNG", uid: "username", sortable: true },
-    { name: "EMAIL", uid: "email", sortable: true },
-    { name: "ROLE", uid: "role", sortable: true },
-    { name: "TUỔI", uid: "age", sortable: true },
-    { name: "XÁC MINH", uid: "isVerified", sortable: true },
-    { name: "TRẠNG THÁI", uid: "isBanned", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
-];
 
 const verifyColorMap: Record<string, "success" | "warning"> = {
     true: "success",
@@ -36,15 +26,6 @@ const roleColorMap: Record<string, "danger" | "warning" | "primary" | "default">
     unknown: "default",
 };
 
-const getRoleLabel = (role: string) => {
-    const normalized = String(role ?? "").trim().toLowerCase();
-
-    if (normalized === "0" || normalized === "admin") return "Admin";
-    if (normalized === "1" || normalized === "staff") return "Staff";
-    if (normalized === "2" || normalized === "user") return "User";
-    return "Unknown";
-};
-
 const getRoleNumber = (role: string) => {
     const normalized = String(role ?? "").trim().toLowerCase();
 
@@ -54,7 +35,28 @@ const getRoleNumber = (role: string) => {
 };
 
 export default function LayoutUsers() {
+    const { t } = useTranslation();
     const { users, isFetchingAllUsers, fetchAllUsers } = useUserStore();
+
+    const columns: AdminColumn[] = useMemo(() => [
+        { name: "ID", uid: "user_id", sortable: true },
+        { name: t('users_tab.columns.user'), uid: "username", sortable: true },
+        { name: t('common.email'), uid: "email", sortable: true },
+        { name: t('users_tab.columns.role'), uid: "role", sortable: true },
+        { name: t('users_tab.columns.age'), uid: "age", sortable: true },
+        { name: t('users_tab.columns.verify'), uid: "isVerified", sortable: true },
+        { name: t('users_tab.columns.status'), uid: "isBanned", sortable: true },
+        { name: t('common.actions'), uid: "actions" },
+    ], [t]);
+
+    const getRoleLabel = useCallback((role: string) => {
+        const normalized = String(role ?? "").trim().toLowerCase();
+
+        if (normalized === "0" || normalized === "admin") return t('users_tab.roles.admin');
+        if (normalized === "1" || normalized === "staff") return t('users_tab.roles.staff');
+        if (normalized === "2" || normalized === "user") return t('users_tab.roles.user');
+        return t('users_tab.roles.unknown');
+    }, [t]);
 
     useEffect(() => {
         fetchAllUsers();
@@ -87,8 +89,11 @@ export default function LayoutUsers() {
                 );
             case "role": {
                 const roleLabel = getRoleLabel(user.role);
+                const roleKey = String(user.role).toLowerCase() === "0" || String(user.role).toLowerCase() === "admin" ? "admin" :
+                    String(user.role).toLowerCase() === "1" || String(user.role).toLowerCase() === "staff" ? "staff" :
+                        String(user.role).toLowerCase() === "2" || String(user.role).toLowerCase() === "user" ? "user" : "unknown";
                 return (
-                    <Chip className="capitalize" color={roleColorMap[roleLabel.toLowerCase()] ?? "default"} size="sm" variant="flat">
+                    <Chip className="capitalize" color={roleColorMap[roleKey] ?? "default"} size="sm" variant="flat">
                         {roleLabel}
                     </Chip>
                 );
@@ -96,13 +101,13 @@ export default function LayoutUsers() {
             case "isVerified":
                 return (
                     <Chip className="capitalize" color={verifyColorMap[String(user.isVerified)]} size="sm" variant="flat">
-                        {user.isVerified ? "Đã xác minh" : "Chưa xác minh"}
+                        {user.isVerified ? t('users_tab.verify_status.verified') : t('users_tab.verify_status.unverified')}
                     </Chip>
                 );
             case "isBanned":
                 return (
                     <Chip className="capitalize" color={bannedColorMap[String(user.isBanned)]} size="sm" variant="flat">
-                        {user.isBanned ? "Bị khóa" : "Hoạt động"}
+                        {user.isBanned ? t('users_tab.banned_status.banned') : t('users_tab.banned_status.active')}
                     </Chip>
                 );
             case "actions":
@@ -117,11 +122,11 @@ export default function LayoutUsers() {
                         </DropdownTrigger>
                         <DropdownMenu>
                             <DropdownItem key="view" startContent={<Eye size={18} />} showDivider>
-                                Xem
+                                {t('common.view')}
                             </DropdownItem>
 
                             <DropdownItem key="delete" startContent={<Ban size={18} />} className="text-danger" color="danger">
-                                Cấm
+                                {t('users_tab.actions.ban')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -129,7 +134,7 @@ export default function LayoutUsers() {
             default:
                 return String(cellValue ?? "");
         }
-    }, []);
+    }, [getRoleLabel, t]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -140,14 +145,14 @@ export default function LayoutUsers() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Người dùng
+                            {t('users_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Xem danh sách, phân quyền và quản lý trạng thái hoạt động của toàn bộ người dùng trong hệ thống.
+                            {t('users_tab.desc')}
                         </p>
                     </div>
                 </div>
@@ -157,11 +162,11 @@ export default function LayoutUsers() {
                 columns={columns}
                 items={users}
                 isLoading={isFetchingAllUsers}
-                searchPlaceholder="Tìm theo tên người dùng..."
-                addButtonLabel="Thêm user"
-                totalLabel={(count) => `Tổng cộng ${count} người dùng`}
-                emptyLabel="Không có người dùng"
-                loadingLabel="Đang tải dữ liệu người dùng..."
+                searchPlaceholder={t('users_tab.search_placeholder')}
+                addButtonLabel={t('users_tab.add_user')}
+                totalLabel={(count) => t('users_tab.total_count', { count })}
+                emptyLabel={t('users_tab.empty_label')}
+                loadingLabel={t('users_tab.loading_label')}
                 defaultSort={{ column: "username", direction: "ascending" }}
                 rowKey={(item) => `${item.user_id || "user"}-${item.profile_slug}-${item.email}-${item.createdAt}`}
                 searchBy={(item) => item.username}
@@ -170,27 +175,27 @@ export default function LayoutUsers() {
                 filters={[
                     {
                         uid: "role",
-                        name: "Vai trò",
+                        name: t('users_tab.columns.role'),
                         options: [
-                            { name: "Admin", uid: "0" },
-                            { name: "Staff", uid: "1" },
-                            { name: "User", uid: "2" },
+                            { name: t('users_tab.roles.admin'), uid: "0" },
+                            { name: t('users_tab.roles.staff'), uid: "1" },
+                            { name: t('users_tab.roles.user'), uid: "2" },
                         ]
                     },
                     {
                         uid: "isVerified",
-                        name: "Xác minh",
+                        name: t('users_tab.columns.verify'),
                         options: [
-                            { name: "Đã xác minh", uid: "true" },
-                            { name: "Chưa xác minh", uid: "false" },
+                            { name: t('users_tab.verify_status.verified'), uid: "true" },
+                            { name: t('users_tab.verify_status.unverified'), uid: "false" },
                         ]
                     },
                     {
                         uid: "isBanned",
-                        name: "Trạng thái",
+                        name: t('users_tab.columns.status'),
                         options: [
-                            { name: "Bị khóa", uid: "true" },
-                            { name: "Hoạt động", uid: "false" },
+                            { name: t('users_tab.banned_status.banned'), uid: "true" },
+                            { name: t('users_tab.banned_status.active'), uid: "false" },
                         ]
                     }
                 ]}

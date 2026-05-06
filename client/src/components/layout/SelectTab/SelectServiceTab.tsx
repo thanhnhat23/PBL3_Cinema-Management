@@ -239,7 +239,7 @@ function ShowtimeSelector({
                                 )}
                             >
                                 <span className="text-xs font-bold">
-                                    {new Date(st.startTime).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
+                                    {new Date(st.startTime).toLocaleTimeString(t('locale_code'), { hour: "2-digit", minute: "2-digit" })}
                                 </span>
                             </button>
                         );

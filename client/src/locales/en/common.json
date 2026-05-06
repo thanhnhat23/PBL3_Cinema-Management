@@ -1,11 +1,21 @@
 {
+  "locale_code": "en-US",
   "common": {
     "success": "Success",
     "error": "Error",
-    "loading": "Loading...",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "search": "Search",
+    "status": "Status",
+    "loading": "Loading...",
     "currency_vnd": "VND",
+    "email": "Email",
+    "actions": "Actions",
+    "management_system": "Management System",
     "actors": "Actors",
     "reviews": "Reviews",
     "copyright": "© 2026 MilkyWayyy Cinema - All rights reserved"
@@ -142,30 +152,30 @@
     },
     "feature_updating": "This feature is being updated to provide you with the best experience.",
     "service_tab": {
-        "step1": "1. Select show date",
-        "step2": "2. Select cinema",
-        "step3": "3. Select showtime",
-        "no_showtimes": "No available showtimes",
-        "days": {
-            "sun": "Sunday",
-            "mon": "Monday",
-            "tue": "Tuesday",
-            "wed": "Wednesday",
-            "thu": "Thursday",
-            "fri": "Friday",
-            "sat": "Saturday"
-        }
+      "step1": "1. Select show date",
+      "step2": "2. Select cinema",
+      "step3": "3. Select showtime",
+      "no_showtimes": "No available showtimes",
+      "days": {
+        "sun": "Sunday",
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday"
+      }
     },
     "seat_tab": {
-        "change_showtime": "Change showtime",
-        "no_seat_info": "No seat map information found",
-        "screen": "Screen",
-        "legend": {
-            "single": "Single seat",
-            "double": "Double seat",
-            "selecting": "Selecting",
-            "sold": "Sold"
-        }
+      "change_showtime": "Change showtime",
+      "no_seat_info": "No seat map information found",
+      "screen": "Screen",
+      "legend": {
+        "single": "Single seat",
+        "double": "Double seat",
+        "selecting": "Selecting",
+        "sold": "Sold"
+      }
     }
   },
   "cinema_detail": {
@@ -528,10 +538,22 @@
       "title": "Dashboard Overview",
       "desc": "A comprehensive view of system performance, data volume, and key operating metrics of the cinema complex.",
       "metrics": {
-        "movies": { "title": "Movies", "desc": "Total number of movies in database" },
-        "reviews": { "title": "Reviews", "desc": "Total number of reviews in database" },
-        "actors": { "title": "Actors", "desc": "Total number of actors in database" },
-        "genres": { "title": "Genres", "desc": "Total number of genres in database" },
+        "movies": {
+          "title": "Movies",
+          "desc": "Total number of movies in database"
+        },
+        "reviews": {
+          "title": "Reviews",
+          "desc": "Total number of reviews in database"
+        },
+        "actors": {
+          "title": "Actors",
+          "desc": "Total number of actors in database"
+        },
+        "genres": {
+          "title": "Genres",
+          "desc": "Total number of genres in database"
+        },
         "stat_label": "{{item}} Statistics"
       },
       "admin_team": {
@@ -574,18 +596,18 @@
       "deselect_all": "Deselect All"
     },
     "movie_details": {
-        "title": "MOVIE",
-        "runtime": "RUNTIME",
-        "vote_average": "SCORE",
-        "vote_count": "REVIEWS",
-        "release_date": "RELEASE DATE",
-        "status": "STATUS",
-        "minutes": "min",
-        "search_placeholder": "Search by movie title...",
-        "add_movie": "Add Movie",
-        "total_count": "Total {{count}} movies",
-        "empty_label": "No movies found",
-        "loading_label": "Loading movie data..."
+      "title": "MOVIE",
+      "runtime": "RUNTIME",
+      "vote_average": "SCORE",
+      "vote_count": "REVIEWS",
+      "release_date": "RELEASE DATE",
+      "status": "STATUS",
+      "minutes": "min",
+      "search_placeholder": "Search by movie title...",
+      "add_movie": "Add Movie",
+      "total_count": "Total {{count}} movies",
+      "empty_label": "No movies found",
+      "loading_label": "Loading movie data..."
     }
   },
   "movie_card": {
@@ -627,5 +649,359 @@
     "sci_fi_fantasy": "Sci-Fi & Fantasy",
     "soap": "Soap",
     "talk": "Talk"
+  },
+  "movie_details": {
+    "title": "Title",
+    "runtime": "Runtime",
+    "vote_average": "Score",
+    "vote_count": "Reviews",
+    "release_date": "Release Date",
+    "status": "Status",
+    "minutes": "min",
+    "search_placeholder": "Search by movie title...",
+    "add_movie": "Add Movie",
+    "total_count": "Total {{count}} movies",
+    "empty_label": "No movies found",
+    "loading_label": "Loading movie data...",
+    "details_title": "Movie Details",
+    "view_details": "Details: {{title}}",
+    "edit_movie": "Edit Movie",
+    "add_new_movie": "Add New Movie",
+    "movie_name": "Movie Name",
+    "description": "Description",
+    "enter_description": "Enter movie description",
+    "runtime_label": "Runtime",
+    "release_date_label": "Release Date",
+    "end_date_label": "End Date",
+    "select_date": "Select Date",
+    "save_changes": "Save Changes",
+    "saving": "Saving...",
+    "close": "Close",
+    "metadata": "Metadata",
+    "age_limit": "Age Limit",
+    "no_overview": "No overview available for this movie.",
+    "no_data": "No movie data available.",
+    "edit_desc": "Make changes to the movie"
+  },
+  "foods_tab": {
+    "title": "Menu Management",
+    "desc": "Configure food, drink categories and promotional combo packages.",
+    "search_placeholder": "Search for food, drinks...",
+    "add_snack": "Add Item",
+    "total_items": "Total {{count}} products",
+    "empty_label": "Snack list is empty",
+    "loading_label": "Loading menu data...",
+    "details_title": "Product Details",
+    "view_details": "View Details",
+    "edit_snack": "Edit Item",
+    "add_new_snack": "Add New Item",
+    "name_label": "Product Name",
+    "name_placeholder": "e.g. Cheese Popcorn...",
+    "type_label": "Category",
+    "type_placeholder": "Select type",
+    "price_label": "Price (USD)",
+    "price_placeholder": "e.g. 5.50",
+    "image_label": "Image URL",
+    "image_placeholder": "https://...",
+    "close_details": "Close Details",
+    "processing": "Processing...",
+    "save_changes": "Save Changes",
+    "types": {
+      "food": "Food",
+      "drink": "Drink",
+      "combo": "Combo"
+    }
+  },
+  "location_tab": {
+    "locations": "Locations",
+    "cinemas": "Cinemas",
+    "rooms": "Rooms"
+  },
+  "locations_tab": {
+    "title": "Region & Location Management",
+    "desc": "Configure the list of cities and cinema locations for easy lookup and booking.",
+    "search_placeholder": "Search for city...",
+    "add_location": "Add Location",
+    "total_count": "Total {{count}} locations",
+    "empty_label": "No locations found",
+    "loading_label": "Loading location data...",
+    "details_title": "Location Details",
+    "edit_location": "Edit Location",
+    "add_new_location": "Add New Location",
+    "city_label": "City Name",
+    "city_placeholder": "e.g. New York, London...",
+    "system_management": "System Management",
+    "system_desc": "This location is currently being used to categorize cinema complexes nationwide.",
+    "no_data": "No data available.",
+    "saving": "Saving...",
+    "save_changes": "Save Changes",
+    "columns": {
+        "city": "City"
+    }
+  },
+  "cinemas_tab": {
+    "title": "Cinema System Management",
+    "desc": "Manage cinema complexes, addresses, hotlines, and facility data across the system.",
+    "search_placeholder": "Search by cinema name...",
+    "add_cinema": "Add Cinema",
+    "total_count": "Total {{count}} cinemas",
+    "empty_label": "No cinemas found",
+    "loading_label": "Loading cinema data...",
+    "details_title": "Cinema Details",
+    "edit_cinema": "Edit Cinema",
+    "add_new_cinema": "Add New Cinema",
+    "name_label": "Cinema Name",
+    "address_label": "Address",
+    "city_label": "City",
+    "phone_label": "Phone Number",
+    "hotline": "Hotline",
+    "coordinates": "Coordinates",
+    "intro_label": "Introduction",
+    "intro_placeholder": "Enter cinema description",
+    "image_label": "Overview Image",
+    "save_changes": "Save Changes",
+    "saving": "Saving...",
+    "no_data": "No cinema data available.",
+    "edit_desc": "Make changes to the cinema",
+    "columns": {
+        "name": "Cinema Name",
+        "address": "Address",
+        "city": "City",
+        "phone": "Phone Number"
+    }
+  },
+  "rooms_tab": {
+    "title": "Theater Room Management",
+    "desc": "Configure seat layouts, room types (IMAX, 4DX, Standard), and base ticket prices for each theater.",
+    "search_placeholder": "Search by room name...",
+    "add_room": "Add Room",
+    "total_count": "Total {{count}} theater rooms",
+    "empty_label": "No rooms found",
+    "loading_label": "Loading theater data...",
+    "details_title": "Room Details",
+    "edit_room": "Edit Room",
+    "add_new_room": "Add New Room",
+    "name_label": "Room Name",
+    "type_label": "Room Type",
+    "price_label": "Base Price (USD)",
+    "rows_label": "Rows",
+    "cols_label": "Columns",
+    "layout_label": "Layout",
+    "capacity_label": "Capacity",
+    "capacity_value": "{{count}} seats",
+    "seat_map_label": "System Seat Layout",
+    "auto_generated": "Auto-generated",
+    "seat_single": "Single Seat",
+    "seat_couple": "Couple Seat (Last 2 rows)",
+    "edit_warning": "Changing the number of rows/columns will delete the old seat map and regenerate it. This action cannot be performed if the room has active showtimes.",
+    "saving": "Saving...",
+    "save_changes": "Save Changes",
+    "columns": {
+        "name": "Room Name",
+        "cinema": "Cinema",
+        "type": "Room Type",
+        "price": "Price",
+        "layout": "Row/Col"
+    }
+  },
+  "tickets_tab": {
+    "title": "Transaction & Ticket Management",
+    "desc": "Track booking history, manage payment status, and view customer transaction details.",
+    "search_placeholder": "Search by username...",
+    "total_count": "Total {{count}} tickets",
+    "empty_label": "No tickets found",
+    "loading_label": "Loading ticket data...",
+    "details_title": "Transaction Details",
+    "cancel_ticket": "Cancel Ticket",
+    "view_details": "Ticket Details",
+    "payment_info": "Payment Information",
+    "original_price": "Original Price",
+    "booking_date": "Booking Date",
+    "total_label": "Total",
+    "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "unknown": "Unknown"
+    },
+    "columns": {
+        "user": "User",
+        "cinema": "Cinema",
+        "total": "Total Amount",
+        "final": "Final Amount",
+        "status": "Status",
+        "created": "Created At"
+    }
+  },
+  "coupons_tab": {
+    "title": "Coupon & Promo Management",
+    "desc": "Create, issue, and manage promotional offers and discount codes for customers during special occasions.",
+    "search_placeholder": "Search by coupon code...",
+    "add_coupon": "Add New Coupon",
+    "total_count": "Total {{count}} coupons",
+    "empty_label": "No coupons found",
+    "loading_label": "Loading coupon data...",
+    "details_title": "Coupon Details",
+    "edit_coupon": "Edit Coupon",
+    "add_new_coupon": "Create New Coupon",
+    "code_label": "Coupon Code",
+    "desc_label": "Description",
+    "desc_placeholder": "e.g. 50% off for orders over $50...",
+    "type_label": "Discount Type",
+    "value_label": "Discount Value",
+    "min_order_label": "Min Order Value (USD)",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "category_label": "Coupon Category",
+    "cat_normal": "Normal Coupon",
+    "cat_holiday": "Holiday/Event Coupon",
+    "special_event": "Special Event",
+    "normal_coupon": "Normal Coupon",
+    "applied_all": "This coupon is applied to all showtimes if the minimum order condition is met.",
+    "no_data": "Please select a coupon to view information.",
+    "saving": "Processing...",
+    "save_changes": "Save Changes",
+    "processing": "Processing...",
+    "create_btn": "Create Coupon",
+    "types": {
+        "percentage": "Percentage (%)",
+        "fixed": "Fixed Amount ($)"
+    },
+    "columns": {
+        "code": "Coupon Code",
+        "type": "Type",
+        "value": "Discount",
+        "min": "Min Value",
+        "status": "Status",
+        "expiry": "Expiry"
+    }
+  },
+  "actors_tab": {
+    "title": "Actor Management",
+    "desc": "Manage actor profiles, biographies, and the list of cinematographic works they have participated in.",
+    "search_placeholder": "Search by actor name...",
+    "add_actor": "Add Actor",
+    "total_count": "Total {{count}} actors",
+    "empty_label": "No actors found",
+    "loading_label": "Loading actor data...",
+    "details_title": "Actor Details",
+    "edit_actor": "Edit Actor",
+    "add_new_actor": "Add New Actor",
+    "name_label": "Full Name",
+    "gender_label": "Gender",
+    "birthday_label": "Birthday",
+    "birthplace_label": "Place of Birth",
+    "bio_label": "Biography",
+    "bio_placeholder": "Enter actor biography",
+    "profile_label": "Profile Path",
+    "movies_participated": "Movies Participated",
+    "no_movies": "No data available.",
+    "no_bio": "No biography data available for this actor.",
+    "saving": "Saving...",
+    "save_changes": "Save Changes",
+    "genders": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+    },
+    "columns": {
+        "name": "Actor",
+        "gender": "Gender",
+        "birthday": "Birthday",
+        "birthplace": "Birthplace"
+    }
+  },
+  "reviews_tab": {
+    "title": "Review Management",
+    "desc": "Moderate and manage user reviews and comments to ensure the quality of community content.",
+    "search_placeholder": "Search by reviewer name...",
+    "total_count": "Total {{count}} reviews",
+    "empty_label": "No reviews found",
+    "loading_label": "Loading review data...",
+    "details_title": "Review Details",
+    "view_details": "View Details",
+    "ban_user": "Ban User",
+    "movie_label": "Movie",
+    "date_label": "Created At",
+    "content_label": "Review Content",
+    "no_comment": "This user left no comment content.",
+    "no_data": "No data available.",
+    "status": {
+        "approved": "Approved",
+        "pending": "Pending"
+    },
+    "columns": {
+        "user": "User",
+        "movie": "Movie",
+        "rating": "Rating",
+        "content": "Content",
+        "status": "Status",
+        "created": "Created At"
+    }
+  },
+  "showtimes_tab": {
+    "title": "Showtime Management",
+    "desc": "Schedule movie screenings, manage time slots, and allocate theaters."
+  },
+  "ticket_tab": {
+    "tickets": "Tickets",
+    "coupons": "Coupons"
+  },
+  "sync_tab": {
+    "title": "Data Synchronization",
+    "desc": "Manage data flow from TMDB to internal system.",
+    "tasks": {
+      "upcoming": { "name": "Upcoming Movies", "desc": "Sync upcoming movies list from TMDB." },
+      "nowplaying": { "name": "Now Playing", "desc": "Update currently screening movie data." },
+      "popular": { "name": "Popular Movies", "desc": "Fetch top-rated movies from TMDB." },
+      "reviews": { "name": "Movie Reviews", "desc": "Update user reviews and scores." },
+      "status": { "name": "System Status", "desc": "Check internal data status." }
+    },
+    "status": {
+      "ready": "System: Ready",
+      "syncing": "Status: Syncing...",
+      "available": "Available",
+      "in_progress": "In Progress",
+      "start": "Start Sync",
+      "stop": "Stop Task",
+      "integration": "TMDB Integration",
+      "priority": "Priority: High",
+      "type_label": "Type"
+    }
+  },
+  "users_tab": {
+    "title": "User Management",
+    "desc": "View list, assign permissions and manage the status of all users in the system.",
+    "search_placeholder": "Search by username...",
+    "add_user": "Add User",
+    "total_count": "Total {{count}} users",
+    "empty_label": "No users found",
+    "loading_label": "Loading user data...",
+    "columns": {
+      "user": "User",
+      "role": "Role",
+      "age": "Age",
+      "verify": "Verify",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "verify_status": {
+      "verified": "Verified",
+      "unverified": "Unverified"
+    },
+    "banned_status": {
+      "banned": "Banned",
+      "active": "Active"
+    },
+    "roles": {
+      "admin": "Admin",
+      "staff": "Staff",
+      "user": "User",
+      "unknown": "Unknown"
+    },
+    "actions": {
+      "view": "View",
+      "ban": "Ban"
+    }
   }
 }

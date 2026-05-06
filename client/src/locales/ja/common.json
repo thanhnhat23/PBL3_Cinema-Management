@@ -1,11 +1,21 @@
 {
+  "locale_code": "ja-JP",
   "common": {
     "success": "成功",
     "error": "エラー",
-    "loading": "読み込み中...",
+    "view": "見る",
+    "edit": "編集",
+    "delete": "削除",
+    "save": "保存",
     "cancel": "キャンセル",
     "confirm": "確認",
+    "search": "検索",
+    "status": "ステータス",
+    "loading": "読み込み中...",
     "currency_vnd": "VNĐ",
+    "email": "メール",
+    "actions": "操作",
+    "management_system": "管理システム",
     "actors": "俳優",
     "reviews": "レビュー",
     "copyright": "© 2026 MilkyWayyy Cinema - 全著作権所有"
@@ -35,7 +45,7 @@
     "cinema_experience": "映画体験"
   },
   "footer": {
-    "description": "最新のテクノロジーで究極 of 映画体験を。すべてのお客様に素晴らしいエンターテインメントのひとときをお届けすることをお約束します。",
+    "description": "最新のテクノロジーで究極の映画体験を。すべてのお客様に素晴らしいエンターテインメントのひとときをお届けすることをお約束します。",
     "cinema_title": "シネマ",
     "support_title": "サポート",
     "newsletter_title": "ニュースレター購読",
@@ -44,45 +54,45 @@
     "send_button": "送信",
     "privacy_note": "* お客様の個人情報は厳重に保護いたします。",
     "links": {
-        "promotions": "チケット料金 & 特典",
-        "recruitment": "採用情報",
-        "contact": "お問い合わせ / フィードバック",
-        "faq": "よくある質問",
-        "policy": "プライバシーポリシー",
-        "terms": "利用規約"
+      "promotions": "チケット料金 & 特典",
+      "recruitment": "採用情報",
+      "contact": "お問い合わせ / フィードバック",
+      "faq": "よくある質問",
+      "policy": "プライバシーポリシー",
+      "terms": "利用規約"
     }
   },
   "home": {
     "explore_title": "映画を探す",
     "explore_subtitle": "今日は何を観る？",
     "tabs": {
-        "now_playing": "公開中",
-        "coming_soon": "近日公開",
-        "popular": "人気順"
+      "now_playing": "公開中",
+      "coming_soon": "近日公開",
+      "popular": "人気順"
     },
     "see_more": "もっと見る",
     "special_offers": "特別キャンペーン",
     "offers": {
-        "offer1_title": "お年玉キャンペーン – 新年を映画で彩ろう",
-        "offer1_desc": "春の訪れとともに超豪華な特典をプレゼント。",
-        "offer2_title": "MilkyWayyy Cinema × MoMo ポップコーン無料プレゼント",
-        "offer2_desc": "今ならポップコーンとドリンクが完全無料。",
-        "offer3_title": "MilkyWayyy Cinema 会員特典 2026",
-        "offer3_desc": "常連のお客様だけの特別な優待サービス。"
+      "offer1_title": "お年玉キャンペーン – 新年を映画で彩ろう",
+      "offer1_desc": "春の訪れとともに超豪華な特典をプレゼント。",
+      "offer2_title": "MilkyWayyy Cinema × MoMo ポップコーン無料プレゼント",
+      "offer2_desc": "今ならポップコーンとドリンクが完全無料。",
+      "offer3_title": "MilkyWayyy Cinema 会員特典 2026",
+      "offer3_desc": "常連のお客様だけの特別な優待サービス。"
     },
     "banner": {
-        "book_online": "オンライン予約",
-        "no_delay": "待ち時間なし",
-        "desc": "MilkyWayyy Cinemaの公式サイトから素早く便利にチケットを予約。待ち時間や売り切れ의 걱정はありません！"
+      "book_online": "オンライン予約",
+      "no_delay": "待ち時間なし",
+      "desc": "MilkyWayyy Cinemaの公式サイトから素早く便利にチケットを予約。待ち時間や売り切れの心配はありません！"
     },
     "about": {
-        "title": "MilkyWayyy Cinemaについて",
-        "p1": "is, 2026年に設立された映画界で最初期の民間企業の一つであり、最も人気のあるエンターテインメントスポット10選の一つとしてブランドを確立しています。最新の設備を備えた映画館システムに加え、親しみやすい atmosphere と一流 của サービス品質で多くの観客を魅了しています。",
-        "p2": "公式サイト milkywayyy.me では、最新作や公開予定作品を簡単にチェックできます。全劇場のスケジュールは毎日・毎時間更新されています。",
-        "p3": "チケット予約はわずか数ステップで完了します。「チケット予約」タブ から 映画、劇場、または日付別に選んで進んでください。",
-        "p4": "「クイック予約」ボックスを使えば、1分足らずで予約が完了し、確認メールが届きます。",
-        "promo": "MilkyWayyy Cinemaでは、常にお客様向けの魅力的なプロモーションや特典、プレゼントをご用意しています。",
-        "p5": "「シネマコーナー」セクションでは、映画、俳優、監督に関する詳細なデータや専門的な記事を提供しています。"
+      "title": "MilkyWayyy Cinemaについて",
+      "p1": "2026年に設立された映画界で最初期の民間企業の一つであり、最も人気のあるエンターテインメントスポット10選の一つとしてブランドを確立しています。最新の設備を備えた映画館システムに加え、親しみやすい雰囲気と一流のサービス品質で多くの観客を魅了しています。",
+      "p2": "公式サイト milkywayyy.me では、最新作や公開予定作品を簡単にチェックできます。全劇場のスケジュールは毎日・毎時間更新されています。",
+      "p3": "チケット予約はわずか数ステップで完了します。「チケット予約」タブから映画、劇場、または日付別に選んで進んでください。",
+      "p4": "「クイック予約」ボックスを使えば、1分足らずで予約が完了し、確認メールが届きます。",
+      "promo": "MilkyWayyy Cinemaでは、常にお客様向けの魅力的なプロモーションや特典、プレゼントをご用意しています。",
+      "p5": "「シネマコーナー」セクションでは、映画、俳優、監督に関する詳細なデータや専門的な記事を提供しています。"
     }
   },
   "movies": {
@@ -107,7 +117,7 @@
     "view_all_cast": "出演者全員を見る",
     "new_reviews": "最新のレビュー",
     "view_all_reviews": "全 {{count}} 件のレビューを見る",
-    "no_reviews": "この映画의 レビューはまだありません。",
+    "no_reviews": "この映画のレビューはまだありません。",
     "cast_list": "出演者リスト",
     "all_cast_for": "{{title}} の出演者全員",
     "close_list": "閉じる",
@@ -118,54 +128,54 @@
   },
   "booking": {
     "steps": {
-        "movie": "映画",
-        "seat": "座席",
-        "food": "フード",
-        "payment": "お支払い",
-        "confirmation": "確認"
+      "movie": "映画",
+      "seat": "座席",
+      "food": "フード",
+      "payment": "お支払い",
+      "confirmation": "確認"
     },
     "selection": {
-        "select_cinema": "映画館を選択",
-        "select_movie": "映画を選択",
-        "select_showtime": "上映回を選択",
-        "not_selected_movie": "映画が選択されていません",
-        "not_selected_cinema": "映画館が選択されていません",
-        "room": "スクリーン"
+      "select_cinema": "映画館を選択",
+      "select_movie": "映画を選択",
+      "select_showtime": "上映回を選択",
+      "not_selected_movie": "映画が選択されていません",
+      "not_selected_cinema": "映画館が選択されていません",
+      "room": "スクリーン"
     },
     "sidebar": {
-        "selected_seats": "選択した座席",
-        "total": "合計金額"
+      "selected_seats": "選択した座席",
+      "total": "合計金額"
     },
     "buttons": {
-        "back": "戻る",
-        "next": "次へ"
+      "back": "戻る",
+      "next": "次へ"
     },
     "feature_updating": "この機能は現在アップデート中です。最高の体験を提供できるよう努めております。",
     "service_tab": {
-        "step1": "1. 上映日を選択",
-        "step2": "2. 映画館を選択",
-        "step3": "3. 上映時間を選択",
-        "no_showtimes": "利用可能な上映時間はありません",
-        "days": {
-            "sun": "日曜日",
-            "mon": "月曜日",
-            "tue": "火曜日",
-            "wed": "水曜日",
-            "thu": "木曜日",
-            "fri": "金曜日",
-            "sat": "土曜日"
-        }
+      "step1": "1. 上映日を選択",
+      "step2": "2. 映画館を選択",
+      "step3": "3. 上映時間を選択",
+      "no_showtimes": "利用可能な上映時間はありません",
+      "days": {
+        "sun": "日曜日",
+        "mon": "月曜日",
+        "tue": "火曜日",
+        "wed": "水曜日",
+        "thu": "木曜日",
+        "fri": "金曜日",
+        "sat": "土曜日"
+      }
     },
     "seat_tab": {
-        "change_showtime": "上映回を変更",
-        "no_seat_info": "座席表情報が見つかりません",
-        "screen": "スクリーン",
-        "legend": {
-            "single": "シングル席",
-            "double": "ダブル席",
-            "selecting": "選択中",
-            "sold": "販売済み"
-        }
+      "change_showtime": "上映回を変更",
+      "no_seat_info": "座席表情報が見つかりません",
+      "screen": "スクリーン",
+      "legend": {
+        "single": "シングル席",
+        "double": "ダブル席",
+        "selecting": "選択中",
+        "sold": "販売済み"
+      }
     }
   },
   "cinema_detail": {
@@ -176,7 +186,7 @@
     "contact_info": "お問い合わせ先",
     "support_phone": "カスタマーサポート",
     "map_location": "地図上の位置",
-    "default_description": "当館はドルビーアトモス音響システム và 最新のIMAXスクリーンを完備し、最高にリアルな映画体験を提供いたします。",
+    "default_description": "当館はドルビーアトモス音響システムと最新のIMAXスクリーンを完備し、最高にリアルな映画体験を提供いたします。",
     "premium_location": "プレミアムロケーション"
   },
   "auth": {
@@ -212,16 +222,16 @@
   },
   "profile": {
     "roles": {
-        "admin": "プレミアム管理者",
-        "member": "シネマメンバー"
+      "admin": "プレミアム管理者",
+      "member": "シネマメンバー"
     },
     "spending_year": "{{year}}年の利用金額",
     "loyalty_point": "ロイヤリティポイント:",
     "rank": "ランク:",
     "ranks": {
-        "silver": "シルバー",
-        "gold": "ゴールド",
-        "platinum": "プラチナ"
+      "silver": "シルバー",
+      "gold": "ゴールド",
+      "platinum": "プラチナ"
     },
     "project_name": "映画管理システム",
     "project_info": "プロジェクト情報",
@@ -229,22 +239,22 @@
     "email_support": "サポートメール",
     "source_web": "ソースウェブサイト",
     "about_us": {
-        "title": "私たちについて",
-        "p1": "これはダナン工科大学のPBL3プロジェクトのアプリケーションです。",
-        "p2": "制作メンバー：Lương Thanh Nhật、Nguyễn Thị Nghĩa",
-        "p3": "これは商用アプリケーションではなく、プロジェクトの成果物であるため、実際のサポートサービスは提供されません。",
-        "p4": "ご質問やフィードバックがある場合は、上記のGitHub経由でご連絡ください。"
+      "title": "私たちについて",
+      "p1": "これはダナン工科大学のPBL3プロジェクトのアプリケーションです。",
+      "p2": "制作メンバー：Lương Thanh Nhật、Nguyễn Thị Nghĩa",
+      "p3": "これは商用アプリケーションではなく、プロジェクトの成果物であるため、実際のサポートサービスは提供されません。",
+      "p4": "ご質問やフィードバックがある場合は、上記のGitHub経由でご連絡ください。"
     },
     "tabs": {
-        "personal_info": "個人情報",
-        "booking_history": "予約履歴"
+      "personal_info": "個人情報",
+      "booking_history": "予約履歴"
     },
     "info_labels": {
-        "full_name": "氏名",
-        "email": "メールアドレス",
-        "join_date": "入会日",
-        "birthdate": "誕生日",
-        "no_data": "データなし"
+      "full_name": "氏名",
+      "email": "メールアドレス",
+      "join_date": "入会日",
+      "birthdate": "誕生日",
+      "no_data": "データなし"
     },
     "account_status": "アカウントステータス",
     "verified": "認証済みアカウント",
@@ -261,7 +271,7 @@
   "actors": {
     "hero_title": "スクリーンの",
     "hero_subtitle": "スターたち",
-    "hero_desc": "映画の魅力を支える素晴らしい才能たち. ベテランから注目の若手まで, スクリーンを彩る俳優陣をご紹介します.",
+    "hero_desc": "映画の魅力を支える素晴らしい才能たち。ベテランから注目の若手まで、スクリーンを彩る俳優陣をご紹介します。",
     "search_placeholder": "俳優を検索...",
     "star_spotlight": "スタースポットライト",
     "professional_actor": "プロ俳優",
@@ -315,32 +325,32 @@
     "hero_desc": "ご質問、ご意見、またはパートナーシップに関するお問い合わせは、以下のフォームよりお送りください。",
     "contact_us": "お問い合わせ",
     "info": {
-        "address_title": "本社所在地",
-        "address_detail": "54 Nguyen Luong Bang, Hoa Khanh Bac, Lien Chieu, Da Nang",
-        "address_desc": "MilkyWayyy シネマコンプレックスビル",
-        "hotline_title": "サポートホットライン",
-        "hotline_desc": "毎日 08:00 - 23:00 受付",
-        "email_title": "メールでのお問い合わせ",
-        "email_desc": "24時間以内に返信いたします"
+      "address_title": "本社所在地",
+      "address_detail": "54 Nguyen Luong Bang, Hoa Khanh Bac, Lien Chieu, Da Nang",
+      "address_desc": "MilkyWayyy シネマコンプレックスビル",
+      "hotline_title": "サポートホットライン",
+      "hotline_desc": "毎日 08:00 - 23:00 受付",
+      "email_title": "メールでのお問い合わせ",
+      "email_desc": "24時間以内に返信いたします"
     },
     "working_hours": {
-        "title": "営業時間",
-        "weekdays": "月曜 - 金曜",
-        "weekends": "土曜 - 日曜",
-        "holidays": "祝日",
-        "open_all_night": "終夜営業"
+      "title": "営業時間",
+      "weekdays": "月曜 - 金曜",
+      "weekends": "土曜 - 日曜",
+      "holidays": "祝日",
+      "open_all_night": "終夜営業"
     },
     "form": {
-        "title": "メッセージを送る",
-        "subtitle": "皆様からの貴重なご意見をお待ちしております。",
-        "name_label": "氏名",
-        "name_placeholder": "例：山田 太郎",
-        "email_label": "メールアドレス",
-        "subject_label": "件名",
-        "subject_placeholder": "お問い合わせ内容の件名を入力してください",
-        "message_label": "メッセージ内容",
-        "message_placeholder": "こちらにメッセージを入力してください...",
-        "send_button": "メッセージを送信"
+      "title": "メッセージを送る",
+      "subtitle": "皆様からの貴重なご意見をお待ちしております。",
+      "name_label": "氏名",
+      "name_placeholder": "例：山田 太郎",
+      "email_label": "メールアドレス",
+      "subject_label": "件名",
+      "subject_placeholder": "お問い合わせ内容の件名を入力してください",
+      "message_label": "メッセージ内容",
+      "message_placeholder": "こちらにメッセージを入力してください...",
+      "send_button": "メッセージを送信"
     }
   },
   "policy": {
@@ -350,39 +360,39 @@
     "privacy_safety": "プライバシーと安全",
     "footer_quote": "私たちは、透明性が信頼の基盤であると信じています。MilkyWayyyにおけるすべてのデータ処理プロセスは、お客様の最大限の安全を目指しています。",
     "sections": {
-        "s1_title": "1. 個人情報の収集目的",
-        "s1_content": "MilkyWayyyのウェブサイトで収集されるデータには、メールアドレス、電話番号、ユーザー名、ログインパスワード、お客様の住所が含まれます。これらは、サービス利用登録時にお客様に提供していただく必要があり、MilkyWayyyがサービス利用の確認連絡を行い、消費者の権利を保護するために使用されます。",
-        "s2_title": "2. 個人情報の利用範囲",
-        "s2_content": "当社は、提供されたお客様情報を以下の目的で使用します：お客様へのサービス提供、お客様とMilkyWayyy間の情報交換に関する通知の送信、ユーザーアカウントの不正利用やなりすまし行為の防止、特別な場合におけるお客様への連絡および解決。",
-        "s3_title": "3. 個人情報の保存期間",
-        "s3_content": "お客様の個人データは、削除依頼があるか、お客様自身がログインして削除を実行するまで保存されます。それ以外の場合、お客様の個人情報はMilkyWayyyのサーバー上で厳重に保護されます。",
-        "s4_title": "4. 第三者への情報提供",
-        "s4_content": "当社は、営利目的でお客様の個人情報を販売したり共有したりして漏洩させることはありません。ただし、法的要請がある場合や、MilkyWayyyの正当な権利を保護するために、公的機関に情報を提供する場合があります。",
-        "s5_title": "5. ユーザーの権利",
-        "s5_content": "お客様は、自身のアカウントにログインして個人情報を編集するか、MilkyWayyyに依頼することにより、自身の個人情報を確認、更新、調整、または削除する権利を有します。",
-        "s6_title": "6. ポリシーの変更",
-        "s6_content": "本ポリシーは、サービスの発展や法的規制に合わせて変更される場合があります。すべての変更は、当社のウェブサイト上で公に通知されます。"
+      "s1_title": "1. 個人情報の収集目的",
+      "s1_content": "MilkyWayyyのウェブサイトで収集されるデータには、メールアドレス、電話番号、ユーザー名、ログインパスワード、お客様の住所が含まれます。これらは、サービス利用登録時にお客様に提供していただく必要があり、MilkyWayyyがサービス利用の確認連絡を行い、消費者の権利を保護するために使用されます。",
+      "s2_title": "2. 個人情報の利用範囲",
+      "s2_content": "当社は、提供されたお客様情報を以下の目的で使用します：お客様へのサービス提供、お客様とMilkyWayyy間の情報交換に関する通知の送信、ユーザーアカウントの不正利用やなりすまし行為の防止、特別な場合におけるお客様への連絡および解決。",
+      "s3_title": "3. 個人情報の保存期間",
+      "s3_content": "お客様の個人データは、削除依頼があるか、お客様自身がログインして削除を実行するまで保存されます。それ以外の場合、お客様の個人情報はMilkyWayyyのサーバー上で厳重に保護されます。",
+      "s4_title": "4. 第三者への情報提供",
+      "s4_content": "当社は、営利目的でお客様の個人情報を販売したり共有したりして漏洩させることはありません。ただし、法的要請がある場合や、MilkyWayyyの正当な権利を保護するために、公的機関に情報を提供する場合があります。",
+      "s5_title": "5. ユーザーの権利",
+      "s5_content": "お客様は、自身のアカウントにログインして個人情報を編集するか、MilkyWayyyに依頼することにより、自身の個人情報を確認、更新、調整、または削除する権利を有します。",
+      "s6_title": "6. ポリシーの変更",
+      "s6_content": "本ポリシーは、サービスの発展や法的規制に合わせて変更される場合があります。すべての変更は、当社のウェブサイト上で公に通知されます。"
     }
   },
   "terms": {
     "hero_title": "利用",
     "hero_subtitle": "規約",
-    "hero_desc": "MilkyWayyyへようこそ. 当社のサービスを最大限に活用していただくために、以下の規約をよくお読みください。",
+    "hero_desc": "MilkyWayyyへようこそ。当社のサービスを最大限に活用していただくために、以下の規約をよくお読みください。",
     "usage_agreement": "利用規約の合意",
     "footer_disclaimer": "本ウェブサイトの利用を継続することにより、お客様は本規約を読み、理解し、拘束されることに同意したものとみなされます。MilkyWayyyは、事前の通知なくいつでも本規約を更新する権利を有します。",
     "sections": {
-        "s1_title": "1. 規約への同意",
-        "s1_content": "MilkyWayyyのウェブサイトにアクセスして利用することにより、お客様はここに記載された利用規約を遵守することに同意するものとします。規約に同意できない場合は、直ちに当社のサービスの利用を中止してください。",
-        "s2_title": "2. チケット予約およびサービス利用規定",
-        "s2_content": "お客様は会員登録時に正確な個人情報を提供しなければなりません。MilkyWayyyのシステムを通じて購入されたチケットはメールで確認されます。上映室への入場には、カウンターまたは改札機でチケットコードを提示してください。",
-        "s3_title": "3. お支払いおよび返金ポリシー",
-        "s3_content": "ウェブサイト上でのすべての支払い取引は、信頼できる決済ゲートウェイを通じて行われます。一度購入されたチケットは、MilkyWayyy側の都合で上映が中止された場合を除き、返金や交換はできません。",
-        "s4_title": "4. ユーザーの責任",
-        "s4_content": "ユーザーは、システムに干渉したりデータ構造を変更したりするためのツールやソフトウェアを使用することは許可されていません。有害な情報の拡散、公序良俗に反する行為、またはベトナムの法律に違反する行為は固く禁じられています。",
-        "s5_title": "5. 知的財産権",
-        "s5_content": "デザイン、ロゴ、テキスト、画像を含むウェブサイト上のすべてのコンテンツはMilkyWayyyに帰属します。当社の書面による同意なしの複製や引用は、権利侵害とみなされます。",
-        "s6_title": "6. 紛争 của 解決",
-        "s6_content": "サービスの利用から生じるすべての紛争は、交渉による解決を優先します。合意に至らない場合は、法律の規定に従って管轄当局に委ねられるものとします。"
+      "s1_title": "1. 規約への同意",
+      "s1_content": "MilkyWayyyのウェブサイトにアクセスして利用することにより、お客様はここに記載された利用規約を遵守することに同意するものとします。規約に同意できない場合は、直ちに当社のサービスの利用を中止してください。",
+      "s2_title": "2. チケット予約およびサービス利用規定",
+      "s2_content": "お客様は会員登録時に正確な個人情報を提供しなければなりません。MilkyWayyyのシステムを通じて購入されたチケットはメールで確認されます。上映室への入場には、カウンターまたは改札機でチケットコードを提示してください。",
+      "s3_title": "3. お支払いおよび返金ポリシー",
+      "s3_content": "ウェブサイト上でのすべての支払い取引は、信頼できる決済ゲートウェイを通じて行われます。一度購入されたチケットは、MilkyWayyy側の都合で上映が中止された場合を除き、返金や交換はできません。",
+      "s4_title": "4. ユーザーの責任",
+      "s4_content": "ユーザーは、システムに干渉したりデータ構造を変更したりするためのツールやソフトウェアを使用することは許可されていません。有害な情報の拡散、公序良俗に反する行為、またはベトナムの法律に違反する行為は固く禁じられています。",
+      "s5_title": "5. 知的財産権",
+      "s5_content": "デザイン、ロゴ、テキスト、画像を含むウェブサイト上のすべてのコンテンツはMilkyWayyyに帰属します。当社の書面による同意なしの複製や引用は、権利侵害とみなされます。",
+      "s6_title": "6. 紛争の解決",
+      "s6_content": "サービスの利用から生じるすべての紛争は、交渉による解決を優先します。合意に至らない場合は、法律の規定に従って管轄当局に委ねられるものとします。"
     }
   },
   "faq": {
@@ -394,29 +404,29 @@
     "cta_desc": "当社のサポートチームが24時間365日、お客様をサポートいたします。",
     "cta_button": "今すぐ問い合わせる",
     "categories": {
-        "c1_title": "アカウント & 登録",
-        "c2_title": "予約 & お支払い",
-        "c3_title": "劇場規定 & 特典"
+      "c1_title": "アカウント & 登録",
+      "c2_title": "予約 & お支払い",
+      "c3_title": "劇場規定 & 特典"
     },
     "questions": {
-        "q1_q": "MilkyWayyyのアカウント登録方法は？",
-        "q1_a": "ツールバーの「ログイン」ボタンをクリックし、「今すぐ登録」を選択してください。個人情報を入力し、メール認証を完了すれば、サービスをご利用いただけます。",
-        "q2_q": "パスワードを忘れた場合は？",
-        "q2_a": "ログインフォームの「パスワードをお忘れですか？」を選択してください。メールアドレスを入力するとOTP（ワンタイムパスワード）が送信され、新しいパスワードを再設定できます。",
-        "q3_q": "個人情報は保護されますか？",
-        "q3_a": "完全に保護されます。MilkyWayyyは最高水準 của データ暗号化を採用しており、お客様の同意なく第三者に情報を提供することはありません。",
-        "q4_q": "一度に最大何枚までチケットを予約できますか？",
-        "q4_a": "公平性を保ち、転売を防止するため、1回の上映につき1アカウント最大8枚まで予約可能です。",
-        "q5_q": "どのような支払い方法がありますか？",
-        "q5_a": "MoMo、VNPayなどの電子マネー、国内ATMカード、国際ブランドカード（Visa、Mastercard）をご利用いただけます。",
-        "q6_q": "予約が成功したか確認する方法は？",
-        "q6_a": "お支払い完了後、画面にQRコードチケットが表示され、同時に詳細がメールで送信されます。プロフィールの「予約履歴」でもご確認いただけます。",
-        "q7_q": "飲食物の持ち込みは可能ですか？",
-        "q7_a": "規定により、衛生面と共有スペースの環境維持のため、外部からの飲食物の持ち込みはご遠慮いただいております。",
-        "q8_q": "クーポンコードの使用方法は？",
-        "q8_a": "お支払い手続き中に「クーポンコード入力」欄があります。コードを入力して適用ボタンを押すと、自動的に割引が適用されます。",
-        "q9_q": "上映開始のどのくらい前に劇場に行くべきですか？",
-        "q9_a": "チケット確認や売店での購入時間を考慮し、上映開始の15〜20分前にお越しいただくことをお勧めします。"
+      "q1_q": "MilkyWayyyのアカウント登録方法は？",
+      "q1_a": "ツールバーの「ログイン」ボタンをクリックし、「今すぐ登録」を選択してください。個人情報を入力し、メール認証を完了すれば、サービスをご利用いただけます。",
+      "q2_q": "パスワードを忘れた場合は？",
+      "q2_a": "ログインフォームの「パスワードをお忘れですか？」を選択してください。メールアドレスを入力するとOTP（ワンタイムパスワード）が送信され、新しいパスワードを再設定できます。",
+      "q3_q": "個人情報は保護されますか？",
+      "q3_a": "完全に保護されます。MilkyWayyyは最高水準のデータ暗号化を採用しており、お客様の同意なく第三者に情報を提供することはありません。",
+      "q4_q": "一度に最大何枚までチケットを予約できますか？",
+      "q4_a": "公平性を保ち、転売を防止するため、1回の上映につき1アカウント最大8枚まで予約可能です。",
+      "q5_q": "どのような支払い方法がありますか？",
+      "q5_a": "MoMo、VNPayなどの電子マネー、国内ATMカード、国際ブランドカード（Visa、Mastercard）をご利用いただけます。",
+      "q6_q": "予約が成功したか確認する方法は？",
+      "q6_a": "お支払い完了後、画面にQRコードチケットが表示され、同時に詳細がメールで送信されます。プロフィールの「予約履歴」でもご確認いただけます。",
+      "q7_q": "飲食物の持ち込みは可能ですか？",
+      "q7_a": "規定により、衛生面と共有スペースの環境維持のため、外部からの飲食物の持ち込みはご遠慮いただいております。",
+      "q8_q": "クーポンコードの使用方法は？",
+      "q8_a": "お支払い手続き中に「クーポンコード入力」欄があります。コードを入力して適用ボタンを押すと、自動的に割引が適用されます。",
+      "q9_q": "上映開始のどのくらい前に劇場に行くべきですか？",
+      "q9_a": "チケット確認や売店での購入時間を考慮し、上映開始の15〜20分前にお越しいただくことをお勧めします。"
     }
   },
   "recruitment": {
@@ -425,10 +435,10 @@
     "hero_desc": "映画が好きですか？クリエイティブでプロフェッショナルな環境で働きたいですか？私たちと一緒に、観客に素晴らしい体験を提供しましょう。",
     "join_our_team": "チームに参加する",
     "benefits": {
-        "free_movies": "週1回の映画鑑賞無料特典",
-        "environment": "若くて活気のある職場環境",
-        "training": "専門的なスキル研修",
-        "flex_time": "フレキシブルな勤務時間"
+      "free_movies": "週1回の映画鑑賞無料特典",
+      "environment": "若くて活気のある職場環境",
+      "training": "専門的なスキル研修",
+      "flex_time": "フレキシブルな勤務時間"
     },
     "jobs_title": "現在募集中の職種",
     "salary_label": "給与:",
@@ -437,54 +447,54 @@
     "cta_desc": "お気軽に履歴書をお送りください。MilkyWayyyの未来を共に築く新しい才能を常に探しています。",
     "cta_button": "自由応募（CV送信）",
     "jobs": {
-        "j1_title": "フロアスーパーバイザー (Floor Supervisor)",
-        "j1_desc": "ロビー運営の管理、スタッフのコーディネート、お客様からの問い合わせ対応などを行います。",
-        "j1_salary": "8,000,000 - 12,000,000 VNĐ",
-        "j2_title": "劇場スタッフ (Cinema Staff)",
-        "j2_desc": "チケット販売、フード＆ドリンクの提供、シアター内での接客サポートなどを行います。",
-        "j2_salary": "25,000 - 30,000 VNĐ/時間",
-        "j3_title": "映写・音響技術スタッフ",
-        "j3_desc": "映写システムや音響設備の操作、劇場の技術機器のメンテナンスを担当します。",
-        "j3_salary": "10,000,000 - 15,000,000 VNĐ",
-        "locations": {
-            "nationwide": "全国",
-            "cities": "ダナン / フエ / ホーチミン",
-            "cities_extended": "ダナン / ハノイ / ニャチャン / フエ"
-        },
-        "types": {
-            "full_time": "正社員",
-            "part_time": "アルバイト・パート"
-        }
+      "j1_title": "フロアスーパーバイザー (Floor Supervisor)",
+      "j1_desc": "ロビー運営の管理、スタッフのコーディネート、お客様からの問い合わせ対応などを行います。",
+      "j1_salary": "8,000,000 - 12,000,000 VNĐ",
+      "j2_title": "劇場スタッフ (Cinema Staff)",
+      "j2_desc": "チケット販売、フード＆ドリンクの提供、シアター内での接客サポートなどを行います。",
+      "j2_salary": "25,000 - 30,000 VNĐ/時間",
+      "j3_title": "映写・音響技術スタッフ",
+      "j3_desc": "映写システムや音響設備の操作、劇場の技術機器のメンテナンスを担当します。",
+      "j3_salary": "10,000,000 - 15,000,000 VNĐ",
+      "locations": {
+        "nationwide": "全国",
+        "cities": "ダナン / フエ / ホーチミン",
+        "cities_extended": "ダナン / ハノイ / ニャチャン / フエ"
+      },
+      "types": {
+        "full_time": "正社員",
+        "part_time": "アルバイト・パート"
+      }
     },
     "apply": {
-        "back": "戻る",
-        "success_title": "送信完了！",
-        "success_desc": "MilkyWayyy Cinemaへのご応募ありがとうございます。採用担当者が内容を確認し、追ってご連絡いたします。",
-        "back_to_jobs": "採用ページに戻る",
-        "hero_start": "新しい",
-        "hero_journey": "一歩を",
-        "hero_desc": "あなたのことをもっと教えてください。詳細な情報を入力することで、より魅力的なプロフィールになります。",
-        "info": {
-            "desired_position": "希望職種",
-            "multi_role": "マルチスタッフ / 技術スタッフ",
-            "location": "勤務地",
-            "all_cinemas": "全国のMilkyWayyyシネマ各館"
-        },
-        "form": {
-            "name_label": "氏名",
-            "name_placeholder": "氏名をフルネームで入力",
-            "email_label": "メールアドレス",
-            "phone_label": "電話番号",
-            "position_label": "応募職種",
-            "position_placeholder": "職種を選択",
-            "intro_label": "自己紹介",
-            "intro_placeholder": "MilkyWayyy Cinemaへの志望動機などを自由に入力してください...",
-            "attach_cv": "履歴書・職務経歴書の添付 (PDF, DOCX)",
-            "upload_desc": "ファイルをドロップするか <span class=\"text-amber-500\">アップロード</span>",
-            "max_size": "最大ファイルサイズ 5MB",
-            "declaration": "記載内容に相違ないことを誓約し、自己 của 責任において応募します。",
-            "submit_button": "応募書類を送信する"
-        }
+      "back": "戻る",
+      "success_title": "送信完了！",
+      "success_desc": "MilkyWayyy Cinemaへのご応募ありがとうございます。採用担当者が内容を確認し、追ってご連絡いたします。",
+      "back_to_jobs": "採用ページに戻る",
+      "hero_start": "新しい",
+      "hero_journey": "一歩を",
+      "hero_desc": "あなたのことをもっと教えてください。詳細な情報を入力することで、より魅力的なプロフィールになります。",
+      "info": {
+        "desired_position": "希望職種",
+        "multi_role": "マルチスタッフ / 技術スタッフ",
+        "location": "勤務地",
+        "all_cinemas": "全国のMilkyWayyyシネマ各館"
+      },
+      "form": {
+        "name_label": "氏名",
+        "name_placeholder": "氏名をフルネームで入力",
+        "email_label": "メールアドレス",
+        "phone_label": "電話番号",
+        "position_label": "応募職種",
+        "position_placeholder": "職種を選択",
+        "intro_label": "自己紹介",
+        "intro_placeholder": "MilkyWayyy Cinemaへの志望動機などを自由に入力してください...",
+        "attach_cv": "履歴書・職務経歴書の添付 (PDF, DOCX)",
+        "upload_desc": "ファイルをドロップするか <span class=\"text-amber-500\">アップロード</span>",
+        "max_size": "最大ファイルサイズ 5MB",
+        "declaration": "記載内容に相違ないことを誓約し、自己の責任において応募します。",
+        "submit_button": "応募書類を送信する"
+      }
     }
   },
   "dashboard": {
@@ -501,91 +511,103 @@
     "switch_light": "ライトモードへ切り替え",
     "switch_dark": "ダークモードへ切り替え",
     "management": {
-        "movies": "映画",
-        "tickets": "チケット",
-        "showtimes": "上映回",
-        "cinemas": "映画館",
-        "foods": "フード",
-        "users": "ユーザー",
-        "sync": "データ同期",
-        "revenue": "収益統計",
-        "stats": "ダッシュボード概要"
+      "movies": "映画",
+      "tickets": "チケット",
+      "showtimes": "上映回",
+      "cinemas": "映画館",
+      "foods": "フード",
+      "users": "ユーザー",
+      "sync": "データ同期",
+      "revenue": "収益統計",
+      "stats": "ダッシュボード概要"
     },
     "themes": {
-        "blue": "ブルー",
-        "green": "グリーン",
-        "yellow": "イエロー",
-        "red": "レッド",
-        "pink": "ピンク",
-        "purple": "パープル",
-        "cyan": "シアン",
-        "orange": "オレンジ",
-        "light_pink": "ライトピンク",
-        "teal": "ティール",
-        "default": "デフォルト"
+      "blue": "ブルー",
+      "green": "グリーン",
+      "yellow": "イエロー",
+      "red": "レッド",
+      "pink": "ピンク",
+      "purple": "パープル",
+      "cyan": "シアン",
+      "orange": "オレンジ",
+      "light_pink": "ライトピンク",
+      "teal": "ティール",
+      "default": "デフォルト"
     },
     "overview_tab": {
-        "title": "ダッシュボード概要",
-        "desc": "システムパフォーマンス、データ量、およびシネマコンプレックスの主要な運用指標の包括的なビュー。",
-        "metrics": {
-            "movies": { "title": "映画", "desc": "データベース内の総映画数" },
-            "reviews": { "title": "レビュー", "desc": "データベース内の総レビュー数" },
-            "actors": { "title": "俳優", "desc": "データベース内の総俳優数" },
-            "genres": { "title": "ジャンル", "desc": "データベース内の総ジャンル数" },
-            "stat_label": "{{item}} 統計"
+      "title": "ダッシュボード概要",
+      "desc": "システムパフォーマンス、データ量、およびシネマコンプレックスの主要な運用指標の包括的なビュー。",
+      "metrics": {
+        "movies": {
+          "title": "映画",
+          "desc": "データベース内の総映画数"
         },
-        "admin_team": {
-            "title": "管理者",
-            "desc": "システム執行チームのリスト",
-            "system_cinema": "シネマシステム"
-        }
+        "reviews": {
+          "title": "レビュー",
+          "desc": "データベース内の総レビュー数"
+        },
+        "actors": {
+          "title": "俳優",
+          "desc": "データベース内の総俳優数"
+        },
+        "genres": {
+          "title": "ジャンル",
+          "desc": "データベース内の総ジャンル数"
+        },
+        "stat_label": "{{item}} 統計"
+      },
+      "admin_team": {
+        "title": "管理者",
+        "desc": "システム執行チームのリスト",
+        "system_cinema": "シネマシステム"
+      }
     },
     "charts": {
-        "movie_status": {
-            "title": "映画ステータス統計",
-            "desc": "上映中 - 公開予定 - 終了",
-            "label": "映画"
-        },
-        "movie_monthly": {
-            "title": "月別映画数統計",
-            "desc": "1月から12月まで更新"
-        },
-        "movie_genre": {
-            "title": "映画ジャンル傾向統計",
-            "desc": "ジャンル別の総映画数"
-        },
-        "ticket_monthly": {
-            "title": "月別チケット販売統計",
-            "desc": "1月から12月まで更新"
-        }
+      "movie_status": {
+        "title": "映画ステータス統計",
+        "desc": "上映中 - 公開予定 - 終了",
+        "label": "映画"
+      },
+      "movie_monthly": {
+        "title": "月別映画数統計",
+        "desc": "1月から12月まで更新"
+      },
+      "movie_genre": {
+        "title": "映画ジャンル傾向統計",
+        "desc": "ジャンル別の総映画数"
+      },
+      "ticket_monthly": {
+        "title": "月別チケット販売統計",
+        "desc": "1月から12月まで更新"
+      }
     },
     "statistics_tab": {
-        "title": "収益統計",
-        "desc": "チケット販売データ、フードサービス収益を分析し、シネマコンプレックスの財務成長を追跡します。"
+      "title": "収益統計",
+      "desc": "チケット販売データ、フードサービス収益を分析し、シネマコンプレックスの財務成長を追跡します。"
     },
     "data_table": {
-        "add_new": "新規追加",
-        "delete_selected": "選択項目を削除",
-        "filtering": "フィルタリング中:",
-        "clear_all_filters": "すべてのフィルターをクリア",
-        "page_info": "ページ {{page}} / {{pages}}",
-        "selected_count": "{{count}} 選択中",
-        "all_selected": "すべて選択済み",
-        "deselect_all": "選択をすべて解除"
+      "add_new": "新規追加",
+      "delete_selected": "選択項目を削除",
+      "filtering": "フィルタリング中:",
+      "clear_all_filters": "すべてのフィルターをクリア",
+      "page_info": "ページ {{page}} / {{pages}}",
+      "selected_count": "{{count}} 選択中",
+      "all_selected": "すべて選択済み",
+      "deselect_all": "選択をすべて解除"
     },
     "movie_details": {
-        "title": "映画",
-        "runtime": "上映時間",
-        "vote_average": "スコア",
-        "vote_count": "評価数",
-        "release_date": "公開日",
-        "status": "ステータス",
-        "minutes": "分",
-        "search_placeholder": "映画タイトルで検索...",
-        "add_movie": "映画を追加",
-        "total_count": "合計 {{count}} 作品",
-        "empty_label": "映画が見つかりません",
-        "loading_label": "映画データを読み込み中..."
+      "title": "映画",
+      "runtime": "上映時間",
+      "vote_average": "スコア",
+      "vote_count": "評価数",
+      "release_date": "公開日",
+      "status": "ステータス",
+      "minutes": "分",
+      "search_placeholder": "映画タイトルで検索...",
+      "add_movie": "映画を追加",
+      "total_count": "合計 {{count}} 作品",
+      "empty_label": "映画が見つかりません",
+      "loading_label": "映画データを読み込み中..."
     }
   },
   "movie_card": {
@@ -627,5 +649,359 @@
     "sci_fi_fantasy": "SF＆ファンタジー",
     "soap": "ソープ",
     "talk": "トーク"
+  },
+  "movie_details": {
+    "title": "作品名",
+    "runtime": "上映時間",
+    "vote_average": "評価点",
+    "vote_count": "評価数",
+    "release_date": "公開日",
+    "status": "状態",
+    "minutes": "分",
+    "search_placeholder": "映画を検索...",
+    "add_movie": "映画を追加",
+    "total_count": "合計 {{count}} 作品",
+    "empty_label": "映画が見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "映画の詳細",
+    "view_details": "詳細：{{title}}",
+    "edit_movie": "映画を編集",
+    "add_new_movie": "新しい映画を追加",
+    "movie_name": "作品名",
+    "description": "概要",
+    "enter_description": "映画の概要を入力してください",
+    "runtime_label": "上映時間",
+    "release_date_label": "公開日",
+    "end_date_label": "終了日",
+    "select_date": "日付を選択",
+    "save_changes": "変更を保存",
+    "saving": "保存中...",
+    "close": "閉じる",
+    "metadata": "メタデータ",
+    "age_limit": "年齢制限",
+    "no_overview": "この映画の概要はまだありません。",
+    "no_data": "映画データがありません。",
+    "edit_desc": "映画情報を変更する"
+  },
+  "foods_tab": {
+    "title": "メニュー管理",
+    "desc": "フード、ドリンク、お得なコンボパッケージの設定。",
+    "search_placeholder": "メニューを検索...",
+    "add_snack": "アイテムを追加",
+    "total_items": "合計 {{count}} アイテム",
+    "empty_label": "リストが空です",
+    "loading_label": "データを読み込み中...",
+    "details_title": "アイテムの詳細",
+    "view_details": "詳細を表示",
+    "edit_snack": "アイテムを編集",
+    "add_new_snack": "新しいアイテムを追加",
+    "name_label": "アイテム名",
+    "name_placeholder": "例：チーズポップコーン...",
+    "type_label": "カテゴリー",
+    "type_placeholder": "タイプを選択",
+    "price_label": "価格 (円)",
+    "price_placeholder": "例：500",
+    "image_label": "画像URL",
+    "image_placeholder": "https://...",
+    "close_details": "詳細を閉じる",
+    "processing": "処理中...",
+    "save_changes": "変更を保存",
+    "types": {
+      "food": "フード",
+      "drink": "ドリンク",
+      "combo": "コンボ"
+    }
+  },
+  "location_tab": {
+    "locations": "場所",
+    "cinemas": "映画館",
+    "rooms": "スクリーン"
+  },
+  "locations_tab": {
+    "title": "地域・ロケーション管理",
+    "desc": "顧客が簡単に検索して予約できるように、都市と映画館のリストを設定します。",
+    "search_placeholder": "都市を検索...",
+    "add_location": "ロケーションを追加",
+    "total_count": "合計 {{count}} ロケーション",
+    "empty_label": "ロケーションが見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "ロケーションの詳細",
+    "edit_location": "ロケーションを編集",
+    "add_new_location": "新しいロケーションを追加",
+    "city_label": "都市名",
+    "city_placeholder": "例：東京、大阪...",
+    "system_management": "システム管理",
+    "system_desc": "このロケーションは現在、全国の劇場コンプレックスを分類するために使用されています。",
+    "no_data": "データがありません。",
+    "saving": "保存中...",
+    "save_changes": "変更を保存",
+    "columns": {
+        "city": "都市"
+    }
+  },
+  "cinemas_tab": {
+    "title": "劇場システム管理",
+    "desc": "劇場コンプレックス、住所、ホットライン、およびシステム全体の施設データを管理します。",
+    "search_placeholder": "劇場名で検索...",
+    "add_cinema": "劇場を追加",
+    "total_count": "合計 {{count}} 劇場",
+    "empty_label": "劇場が見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "劇場の詳細",
+    "edit_cinema": "劇場を編集",
+    "add_new_cinema": "新しい劇場を追加",
+    "name_label": "劇場名",
+    "address_label": "住所",
+    "city_label": "都市",
+    "phone_label": "電話番号",
+    "hotline": "ホットライン",
+    "coordinates": "座標",
+    "intro_label": "紹介文",
+    "intro_placeholder": "劇場の説明を入力してください",
+    "image_label": "概要画像",
+    "save_changes": "変更を保存",
+    "saving": "保存中...",
+    "no_data": "劇場データがありません。",
+    "edit_desc": "劇場情報を変更する",
+    "columns": {
+        "name": "劇場名",
+        "address": "住所",
+        "city": "都市",
+        "phone": "電話番号"
+    }
+  },
+  "rooms_tab": {
+    "title": "シアター管理",
+    "desc": "座席レイアウト、シアタータイプ（IMAX、4DX、スタンダード）、および各シアターの基本チケット料金を設定します。",
+    "search_placeholder": "シアター名で検索...",
+    "add_room": "シアターを追加",
+    "total_count": "合計 {{count}} シアター",
+    "empty_label": "シアターが見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "シアターの詳細",
+    "edit_room": "シアターを編集",
+    "add_new_room": "新しいシアターを追加",
+    "name_label": "シアター名",
+    "type_label": "タイプ",
+    "price_label": "基本料金",
+    "rows_label": "行数",
+    "cols_label": "列数",
+    "layout_label": "レイアウト",
+    "capacity_label": "収容人数",
+    "capacity_value": "{{count}} 席",
+    "seat_map_label": "座席レイアウト図",
+    "auto_generated": "自動生成",
+    "seat_single": "一般席",
+    "seat_couple": "ペアシート（後方2列）",
+    "edit_warning": "行数や列数を変更すると、古い座席マップが削除され、再生成されます。上映スケジュールが設定されている場合は変更できません。",
+    "saving": "保存中...",
+    "save_changes": "変更を保存",
+    "columns": {
+        "name": "シアター名",
+        "cinema": "劇場",
+        "type": "タイプ",
+        "price": "料金",
+        "layout": "行/列"
+    }
+  },
+  "tickets_tab": {
+    "title": "取引・チケット管理",
+    "desc": "予約履歴の追跡、支払いステータスの管理、および顧客の取引詳細の表示を行います。",
+    "search_placeholder": "ユーザー名で検索...",
+    "total_count": "合計 {{count}} チケット",
+    "empty_label": "チケットが見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "取引の詳細",
+    "cancel_ticket": "チケットをキャンセル",
+    "view_details": "チケットの詳細",
+    "payment_info": "支払い情報",
+    "original_price": "元の価格",
+    "booking_date": "予約日",
+    "total_label": "合計",
+    "status": {
+        "pending": "保留中",
+        "confirmed": "確認済み",
+        "cancelled": "キャンセル済み",
+        "unknown": "不明"
+    },
+    "columns": {
+        "user": "ユーザー",
+        "cinema": "劇場",
+        "total": "総額",
+        "final": "最終金額",
+        "status": "ステータス",
+        "created": "作成日"
+    }
+  },
+  "coupons_tab": {
+    "title": "クーポン・プロモーション管理",
+    "desc": "特別な日のための顧客向けのプロモーション特典や割引コードを作成、発行、および管理します。",
+    "search_placeholder": "クーポンコードで検索...",
+    "add_coupon": "新しいクーポンを追加",
+    "total_count": "合計 {{count}} クーポン",
+    "empty_label": "クーポンが見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "クーポンの詳細",
+    "edit_coupon": "クーポンを編集",
+    "add_new_coupon": "新しいクーポンを作成",
+    "code_label": "クーポンコード",
+    "desc_label": "説明",
+    "desc_placeholder": "例：50ドル以上の注文で50%オフ...",
+    "type_label": "割引タイプ",
+    "value_label": "割引額",
+    "min_order_label": "最小注文額",
+    "start_date": "開始日",
+    "end_date": "終了日",
+    "category_label": "クーポンカテゴリ",
+    "cat_normal": "通常クーポン",
+    "cat_holiday": "休日・イベントクーポン",
+    "special_event": "スペシャルイベント",
+    "normal_coupon": "通常クーポン",
+    "applied_all": "このクーポンは、最小注文条件が満たされている場合、すべての上映に適用されます。",
+    "no_data": "情報を表示するにはクーポンを選択してください。",
+    "saving": "処理中...",
+    "save_changes": "変更を保存",
+    "processing": "処理中...",
+    "create_btn": "クーポンを作成",
+    "types": {
+        "percentage": "パーセント (%)",
+        "fixed": "固定額"
+    },
+    "columns": {
+        "code": "クーポンコード",
+        "type": "タイプ",
+        "value": "割引",
+        "min": "最小金額",
+        "status": "ステータス",
+        "expiry": "有効期限"
+    }
+  },
+  "actors_tab": {
+    "title": "俳優管理",
+    "desc": "俳優のプロフィール情報、略歴、および彼らが参加した映画作品のリストを管理します。",
+    "search_placeholder": "俳優名で検索...",
+    "add_actor": "俳優を追加",
+    "total_count": "合計 {{count}} 俳優",
+    "empty_label": "俳優が見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "俳優の詳細",
+    "edit_actor": "俳優を編集",
+    "add_new_actor": "新しい俳優を追加",
+    "name_label": "氏名",
+    "gender_label": "性別",
+    "birthday_label": "生年月日",
+    "birthplace_label": "出生地",
+    "bio_label": "略歴",
+    "bio_placeholder": "俳優の略歴を入力",
+    "profile_label": "プロフィールパス",
+    "movies_participated": "出演作品",
+    "no_movies": "データがありません。",
+    "no_bio": "この俳優の略歴データはありません。",
+    "saving": "保存中...",
+    "save_changes": "変更を保存",
+    "genders": {
+        "male": "男性",
+        "female": "女性",
+        "other": "その他"
+    },
+    "columns": {
+        "name": "俳優",
+        "gender": "性別",
+        "birthday": "生年月日",
+        "birthplace": "出生地"
+    }
+  },
+  "reviews_tab": {
+    "title": "レビュー管理",
+    "desc": "コミュニティコンテンツの質を確保するために、ユーザーのレビューやコメントを検閲および管理します。",
+    "search_placeholder": "レビューアー名で検索...",
+    "total_count": "合計 {{count}} レビュー",
+    "empty_label": "レビューが見つかりませんでした",
+    "loading_label": "データを読み込み中...",
+    "details_title": "レビューの詳細",
+    "view_details": "詳細を表示",
+    "ban_user": "ユーザーを禁止",
+    "movie_label": "映画",
+    "date_label": "作成日",
+    "content_label": "レビュー内容",
+    "no_comment": "このユーザーはコメント内容を残していません。",
+    "no_data": "データがありません。",
+    "status": {
+        "approved": "承認済み",
+        "pending": "承認待ち"
+    },
+    "columns": {
+        "user": "ユーザー",
+        "movie": "映画",
+        "rating": "評価",
+        "content": "内容",
+        "status": "ステータス",
+        "created": "作成日"
+    }
+  },
+  "showtimes_tab": {
+    "title": "上映スケジュール管理",
+    "desc": "上映スケジュールの作成、時間枠の管理、スクリーンの割り当て。"
+  },
+  "ticket_tab": {
+    "tickets": "チケット",
+    "coupons": "クーポン"
+  },
+  "sync_tab": {
+    "title": "データ同期",
+    "desc": "TMDBから内部システムへのデータフロー管理。",
+    "tasks": {
+      "upcoming": { "name": "公開予定作品", "desc": "TMDBから公開予定映画を同期します。" },
+      "nowplaying": { "name": "上映中作品", "desc": "現在上映中の映画データを更新します。" },
+      "popular": { "name": "人気作品", "desc": "TMDBから高評価作品を取得します。" },
+      "reviews": { "name": "レビュー", "desc": "ユーザーレビューとスコアを更新します。" },
+      "status": { "name": "システム状態", "desc": "内部データの状態を確認します。" }
+    },
+    "status": {
+      "ready": "システム：準備完了",
+      "syncing": "状態：同期中...",
+      "available": "利用可能",
+      "in_progress": "処理中",
+      "start": "同期開始",
+      "stop": "停止",
+      "integration": "TMDB連携",
+      "priority": "優先度：高",
+      "type_label": "タイプ"
+    }
+  },
+  "users_tab": {
+    "title": "ユーザー管理",
+    "desc": "リスト表示、権限割り当て、システム内の全ユーザーの状態管理。",
+    "search_placeholder": "ユーザー名で検索...",
+    "add_user": "ユーザーを追加",
+    "total_count": "合計 {{count}} ユーザー",
+    "empty_label": "ユーザーが見つかりません",
+    "loading_label": "ユーザーデータを読み込み中...",
+    "columns": {
+      "user": "ユーザー",
+      "role": "役割",
+      "age": "年齢",
+      "verify": "認証",
+      "status": "状態",
+      "actions": "操作"
+    },
+    "verify_status": {
+      "verified": "認証済み",
+      "unverified": "未認証"
+    },
+    "banned_status": {
+      "banned": "禁止",
+      "active": "有効"
+    },
+    "roles": {
+      "admin": "管理者",
+      "staff": "スタッフ",
+      "user": "ユーザー",
+      "unknown": "不明"
+    },
+    "actions": {
+      "view": "表示",
+      "ban": "禁止"
+    }
   }
 }

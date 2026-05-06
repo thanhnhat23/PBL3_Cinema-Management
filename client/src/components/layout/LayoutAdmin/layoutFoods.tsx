@@ -1,4 +1,4 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -27,17 +27,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
+import { useTranslation } from "react-i18next";
 import { useSnackStore, type Snack } from "@/stores/useSnackStore";
 import DataTableAdmin, { type AdminColumn } from "../dataTable";
 import Image from "next/image";
 
-const columns: AdminColumn[] = [
+const getMovieColumns = (t: any): AdminColumn[] => [
     { name: "ID", uid: "snack_id", sortable: true },
-    { name: "TÊN ĐỒ ĂN VẶT", uid: "name", sortable: true },
-    { name: "LOẠI", uid: "type", sortable: true },
-    { name: "GIÁ", uid: "price", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: t('foods_tab.name_label'), uid: "name", sortable: true },
+    { name: t('foods_tab.type_label'), uid: "type", sortable: true },
+    { name: t('foods_tab.price_label'), uid: "price", sortable: true },
+    { name: t('common.actions'), uid: "actions" },
 ];
 
 const snackTypeColorMap: Record<string, "primary" | "success" | "warning"> = {
@@ -46,20 +46,8 @@ const snackTypeColorMap: Record<string, "primary" | "success" | "warning"> = {
     combo: "warning",
 };
 
-const getSnackTypeText = (type: number) => {
-    switch (type) {
-        case 0:
-            return "Food";
-        case 1:
-            return "Drink";
-        case 2:
-            return "Combo";
-        default:
-            return "Unknown";
-    }
-};
-
 export default function LayoutFood() {
+    const { t } = useTranslation();
     const {
         snacks,
         isFetchingSnacks,
@@ -70,6 +58,19 @@ export default function LayoutFood() {
         isUpdatingSnack,
         isCreatingSnack
     } = useSnackStore();
+
+    const getSnackTypeText = useCallback((type: number) => {
+        switch (type) {
+            case 0:
+                return t('foods_tab.types.food');
+            case 1:
+                return t('foods_tab.types.drink');
+            case 2:
+                return t('foods_tab.types.combo');
+            default:
+                return t('users_tab.roles.unknown');
+        }
+    }, [t]);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
@@ -149,14 +150,15 @@ export default function LayoutFood() {
                 );
             case "type": {
                 const typeText = getSnackTypeText(snack.type);
+                const typeKey = snack.type === 0 ? 'food' : snack.type === 1 ? 'drink' : 'combo';
                 return (
-                    <Chip className="capitalize font-bold" color={snackTypeColorMap[typeText.toLowerCase()]} size="sm" variant="flat">
+                    <Chip className="capitalize font-bold" color={snackTypeColorMap[typeKey]} size="sm" variant="flat">
                         {typeText}
                     </Chip>
                 );
             }
             case "price":
-                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(snack.price).toLocaleString("vi-VN")} đ</span>;
+                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(snack.price).toLocaleString(t('locale_code'))} Ä‘</span>;
             case "actions":
                 return (
                     <Dropdown classNames={{
@@ -176,14 +178,14 @@ export default function LayoutFood() {
                                     onOpen();
                                 }}
                             >
-                                Xem
+                                {t('users_tab.actions.view')}
                             </DropdownItem>
                             <DropdownItem
                                 key="edit"
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(snack)}
                             >
-                                Sửa
+                                {t('movie_details.edit_movie')}
                             </DropdownItem>
                             <DropdownItem
                                 key="delete"
@@ -192,7 +194,7 @@ export default function LayoutFood() {
                                 startContent={<Trash size={16} />}
                                 onPress={() => deleteSnack(snack.snack_id)}
                             >
-                                Xóa
+                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -200,7 +202,7 @@ export default function LayoutFood() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [handleOpenEdit, onOpen, deleteSnack]);
+    }, [handleOpenEdit, onOpen, deleteSnack, getSnackTypeText, t]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -211,28 +213,28 @@ export default function LayoutFood() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Thực đơn
+                            {t('foods_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Cấu hình danh mục đồ ăn, thức uống và các gói combo ưu đãi để phục vụ khách hàng tại quầy popcorn.
+                            {t('foods_tab.desc')}
                         </p>
                     </div>
                 </div>
             </div>
             <DataTableAdmin<Snack>
-                columns={columns}
+                columns={getMovieColumns(t)}
                 items={snacks}
                 isLoading={isFetchingSnacks}
-                searchPlaceholder="Tìm kiếm tên món ăn, thức uống..."
-                addButtonLabel="Thêm món"
+                searchPlaceholder={t('foods_tab.search_placeholder')}
+                addButtonLabel={t('foods_tab.add_snack')}
                 onAdd={handleOpenAdd}
-                totalLabel={(count) => `Tổng cộng ${count} sản phẩm`}
-                emptyLabel="Danh sách món ăn trống"
-                loadingLabel="Đang tải dữ liệu thực đơn..."
+                totalLabel={(count) => t('foods_tab.total_items', { count })}
+                emptyLabel={t('foods_tab.empty_label')}
+                loadingLabel={t('foods_tab.loading_label')}
                 defaultSort={{ column: "name", direction: "ascending" }}
                 rowKey={(item) => item.snack_id}
                 searchBy={(item) => item.name}
@@ -240,11 +242,11 @@ export default function LayoutFood() {
                 filters={[
                     {
                         uid: "type",
-                        name: "Loại",
+                        name: t('foods_tab.type_label'),
                         options: [
-                            { name: "Food", uid: "0" },
-                            { name: "Drink", uid: "1" },
-                            { name: "Combo", uid: "2" },
+                            { name: t('foods_tab.types.food'), uid: "0" },
+                            { name: t('foods_tab.types.drink'), uid: "1" },
+                            { name: t('foods_tab.types.combo'), uid: "2" },
                         ]
                     }
                 ]}
@@ -256,7 +258,7 @@ export default function LayoutFood() {
                     {(onClose) => (
                         <>
                             <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
-                                Chi tiết sản phẩm
+                                {t('foods_tab.details_title')}
                             </DrawerHeader>
 
                             <DrawerBody className="p-0">
@@ -283,16 +285,16 @@ export default function LayoutFood() {
                                                 <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
                                                     <div className="flex items-center gap-2 text-zinc-400">
                                                         <DollarSign size={14} />
-                                                        <span className="text-[10px] font-bold uppercase tracking-widest">Giá bán</span>
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('foods_tab.price_label')}</span>
                                                     </div>
                                                     <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
-                                                        {Number(selectedSnack.price).toLocaleString("vi-VN")} đ
+                                                        {Number(selectedSnack.price).toLocaleString(t('locale_code'))} Ä‘
                                                     </span>
                                                 </div>
                                                 <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
                                                     <div className="flex items-center gap-2 text-zinc-400">
                                                         <Boxes size={14} />
-                                                        <span className="text-[10px] font-bold uppercase tracking-widest">Phân loại</span>
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('foods_tab.type_label')}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm font-bold text-zinc-700 dark:text-zinc-200">
@@ -304,12 +306,12 @@ export default function LayoutFood() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center text-zinc-500 font-medium italic">Vui lòng chọn một sản phẩm để xem chi tiết.</div>
+                                    <div className="p-12 text-center text-zinc-500 font-medium italic">{t('movie_details.no_data')}</div>
                                 )}
                             </DrawerBody>
                             <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
                                 <button onClick={onClose} className="w-full font-bold border border-zinc-200 dark:border-zinc-800 rounded-lg py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer">
-                                    Đóng chi tiết
+                                    {t('foods_tab.close_details')}
                                 </button>
                             </DrawerFooter>
                         </>
@@ -323,16 +325,16 @@ export default function LayoutFood() {
                     {() => (
                         <>
                             <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
-                                {isAdding ? "Thêm món mới" : "Sửa món ăn"}
+                                {isAdding ? t('foods_tab.add_new_snack') : t('foods_tab.edit_snack')}
                             </DrawerHeader>
 
                             <DrawerBody>
                                 <div ref={drawerContainerRef} className="flex flex-col gap-6 py-6">
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Tên sản phẩm</Label>
+                                        <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('foods_tab.name_label')}</Label>
                                         <Input
                                             id="name"
-                                            placeholder="VD: Bắp rang bơ phô mai, Coca Cola..."
+                                            placeholder={t('foods_tab.name_placeholder')}
                                             value={editForm.name}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
                                             className="bg-sidebar h-12 rounded-lg"
@@ -341,31 +343,31 @@ export default function LayoutFood() {
 
                                     <div className="flex flex-col gap-4">
                                         <div className="flex flex-col gap-2">
-                                            <Label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Phân loại</Label>
+                                            <Label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('foods_tab.type_label')}</Label>
                                             <Select
                                                 value={editForm.type}
                                                 onValueChange={(value) => setEditForm((prev) => ({ ...prev, type: value }))}
                                             >
                                                 <SelectTrigger className="w-full bg-sidebar h-12 rounded-lg">
-                                                    <SelectValue placeholder="Chọn loại" />
+                                                    <SelectValue placeholder={t('foods_tab.type_placeholder')} />
                                                 </SelectTrigger>
                                                 <SelectContent container={drawerContainerRef.current}>
                                                     <SelectGroup>
-                                                        <SelectLabel>Loại sản phẩm</SelectLabel>
-                                                        <SelectItem value="0">Thức ăn (Food)</SelectItem>
-                                                        <SelectItem value="1">Đồ uống (Drink)</SelectItem>
-                                                        <SelectItem value="2">Combo tiết kiệm</SelectItem>
+                                                        <SelectLabel>{t('foods_tab.type_label')}</SelectLabel>
+                                                        <SelectItem value="0">{t('foods_tab.types.food')}</SelectItem>
+                                                        <SelectItem value="1">{t('foods_tab.types.drink')}</SelectItem>
+                                                        <SelectItem value="2">{t('foods_tab.types.combo')}</SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>
                                         </div>
 
                                         <div className="flex flex-col gap-2">
-                                            <Label htmlFor="price" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Giá bán (VNĐ)</Label>
+                                            <Label htmlFor="price" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('foods_tab.price_label')}</Label>
                                             <Input
                                                 id="price"
                                                 type="number"
-                                                placeholder="VD: 55000"
+                                                placeholder={t('foods_tab.price_placeholder')}
                                                 value={editForm.price}
                                                 onChange={(event) => setEditForm((prev) => ({ ...prev, price: event.target.value }))}
                                                 className="bg-sidebar h-12 rounded-lg"
@@ -374,11 +376,11 @@ export default function LayoutFood() {
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="imageUrl" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Đường dẫn hình ảnh (URL)</Label>
+                                        <Label htmlFor="imageUrl" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('foods_tab.image_label')}</Label>
                                         <div className="flex gap-2">
                                             <Input
                                                 id="imageUrl"
-                                                placeholder="https://..."
+                                                placeholder={t('foods_tab.image_placeholder')}
                                                 value={editForm.imageUrl}
                                                 onChange={(event) => setEditForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
                                                 className="bg-sidebar h-12 rounded-lg"
@@ -401,7 +403,7 @@ export default function LayoutFood() {
                                     disabled={isUpdatingSnack || isCreatingSnack}
                                     className="w-full h-12 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black font-bold rounded-lg hover:opacity-90 transition-all shadow-lg shadow-zinc-200 dark:shadow-none disabled:opacity-50 cursor-pointer"
                                 >
-                                    {isUpdatingSnack || isCreatingSnack ? "Đang xử lý..." : isAdding ? "Thêm món" : "Lưu thay đổi"}
+                                    {isUpdatingSnack || isCreatingSnack ? t('foods_tab.processing') : isAdding ? t('foods_tab.add_snack') : t('foods_tab.save_changes')}
                                 </button>
                             </DrawerFooter>
                         </>

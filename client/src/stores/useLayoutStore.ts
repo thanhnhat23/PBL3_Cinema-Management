@@ -9,12 +9,11 @@ export type LayoutKey =
     | 'users'
     | 'sync'
     | 'revenue'
-    | 'foods'
-    | null;
+    | 'foods';
 
 interface LayoutStore {
-    openLayout: LayoutKey;
-    setOpenLayout: (layout: LayoutKey) => void;
+    openLayout: LayoutKey | null;
+    setOpenLayout: (layout: LayoutKey | null) => void;
 }
 
 export const useLayoutStore = create<LayoutStore>((set) => ({

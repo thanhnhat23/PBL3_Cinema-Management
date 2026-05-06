@@ -1,4 +1,4 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -29,21 +29,22 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
+import { useTranslation } from "react-i18next";
 import { useCinemaStore, type Cinema } from "@/stores/useCinemaStore";
 import { useLocationStore } from "@/stores/useLocationStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
-const columns: AdminColumn[] = [
+const getCinemaColumns = (t: any): AdminColumn[] => [
     { name: "ID", uid: "cinema_id", sortable: true },
-    { name: "TÊN RẠP", uid: "name", sortable: true },
-    { name: "ĐỊA CHỈ", uid: "address", sortable: true },
-    { name: "THÀNH PHỐ", uid: "location", sortable: true },
-    { name: "SỐ ĐIỆN THOẠI", uid: "phone_number", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: t('cinemas_tab.columns.name'), uid: "name", sortable: true },
+    { name: t('cinemas_tab.columns.address'), uid: "address", sortable: true },
+    { name: t('cinemas_tab.columns.city'), uid: "location", sortable: true },
+    { name: t('cinemas_tab.columns.phone'), uid: "phone_number", sortable: true },
+    { name: t('common.actions'), uid: "actions" },
 ];
 
 export default function LayoutCinemas() {
+    const { t } = useTranslation();
     const { cinemas, isFetchingCinemas, fetchAllCinemas, isUpdatingCinema, updateCinema } = useCinemaStore();
     const { locations, fetchAllLocations } = useLocationStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -163,14 +164,14 @@ export default function LayoutCinemas() {
                                     onOpen();
                                 }}
                             >
-                                Xem
+                                {t('common.view')}
                             </DropdownItem>
                             <DropdownItem
                                 key="edit"
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(cinema)}
                             >
-                                Sửa
+                                {t('movie_details.edit_movie')}
                             </DropdownItem>
                              <DropdownItem 
                                 key="delete" 
@@ -182,7 +183,7 @@ export default function LayoutCinemas() {
                                     deleteCinema(cinema.cinema_id);
                                 }}
                             >
-                                Xóa
+                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -190,7 +191,7 @@ export default function LayoutCinemas() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [handleOpenEdit, onOpen]);
+    }, [handleOpenEdit, onOpen, t]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -201,28 +202,28 @@ export default function LayoutCinemas() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Hệ thống Rạp
+                            {t('cinemas_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Quản lý thông tin các cụm rạp, địa chỉ, hotline và cơ sở vật chất của toàn hệ thống rạp phim.
+                            {t('cinemas_tab.desc')}
                         </p>
                     </div>
                 </div>
             </div>
             <DataTableAdmin<Cinema>
-                columns={columns}
+                columns={getCinemaColumns(t)}
                 items={cinemas}
                 isLoading={isFetchingCinemas}
-                searchPlaceholder="Tìm theo tên rạp..."
-                addButtonLabel="Thêm rạp phim"
+                searchPlaceholder={t('cinemas_tab.search_placeholder')}
+                addButtonLabel={t('cinemas_tab.add_cinema')}
                 onAdd={handleOpenAdd}
-                totalLabel={(count) => `Tổng cộng ${count} rạp phim`}
-                emptyLabel="Không có rạp phim"
-                loadingLabel="Đang tải dữ liệu rạp phim..."
+                totalLabel={(count) => t('cinemas_tab.total_count', { count })}
+                emptyLabel={t('cinemas_tab.empty_label')}
+                loadingLabel={t('cinemas_tab.loading_label')}
                 defaultSort={{ column: "name", direction: "ascending" }}
                 rowKey={(item) => item.cinema_id}
                 searchBy={(item) => item.name}
@@ -230,7 +231,7 @@ export default function LayoutCinemas() {
                 filters={[
                     {
                         uid: "location_id",
-                        name: "Thành phố",
+                        name: t('cinemas_tab.city_label'),
                         options: locations.map(l => ({ name: l.city, uid: String(l.location_id) }))
                     }
                 ]}
@@ -241,7 +242,7 @@ export default function LayoutCinemas() {
                     {(onClose) => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
-                                {selectedCinema ? `Chi tiết: ${selectedCinema.name}` : "Chi tiết rạp phim"}
+                                {selectedCinema ? t('movie_details.view_details', { title: selectedCinema.name }) : t('cinemas_tab.details_title')}
                             </DrawerHeader>
  
                             <DrawerBody className="px-0">
@@ -271,7 +272,7 @@ export default function LayoutCinemas() {
                                             <div className="grid grid-cols-1 gap-4">
                                                 <div className="flex items-start gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                                                     <div className="flex flex-col gap-1 w-full">
-                                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Địa chỉ</span>
+                                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('cinemas_tab.address_label')}</span>
                                                         <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 leading-snug">{selectedCinema.address}</span>
                                                     </div>
                                                 </div>
@@ -279,13 +280,13 @@ export default function LayoutCinemas() {
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div className="flex items-start gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                                                         <div className="flex flex-col gap-1">
-                                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Hotline</span>
+                                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('cinemas_tab.hotline')}</span>
                                                             <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{selectedCinema.phone_number || "N/A"}</span>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-start gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                                                         <div className="flex flex-col gap-1">
-                                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Coordinates</span>
+                                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('cinemas_tab.coordinates')}</span>
                                                             <span className="text-[11px] font-medium text-zinc-500">{selectedCinema.latitude}, {selectedCinema.longitude}</span>
                                                         </div>
                                                     </div>
@@ -293,17 +294,22 @@ export default function LayoutCinemas() {
                                             </div>
 
                                             <div className="flex flex-col gap-3">
-                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Giới thiệu rạp</span>
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('cinemas_tab.intro_label')}</span>
                                                 <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 italic">
-                                                    {selectedCinema.description || "Hệ thống rạp chiếu phim hiện đại với công nghệ âm thanh vòm Dolby Atmos và màn hình sắc nét."}
+                                                    {selectedCinema.description || t('cinemas_tab.intro_placeholder')}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center text-zinc-500 font-medium tracking-tight">Không có dữ liệu rạp phim.</div>
+                                    <div className="p-12 text-center text-zinc-500 font-medium tracking-tight">{t('cinemas_tab.no_data')}</div>
                                 )}
                             </DrawerBody>
+                            <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
+                                <button onClick={onClose} className="w-full font-bold border border-zinc-200 dark:border-zinc-800 rounded-lg py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer">
+                                    {t('foods_tab.close_details')}
+                                </button>
+                            </DrawerFooter>
                         </>
                     )}
                 </DrawerContent>
@@ -314,16 +320,16 @@ export default function LayoutCinemas() {
                     {() => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1">
-                                {isAdding ? "Thêm rạp phim mới" : "Sửa rạp phim"}
+                                {isAdding ? t('cinemas_tab.add_new_cinema') : t('cinemas_tab.edit_cinema')}
                             </DrawerHeader>
 
                             <DrawerBody>
-                                <p className="text-sm text-zinc-500">Thực hiện các thay đổi cho rạp phim</p>
+                                <p className="text-sm text-zinc-500">{t('cinemas_tab.edit_desc')}</p>
 
                                 <div ref={drawerContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
-                                            Tên rạp
+                                            {t('cinemas_tab.name_label')}
                                         </Label>
 
                                         <Input
@@ -336,7 +342,7 @@ export default function LayoutCinemas() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="location_id" className="text-right">
-                                            Thành phố
+                                            {t('cinemas_tab.city_label')}
                                         </Label>
 
                                         <Select
@@ -344,12 +350,12 @@ export default function LayoutCinemas() {
                                             onValueChange={(value) => setEditForm((prev) => ({ ...prev, location_id: value }))}
                                         >
                                             <SelectTrigger className="col-span-3 w-full bg-sidebar">
-                                                <SelectValue placeholder="Chọn thành phố" />
+                                                <SelectValue placeholder={t('cinemas_tab.city_label')} />
                                             </SelectTrigger>
 
                                             <SelectContent container={drawerContainerRef.current}>
                                                 <SelectGroup>
-                                                    <SelectLabel>Danh sách thành phố</SelectLabel>
+                                                    <SelectLabel>{t('cinemas_tab.city_label')}</SelectLabel>
                                                     {locations.map((location) => (
                                                         <SelectItem key={location.location_id} value={String(location.location_id)}>
                                                             {location.city}
@@ -362,7 +368,7 @@ export default function LayoutCinemas() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="address" className="text-right">
-                                            Địa chỉ
+                                            {t('cinemas_tab.address_label')}
                                         </Label>
 
                                         <Input
@@ -375,7 +381,7 @@ export default function LayoutCinemas() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="phone_number" className="text-right">
-                                            Số điện thoại
+                                            {t('cinemas_tab.phone_label')}
                                         </Label>
 
                                         <Input
@@ -388,7 +394,7 @@ export default function LayoutCinemas() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="latitude" className="text-right">
-                                            Vĩ độ
+                                            {t('cinemas_tab.coordinates')} (Lat)
                                         </Label>
 
                                         <Input
@@ -402,7 +408,7 @@ export default function LayoutCinemas() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="longitude" className="text-right">
-                                            Kinh độ
+                                            {t('cinemas_tab.coordinates')} (Lng)
                                         </Label>
 
                                         <Input
@@ -416,13 +422,13 @@ export default function LayoutCinemas() {
 
                                     <div className="grid grid-cols-4 items-start gap-4">
                                         <Label htmlFor="description" className="text-right pt-2">
-                                            Mô tả
+                                            {t('cinemas_tab.intro_label')}
                                         </Label>
 
                                         <Textarea
                                             id="description"
                                             value={editForm.description}
-                                            placeholder="Nhập mô tả rạp phim"
+                                            placeholder={t('cinemas_tab.intro_placeholder')}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, description: event.target.value }))}
                                             className="col-span-3 text-sm min-h-auto"
                                         />
@@ -430,7 +436,7 @@ export default function LayoutCinemas() {
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="image_overview" className="text-right">
-                                            Ảnh mô tả
+                                            {t('cinemas_tab.image_label')}
                                         </Label>
 
                                         <Input
@@ -450,7 +456,7 @@ export default function LayoutCinemas() {
                                     disabled={isUpdatingCinema}
                                     className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
                                 >
-                                    {isUpdatingCinema ? "Đang lưu..." : "Lưu thay đổi"}
+                                    {isUpdatingCinema ? t('cinemas_tab.saving') : t('cinemas_tab.save_changes')}
                                 </button>
                             </DrawerFooter>
                         </>

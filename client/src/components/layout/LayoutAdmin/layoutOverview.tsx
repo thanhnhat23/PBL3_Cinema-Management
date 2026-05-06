@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { 
     ChartColumnDecreasing, 
@@ -121,8 +121,8 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
 
     const getRoleLabel = useCallback((role: string) => {
         const normalized = String(role).toLowerCase();
-        return normalized === 'admin' || normalized === '0' ? 'Admin' : 'Staff';
-    }, []);
+        return normalized === 'admin' || normalized === '0' ? t('users_tab.roles.admin') : t('users_tab.roles.staff');
+    }, [t]);
 
     const adminOrStaffUsers = useMemo(() => {
         return users.filter((user) => isAdminOrStaffUser(user.role));
@@ -176,7 +176,7 @@ export const LayoutOverview = ({ selectValue }: { selectValue: string }) => {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">

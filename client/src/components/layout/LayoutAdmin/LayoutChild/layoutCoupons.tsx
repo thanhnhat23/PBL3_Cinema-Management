@@ -1,4 +1,4 @@
-import type { Key } from "react";
+﻿import type { Key } from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import { 
@@ -30,16 +30,17 @@ import {
 } from "@/components/ui/select";
 import { format } from "date-fns";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
-const columns: AdminColumn[] = [
+const getCouponColumns = (t: any): AdminColumn[] => [
     { name: "ID", uid: "coupon_id", sortable: true },
-    { name: "MÃ GIẢM GIÁ", uid: "code", sortable: true },
-    { name: "LOẠI", uid: "type", sortable: true },
-    { name: "GIÁ TRỊ GIẢM", uid: "discountValue", sortable: true },
-    { name: "GIÁ TRỊ TỐI THIỂU", uid: "minOrderValue", sortable: true },
-    { name: "TRẠNG THÁI", uid: "isHoliday", sortable: true },
-    { name: "HẾT HẠN", uid: "endDate", sortable: true },
-    { name: "ACTIONS", uid: "actions" },
+    { name: t('coupons_tab.columns.code'), uid: "code", sortable: true },
+    { name: t('coupons_tab.columns.type'), uid: "type", sortable: true },
+    { name: t('coupons_tab.columns.value'), uid: "discountValue", sortable: true },
+    { name: t('coupons_tab.columns.min'), uid: "minOrderValue", sortable: true },
+    { name: t('coupons_tab.columns.status'), uid: "isHoliday", sortable: true },
+    { name: t('coupons_tab.columns.expiry'), uid: "endDate", sortable: true },
+    { name: t('common.actions'), uid: "actions" },
 ];
 
 const discountTypeColorMap: Record<string, "primary" | "success" | "default"> = {
@@ -48,15 +49,8 @@ const discountTypeColorMap: Record<string, "primary" | "success" | "default"> = 
     unknown: "default",
 };
 
-const getDiscountTypeText = (type: number) => {
-    if (type === 0) return "Percentage";
-    if (type === 1) return "Fixed Amount";
-    return "Unknown";
-};
-
-const getDiscountTypeKey = (typeText: string) => typeText.toLowerCase().replace(/\s+/g, "");
-
 export default function LayoutCoupons() {
+    const { t } = useTranslation();
     const { 
         coupons, 
         isFetchingCoupons, 
@@ -88,6 +82,18 @@ export default function LayoutCoupons() {
     useEffect(() => {
         fetchAllCoupons();
     }, [fetchAllCoupons]);
+
+    const getDiscountTypeText = useCallback((type: number) => {
+        if (type === 0) return t('coupons_tab.types.percentage');
+        if (type === 1) return t('coupons_tab.types.fixed');
+        return "Unknown";
+    }, [t]);
+
+    const getDiscountTypeKey = useCallback((type: number) => {
+        if (type === 0) return "percentage";
+        if (type === 1) return "fixedamount";
+        return "unknown";
+    }, []);
 
     const handleOpenAdd = () => {
         setIsAdding(true);
@@ -169,8 +175,9 @@ export default function LayoutCoupons() {
                 );
             case "type": {
                 const typeText = getDiscountTypeText(coupon.type);
+                const typeKey = getDiscountTypeKey(coupon.type);
                 return (
-                    <Chip className="capitalize font-bold" color={discountTypeColorMap[getDiscountTypeKey(typeText)]} size="sm" variant="flat">
+                    <Chip className="capitalize font-bold" color={discountTypeColorMap[typeKey]} size="sm" variant="flat">
                         {typeText}
                     </Chip>
                 );
@@ -179,13 +186,13 @@ export default function LayoutCoupons() {
                 return (
                     <div className="flex items-center gap-1 font-bold">
                         {coupon.type === 0 ? <Percent size={14} className="text-zinc-400" /> : <Banknote size={14} className="text-zinc-400" />}
-                        <span>{coupon.type === 0 ? `${coupon.discountValue}%` : `${Number(coupon.discountValue).toLocaleString("vi-VN")} đ`}</span>
+                        <span>{coupon.type === 0 ? `${coupon.discountValue}%` : `${Number(coupon.discountValue).toLocaleString(t('locale_code'))} Ä‘`}</span>
                     </div>
                 );
             case "minOrderValue":
-                return <span className="text-zinc-500 font-medium">{Number(coupon.minOrderValue).toLocaleString("vi-VN")} đ</span>;
+                return <span className="text-zinc-500 font-medium">{Number(coupon.minOrderValue).toLocaleString(t('locale_code'))} Ä‘</span>;
             case "endDate":
-                return <span className="text-xs font-medium text-zinc-400">{new Date(String(coupon.endDate)).toLocaleDateString("vi-VN")}</span>;
+                return <span className="text-xs font-medium text-zinc-400">{new Date(String(coupon.endDate)).toLocaleDateString(t('locale_code'))}</span>;
             case "isHoliday":
                 return (
                     <Chip className="capitalize font-bold" color={coupon.isHoliday ? "warning" : "success"} size="sm" variant="flat">
@@ -211,14 +218,14 @@ export default function LayoutCoupons() {
                                     onOpen();
                                 }}
                             >
-                                Chi tiết mã
+                                {t('coupons_tab.details_title')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="edit" 
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(coupon)}
                             >
-                                Chỉnh sửa
+                                {t('coupons_tab.edit_coupon')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="delete" 
@@ -227,7 +234,7 @@ export default function LayoutCoupons() {
                                 startContent={<Trash size={16} />}
                                 onPress={() => deleteCoupon(coupon.coupon_id)}
                             >
-                                Xóa mã
+                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -235,7 +242,7 @@ export default function LayoutCoupons() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [onOpen, deleteCoupon, handleOpenEdit]);
+    }, [onOpen, deleteCoupon, handleOpenEdit, t, getDiscountTypeText, getDiscountTypeKey]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -246,28 +253,28 @@ export default function LayoutCoupons() {
                 <div className="relative z-10 flex flex-col gap-4">
                     <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        Management System
+                        {t('common.management_system')}
                     </div>
                     <div className="space-y-1">
                         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-                            Quản lý Mã giảm giá
+                            {t('coupons_tab.title')}
                         </h1>
                         <p className="text-sm text-zinc-500 font-medium max-w-lg">
-                            Tạo, phát hành và quản lý các chương trình ưu đãi, mã giảm giá cho khách hàng trong các dịp đặc biệt.
+                            {t('coupons_tab.desc')}
                         </p>
                     </div>
                 </div>
             </div>
             <DataTableAdmin<Coupon>
-                columns={columns}
+                columns={getCouponColumns(t)}
                 items={coupons}
                 isLoading={isFetchingCoupons}
-                searchPlaceholder="Tìm theo mã giảm giá..."
-                addButtonLabel="Thêm mã mới"
+                searchPlaceholder={t('coupons_tab.search_placeholder')}
+                addButtonLabel={t('coupons_tab.add_coupon')}
                 onAdd={handleOpenAdd}
-                totalLabel={(count) => `Tổng cộng ${count} mã giảm giá`}
-                emptyLabel="Không có mã giảm giá"
-                loadingLabel="Đang tải dữ liệu mã giảm giá..."
+                totalLabel={(count) => t('coupons_tab.total_count', { count })}
+                emptyLabel={t('coupons_tab.empty_label')}
+                loadingLabel={t('coupons_tab.loading_label')}
                 defaultSort={{ column: "code", direction: "ascending" }}
                 rowKey={(item) => item.coupon_id}
                 searchBy={(item) => item.code}
@@ -275,15 +282,15 @@ export default function LayoutCoupons() {
                 filters={[
                     {
                         uid: "type",
-                        name: "Loại giảm giá",
+                        name: t('coupons_tab.type_label'),
                         options: [
-                            { name: "Phần trăm (%)", uid: "0" },
-                            { name: "Tiền mặt (đ)", uid: "1" },
+                            { name: t('coupons_tab.types.percentage'), uid: "0" },
+                            { name: t('coupons_tab.types.fixed'), uid: "1" },
                         ]
                     },
                     {
                         uid: "isHoliday",
-                        name: "Phân loại",
+                        name: t('coupons_tab.category_label'),
                         options: [
                             { name: "Normal", uid: "false" },
                             { name: "Holiday", uid: "true" },
@@ -297,7 +304,7 @@ export default function LayoutCoupons() {
                     {(onClose) => (
                         <>
                             <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
-                                Chi tiết mã giảm giá
+                                {t('coupons_tab.details_title')}
                             </DrawerHeader>
 
                             <DrawerBody className="p-0">
@@ -314,7 +321,7 @@ export default function LayoutCoupons() {
                                                 <h2 className="text-3xl font-black tracking-tighter text-blue-600 dark:text-blue-400 uppercase">{selectedCoupon.code}</h2>
                                                 <div className="flex items-center justify-center gap-2">
                                                     <Chip color={selectedCoupon.isHoliday ? "warning" : "success"} variant="flat" size="sm" className="font-bold">
-                                                        {selectedCoupon.isHoliday ? "Sự kiện đặc biệt" : "Mã thông thường"}
+                                                        {selectedCoupon.isHoliday ? t('coupons_tab.special_event') : t('coupons_tab.normal_coupon')}
                                                     </Chip>
                                                 </div>
                                             </div>
@@ -325,19 +332,19 @@ export default function LayoutCoupons() {
                                                 <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
                                                     <div className="flex items-center gap-2 text-zinc-400">
                                                         <Percent size={14} />
-                                                        <span className="text-[10px] font-bold uppercase tracking-widest">Giá trị giảm</span>
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('coupons_tab.value_label')}</span>
                                                     </div>
                                                     <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
-                                                        {selectedCoupon.type === 0 ? `${selectedCoupon.discountValue}%` : `${Number(selectedCoupon.discountValue).toLocaleString("vi-VN")} đ`}
+                                                        {selectedCoupon.type === 0 ? `${selectedCoupon.discountValue}%` : `${Number(selectedCoupon.discountValue).toLocaleString(t('locale_code'))} Ä‘`}
                                                     </span>
                                                 </div>
                                                 <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
                                                     <div className="flex items-center gap-2 text-zinc-400">
                                                         <Banknote size={14} />
-                                                        <span className="text-[10px] font-bold uppercase tracking-widest">Đơn tối thiểu</span>
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('coupons_tab.min_order_label')}</span>
                                                     </div>
                                                     <span className="text-lg font-bold text-zinc-700 dark:text-zinc-200">
-                                                        {Number(selectedCoupon.minOrderValue).toLocaleString("vi-VN")} đ
+                                                        {Number(selectedCoupon.minOrderValue).toLocaleString(t('locale_code'))} Ä‘
                                                     </span>
                                                 </div>
                                             </div>
@@ -345,17 +352,17 @@ export default function LayoutCoupons() {
                                             <div className="p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-6 shadow-sm">
                                                 <div className="flex items-center gap-2 text-zinc-400">
                                                     <Calendar size={14} />
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest">Thời gian áp dụng</span>
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">{t('coupons_tab.applied_all')}</span>
                                                 </div>
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex flex-col gap-1">
-                                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Bắt đầu</span>
-                                                        <span className="text-sm font-bold">{new Date(String(selectedCoupon.startDate)).toLocaleDateString("vi-VN", { dateStyle: 'long' })}</span>
+                                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('coupons_tab.start_date')}</span>
+                                                        <span className="text-sm font-bold">{new Date(String(selectedCoupon.startDate)).toLocaleDateString(t('locale_code'), { dateStyle: 'long' })}</span>
                                                     </div>
                                                     <div className="w-10 h-px bg-zinc-100 dark:bg-zinc-800" />
                                                     <div className="flex flex-col gap-1 text-right">
-                                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Kết thúc</span>
-                                                        <span className="text-sm font-bold text-rose-500">{new Date(String(selectedCoupon.endDate)).toLocaleDateString("vi-VN", { dateStyle: 'long' })}</span>
+                                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('coupons_tab.end_date')}</span>
+                                                        <span className="text-sm font-bold text-rose-500">{new Date(String(selectedCoupon.endDate)).toLocaleDateString(t('locale_code'), { dateStyle: 'long' })}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -363,19 +370,19 @@ export default function LayoutCoupons() {
                                             <div className="flex flex-col gap-3 p-4 bg-zinc-100/50 dark:bg-zinc-800/50 rounded-xl border border-dashed border-zinc-200 dark:border-zinc-700">
                                                 <div className="flex items-center gap-2 text-zinc-400">
                                                     <Clock size={12} />
-                                                    <span className="text-[9px] font-bold uppercase tracking-widest">Hệ thống ghi nhận</span>
+                                                    <span className="text-[9px] font-bold uppercase tracking-widest">System Record</span>
                                                 </div>
-                                                <p className="text-[11px] text-zinc-500 font-medium">Mã giảm giá này được áp dụng cho toàn bộ các suất chiếu nếu thỏa mãn điều kiện đơn hàng tối thiểu.</p>
+                                                <p className="text-[11px] text-zinc-500 font-medium">{t('coupons_tab.applied_all')}</p>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center text-zinc-500 font-medium italic">Vui lòng chọn mã giảm giá để xem thông tin.</div>
+                                    <div className="p-12 text-center text-zinc-500 font-medium italic">{t('coupons_tab.no_data')}</div>
                                 )}
                             </DrawerBody>
                             <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
                                 <button onClick={onClose} className="w-full font-bold border border-zinc-200 dark:border-zinc-800 rounded-lg py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer">
-                                    Đóng chi tiết
+                                    {t('foods_tab.close_details')}
                                 </button>
                             </DrawerFooter>
                         </>
@@ -389,14 +396,14 @@ export default function LayoutCoupons() {
                     {() => (
                         <>
                             <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
-                                {isAdding ? "Tạo mã giảm giá mới" : "Chỉnh sửa mã giảm giá"}
+                                {isAdding ? t('coupons_tab.add_new_coupon') : t('coupons_tab.edit_coupon')}
                             </DrawerHeader>
 
                             <DrawerBody>
                                 <div ref={drawerContainerRef} className="flex flex-col gap-6 py-6">
                                     {!isAdding && (
                                         <div className="flex flex-col gap-2">
-                                            <Label htmlFor="code" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Mã Coupon</Label>
+                                            <Label htmlFor="code" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.code_label')}</Label>
                                             <Input
                                                 id="code"
                                                 value={editForm.code}
@@ -407,10 +414,10 @@ export default function LayoutCoupons() {
                                     )}
 
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="description" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Mô tả</Label>
+                                        <Label htmlFor="description" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.desc_label')}</Label>
                                         <Input
                                             id="description"
-                                            placeholder="VD: Giảm 50% cho đơn hàng từ 100k..."
+                                            placeholder={t('coupons_tab.desc_placeholder')}
                                             value={editForm.description}
                                             onChange={(e) => setEditForm(p => ({ ...p, description: e.target.value }))}
                                             className="bg-sidebar h-12 rounded-lg"
@@ -419,25 +426,25 @@ export default function LayoutCoupons() {
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex flex-col gap-2">
-                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Loại giảm giá</Label>
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.type_label')}</Label>
                                             <Select
                                                 value={editForm.type}
                                                 onValueChange={(v) => setEditForm(p => ({ ...p, type: v }))}
                                             >
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg">
-                                                    <SelectValue placeholder="Chọn loại" />
+                                                    <SelectValue placeholder={t('coupons_tab.type_label')} />
                                                 </SelectTrigger>
                                                 <SelectContent container={drawerContainerRef.current}>
                                                     <SelectGroup>
-                                                        <SelectItem value="0">Phần trăm (%)</SelectItem>
-                                                        <SelectItem value="1">Số tiền cố định (đ)</SelectItem>
+                                                        <SelectItem value="0">{t('coupons_tab.types.percentage')}</SelectItem>
+                                                        <SelectItem value="1">{t('coupons_tab.types.fixed')}</SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>
                                         </div>
 
                                         <div className="flex flex-col gap-2">
-                                            <Label htmlFor="discountValue" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Giá trị giảm</Label>
+                                            <Label htmlFor="discountValue" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.value_label')}</Label>
                                             <Input
                                                 id="discountValue"
                                                 type="number"
@@ -449,7 +456,7 @@ export default function LayoutCoupons() {
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="minOrderValue" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Giá trị đơn tối thiểu (VNĐ)</Label>
+                                        <Label htmlFor="minOrderValue" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.min_order_label')}</Label>
                                         <Input
                                             id="minOrderValue"
                                             type="number"
@@ -461,7 +468,7 @@ export default function LayoutCoupons() {
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex flex-col gap-2">
-                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Ngày bắt đầu</Label>
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.start_date')}</Label>
                                             <Input
                                                 type="date"
                                                 value={editForm.startDate}
@@ -470,7 +477,7 @@ export default function LayoutCoupons() {
                                             />
                                         </div>
                                         <div className="flex flex-col gap-2">
-                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Ngày kết thúc</Label>
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.end_date')}</Label>
                                             <Input
                                                 type="date"
                                                 value={editForm.endDate}
@@ -481,18 +488,18 @@ export default function LayoutCoupons() {
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Phân loại mã</Label>
+                                        <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.category_label')}</Label>
                                         <Select
                                             value={editForm.isHoliday}
                                             onValueChange={(v) => setEditForm(p => ({ ...p, isHoliday: v }))}
                                         >
                                             <SelectTrigger className="bg-sidebar h-12 rounded-lg">
-                                                <SelectValue placeholder="Chọn phân loại" />
+                                                <SelectValue placeholder={t('coupons_tab.category_label')} />
                                             </SelectTrigger>
                                             <SelectContent container={drawerContainerRef.current}>
                                                 <SelectGroup>
-                                                    <SelectItem value="false">Mã thông thường (Normal)</SelectItem>
-                                                    <SelectItem value="true">Mã sự kiện/Lễ (Holiday)</SelectItem>
+                                                    <SelectItem value="false">{t('coupons_tab.cat_normal')}</SelectItem>
+                                                    <SelectItem value="true">{t('coupons_tab.cat_holiday')}</SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
@@ -506,7 +513,7 @@ export default function LayoutCoupons() {
                                     disabled={isCreatingCoupon || isUpdatingCoupon}
                                     className="w-full h-12 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black font-bold rounded-lg hover:opacity-90 transition-all shadow-lg shadow-zinc-200 dark:shadow-none disabled:opacity-50 cursor-pointer"
                                 >
-                                    {isCreatingCoupon || isUpdatingCoupon ? "Đang xử lý..." : isAdding ? "Tạo mã" : "Lưu thay đổi"}
+                                    {isCreatingCoupon || isUpdatingCoupon ? t('coupons_tab.processing') : isAdding ? t('coupons_tab.create_btn') : t('coupons_tab.save_changes')}
                                 </button>
                             </DrawerFooter>
                         </>

@@ -1,4 +1,4 @@
-import { Tabs, Tab } from "@heroui/react";
+﻿import { Tabs, Tab } from "@heroui/react";
 import LayoutActors from "./LayoutChild/layoutActors";
 import LayoutReviews from "./LayoutChild/layoutReviews";
 import LayoutMovies from "./LayoutChild/layoutMovies";

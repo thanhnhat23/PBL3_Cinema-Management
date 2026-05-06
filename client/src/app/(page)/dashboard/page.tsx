@@ -168,9 +168,9 @@ export default function Dashboard() {
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarGroupLabel className='px-2 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 flex items-center gap-2'>
-                             <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                             {t('dashboard.overview')}
-                         </SidebarGroupLabel>
+                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                            {t('dashboard.overview')}
+                        </SidebarGroupLabel>
                         <SidebarMenu className="gap-1">
                             <SidebarMenuItem>
                                 <SidebarMenuButton
@@ -183,9 +183,9 @@ export default function Dashboard() {
                                     )}
                                     onClick={() => handleSetLayout('stats')}
                                 >
-                                     <ChartColumnDecreasing className={cn("size-2", openLayout === 'stats' && "animate-pulse")} />
-                                     <span className="text-sm">{t('dashboard.stats_overview')}</span>
-                                     {openLayout === 'stats' && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
+                                    <ChartColumnDecreasing className={cn("size-2", openLayout === 'stats' && "animate-pulse")} />
+                                    <span className="text-sm">{t('dashboard.stats_overview')}</span>
+                                    {openLayout === 'stats' && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
@@ -193,9 +193,9 @@ export default function Dashboard() {
 
                     <SidebarGroup>
                         <SidebarGroupLabel className='px-2 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 flex items-center gap-2'>
-                             <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                             {t('dashboard.system_management')}
-                         </SidebarGroupLabel>
+                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                            {t('dashboard.system_management')}
+                        </SidebarGroupLabel>
                         <SidebarMenu className="gap-1">
                             {Management.map((item, index) => {
                                 const isActive = openLayout === ManagementLayoutMap[item];
@@ -211,11 +211,11 @@ export default function Dashboard() {
                                             )}
                                             onClick={() => handleSetLayout(ManagementLayoutMap[item])}
                                         >
-                                             <div className={cn("transition-transform duration-300", isActive && "scale-110")}>
-                                                 {Icon[item]}
-                                             </div>
-                                             <span>{t(`dashboard.management.${item}`)}</span>
-                                             {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
+                                            <div className={cn("transition-transform duration-300", isActive && "scale-110")}>
+                                                {Icon[item]}
+                                            </div>
+                                            <span>{t(`dashboard.management.${item}`)}</span>
+                                            {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 );
@@ -225,14 +225,14 @@ export default function Dashboard() {
 
                     <SidebarGroup>
                         <SidebarGroupLabel className='px-2 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 flex items-center gap-2'>
-                             <div className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
-                             {t('dashboard.config_data')}
-                         </SidebarGroupLabel>
+                            <div className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+                            {t('dashboard.config_data')}
+                        </SidebarGroupLabel>
                         <SidebarMenu className="gap-1">
                             {[
-                                 { key: 'users', icon: <User size={18} />, label: t('dashboard.management.users') },
-                                 { key: 'sync', icon: <Database size={18} />, label: t('dashboard.management.sync') },
-                                 { key: 'revenue', icon: <ChartColumnDecreasing size={18} />, label: t('dashboard.management.revenue') }
+                                { key: 'users', icon: <User size={18} />, label: t('dashboard.management.users') },
+                                { key: 'sync', icon: <Database size={18} />, label: t('dashboard.management.sync') },
+                                { key: 'revenue', icon: <ChartColumnDecreasing size={18} />, label: t('dashboard.management.revenue') }
                             ].map((item) => {
                                 const isActive = openLayout === item.key;
                                 return (
@@ -281,47 +281,47 @@ export default function Dashboard() {
                                             <span className='text-sm font-semibold dark:text-white truncate max-w-30'>{authUser?.username}</span>
                                             <div className="flex items-center gap-1.5">
                                                 <div className={cn("w-2 h-2 rounded-full", Number(authUser?.role) === 0 ? "bg-rose-500" : "bg-emerald-500")} />
-                                                <span className='text-[10px] font-bold tracking-widest text-zinc-500'>{Number(authUser?.role) === 0 ? 'Admin' : 'Staff'}</span>
+                                                <span className='text-[10px] font-bold tracking-widest text-zinc-500'>{Number(authUser?.role) === 0 ? t('users_tab.roles.admin') : t('users_tab.roles.staff')}</span>
                                             </div>
                                         </div>
                                     </SidebarMenuButton>
                                 </DropdownTrigger>
 
                                 <DropdownMenu variant="flat" className="min-w-50 bg-sidebar">
-                                     <DropdownItem key="profile-header" isReadOnly className="h-14 gap-2 opacity-100">
-                                         <div className="flex flex-col">
-                                             <p className="text-xs font-bold text-zinc-400">{t('dashboard.logged_in')}</p>
-                                             <p className="text-xs font-semibold truncate">{authUser?.email}</p>
-                                         </div>
-                                     </DropdownItem>
+                                    <DropdownItem key="profile-header" isReadOnly className="h-14 gap-2 opacity-100">
+                                        <div className="flex flex-col">
+                                            <p className="text-xs font-bold text-zinc-400">{t('dashboard.logged_in')}</p>
+                                            <p className="text-xs font-semibold truncate">{authUser?.email}</p>
+                                        </div>
+                                    </DropdownItem>
 
                                     <DropdownItem
                                         key='home'
                                         startContent={<House size={18} className="text-zinc-400" />}
                                         href="/"
-                                         className="font-semibold py-2"
-                                     >
-                                         {t('dashboard.home')}
-                                     </DropdownItem>
+                                        className="font-semibold py-2"
+                                    >
+                                        {t('dashboard.home')}
+                                    </DropdownItem>
 
                                     <DropdownItem
                                         key='user'
                                         showDivider
                                         startContent={<User size={18} className="text-zinc-400" />}
                                         href={`/profile/${authUser?.id}`}
-                                         className="font-semibold py-2"
-                                     >
-                                         {t('dashboard.profile')}
-                                     </DropdownItem>
+                                        className="font-semibold py-2"
+                                    >
+                                        {t('dashboard.profile')}
+                                    </DropdownItem>
 
                                     <DropdownItem
                                         key='logout'
                                         className="text-rose-500 hover:bg-rose-500/10 font-semibold py-2"
                                         startContent={<LogOut size={18} />}
-                                         onClick={logout}
-                                     >
-                                         {t('dashboard.logout')}
-                                     </DropdownItem>
+                                        onClick={logout}
+                                    >
+                                        {t('dashboard.logout')}
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </SidebarMenuItem>
@@ -349,8 +349,8 @@ export default function Dashboard() {
                             <div className="hidden md:flex items-center gap-2 p-1.5 bg-sidebar rounded-sm shadow-sm border border-zinc-200/50 dark:border-white/5">
                                 <Dropdown>
                                     <DropdownTrigger>
-                                         <button className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold transition-all hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm">
-                                             <span className="text-zinc-400 uppercase tracking-widest text-[9px]">{t('dashboard.chart_color')}</span>
+                                        <button className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold transition-all hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm">
+                                            <span className="text-zinc-400 uppercase tracking-widest text-[9px]">{t('dashboard.chart_color')}</span>
                                             <div className="flex items-center gap-2 border-l border-zinc-200 dark:border-white/10 pl-2.5">
                                                 <div className={cn("w-3.5 h-3.5 rounded-full shadow-inner", getChartColorClass(selectedValue))} />
                                                 <span className="text-zinc-600 dark:text-zinc-300">{t(`dashboard.themes.${selectedValue}`)}</span>
@@ -373,10 +373,10 @@ export default function Dashboard() {
                                                 key={theme.key}
                                                 startContent={<div className={`w-3.5 h-3.5 rounded-full ${theme.color} shadow-sm`} />}
                                                 showDivider={theme.showDivider}
-                                                 className="font-bold py-2.5"
-                                             >
-                                                 {t(`dashboard.themes.${theme.key}`)}
-                                             </DropdownItem>
+                                                className="font-bold py-2.5"
+                                            >
+                                                {t(`dashboard.themes.${theme.key}`)}
+                                            </DropdownItem>
                                         ))}
                                     </DropdownMenu>
                                 </Dropdown>
@@ -384,10 +384,10 @@ export default function Dashboard() {
                                 <div className="w-px h-6 bg-zinc-200 dark:bg-white/10 mx-1" />
 
                                 <button
-                                     className="p-2 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-xl transition-all group"
-                                     onClick={handleThemeToggle}
-                                     title={isDark ? t('dashboard.switch_light') : t('dashboard.switch_dark')}
-                                 >
+                                    className="p-2 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-xl transition-all group"
+                                    onClick={handleThemeToggle}
+                                    title={isDark ? t('dashboard.switch_light') : t('dashboard.switch_dark')}
+                                >
                                     <ThemeToggler className='hidden' ref={themeTogglerRef} />
                                     {isDark
                                         ? <Sun size={20} className="text-amber-500 group-hover:rotate-45 transition-transform" />
