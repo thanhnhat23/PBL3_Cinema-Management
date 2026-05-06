@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { Seat } from "@/stores/useSeatStore";
 import { Monitor, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface SelectSeatTabProps {
   selectedSeatCodes: string[];
@@ -28,6 +29,7 @@ export function SelectSeatTab({
   onSelectShowtime,
   showtimeOptions = [],
 }: SelectSeatTabProps) {
+  const { t } = useTranslation();
   
   const layoutData = useMemo(() => {
     if (!seats.length) {
@@ -112,7 +114,7 @@ export function SelectSeatTab({
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6 px-8 py-6 border-b border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5">
         <div className="flex items-center gap-2">
             <Monitor size={16} className="text-amber-500" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Đổi suất chiếu</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.seat_tab.change_showtime')}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {showtimeOptions.map((showtime) => (
@@ -142,7 +144,7 @@ export function SelectSeatTab({
                   <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto text-zinc-400">
                     <Info size={32} />
                   </div>
-                  <p className="text-zinc-500 font-medium italic">Không tìm thấy thông tin sơ đồ ghế</p>
+                  <p className="text-zinc-500 font-medium italic">{t('booking.seat_tab.no_seat_info')}</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -172,17 +174,17 @@ export function SelectSeatTab({
         
         {/* Screen Visualization */}
         <div className="relative mt-20">
-          <p className="pb-4 text-center text-[10px] font-black uppercase tracking-[1em] text-zinc-400 opacity-50">Màn hình</p>
+          <p className="pb-4 text-center text-[10px] font-black uppercase tracking-[1em] text-zinc-400 opacity-50">{t('booking.seat_tab.screen')}</p>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-2 bg-amber-500/20 blur-xl" />
           <div className="h-1 w-[70%] mx-auto bg-gradient-to-r from-transparent via-amber-500 to-transparent rounded-full opacity-50 shadow-[0_0_20px_rgba(245,158,11,0.5)]" />
         </div>
 
         {/* Legend */}
         <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 pt-10 border-t border-zinc-100 dark:border-white/5">
-            <LegendItem color="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10" label="Ghế đơn" />
-            <LegendItem color="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10 w-8" label="Ghế đôi" />
-            <LegendItem color="bg-amber-500 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]" label="Đang chọn" />
-            <LegendItem color="bg-zinc-100 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 opacity-30" label="Đã bán" />
+            <LegendItem color="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10" label={t('booking.seat_tab.legend.single')} />
+            <LegendItem color="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10 w-8" label={t('booking.seat_tab.legend.double')} />
+            <LegendItem color="bg-amber-500 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]" label={t('booking.seat_tab.legend.selecting')} />
+            <LegendItem color="bg-zinc-100 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 opacity-30" label={t('booking.seat_tab.legend.sold')} />
         </div>
       </div>
     </div>

@@ -138,7 +138,33 @@
         "back": "Quay lại",
         "next": "Tiếp theo"
     },
-    "feature_updating": "Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn."
+    "feature_updating": "Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn.",
+    "service_tab": {
+        "step1": "1. Chọn ngày chiếu",
+        "step2": "2. Chọn rạp",
+        "step3": "3. Chọn suất chiếu",
+        "no_showtimes": "Không có suất chiếu khả dụng",
+        "days": {
+            "sun": "Chủ nhật",
+            "mon": "Thứ hai",
+            "tue": "Thứ ba",
+            "wed": "Thứ tư",
+            "thu": "Thứ năm",
+            "fri": "Thứ sáu",
+            "sat": "Thứ bảy"
+        }
+    },
+    "seat_tab": {
+        "change_showtime": "Đổi suất chiếu",
+        "no_seat_info": "Không tìm thấy thông tin sơ đồ ghế",
+        "screen": "Màn hình",
+        "legend": {
+            "single": "Ghế đơn",
+            "double": "Ghế đôi",
+            "selecting": "Đang chọn",
+            "sold": "Đã bán"
+        }
+    }
   },
   "cinema_detail": {
     "address_label": "ĐỊA CHỈ:",

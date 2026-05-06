@@ -27,13 +27,7 @@ interface BookingSelection {
   selectedSeats: string[];
 }
 
-const STEPS = [
-  { key: "select-service", label: "Phim", icon: <Clapperboard size={20} /> },
-  { key: "select-seat", label: "Ghế", icon: <Armchair size={20} /> },
-  { key: "select-food", label: "Đồ ăn", icon: <Popcorn size={20} /> },
-  { key: "payment", label: "Thanh toán", icon: <WalletCards size={20} /> },
-  { key: "confirmation", label: "Xác nhận", icon: <BadgeCheck size={20} /> }
-];
+
 
 export default function BookingPage() {
   const [selection, setSelection] = useState<BookingSelection>({

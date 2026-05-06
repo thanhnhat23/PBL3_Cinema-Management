@@ -138,7 +138,33 @@
       "back": "Back",
       "next": "Next"
     },
-    "feature_updating": "This feature is being updated to bring the best experience to you."
+    "feature_updating": "This feature is being updated to provide you with the best experience.",
+    "service_tab": {
+        "step1": "1. Select show date",
+        "step2": "2. Select cinema",
+        "step3": "3. Select showtime",
+        "no_showtimes": "No available showtimes",
+        "days": {
+            "sun": "Sunday",
+            "mon": "Monday",
+            "tue": "Tuesday",
+            "wed": "Wednesday",
+            "thu": "Thursday",
+            "fri": "Friday",
+            "sat": "Saturday"
+        }
+    },
+    "seat_tab": {
+        "change_showtime": "Change showtime",
+        "no_seat_info": "No seat map information found",
+        "screen": "Screen",
+        "legend": {
+            "single": "Single seat",
+            "double": "Double seat",
+            "selecting": "Selecting",
+            "sold": "Sold"
+        }
+    }
   },
   "cinema_detail": {
     "address_label": "ADDRESS:",

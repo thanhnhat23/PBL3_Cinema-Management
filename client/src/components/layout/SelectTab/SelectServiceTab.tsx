@@ -1,6 +1,7 @@
 import { ChevronDown, MapPin, Film, Calendar, Monitor } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 import type { Cinema } from "@/stores/useCinemaStore";
 import type { Location } from "@/stores/useLocationStore";
@@ -132,7 +133,7 @@ function DateSelector({
 
     return (
         <div className="space-y-4">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">1. Chọn ngày chiếu</p>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.service_tab.step1')}</p>
             <div className="flex flex-wrap gap-3">
                 {dates.map((date) => {
                     const isActive = selectedDate === date.value;
@@ -171,7 +172,7 @@ function CinemaSelector({
 
     return (
         <div className="space-y-4">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">2. Chọn rạp</p>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.service_tab.step2')}</p>
             <div className="flex flex-wrap gap-3">
                 {cinemas.map((cinema) => {
                     const isActive = selectedCinemaId === cinema.cinema_id;
@@ -209,7 +210,7 @@ function ShowtimeSelector({
 }) {
     return (
         <div className="space-y-4">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">3. Chọn suất chiếu</p>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.service_tab.step3')}</p>
             {isLoading ? (
                 <div className="flex gap-2">
                     {[1, 2, 3].map(i => (
@@ -240,7 +241,7 @@ function ShowtimeSelector({
                     })}
                 </div>
             ) : (
-                <p className="text-sm text-zinc-500 italic">Không có suất chiếu khả dụng</p>
+                <p className="text-sm text-zinc-500 italic">{t('booking.service_tab.no_showtimes')}</p>
             )}
         </div>
     );
@@ -258,8 +259,10 @@ export function SelectServiceTab({
     isLoadingShoTimes,
     onToggleSection,
     onSelectValue,
+    onSelectValue,
     onFetchShowtimes,
 }: SelectServiceTabProps) {  
+    const { t } = useTranslation();
     const selectedLocation = stateSelect["select-location"]?.[0] ?? "";
     const selectedMovie = stateSelect["select-movie"]?.[0] ?? "";
     const selectedShowtimeDate = stateSelect["select-showtime"]?.[0] ?? "";
@@ -281,7 +284,15 @@ export function SelectServiceTab({
         value: string;
     }> => {
         const dateSet = new Set<string>();
-        const days = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
+        const days = [
+            t('booking.service_tab.days.sun'),
+            t('booking.service_tab.days.mon'),
+            t('booking.service_tab.days.tue'),
+            t('booking.service_tab.days.wed'),
+            t('booking.service_tab.days.thu'),
+            t('booking.service_tab.days.fri'),
+            t('booking.service_tab.days.sat')
+        ];
 
         movieShowtimes.forEach((st) => {
             const date = new Date(st.startTime);

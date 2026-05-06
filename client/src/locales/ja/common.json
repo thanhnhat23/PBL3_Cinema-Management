@@ -138,7 +138,33 @@
         "back": "戻る",
         "next": "次へ"
     },
-    "feature_updating": "この機能は現在アップデート中です。最高の体験を提供できるよう努めております。"
+    "feature_updating": "この機能は現在アップデート中です。最高の体験を提供できるよう努めております。",
+    "service_tab": {
+        "step1": "1. 上映日を選択",
+        "step2": "2. 映画館を選択",
+        "step3": "3. 上映時間を選択",
+        "no_showtimes": "利用可能な上映時間はありません",
+        "days": {
+            "sun": "日曜日",
+            "mon": "月曜日",
+            "tue": "火曜日",
+            "wed": "水曜日",
+            "thu": "木曜日",
+            "fri": "金曜日",
+            "sat": "土曜日"
+        }
+    },
+    "seat_tab": {
+        "change_showtime": "上映回を変更",
+        "no_seat_info": "座席表情報が見つかりません",
+        "screen": "スクリーン",
+        "legend": {
+            "single": "シングル席",
+            "double": "ダブル席",
+            "selecting": "選択中",
+            "sold": "販売済み"
+        }
+    }
   },
   "cinema_detail": {
     "address_label": "住所:",
