@@ -5,26 +5,28 @@ import { FaFacebook, FaAt, FaInstagram } from "react-icons/fa";
 import { Button, Input, Textarea } from "@heroui/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export default function Contact() {
+    const { t } = useTranslation();
     const contactInfo = [
         {
             icon: <MapPin className="text-amber-500" size={24} />,
-            title: "Trụ sở chính",
-            detail: "54 Nguyễn Lương Bằng, Hòa Khánh Bắc, Liên Chiểu, Đà Nẵng",
-            desc: "Tòa nhà MilkyWayyy Cinema Complex"
+            title: t('contact.info.address_title'),
+            detail: t('contact.info.address_detail'),
+            desc: t('contact.info.address_desc')
         },
         {
             icon: <Phone className="text-amber-500" size={24} />,
-            title: "Hotline hỗ trợ",
+            title: t('contact.info.hotline_title'),
             detail: "1900 2310",
-            desc: "Hoạt động từ 08:00 - 23:00 hàng ngày"
+            desc: t('contact.info.hotline_desc')
         },
         {
             icon: <Mail className="text-amber-500" size={24} />,
-            title: "Email liên hệ",
+            title: t('contact.info.email_title'),
             detail: "milkywayyy@cinema.me",
-            desc: "Chúng tôi sẽ phản hồi trong vòng 24h"
+            desc: t('contact.info.email_desc')
         }
     ];
 
@@ -35,13 +37,13 @@ export default function Contact() {
                 <div className="flex flex-col md:flex-row justify-between items-end gap-8 border-b border-zinc-200 dark:border-white/10 pb-12">
                     <div className="space-y-4 max-w-2xl">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-[0.2em]">
-                            Contact Us
+                            {t('contact.contact_us')}
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic leading-none">
-                            KẾT NỐI VỚI <span className="text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">CHÚNG TÔI</span>
+                            {t('contact.hero_title')} <span className="text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">{t('contact.hero_subtitle')}</span>
                         </h1>
                         <p className="text-zinc-500 dark:text-zinc-400 font-medium text-lg italic">
-                            Mọi thắc mắc, góp ý hoặc yêu cầu hợp tác, vui lòng gửi tin nhắn cho đội ngũ MilkyWayyy.
+                            {t('contact.hero_desc')}
                         </p>
                     </div>
                     
@@ -97,20 +99,20 @@ export default function Contact() {
                             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-[60px] group-hover:bg-amber-500/20 transition-colors" />
                             <div className="flex items-center gap-3">
                                 <Clock className="text-amber-500" />
-                                <h3 className="text-xl font-black uppercase italic tracking-wider">Giờ làm việc</h3>
+                                <h3 className="text-xl font-black uppercase italic tracking-wider">{t('contact.working_hours.title')}</h3>
                             </div>
                             <div className="space-y-4 font-medium text-zinc-400">
                                 <div className="flex justify-between border-b border-white/5 pb-2">
-                                    <span>Thứ 2 - Thứ 6</span>
+                                    <span>{t('contact.working_hours.weekdays')}</span>
                                     <span className="text-white">08:00 - 23:00</span>
                                 </div>
                                 <div className="flex justify-between border-b border-white/5 pb-2">
-                                    <span>Thứ 7 - Chủ Nhật</span>
+                                    <span>{t('contact.working_hours.weekends')}</span>
                                     <span className="text-white">07:30 - 00:00</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span>Ngày lễ</span>
-                                    <span className="text-amber-500">Mở cửa suốt đêm</span>
+                                    <span>{t('contact.working_hours.holidays')}</span>
+                                    <span className="text-amber-500">{t('contact.working_hours.open_all_night')}</span>
                                 </div>
                             </div>
                         </div>
@@ -125,20 +127,20 @@ export default function Contact() {
                              
                              <form className="space-y-8 relative z-10" onSubmit={(e) => e.preventDefault()}>
                                 <div className="space-y-2">
-                                    <h2 className="text-3xl font-black uppercase italic text-zinc-900 dark:text-white tracking-tighter">Gửi lời nhắn</h2>
-                                    <p className="text-zinc-500 font-medium">Chúng tôi luôn lắng nghe ý kiến đóng góp từ bạn.</p>
+                                    <h2 className="text-3xl font-black uppercase italic text-zinc-900 dark:text-white tracking-tighter">{t('contact.form.title')}</h2>
+                                    <p className="text-zinc-500 font-medium">{t('contact.form.subtitle')}</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <Input 
-                                        label="Họ và tên" 
-                                        placeholder="VD: Nguyễn Văn A"
+                                        label={t('contact.form.name_label')} 
+                                        placeholder={t('contact.form.name_placeholder')}
                                         labelPlacement="outside"
                                         variant="bordered"
                                         classNames={{ inputWrapper: "h-14 rounded-sm" }}
                                     />
                                     <Input 
-                                        label="Địa chỉ Email" 
+                                        label={t('contact.form.email_label')} 
                                         placeholder="example@gmail.com"
                                         labelPlacement="outside"
                                         variant="bordered"
@@ -147,16 +149,16 @@ export default function Contact() {
                                 </div>
 
                                 <Input 
-                                    label="Tiêu đề" 
-                                    placeholder="Bạn muốn liên hệ về vấn đề gì?"
+                                    label={t('contact.form.subject_label')} 
+                                    placeholder={t('contact.form.subject_placeholder')}
                                     labelPlacement="outside"
                                     variant="bordered"
                                     classNames={{ inputWrapper: "h-14 rounded-sm" }}
                                 />
 
                                 <Textarea 
-                                    label="Nội dung lời nhắn" 
-                                    placeholder="Viết lời nhắn của bạn tại đây..."
+                                    label={t('contact.form.message_label')} 
+                                    placeholder={t('contact.form.message_placeholder')}
                                     labelPlacement="outside"
                                     variant="bordered"
                                     minRows={6}
@@ -167,7 +169,7 @@ export default function Contact() {
                                     className="w-full h-16 bg-linear-to-r from-amber-500 to-orange-600 text-white font-black uppercase tracking-[0.2em] text-sm rounded-sm shadow-xl hover:shadow-amber-500/20 hover:-translate-y-1 transition-all"
                                     endContent={<Send size={18} />}
                                 >
-                                    Gửi tin nhắn ngay
+                                    {t('contact.form.send_button')}
                                 </Button>
                              </form>
                         </div>

@@ -13,6 +13,7 @@ import { TrendingUpIcon, type TrendingUpIconHandle } from "@/components/icons/tr
 import { Input } from "@heroui/react";
 import { FiSearch } from "react-icons/fi";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 export const dynamic = "force-dynamic";
 
 export default function MoviesWrapper() {
@@ -35,10 +36,10 @@ function Movies() {
 
     const tabParam = searchParams.get('tab');
     const [selectedTab, setSelectedTab] = useState<string>(() => {
-        if (tabParam && ['nowplaying', 'coming-soon', 'popular'].includes(tabParam)) {
+        if (tabParam && ['now-playing', 'coming-soon', 'popular'].includes(tabParam)) {
             return tabParam;
         }
-        return 'nowplaying';
+        return 'now-playing';
     });
 
     const flameRef = useRef<FlameIconHandle | null>(null);
@@ -50,6 +51,7 @@ function Movies() {
     const popularMovies = useMovieStore(state => state.popularMovies);
     const isFetchingMoviesByStatus = useMovieStore(state => state.isFetchingMoviesByStatus);
     const isFetchingPopularMovies = useMovieStore(state => state.isFetchingPopularMovies);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (hoveredItem === 'popular') {
@@ -68,7 +70,7 @@ function Movies() {
         const fetchDataByTab = async () => {
             const fetchLimit = 10000;
 
-            if (selectedTab === 'nowplaying' && !hasLoadedNowPlaying) {
+            if (selectedTab === 'now-playing' && !hasLoadedNowPlaying) {
                 await fetchMoviesByStatus(0, fetchLimit);
                 setHasLoadedNowPlaying(true);
                 return;
@@ -156,26 +158,26 @@ function Movies() {
                     <BlurFade delay={0.1} inView>
                         <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-white/10 backdrop-blur-md border border-zinc-200 dark:border-white/20 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 dark:text-white/80 shadow-2xl">
                             <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                            Premium Experience
+                            {t('movies.premium_experience')}
                         </div>
                     </BlurFade>
                     
                     <BlurFade delay={0.2} inView>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-sidebar uppercase drop-shadow-2xl">
-                            Thế giới <span className="text-transparent bg-clip-text bg-linear-to-b from-orange-400 to-amber-600">Điện ảnh</span>
+                            {t('movies.hero_title')} <span className="text-transparent bg-clip-text bg-linear-to-b from-orange-400 to-amber-600">{t('movies.hero_subtitle')}</span>
                         </h1>
                     </BlurFade>
 
                     <BlurFade delay={0.3} inView>
                         <p className="text-zinc-400 font-medium max-w-xl text-sm md:text-base leading-relaxed drop-shadow-md">
-                            Những siêu phẩm điện ảnh mới nhất, từ những bom tấn hành động đến những câu chuyện đầy cảm xúc.
+                            {t('movies.hero_desc')}
                         </p>
                     </BlurFade>
 
                     <BlurFade delay={0.4} inView>
                         <div className="w-full md:w-xl mt-4">
                             <Input
-                                placeholder="Tìm kiếm phim theo tên..."
+                                placeholder={t('movies.search_placeholder')}
                                 value={searchQuery}
                                 onValueChange={(val) => {
                                     setSearchQuery(val);
@@ -198,7 +200,7 @@ function Movies() {
                     <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-6 mb-8">
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-10 bg-amber-500 rounded-full" />
-                            <h2 className="text-2xl md:text-3xl font-black tracking-tight uppercase">Danh sách phim</h2>
+                            <h2 className="text-2xl md:text-3xl font-black tracking-tight uppercase">{t('movies.movie_list_title')}</h2>
                         </div>
                         
                         <Tabs 
@@ -217,10 +219,10 @@ function Movies() {
                                 tabContent: "group-data-[selected=true]:text-amber-500 font-black uppercase text-xs tracking-widest transition-colors duration-300"
                             }}
                         >
-                            <Tab key="nowplaying" title={
+                            <Tab key="now-playing" title={
                                     <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('nowplaying')} onMouseLeave={() => setHoveredItem(null)}>
                                         <Cctv animate={hoveredItem === 'nowplaying'} size={18} />
-                                        <span>Đang chiếu</span>
+                                        <span>{t('home.tabs.now_playing')}</span>
                                     </div>
                                 }
                             />
@@ -228,7 +230,7 @@ function Movies() {
                             <Tab key="coming-soon" title={
                                     <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('upcoming')} onMouseLeave={() => setHoveredItem(null)}>
                                         <TrendingUpIcon ref={trendingRef} size={18} />
-                                        <span>Sắp chiếu</span>
+                                        <span>{t('home.tabs.coming_soon')}</span>
                                     </div>
                                 } 
                             />
@@ -236,14 +238,14 @@ function Movies() {
                             <Tab key="popular" title={
                                     <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('popular')} onMouseLeave={() => setHoveredItem(null)}>
                                         <FlameIcon ref={flameRef} size={18} />
-                                        <span>Phổ biến</span>
+                                        <span>{t('home.tabs.popular')}</span>
                                     </div>
                                 } 
                             />
                         </Tabs>
                     </div>
                 
-                {selectedTab === 'nowplaying' && (
+                {selectedTab === 'now-playing' && (
                     <div className="flex flex-col items-center">
                         <div className="gap-4 md:gap-8 grid grid-cols-2 sm:grid-cols-4 p-2">
                             {isLoadingNowPlaying ? (

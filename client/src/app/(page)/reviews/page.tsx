@@ -7,10 +7,12 @@ import { useMovieStore } from '@/stores/useMovieStore';
 import { Pagination } from "@heroui/react";
 import CardReviewSkeleton from '@/components/skeletons/cardReview';
 import { BlurFade } from "@/components/ui/effects/blur-fade";
+import { useTranslation } from 'react-i18next';
 
 export default function ReviewPage() {
     const { reviews, fetchReviews, isFetchingReviews } = useReviewStore();
     const { fetchAllMovies } = useMovieStore();
+    const { t } = useTranslation();
     const [page, setPage] = useState<number>(1);
 
     const uniqueMovieReviews = useMemo(() => {
@@ -44,13 +46,13 @@ export default function ReviewPage() {
                         <div className="flex flex-col items-start gap-4">
                             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-white/5 backdrop-blur-md border border-zinc-200 dark:border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 dark:text-white/60">
                                 <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-                                Audience Insights
+                                {t('reviews_page.audience_insights')}
                             </div>
                             <h1 className="text-5xl md:text-6xl font-black tracking-tighter dark:text-white text-black uppercase drop-shadow-2xl">
-                                Cộng đồng <span className="text-transparent bg-clip-text bg-linear-to-r from-yellow-400 to-amber-600">Phản hồi</span>
+                                {t('reviews_page.hero_title')} <span className="text-transparent bg-clip-text bg-linear-to-r from-yellow-400 to-amber-600">{t('reviews_page.hero_subtitle')}</span>
                             </h1>
                             <p className="text-zinc-500 font-medium max-w-2xl text-sm md:text-base leading-relaxed">
-                                Những chia sẻ chân thực từ cộng đồng yêu điện ảnh. Những đánh giá giúp bạn có cái nhìn khách quan nhất trước khi lựa chọn bộ phim cho mình.
+                                {t('reviews_page.hero_desc')}
                             </p>
                         </div>
                     </BlurFade>

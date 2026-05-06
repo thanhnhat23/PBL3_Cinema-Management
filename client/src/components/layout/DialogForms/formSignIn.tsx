@@ -8,6 +8,7 @@ import { Button, Input } from "@heroui/react"
 import { User, Lock, Eye, EyeOff } from "lucide-react"
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface FormSignInProps {
     formSignIn: {
@@ -40,6 +41,8 @@ export const FormSignIn = ({
     resetForms,
     setOpenDialog
 }: FormSignInProps) => {
+    const { t } = useTranslation();
+
     return (
         <div className="animate-in fade-in zoom-in-95 duration-300 p-4 md:p-0">
             <DialogHeader className="mb-8">
@@ -59,10 +62,10 @@ export const FormSignIn = ({
 
                     <div className="text-center space-y-1">
                         <DialogTitle className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white uppercase">
-                            Chào mừng trở lại
+                            {t('auth.welcome_back')}
                         </DialogTitle>
                         <p className="text-xs font-bold text-amber-500 uppercase opacity-80">
-                            Đăng nhập vào tài khoản của bạn
+                            {t('auth.login_to_account')}
                         </p>
                     </div>
                 </div>
@@ -72,9 +75,9 @@ export const FormSignIn = ({
                 <Input 
                     key="signin-username"
                     isRequired
-                    label="Tên đăng nhập" 
+                    label={t('auth.username')} 
                     labelPlacement="outside"
-                    placeholder="Nhập tên đăng nhập của bạn"
+                    placeholder={t('auth.username_placeholder')}
                     type="text" 
                     variant="bordered"
                     classNames={{
@@ -97,9 +100,9 @@ export const FormSignIn = ({
                     <Input
                         key="signin-password"
                         isRequired
-                        label="Mật khẩu"
+                        label={t('auth.password')}
                         labelPlacement="outside"
-                        placeholder="Nhập mật khẩu"
+                        placeholder={t('auth.password_placeholder')}
                         type={isVisiblePassword ? "text" : "password"}
                         variant="bordered"
                         classNames={{
@@ -134,7 +137,7 @@ export const FormSignIn = ({
                             className="text-sm font-semibold text-amber-500 hover:text-amber-600 transition-colors"
                             onClick={() => setOpenDialog('forgot-password')}
                         >
-                            Quên mật khẩu?
+                            {t('auth.forgot_password')}
                         </Link>
                     </div>
                 </div>
@@ -154,7 +157,7 @@ export const FormSignIn = ({
                                 : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
                         )}
                     >
-                        Đăng nhập ngay
+                        {t('auth.login_button')}
                     </Button>
 
                     <div className="relative py-2">
@@ -162,13 +165,13 @@ export const FormSignIn = ({
                             <span className="w-full border-t border-zinc-200 dark:border-white/10" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-white dark:bg-zinc-950 px-4 text-zinc-500 font-bold">Hoặc</span>
+                            <span className="bg-white dark:bg-zinc-950 px-4 text-zinc-500 font-bold">{t('auth.or')}</span>
                         </div>
                     </div>
 
                     <div className="text-center">
                         <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
-                            Chưa có tài khoản?{" "}
+                            {t('auth.no_account')}{" "}
                             <button 
                                 type="button"
                                 onClick={() => {
@@ -177,7 +180,7 @@ export const FormSignIn = ({
                                 }}
                                 className="text-amber-500 font-semibold hover:underline underline-offset-4 cursor-pointer"
                             >
-                                Đăng kí ngay
+                                {t('auth.register_now')}
                             </button>
                         </p>
                     </div>

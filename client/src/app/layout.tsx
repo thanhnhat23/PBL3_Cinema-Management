@@ -4,6 +4,8 @@ import "./globals.css";
 import { Providers } from "./providers"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import NextTopLoader from 'nextjs-toploader';
+import { cookies } from "next/headers";
+import i18n, { i18nConfig } from "@/lib/i18n";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -79,13 +81,26 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('i18next')?.value || 'vi';
+  
+  // Initialize i18n for the server
+  if (!i18n.isInitialized) {
+    await i18n.init({
+      ...i18nConfig,
+      lng: locale
+    });
+  } else if (i18n.language !== locale) {
+    await i18n.changeLanguage(locale);
+  }
+
   return (
-    <html lang="vi" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -114,7 +129,7 @@ export default function RootLayout({
           shadow="0 0 10px #f59e0b,0 0 5px #f59e0b"
         />
         <TooltipProvider>
-          <Providers>{children}</Providers>
+          <Providers locale={locale}>{children}</Providers>
         </TooltipProvider>
       </body>
     </html>

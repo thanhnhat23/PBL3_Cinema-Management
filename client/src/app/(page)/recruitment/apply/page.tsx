@@ -4,8 +4,10 @@ import { Button, Input, Textarea, Select, SelectItem, Checkbox } from "@heroui/r
 import { User, Mail, Phone, FileText, Upload, Send, ArrowLeft, CheckCircle2, Briefcase, MapPin } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ApplyPage() {
+    const { t } = useTranslation();
     const [submitted, setSubmitted] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -20,16 +22,16 @@ export default function ApplyPage() {
                     <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500 mx-auto">
                         <CheckCircle2 size={40} />
                     </div>
-                    <h1 className="text-3xl font-black uppercase italic tracking-tighter">Gửi thành công!</h1>
+                    <h1 className="text-3xl font-black uppercase italic tracking-tighter">{t('recruitment.apply.success_title')}</h1>
                     <p className="text-zinc-500 dark:text-zinc-400 font-medium">
-                        Cảm ơn bạn đã quan tâm đến MilkyWayyy Cinema. Bộ phận nhân sự sẽ xem xét hồ sơ và liên hệ với bạn sớm nhất có thể.
+                        {t('recruitment.apply.success_desc')}
                     </p>
                     <Button 
                         as={Link}
                         href="/recruitment"
                         className="w-full h-14 bg-amber-500 text-white font-black uppercase tracking-widest text-xs shadow-[0_10px_30px_rgba(245,158,11,0.3)] rounded-sm"
                     >
-                        Quay lại trang tuyển dụng
+                        {t('recruitment.apply.back_to_jobs')}
                     </Button>
                 </div>
             </div>
@@ -44,7 +46,7 @@ export default function ApplyPage() {
                     className="inline-flex items-center gap-2 text-zinc-500 hover:text-amber-500 transition-colors mb-10 group"
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                    <span className="text-xs font-black uppercase tracking-widest">Quay lại</span>
+                    <span className="text-xs font-black uppercase tracking-widest">{t('recruitment.apply.back')}</span>
                 </Link>
 
                 <div className="grid lg:grid-cols-3 gap-12">
@@ -52,10 +54,10 @@ export default function ApplyPage() {
                     <div className="lg:col-span-1 space-y-8">
                         <div>
                             <h1 className="text-5xl font-black uppercase italic tracking-tighter leading-none mb-4">
-                                Bắt đầu <br /> <span className="text-amber-500">Hành trình</span>
+                                {t('recruitment.apply.hero_start')} <br /> <span className="text-amber-500">{t('recruitment.apply.hero_journey')}</span>
                             </h1>
                             <p className="text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
-                                Hãy để chúng tôi hiểu thêm về bạn. Hãy điền đầy đủ thông tin để hồ sơ của bạn nổi bật hơn.
+                                {t('recruitment.apply.hero_desc')}
                             </p>
                         </div>
 
@@ -66,8 +68,8 @@ export default function ApplyPage() {
                                         <Briefcase size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Vị trí mong muốn</p>
-                                        <p className="font-bold text-sm">Nhân viên đa năng / Kỹ thuật viên</p>
+                                         <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">{t('recruitment.apply.info.desired_position')}</p>
+                                         <p className="font-bold text-sm">{t('recruitment.apply.info.multi_role')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -78,8 +80,8 @@ export default function ApplyPage() {
                                         <MapPin size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">Địa điểm</p>
-                                        <p className="font-bold text-sm">Các cụm rạp MilkyWayyy trên toàn quốc</p>
+                                         <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1">{t('recruitment.apply.info.location')}</p>
+                                         <p className="font-bold text-sm">{t('recruitment.apply.info.all_cinemas')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -92,8 +94,8 @@ export default function ApplyPage() {
                         
                         <div className="grid md:grid-cols-2 gap-6">
                             <Input
-                                label="Họ và tên"
-                                placeholder="Nhập đầy đủ họ tên"
+                                 label={t('recruitment.apply.form.name_label')}
+                                 placeholder={t('recruitment.apply.form.name_placeholder')}
                                 labelPlacement="outside"
                                 variant="bordered"
                                 radius="sm"
@@ -104,8 +106,8 @@ export default function ApplyPage() {
                                     inputWrapper: "border-zinc-200 dark:border-white/10 focus-within:!border-amber-500"
                                 }}
                             />
-                            <Input
-                                label="Email"
+                             <Input
+                                 label={t('recruitment.apply.form.email_label')}
                                 placeholder="example@mail.com"
                                 labelPlacement="outside"
                                 variant="bordered"
@@ -122,8 +124,8 @@ export default function ApplyPage() {
 
                         <div className="grid md:grid-cols-2 gap-6">
                             <Input
-                                label="Số điện thoại"
-                                placeholder="090x xxx xxx"
+                                 label={t('recruitment.apply.form.phone_label')}
+                                 placeholder="090x xxx xxx"
                                 labelPlacement="outside"
                                 variant="bordered"
                                 radius="sm"
@@ -135,8 +137,8 @@ export default function ApplyPage() {
                                 }}
                             />
                             <Select
-                                label="Vị trí ứng tuyển"
-                                placeholder="Chọn vị trí"
+                                 label={t('recruitment.apply.form.position_label')}
+                                 placeholder={t('recruitment.apply.form.position_placeholder')}
                                 labelPlacement="outside"
                                 variant="bordered"
                                 radius="sm"
@@ -146,16 +148,16 @@ export default function ApplyPage() {
                                     trigger: "border-zinc-200 dark:border-white/10 focus-within:!border-amber-500"
                                 }}
                             >
-                                <SelectItem key="floor">Giám sát sảnh rạp</SelectItem>
-                                <SelectItem key="staff">Nhân viên Phục vụ</SelectItem>
-                                <SelectItem key="tech">Kỹ thuật viên phòng chiếu</SelectItem>
-                                <SelectItem key="mkt">Nhân viên Marketing</SelectItem>
+                                 <SelectItem key="floor">{t('recruitment.jobs.j1_title')}</SelectItem>
+                                 <SelectItem key="staff">{t('recruitment.jobs.j2_title')}</SelectItem>
+                                 <SelectItem key="tech">{t('recruitment.jobs.j3_title')}</SelectItem>
+                                 <SelectItem key="mkt">{t('recruitment.apply.form.position_mkt', { defaultValue: 'Nhân viên Marketing' })}</SelectItem>
                             </Select>
                         </div>
 
-                        <Textarea
-                            label="Giới thiệu bản thân"
-                            placeholder="Hãy chia sẻ lý do bạn muốn gia nhập MilkyWayyy Cinema..."
+                         <Textarea
+                             label={t('recruitment.apply.form.intro_label')}
+                             placeholder={t('recruitment.apply.form.intro_placeholder')}
                             labelPlacement="outside"
                             variant="bordered"
                             radius="sm"
@@ -167,16 +169,16 @@ export default function ApplyPage() {
                         />
 
                         <div className="space-y-4">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Đính kèm CV (PDF, DOCX)</p>
+                             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{t('recruitment.apply.form.attach_cv')}</p>
                             <div className="border-2 border-dashed border-zinc-200 dark:border-white/10 rounded-sm p-8 text-center group hover:border-amber-500/50 transition-colors cursor-pointer bg-zinc-50 dark:bg-white/5">
                                 <div className="flex flex-col items-center gap-3">
                                     <div className="w-12 h-12 bg-white dark:bg-zinc-800 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                         <Upload size={20} className="text-amber-500" />
                                     </div>
-                                    <div>
-                                        <p className="text-sm font-bold">Kéo thả CV vào đây hoặc <span className="text-amber-500">tải lên</span></p>
-                                        <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">Dung lượng tối đa 5MB</p>
-                                    </div>
+                                     <div>
+                                         <p className="text-sm font-bold" dangerouslySetInnerHTML={{ __html: t('recruitment.apply.form.upload_desc') }} />
+                                         <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">{t('recruitment.apply.form.max_size')}</p>
+                                     </div>
                                 </div>
                             </div>
                         </div>
@@ -187,18 +189,18 @@ export default function ApplyPage() {
                                 classNames={{
                                     label: "text-xs text-zinc-500 font-medium"
                                 }}
-                            >
-                                Tôi cam đoan các thông tin trên là chính xác và hoàn toàn chịu trách nhiệm.
-                            </Checkbox>
+                             >
+                                 {t('recruitment.apply.form.declaration')}
+                             </Checkbox>
                         </div>
 
-                        <Button 
-                            type="submit"
-                            className="w-full h-16 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black uppercase tracking-widest text-xs shadow-[0_10px_30px_rgba(245,158,11,0.3)] hover:shadow-[0_15px_40px_rgba(245,158,11,0.4)] transition-all rounded-sm"
-                            endContent={<Send size={18} />}
-                        >
-                            Gửi hồ sơ ứng tuyển
-                        </Button>
+                         <Button 
+                             type="submit"
+                             className="w-full h-16 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black uppercase tracking-widest text-xs shadow-[0_10px_30px_rgba(245,158,11,0.3)] hover:shadow-[0_15px_40px_rgba(245,158,11,0.4)] transition-all rounded-sm"
+                             endContent={<Send size={18} />}
+                         >
+                             {t('recruitment.apply.form.submit_button')}
+                         </Button>
                     </form>
                 </div>
             </div>

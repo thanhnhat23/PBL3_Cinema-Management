@@ -20,9 +20,11 @@ import { useDialogStore } from "@/stores/useDialogStore";
 import { CircleCheck } from 'lucide-react';
 import { BadgeCheck } from 'lucide-react';
 import { AvatarElement } from "@/components/ui/avatar";
+import { useTranslation } from "react-i18next";
 
 export default function ProfilePage() {
   const { authUser } = useAuthStore();
+  const { t } = useTranslation();
   type DialogAction = 'change-email' | 'change-birthdate' | 'settings' | 'change-password';
   const { fetchUserById, user } = useUserStore();
   const searchParams = useSearchParams();
@@ -97,7 +99,7 @@ export default function ProfilePage() {
                                     ) : null}
                                 </div>
                                 <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                                    {Number(user?.role) === 0 ? "Premium Administrator" : "Cinema Member"}
+                                    {Number(user?.role) === 0 ? t('profile.roles.admin') : t('profile.roles.member')}
                                 </p>
                             </div>
 
@@ -106,8 +108,8 @@ export default function ProfilePage() {
                             <div className="w-full space-y-6">
                                 <div>
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Chi tiêu năm {new Date().getFullYear()}</span>
-                                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">LOYALTY POINT: 250</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{t('profile.spending_year', { year: new Date().getFullYear() })}</span>
+                                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">{t('profile.loyalty_point')} 250</span>
                                     </div>
                                     <Progress 
                                         value={1000000} 
@@ -119,8 +121,8 @@ export default function ProfilePage() {
                                         }}
                                     />
                                     <div className="flex justify-between mt-2">
-                                        <span className="text-xs font-bold">1,000,000đ</span>
-                                        <span className="text-xs font-medium text-zinc-400 italic">Hạng: Silver</span>
+                                        <span className="text-xs font-bold">1,000,000{t('profile.currency')}</span>
+                                        <span className="text-xs font-medium text-zinc-400 italic">{t('profile.rank')} {t('profile.ranks.silver')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -128,12 +130,12 @@ export default function ProfilePage() {
 
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 shadow-xl border border-white/20 dark:border-white/5 flex flex-col gap-6">
                             <div className="w-full flex flex-col gap-2">
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500 mb-2 px-1">Thông tin dự án</h3>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500 mb-2 px-1">{t('profile.project_info')}</h3>
                                 <Accordion selectionMode="multiple" className="px-0">
                                     <AccordionItem 
                                         key="1" 
                                         aria-label="Hotline support" 
-                                        title={<span className="text-xs font-bold uppercase tracking-wider">Hotline hỗ trợ</span>}
+                                        title={<span className="text-xs font-bold uppercase tracking-wider">{t('profile.hotline')}</span>}
                                         className="border-none"
                                     >
                                         <Link href="tel:19002310" className="text-xs font-bold text-amber-500 hover:underline">1900 2310</Link>
@@ -142,7 +144,7 @@ export default function ProfilePage() {
                                     <AccordionItem 
                                         key="2" 
                                         aria-label="Email support" 
-                                        title={<span className="text-xs font-bold uppercase tracking-wider">Email hỗ trợ</span>}
+                                        title={<span className="text-xs font-bold uppercase tracking-wider">{t('profile.email_support')}</span>}
                                         className="border-none"
                                     >
                                         <Link href="mailto:milkywayyy@cinema.me" className="text-xs font-bold text-amber-500 hover:underline">milkywayyy@cinema.me</Link>
@@ -151,23 +153,23 @@ export default function ProfilePage() {
                                     <AccordionItem 
                                         key="3" 
                                         aria-label="Source web" 
-                                        title={<span className="text-xs font-bold uppercase tracking-wider">Source website</span>}
+                                        title={<span className="text-xs font-bold uppercase tracking-wider">{t('profile.source_web')}</span>}
                                         className="border-none"
                                     >
-                                        <Link href="https://github.com/thanhnhat23/PBL3_Cinema-Management" className="text-xs font-bold text-amber-500 hover:underline">Cinema Management</Link>
+                                        <Link href="https://github.com/thanhnhat23/PBL3_Cinema-Management" className="text-xs font-bold text-amber-500 hover:underline">{t('profile.project_name')}</Link>
                                     </AccordionItem>
 
                                     <AccordionItem 
                                         key="4" 
                                         aria-label="About us" 
-                                        title={<span className="text-xs font-bold uppercase tracking-wider">Về chúng tôi</span>}
+                                        title={<span className="text-xs font-bold uppercase tracking-wider">{t('profile.about_us.title')}</span>}
                                         className="border-none"
                                     >
                                         <div className="text-[11px] text-zinc-500 leading-relaxed font-medium space-y-2">
-                                            <p>- Đây là một ứng dụng của đồ án PBL3 của trường Đại học Bách Khoa Đà Nẵng</p>
-                                            <p>- Gồm 2 thành viên thực hiện: Lương Thanh Nhật và Nguyễn Thị Nghĩa.</p>
-                                            <p>- Đây không phải là một ứng dụng thương mại, mà chỉ là một sản phẩm của đồ án, nên sẽ không có dịch vụ hỗ trợ thực sự nào cả.</p>
-                                            <p>- Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào về ứng dụng, vui lòng liên hệ với chúng tôi qua github đã cung cấp ở trên.</p>
+                                            <p>- {t('profile.about_us.p1')}</p>
+                                            <p>- {t('profile.about_us.p2')}</p>
+                                            <p>- {t('profile.about_us.p3')}</p>
+                                            <p>- {t('profile.about_us.p4')}</p>
                                         </div>
                                     </AccordionItem>
                                 </Accordion>
@@ -195,7 +197,7 @@ export default function ProfilePage() {
                                     <Tab key="info" title={
                                         <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('info')} onMouseLeave={() => setHoveredItem(null)}>
                                             <UserRound animate={hoveredItem === 'info'} size={18} />
-                                            <span>Thông tin cá nhân</span>
+                                            <span>{t('profile.tabs.personal_info')}</span>
                                         </div>
                                     } />
 
@@ -203,7 +205,7 @@ export default function ProfilePage() {
                                         <Tab key="history" title={
                                             <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('history')} onMouseLeave={() => setHoveredItem(null)}>
                                                 <HistoryIcon ref={historyRef} size={18} />
-                                                <span>Lịch sử đặt vé</span>
+                                                <span>{t('profile.tabs.booking_history')}</span>
                                             </div>
                                         } />
                                     )}
@@ -214,10 +216,10 @@ export default function ProfilePage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     {/* Info Cards */}
                                     {[
-                                        { label: "Tên cá nhân", value: user?.username, icon: <FaUser size={16} /> },
-                                        { label: "Địa chỉ Email", value: user?.email, icon: <IoIosMail size={18} />, action: 'change-email' },
-                                        { label: "Ngày tham gia", value: user?.createdAt ? new Date(user?.createdAt).toLocaleDateString('vi-VN') : 'N/A', icon: <MdDateRange size={18} /> },
-                                        { label: "Ngày sinh nhật", value: user?.birthDate ? new Date(user.birthDate).toLocaleDateString('vi-VN') : 'N/A', icon: <MdDateRange size={18} />, action: 'change-birthdate' },
+                                        { label: t('profile.info_labels.full_name'), value: user?.username, icon: <FaUser size={16} /> },
+                                        { label: t('profile.info_labels.email'), value: user?.email, icon: <IoIosMail size={18} />, action: 'change-email' },
+                                        { label: t('profile.info_labels.join_date'), value: user?.createdAt ? new Date(user?.createdAt).toLocaleDateString(t('language') === 'ja' ? 'ja-JP' : 'vi-VN') : 'N/A', icon: <MdDateRange size={18} /> },
+                                        { label: t('profile.info_labels.birthdate'), value: user?.birthDate ? new Date(user.birthDate).toLocaleDateString(t('language') === 'ja' ? 'ja-JP' : 'vi-VN') : 'N/A', icon: <MdDateRange size={18} />, action: 'change-birthdate' },
                                     ].map((item, idx) => (
                                         <div key={idx} className="group relative">
                                             <p className="text-xs font-bold text-zinc-500 mb-2 px-1">{item.label}</p>
@@ -226,7 +228,7 @@ export default function ProfilePage() {
                                                     <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 shadow-sm border border-zinc-100 dark:border-white/10 flex items-center justify-center text-zinc-400 group-hover:text-amber-500 transition-colors">
                                                         {item.icon}
                                                     </div>
-                                                    <span className="text-xs md:text-sm font-semibold text-zinc-700 dark:text-zinc-200">{item.value || 'Không có dữ liệu'}</span>
+                                                    <span className="text-xs md:text-sm font-semibold text-zinc-700 dark:text-zinc-200">{item.value || t('profile.info_labels.no_data')}</span>
                                                 </div>
                                                 {authUser?.id === id && item.action && (
                                                     <Button 
@@ -245,17 +247,17 @@ export default function ProfilePage() {
                                     ))}
 
                                     <div className="md:col-span-2">
-                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 px-1">Trạng thái tài khoản</p>
+                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 px-1">{t('profile.account_status')}</p>
                                         <div className={`flex items-center gap-4 p-4 rounded-sm border transition-all duration-300 ${user?.isVerified ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-rose-500/5 border-rose-500/20'}`}>
                                             <div className={`w-10 h-10 rounded-sm flex items-center justify-center ${user?.isVerified ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white shadow-rose-500/20'}`}>
                                                 <FaUserCheck size={18} />
                                             </div>
                                             <div>
                                                 <span className={`text-sm font-black uppercase tracking-tight ${user?.isVerified ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                                    {user?.isVerified ? "Verified Account" : "Unverified Account"}
+                                                    {user?.isVerified ? t('profile.verified') : t('profile.unverified')}
                                                 </span>
                                                 <p className="text-[10px] font-medium text-zinc-400">
-                                                    {user?.isVerified ? "Tài khoản của bạn đã được bảo mật hoàn toàn." : "Vui lòng xác minh email để tăng cường bảo mật."}
+                                                    {user?.isVerified ? t('profile.verified_desc') : t('profile.unverified_desc')}
                                                 </p>
                                             </div>
                                         </div>
@@ -263,14 +265,14 @@ export default function ProfilePage() {
 
                                     {authUser?.id === id && (
                                         <div className="md:col-span-2">
-                                             <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 px-1">Bảo mật</p>
+                                             <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 px-1">{t('profile.security')}</p>
                                              <div className="flex items-center justify-between p-4 rounded-sm bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-white/5">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 shadow-sm border border-zinc-100 dark:border-white/10 flex items-center justify-center text-zinc-400">
                                                         <MdPassword size={20} />
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <span className="font-bold text-xs md:text-sm">Mật khẩu bảo vệ</span>
+                                                        <span className="font-bold text-xs md:text-sm">{t('profile.password_protection')}</span>
                                                         <span className="text-[10px] text-zinc-400 tracking-[0.3em]">●●●●●●●●●●●●</span>
                                                     </div>
                                                 </div>
@@ -282,7 +284,7 @@ export default function ProfilePage() {
                                                     color="warning"
                                                     onClick={() => setOpenDialog('change-password')}
                                                 >
-                                                    Đổi mật khẩu
+                                                    {t('profile.change_password')}
                                                 </Button>
                                              </div>
                                         </div>
@@ -296,11 +298,11 @@ export default function ProfilePage() {
                                         <HistoryIcon size={40} />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-black uppercase tracking-tight">Lịch sử đặt vé</h3>
-                                        <p className="text-sm text-zinc-500 max-w-xs mx-auto">Bạn hiện chưa có giao dịch nào gần đây. Hãy chọn cho mình một bộ phim yêu thích nhé!</p>
+                                        <h3 className="text-xl font-black uppercase tracking-tight">{t('profile.tabs.booking_history')}</h3>
+                                        <p className="text-sm text-zinc-500 max-w-xs mx-auto">{t('profile.no_transactions')}</p>
                                     </div>
                                     <Link href="/movies" className="mt-4 px-10 py-3 rounded-full bg-amber-500 text-white font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-xl shadow-amber-500/20">
-                                        Khám phá phim ngay
+                                        {t('profile.explore_now')}
                                     </Link>
                                 </div>
                             )}

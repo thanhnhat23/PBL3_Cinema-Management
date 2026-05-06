@@ -1,0 +1,539 @@
+{
+  "common": {
+    "success": "Thành công",
+    "error": "Lỗi",
+    "loading": "Đang tải...",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "currency_vnd": "VNĐ",
+    "copyright": "© 2026 MilkyWayyy Cinema - Bản quyền đã được bảo hộ"
+  },
+  "navbar": {
+    "movies": "Phim",
+    "movies_now": "Phim Đang Chiếu",
+    "movies_upcoming": "Phim Sắp Chiếu",
+    "movies_hot": "Phim Hot",
+    "cinemas": "Rạp",
+    "cinemas_system": "Hệ thống rạp",
+    "categories": "Thể loại",
+    "actors": "Diễn viên",
+    "reviews": "Review",
+    "booking": "Đặt vé",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "profile": "Hồ sơ cá nhân",
+    "dashboard": "Quản trị hệ thống",
+    "my_tickets": "Vé đã đặt của tôi",
+    "theme": "Giao diện",
+    "theme_light": "Sáng",
+    "theme_dark": "Tối",
+    "language": "Ngôn ngữ",
+    "logged_in_as": "Đăng nhập với:",
+    "buy_tickets_now": "Mua vé ngay",
+    "cinema_experience": "Cinema Experience"
+  },
+  "footer": {
+    "description": "Trải nghiệm điện ảnh đỉnh cao với công nghệ hiện đại nhất. Chúng tôi cam kết mang đến những giây phút giải trí tuyệt vời cho mọi khán giả.",
+    "cinema_title": "Điện ảnh",
+    "support_title": "Hỗ trợ",
+    "newsletter_title": "Đăng ký nhận tin",
+    "newsletter_desc": "Nhận thông tin về các bộ phim bom tấn và ưu đãi độc quyền sớm nhất.",
+    "email_placeholder": "Email của bạn...",
+    "send_button": "Gửi",
+    "privacy_note": "* Chúng tôi cam kết bảo mật thông tin của bạn.",
+    "links": {
+        "promotions": "Giá Vé & Ưu Đãi",
+        "recruitment": "Tuyển Dụng",
+        "contact": "Liên Hệ / Góp Ý",
+        "faq": "Câu Hỏi Thường Gặp",
+        "policy": "Chính Sách Bảo Mật",
+        "terms": "Điều Khoản Sử Dụng"
+    }
+  },
+  "home": {
+    "explore_title": "Khám phá Phim",
+    "explore_subtitle": "Xem gì hôm nay?",
+    "tabs": {
+        "now_playing": "Đang chiếu",
+        "coming_soon": "Sắp chiếu",
+        "popular": "Phổ biến"
+    },
+    "see_more": "XEM THÊM",
+    "special_offers": "Ưu đãi đặc biệt",
+    "offers": {
+        "offer1_title": "Tết Mã Ngập Quà – Năm Mới Nở Hoa",
+        "offer1_desc": "Ưu đãi cực khủng dịp xuân về.",
+        "offer2_title": "MilkyWayyy Cinema Và MoMo Tặng Bắp Nước Miễn Phí",
+        "offer2_desc": "Thưởng thức bắp nước hoàn toàn free.",
+        "offer3_title": "Ưu Đãi Thành Viên MilkyWayyy Cinema 2026",
+        "offer3_desc": "Đặc quyền dành riêng cho fan cứng."
+    },
+    "banner": {
+        "book_online": "Đặt vé Online",
+        "no_delay": "Không lo trễ nải",
+        "desc": "Đặt vé nhanh chóng, tiện lợi ngay từ trang chủ của MilkyWayyy Cinema. Không cần chờ đợi, không cần lo lắng về việc hết vé!"
+    },
+    "about": {
+        "title": "Về MilkyWayyy Cinema",
+        "p1": "là một trong những công ty tư nhân đầu tiên về điện ảnh được thành lập từ năm 2026, đã khẳng định thương hiệu là 1 trong 10 địa điểm vui chơi giải trí được yêu thích nhất. Ngoài hệ thống rạp chiếu phim hiện đại, thu hút hàng triệu lượt người đến xem, MilkyWayyy Cinema còn hấp dẫn khán giả bởi không khí thân thiện cũng như chất lượng dịch vụ hàng đầu.",
+        "p2": "Đến website milkywayyy.me, khách hàng sẽ dễ dàng tham khảo các phim hay nhất, phim mới nhất đang chiếu hoặc sắp chiếu luôn được cập nhật thường xuyên. Lịch chiếu tại tất cả hệ thống rạp chiếu phim của MilkyWayyy Cinema cũng được cập nhật đầy đủ hàng ngày hàng giờ trên trang chủ.",
+        "p3": "Giờ đây đặt vé tại MilkyWayyy Cinema càng thêm dễ dàng chỉ với vài thao tác vô cùng đơn giản. Để mua vé, hãy vào tab Mua vé. Quý khách có thể chọn Mua vé theo phim, theo rạp, hoặc theo ngày. Sau đó, tiến hành mua vé theo các bước hướng dẫn.",
+        "p4": "Nếu bạn đã chọn được phim hay để xem, hãy đặt vé cực nhanh bằng box Mua Vé Nhanh ngay từ Trang Chủ. Chỉ cần một phút, tin nhắn và email phản hồi của MilkyWayyy Cinema sẽ gửi ngay vào điện thoại và hộp mail của bạn.",
+        "promo": "MilkyWayyy Cinema luôn có những chương trình khuyến mãi, ưu đãi, quà tặng vô cùng hấp dẫn dành cho các khách hàng.",
+        "p5": "Trang web milkywayyy.me còn có mục Góc Điện Ảnh - nơi lưu trữ dữ liệu về phim, diễn viên và đạo diễn, những bài viết chuyên sâu về điện ảnh, hỗ trợ người yêu phim dễ dàng hơn trong việc lựa chọn phim."
+    }
+  },
+  "movies": {
+    "hero_title": "Thế giới",
+    "hero_subtitle": "Điện ảnh",
+    "hero_desc": "Những siêu phẩm điện ảnh mới nhất, từ những bom tấn hành động đến những câu chuyện đầy cảm xúc.",
+    "search_placeholder": "Tìm kiếm phim theo tên...",
+    "movie_list_title": "Danh sách phim",
+    "premium_experience": "Trải nghiệm Cao cấp"
+  },
+  "movie_detail": {
+    "runtime": "PHÚT",
+    "reviews_count": "REVIEWS",
+    "book_now": "Đặt vé ngay",
+    "watch_trailer": "Xem Trailer",
+    "storyline": "Cốt truyện",
+    "no_overview": "Hiện chưa có mô tả cho phim này.",
+    "official_trailer": "Trailer Chính Thức",
+    "coming_soon": "SẮP RA MẮT",
+    "trailer_not_ready": "Trailer hiện chưa sẵn sàng",
+    "main_cast": "Diễn viên chính",
+    "view_all_cast": "Xem toàn bộ diễn viên",
+    "new_reviews": "Đánh giá mới",
+    "view_all_reviews": "Xem tất cả {{count}} đánh giá",
+    "no_reviews": "Chưa có đánh giá nào cho phim này.",
+    "cast_list": "Dàn diễn viên",
+    "all_cast_for": "Toàn bộ diễn viên tham gia phim {{title}}",
+    "close_list": "Đóng danh sách",
+    "all_reviews": "Tất cả đánh giá",
+    "community_reviews": "Có {{count}} đánh giá từ cộng đồng",
+    "back": "Quay lại",
+    "movie_detail_label": "Chi tiết phim"
+  },
+  "booking": {
+    "steps": {
+        "movie": "Phim",
+        "seat": "Ghế",
+        "food": "Đồ ăn",
+        "payment": "Thanh toán",
+        "confirmation": "Xác nhận"
+    },
+    "selection": {
+        "select_cinema": "Chọn rạp",
+        "select_movie": "Chọn phim",
+        "select_showtime": "Chọn suất chiếu",
+        "not_selected_movie": "Chưa chọn phim",
+        "not_selected_cinema": "Chưa chọn rạp",
+        "room": "Phòng"
+    },
+    "sidebar": {
+        "selected_seats": "Ghế đã chọn",
+        "total": "Tổng cộng"
+    },
+    "buttons": {
+        "back": "Quay lại",
+        "next": "Tiếp theo"
+    },
+    "feature_updating": "Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn."
+  },
+  "cinema_detail": {
+    "address_label": "ĐỊA CHỈ:",
+    "service_fees": "Biểu phí dịch vụ",
+    "ticket_pricing": "Giá vé",
+    "zoom_to_view": "Phóng to để xem",
+    "contact_info": "Thông tin liên hệ",
+    "support_phone": "Điện thoại hỗ trợ",
+    "map_location": "Vị trí trên bản đồ",
+    "default_description": "Rạp của chúng tôi được trang bị hệ thống âm thanh Dolby Atmos và màn hình IMAX hiện đại, mang đến trải nghiệm điện ảnh chân thực nhất.",
+    "premium_location": "Vị trí cao cấp"
+  },
+  "auth": {
+    "welcome_back": "Chào mừng trở lại",
+    "login_to_account": "Đăng nhập vào tài khoản của bạn",
+    "username": "Tên đăng nhập",
+    "username_placeholder": "Nhập tên đăng nhập của bạn",
+    "password": "Mật khẩu",
+    "password_placeholder": "Nhập mật khẩu",
+    "forgot_password": "Quên mật khẩu?",
+    "login_button": "Đăng nhập ngay",
+    "or": "Hoặc",
+    "no_account": "Chưa có tài khoản?",
+    "register_now": "Đăng ký ngay",
+    "join_us": "Gia nhập cộng đồng MilkyWayyy ngay hôm nay",
+    "create_account": "Tạo tài khoản mới",
+    "full_name": "Họ và tên",
+    "full_name_placeholder": "Nhập họ và tên của bạn",
+    "email": "Địa chỉ Email",
+    "email_placeholder": "Nhập email của bạn",
+    "phone": "Số điện thoại",
+    "phone_placeholder": "0123456xxx",
+    "birthdate": "Ngày sinh",
+    "password_signup_placeholder": "Mật khẩu của bạn",
+    "confirm_password": "Xác nhận mật khẩu",
+    "confirm_password_placeholder": "Nhập lại mật khẩu",
+    "register_button": "Tạo tài khoản ngay",
+    "already_have_account": "Đã có tài khoản?",
+    "login_now": "Quay lại đăng nhập",
+    "username_signup_placeholder": "Chọn một tên đăng nhập",
+    "verify_success": "Xác minh email thành công!",
+    "verify_failed": "Xác minh email thất bại. Vui lòng thử lại."
+  },
+  "profile": {
+    "roles": {
+        "admin": "Quản trị viên Cao cấp",
+        "member": "Thành viên Cinema"
+    },
+    "spending_year": "Chi tiêu năm {{year}}",
+    "loyalty_point": "ĐIỂM THÂN THIẾT:",
+    "rank": "Hạng:",
+    "ranks": {
+        "silver": "Bạc",
+        "gold": "Vàng",
+        "platinum": "Bạch kim"
+    },
+    "project_name": "Quản lý Rạp chiếu phim",
+    "project_info": "Thông tin dự án",
+    "hotline": "Hotline hỗ trợ",
+    "email_support": "Email hỗ trợ",
+    "source_web": "Mã nguồn website",
+    "about_us": {
+        "title": "Về chúng tôi",
+        "p1": "Đây là một ứng dụng của đồ án PBL3 của trường Đại học Bách Khoa Đà Nẵng",
+        "p2": "Gồm 2 thành viên thực hiện: Lương Thanh Nhật và Nguyễn Thị Nghĩa.",
+        "p3": "Đây không phải là một ứng dụng thương mại, mà chỉ là một sản phẩm của đồ án, nên sẽ không có dịch vụ hỗ trợ thực sự nào cả.",
+        "p4": "Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào về ứng dụng, vui lòng liên hệ với chúng tôi qua github đã cung cấp ở trên."
+    },
+    "tabs": {
+        "personal_info": "Thông tin cá nhân",
+        "booking_history": "Lịch sử đặt vé"
+    },
+    "info_labels": {
+        "full_name": "Tên cá nhân",
+        "email": "Địa chỉ Email",
+        "join_date": "Ngày tham gia",
+        "birthdate": "Ngày sinh nhật",
+        "no_data": "Không có dữ liệu"
+    },
+    "account_status": "Trạng thái tài khoản",
+    "verified": "Tài khoản đã xác minh",
+    "unverified": "Tài khoản chưa xác minh",
+    "verified_desc": "Tài khoản của bạn đã được bảo mật hoàn toàn.",
+    "unverified_desc": "Vui lòng xác minh email để tăng cường bảo mật.",
+    "security": "Bảo mật",
+    "password_protection": "Mật khẩu bảo vệ",
+    "change_password": "Đổi mật khẩu",
+    "no_transactions": "Bạn hiện chưa có giao dịch nào gần đây. Hãy chọn cho mình một bộ phim yêu thích nhé!",
+    "explore_now": "Khám phá phim ngay",
+    "currency": "đ"
+  },
+  "actors": {
+    "hero_title": "Những gương mặt",
+    "hero_subtitle": "Điện ảnh",
+    "hero_desc": "Gặp gỡ những tài năng đã góp phần làm nên sức hút của các tác phẩm điện ảnh. Từ những ngôi sao gạo cội đến những gương mặt mới đầy triển vọng.",
+    "search_placeholder": "Tìm kiếm diễn viên...",
+    "star_spotlight": "Ngôi sao tiêu điểm",
+    "professional_actor": "Diễn viên Chuyên nghiệp",
+    "cinema_star": "Ngôi sao Điện ảnh",
+    "birthday": "Sinh nhật",
+    "gender": "Giới tính",
+    "gender_male": "Nam",
+    "gender_female": "Nữ",
+    "gender_other": "Khác",
+    "biography": "Tiểu sử",
+    "no_biography": "Hiện chưa có tiểu sử cho diễn viên này. Chúng tôi sẽ cập nhật sớm nhất có thể.",
+    "known_for": "Vai diễn nổi bật",
+    "no_character": "Thông tin vai diễn đang được cập nhật.",
+    "fast_facts": "Thông tin nhanh",
+    "movie_count": "Số phim",
+    "works": "tác phẩm",
+    "character_count": "Vai diễn",
+    "characters": "nhân vật",
+    "professional_status": "Trạng thái Chuyên nghiệp",
+    "official_collaboration": "Hợp tác chính thức",
+    "collaboration_desc": "Diễn viên đã đóng góp {{count}} tác phẩm xuất sắc trong hệ thống rạp của chúng tôi.",
+    "filmography": "Danh sách Phim",
+    "movies_count_label": "{{count}} Phim"
+  },
+  "reviews_page": {
+    "hero_title": "Cộng đồng",
+    "hero_subtitle": "Phản hồi",
+    "hero_desc": "Những chia sẻ chân thực từ cộng đồng yêu điện ảnh. Những đánh giá giúp bạn có cái nhìn khách quan nhất trước khi lựa chọn bộ phim cho mình.",
+    "audience_insights": "Góc nhìn khán giả"
+  },
+  "category": {
+    "hero_title": "Phim theo",
+    "hero_subtitle": "Thể loại",
+    "hero_desc": "Danh sách phim theo sở thích cá nhân của bạn. Từ hành động kịch tính đến tình cảm lãng mạn, tất cả đều có tại đây.",
+    "genre_discovery": "Khám phá Thể loại",
+    "search_label": "Tìm kiếm phim",
+    "search_placeholder": "Nhập tên phim...",
+    "filter_genre": "Lọc theo Thể loại",
+    "select_genre_placeholder": "Chọn thể loại",
+    "genre_list_label": "Danh sách thể loại",
+    "all_movies": "Tất cả phim",
+    "min_rating": "Đánh giá tối thiểu",
+    "rating_placeholder": "Đánh giá",
+    "select_rating_level": "Chọn mức đánh giá",
+    "all_ratings": "Tất cả",
+    "stars": "Sao"
+  },
+  "contact": {
+    "hero_title": "KẾT NỐI VỚI",
+    "hero_subtitle": "CHÚNG TÔI",
+    "hero_desc": "Mọi thắc mắc, góp ý hoặc yêu cầu hợp tác, vui lòng gửi tin nhắn cho đội ngũ MilkyWayyy.",
+    "contact_us": "Liên hệ với chúng tôi",
+    "info": {
+        "address_title": "Trụ sở chính",
+        "address_detail": "54 Nguyễn Lương Bằng, Hòa Khánh Bắc, Liên Chiểu, Đà Nẵng",
+        "address_desc": "Tòa nhà MilkyWayyy Cinema Complex",
+        "hotline_title": "Hotline hỗ trợ",
+        "hotline_desc": "Hoạt động từ 08:00 - 23:00 hàng ngày",
+        "email_title": "Email liên hệ",
+        "email_desc": "Chúng tôi sẽ phản hồi trong vòng 24h"
+    },
+    "working_hours": {
+        "title": "Giờ làm việc",
+        "weekdays": "Thứ 2 - Thứ 6",
+        "weekends": "Thứ 7 - Chủ Nhật",
+        "holidays": "Ngày lễ",
+        "open_all_night": "Mở cửa suốt đêm"
+    },
+    "form": {
+        "title": "Gửi lời nhắn",
+        "subtitle": "Chúng tôi luôn lắng nghe ý kiến đóng góp từ bạn.",
+        "name_label": "Họ và tên",
+        "name_placeholder": "VD: Nguyễn Văn A",
+        "email_label": "Địa chỉ Email",
+        "subject_label": "Tiêu đề",
+        "subject_placeholder": "Bạn muốn liên hệ về vấn đề gì?",
+        "message_label": "Nội dung lời nhắn",
+        "message_placeholder": "Viết lời nhắn của bạn tại đây...",
+        "send_button": "Gửi tin nhắn ngay"
+    }
+  },
+  "policy": {
+    "hero_title": "Chính Sách",
+    "hero_subtitle": "Bảo Mật",
+    "hero_desc": "Tại MilkyWayyy, quyền riêng tư của bạn là ưu tiên hàng đầu. Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn một cách tuyệt đối.",
+    "privacy_safety": "Quyền riêng tư & An toàn",
+    "footer_quote": "Chúng tôi tin rằng minh bạch là nền tảng của niềm tin. Mọi quy trình xử lý dữ liệu tại MilkyWayyy đều hướng tới sự an toàn cao nhất cho khách hàng.",
+    "sections": {
+        "s1_title": "1. Mục đích thu thập thông tin",
+        "s1_content": "Việc thu thập dữ liệu trên website MilkyWayyy bao gồm: Email, số điện thoại, tên đăng nhập, mật khẩu đăng nhập, địa chỉ khách hàng. Đây là các thông tin mà MilkyWayyy cần khách hàng cung cấp bắt buộc khi đăng ký sử dụng dịch vụ và để MilkyWayyy liên hệ xác nhận khi khách hàng đăng ký sử dụng dịch vụ trên website nhằm đảm bảo quyền lợi cho cho người tiêu dùng.",
+        "s2_title": "2. Phạm vi sử dụng thông tin",
+        "s2_content": "Công ty sử dụng thông tin khách hàng cung cấp để: Cung cấp các dịch vụ đến khách hàng; Gửi các thông báo về các hoạt động trao đổi thông tin giữa khách hàng và MilkyWayyy; Ngăn ngừa các hoạt động phá hủy tài khoản người dùng của khách hàng hoặc các hoạt động giả mạo khách hàng; Liên lạc và giải quyết với khách hàng trong những trường hợp đặc biệt.",
+        "s3_title": "3. Thời gian lưu trữ thông tin",
+        "s3_content": "Dữ liệu cá nhân của khách hàng sẽ được lưu trữ cho đến khi có yêu cầu hủy bỏ hoặc tự khách hàng đăng nhập và thực hiện hủy bỏ. Còn lại trong mọi trường hợp thông tin cá nhân khách hàng sẽ được bảo mật trên máy chủ của MilkyWayyy.",
+        "s4_title": "4. Chia sẻ thông tin với bên thứ ba",
+        "s4_content": "Chúng tôi cam kết không bán, chia sẻ dẫn đến làm lộ thông tin cá nhân của bạn vì mục đích thương mại. Tuy nhiên, chúng tôi có thể cung cấp thông tin cho các cơ quan chức năng nếu có yêu cầu pháp lý hoặc để bảo vệ quyền lợi chính đáng của MilkyWayyy.",
+        "s5_title": "5. Quyền lợi của người dùng",
+        "s5_content": "Khách hàng có quyền tự kiểm tra, cập nhật, điều chỉnh hoặc hủy bỏ thông tin cá nhân của mình bằng cách đăng nhập vào tài khoản và chỉnh sửa thông tin cá nhân hoặc yêu cầu MilkyWayyy thực hiện việc này.",
+        "s6_title": "6. Thay đổi chính sách",
+        "s6_content": "Chính sách này có thể thay đổi để phù hợp với sự phát triển của dịch vụ và quy định pháp luật. Mọi thay đổi sẽ được thông báo công khai trên website của chúng tôi."
+    }
+  },
+  "terms": {
+    "hero_title": "Điều Khoản",
+    "hero_subtitle": "Sử Dụng",
+    "hero_desc": "Chào mừng bạn đến với MilkyWayyy. Vui lòng đọc kỹ các điều khoản dưới đây để đảm bảo quyền lợi tốt nhất khi trải nghiệm dịch vụ của chúng tôi.",
+    "usage_agreement": "Thỏa thuận sử dụng",
+    "footer_disclaimer": "Bằng việc tiếp tục sử dụng website, bạn xác nhận rằng đã đọc, hiểu và đồng ý bị ràng buộc bởi các Điều khoản này. MilkyWayyy có quyền cập nhật các điều khoản này bất kỳ lúc nào mà không cần báo trước.",
+    "sections": {
+        "s1_title": "1. Chấp thuận các điều khoản",
+        "s1_content": "Bằng cách truy cập và sử dụng website MilkyWayyy, bạn đồng ý tuân thủ các điều khoản và điều kiện được nêu tại đây. Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ của chúng tôi ngay lập tức.",
+        "s2_title": "2. Quy định đặt vé và sử dụng dịch vụ",
+        "s2_content": "Khách hàng phải cung cấp thông tin cá nhân chính xác khi đăng ký thành viên. Vé đã mua qua hệ thống MilkyWayyy sẽ được xác nhận qua email. Khách hàng vui lòng xuất trình mã vé tại quầy hoặc máy soát vé để được vào phòng chiếu.",
+        "s3_title": "3. Chính sách thanh toán và hoàn tiền",
+        "s3_content": "Tất cả các giao dịch thanh toán trên website đều được thực hiện thông qua các cổng thanh toán uy tín. Vé đã mua thành công KHÔNG ĐƯỢC hoàn tiền hoặc đổi trả, trừ trường hợp suất chiếu bị hủy từ phía MilkyWayyy.",
+        "s4_title": "4. Trách nhiệm của người dùng",
+        "s4_content": "Người dùng không được phép sử dụng bất kỳ công cụ, phần mềm nào để can thiệp vào hệ thống hoặc làm thay đổi cấu trúc dữ liệu. Nghiêm cấm mọi hành vi phát tán thông tin độc hại, trái với thuần phong mỹ tục hoặc vi phạm pháp luật Việt Nam.",
+        "s5_title": "5. Quyền sở hữu trí tuệ",
+        "s5_content": "Tất cả nội dung trên website bao gồm thiết kế, logo, văn bản, hình ảnh đều thuộc sở hữu của MilkyWayyy. Mọi hành vi sao chép, trích dẫn mà không có sự đồng ý bằng văn bản của chúng tôi đều được coi là vi phạm.",
+        "s6_title": "6. Giải quyết tranh chấp",
+        "s6_content": "Mọi tranh chấp phát sinh từ việc sử dụng dịch vụ sẽ được ưu tiên giải quyết thông qua thương lượng. Nếu không đạt được thỏa thuận, vụ việc sẽ được đưa ra cơ quan có thẩm quyền để giải quyết theo quy định của pháp luật."
+    }
+  },
+  "faq": {
+    "hero_title": "Câu Hỏi",
+    "hero_subtitle": "Thường Gặp",
+    "hero_desc": "Bạn có thắc mắc? Chúng tôi có câu trả lời. Tìm kiếm nhanh các giải đáp cho các vấn đề phổ biến nhất tại MilkyWayyy.",
+    "support_center": "Trung tâm hỗ trợ",
+    "cta_title": "Vẫn chưa tìm thấy câu trả lời?",
+    "cta_desc": "Đội ngũ hỗ trợ của chúng tôi luôn sẵn sàng giúp đỡ bạn 24/7.",
+    "cta_button": "Liên Hệ Ngay",
+    "categories": {
+        "c1_title": "Tài khoản & Đăng ký",
+        "c2_title": "Đặt vé & Thanh toán",
+        "c3_title": "Quy định rạp & Ưu đãi"
+    },
+    "questions": {
+        "q1_q": "Làm thế nào để đăng ký tài khoản MilkyWayyy?",
+        "q1_a": "Bạn chỉ cần nhấn vào nút Đăng nhập trên thanh công cụ, sau đó chọn 'Đăng ký ngay'. Điền đầy đủ thông tin cá nhân và xác nhận qua email để bắt đầu trải nghiệm dịch vụ.",
+        "q2_q": "Tôi quên mật khẩu thì phải làm sao?",
+        "q2_a": "Tại Form đăng nhập, hãy chọn 'Quên mật khẩu'. Hệ thống sẽ yêu cầu bạn nhập Email và gửi một mã OTP xác nhận để bạn có thể thiết lập lại mật khẩu mới.",
+        "q3_q": "Thông tin cá nhân của tôi có được bảo mật không?",
+        "q3_a": "Hoàn toàn bảo mật. MilkyWayyy áp dụng các tiêu chuẩn mã hóa dữ liệu cao nhất và cam kết không chia sẻ thông tin của bạn cho bất kỳ bên thứ ba nào khi chưa có sự đồng ý.",
+        "q4_q": "Tôi có thể đặt tối đa bao nhiêu vé trong một lần giao dịch?",
+        "q4_a": "Để đảm bảo tính công bằng và tránh tình trạng đầu cơ, mỗi tài khoản được đặt tối đa 8 vé cho mỗi suất chiếu.",
+        "q5_q": "Hệ thống hỗ trợ những phương thức thanh toán nào?",
+        "q5_a": "Chúng tôi hỗ trợ thanh toán qua các cổng phổ biến như: Ví MoMo, VNPay, thẻ ATM nội địa và các loại thẻ quốc tế (Visa, Mastercard).",
+        "q6_q": "Làm sao để tôi biết mình đã đặt vé thành công?",
+        "q6_a": "Sau khi thanh toán, hệ thống sẽ hiển thị mã vé QR ngay trên màn hình và đồng thời gửi thông tin chi tiết vào Email của bạn. Bạn cũng có thể kiểm tra lại trong mục 'Lịch sử đặt vé' trong Profile.",
+        "q7_q": "Tôi có được mang thức ăn từ ngoài vào rạp không?",
+        "q7_a": "Theo quy định chung, khách hàng vui lòng không mang thức ăn và nước uống từ bên ngoài vào rạp để đảm bảo vệ sinh và không gian chung.",
+        "q8_q": "Làm thế nào để áp dụng mã giảm giá?",
+        "q8_a": "Tại bước thanh toán, bạn sẽ thấy ô 'Nhập mã giảm giá'. Hãy điền mã của bạn vào đó và nhấn áp dụng, hệ thống sẽ tự động trừ tiền trước khi bạn tiến hành thanh toán.",
+        "q9_q": "Tôi cần đến rạp trước bao lâu để nhận vé?",
+        "q9_a": "Chúng tôi khuyến khích bạn nên đến rạp trước ít nhất 15-20 phút để thực hiện các thủ tục soát vé và mua bắp nước, đảm bảo không bỏ lỡ phần đầu của phim."
+    }
+  },
+  "recruitment": {
+    "hero_title": "GIA NHẬP",
+    "hero_subtitle": "VŨ TRỤ",
+    "hero_desc": "Bạn đam mê điện ảnh? Bạn muốn làm việc trong môi trường sáng tạo và chuyên nghiệp? Hãy cùng chúng tôi tạo nên những trải nghiệm tuyệt vời cho khán giả.",
+    "join_our_team": "Gia nhập đội ngũ",
+    "benefits": {
+        "free_movies": "Xem phim miễn phí hàng tuần",
+        "environment": "Môi trường trẻ trung, năng động",
+        "training": "Đào tạo kỹ năng chuyên nghiệp",
+        "flex_time": "Giờ làm việc linh hoạt"
+    },
+    "jobs_title": "Vị trí đang tuyển",
+    "salary_label": "Lương:",
+    "apply_button": "Ứng tuyển ngay",
+    "cta_title": "Bạn chưa thấy vị trí phù hợp?",
+    "cta_desc": "Đừng ngần ngại gửi hồ sơ của bạn cho chúng tôi. Chúng tôi luôn tìm kiếm những tài năng mới để cùng phát triển MilkyWayyy trong tương lai.",
+    "cta_button": "Gửi CV tự do",
+    "jobs": {
+        "j1_title": "Giám sát sảnh rạp (Floor Supervisor)",
+        "j1_desc": "Quản lý hoạt động vận hành tại sảnh, điều phối nhân viên và giải quyết các khiếu nại của khách hàng.",
+        "j1_salary": "8,000,000 - 12,000,000 VNĐ",
+        "j2_title": "Nhân viên Phục vụ (Cinema Staff)",
+        "j2_desc": "Bán vé, phục vụ bắp nước và hỗ trợ khách hàng tại khu vực rạp chiếu.",
+        "j2_salary": "25,000 - 30,000 VNĐ/giờ",
+        "j3_title": "Kỹ thuật viên phòng chiếu",
+        "j3_desc": "Vận hành hệ thống máy chiếu, âm thanh và bảo trì thiết bị kỹ thuật trong rạp.",
+        "j3_salary": "10,000,000 - 15,000,000 VNĐ",
+        "locations": {
+            "nationwide": "Toàn quốc",
+            "cities": "Đà Nẵng / Huế / HCM",
+            "cities_extended": "Đà Nẵng / Hà Nội / Nha Trang / Huế"
+        },
+        "types": {
+            "full_time": "Toàn thời gian",
+            "part_time": "Bán thời gian"
+        }
+    },
+    "apply": {
+        "back": "Quay lại",
+        "success_title": "Gửi thành công!",
+        "success_desc": "Cảm ơn bạn đã quan tâm đến MilkyWayyy Cinema. Bộ phận nhân sự sẽ xem xét hồ sơ và liên hệ với bạn sớm nhất có thể.",
+        "back_to_jobs": "Quay lại trang tuyển dụng",
+        "hero_start": "Bắt đầu",
+        "hero_journey": "Hành trình",
+        "hero_desc": "Hãy để chúng tôi hiểu thêm về bạn. Hãy điền đầy đủ thông tin để hồ sơ của bạn nổi bật hơn.",
+        "info": {
+            "desired_position": "Vị trí mong muốn",
+            "multi_role": "Nhân viên đa năng / Kỹ thuật viên",
+            "location": "Địa điểm",
+            "all_cinemas": "Các cụm rạp MilkyWayyy trên toàn quốc"
+        },
+        "form": {
+            "name_label": "Họ và tên",
+            "name_placeholder": "Nhập đầy đủ họ tên",
+            "email_label": "Email",
+            "phone_label": "Số điện thoại",
+            "position_label": "Vị trí ứng tuyển",
+            "position_placeholder": "Chọn vị trí",
+            "intro_label": "Giới thiệu bản thân",
+            "intro_placeholder": "Hãy chia sẻ lý do bạn muốn gia nhập MilkyWayyy Cinema...",
+            "attach_cv": "Đính kèm CV (PDF, DOCX)",
+            "upload_desc": "Kéo thả CV vào đây hoặc <span class=\"text-amber-500\">tải lên</span>",
+            "max_size": "Dung lượng tối đa 5MB",
+            "declaration": "Tôi cam đoan các thông tin trên là chính xác và hoàn toàn chịu trách nhiệm.",
+            "submit_button": "Gửi hồ sơ ứng tuyển"
+        }
+    }
+  },
+  "dashboard": {
+    "admin_panel": "Bảng quản trị",
+    "overview": "Tổng quan",
+    "system_management": "Quản lý hệ thống",
+    "config_data": "Cấu hình & Dữ liệu",
+    "stats_overview": "Thống kê tổng quan",
+    "logged_in": "Đang đăng nhập",
+    "home": "Trang chủ",
+    "profile": "Hồ sơ cá nhân",
+    "logout": "Đăng xuất",
+    "chart_color": "Màu Chart",
+    "switch_light": "Chuyển sang chế độ sáng",
+    "switch_dark": "Chuyển sang chế độ tối",
+    "management": {
+        "movies": "Phim",
+        "tickets": "Vé",
+        "showtimes": "Suất chiếu",
+        "cinemas": "Rạp chiếu",
+        "foods": "Thức ăn",
+        "users": "Người dùng",
+        "sync": "Đồng bộ dữ liệu",
+        "revenue": "Thống kê doanh thu"
+    },
+    "themes": {
+        "blue": "Xanh dương",
+        "green": "Xanh lá",
+        "yellow": "Vàng",
+        "red": "Đỏ",
+        "pink": "Hồng",
+        "purple": "Tím đậm",
+        "cyan": "Xanh lơ đậm",
+        "orange": "Cam đào",
+        "light_pink": "Hồng nhạt",
+        "teal": "Xanh biển sáng",
+        "default": "Mặc định"
+    }
+  },
+  "movie_card": {
+    "book_now": "Đặt vé ngay",
+    "watch_trailer": "Xem Trailer",
+    "coming_soon": "SẮP RA MẮT",
+    "trailer_preparing": "Trailer hiện đang được chuẩn bị..."
+  },
+  "movie_status": {
+    "released": "Đang chiếu",
+    "upcoming": "Sắp chiếu",
+    "ended": "Đã kết thúc",
+    "unknown": "Không xác định"
+  },
+  "genres": {
+    "action": "Hành động",
+    "adventure": "Phiêu lưu",
+    "animation": "Hoạt hình",
+    "comedy": "Hài",
+    "crime": "Tội phạm",
+    "documentary": "Tài liệu",
+    "drama": "Chính kịch",
+    "family": "Gia đình",
+    "fantasy": "Viễn tưởng",
+    "history": "Lịch sử",
+    "horror": "Kinh dị",
+    "music": "Âm nhạc",
+    "mystery": "Bí ẩn",
+    "romance": "Lãng mạn",
+    "science_fiction": "Khoa học Viễn tưởng",
+    "tv_movie": "Phim Truyền hình",
+    "thriller": "Gây cấn",
+    "war": "Chiến tranh",
+    "western": "Miền Tây",
+    "action_adventure": "Hành động & Phiêu lưu",
+    "kids": "Trẻ em",
+    "news": "Tin tức",
+    "reality": "Thực tế",
+    "sci_fi_fantasy": "KHVT & Viễn tưởng",
+    "soap": "Phim dài tập",
+    "talk": "Trò chuyện"
+  }
+}

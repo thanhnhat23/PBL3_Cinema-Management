@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image";
-import { 
+import {
     Dropdown,
     DropdownTrigger,
     DropdownMenu,
@@ -16,8 +16,10 @@ import {
     NavbarMenuItem,
     Button,
     Accordion,
-    AccordionItem
+    AccordionItem,
+    Chip
 } from "@heroui/react";
+import { PanelLeftIcon, Languages } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { UserRound } from "../icons/user-round";
@@ -36,10 +38,13 @@ import { GitHubStarsButton } from "@/components/ui/github-stars";
 import { MapPin } from "../icons/map-pin";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { isAdmin, isStaff } from "@/types";
+import i18n from "@/lib/i18n";
 import { useCinemaStore } from "@/stores/useCinemaStore";
 import { useDialogStore } from "@/stores/useDialogStore";
 import { useRouter } from "next/navigation";
 import { AvatarElement } from "../ui/avatar";
+import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const NAV_LINK_CLASS = "relative text-sm font-semibold tracking-[0.2em] text-zinc-600 dark:text-white/70 hover:text-black dark:hover:text-white transition-all duration-300 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-amber-500 after:transition-all hover:after:w-full";
 const DROPDOWN_ITEM_CLASS = "data-[hover=true]:bg-amber-500/10 data-[hover=true]:text-amber-500 font-bold transition-all duration-200";
@@ -51,7 +56,7 @@ export default function NavbarLayout() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const lastScrollY = useRef(0);
-    
+
     const setOpenDialog = useDialogStore(state => state.setOpenDialog);
     const cinemas = useCinemaStore(state => state.cinemas);
     const fetchAllCinemas = useCinemaStore(state => state.fetchAllCinemas);
@@ -66,7 +71,7 @@ export default function NavbarLayout() {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-            
+
             setIsScrolled(currentScrollY > 20);
 
             if (currentScrollY > lastScrollY.current && currentScrollY > 150) {
@@ -74,7 +79,7 @@ export default function NavbarLayout() {
             } else {
                 setIsVisible(true);
             }
-            
+
             lastScrollY.current = currentScrollY;
         };
 
@@ -116,22 +121,35 @@ export default function NavbarLayout() {
         themeTogglerRef.current?.click();
     };
 
+    const { t } = useTranslation();
+    const pathname = usePathname();
+
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng);
+        // Ensure cookie is updated for the server to pick up on refresh
+        if (typeof window !== 'undefined') {
+            document.cookie = `i18next=${lng}; path=/; max-age=31536000; SameSite=Lax`;
+        }
+    };
+
+    const currentLang = (i18n.language || 'vi').startsWith('ja') ? 'ja' : (i18n.language || 'vi').startsWith('en') ? 'en' : 'vi';
+
     const desktopMovieItems = [
         {
             key: 'nowplaying',
-            label: 'Phim Đang Chiếu',
-            href: '/movies?tab=nowplaying',
+            label: t('navbar.movies_now'),
+            href: '/movies?tab=now-playing',
             icon: <Cctv animate={hoveredItem === 'nowplaying'} size={16} />,
         },
         {
             key: 'upcoming',
-            label: 'Phim Sắp Chiếu',
+            label: t('navbar.movies_upcoming'),
             href: '/movies?tab=coming-soon',
             icon: <TrendingUpIcon ref={trendingRef} size={16} />,
         },
         {
             key: 'popular',
-            label: 'Phim Hot',
+            label: t('navbar.movies_hot'),
             href: '/movies?tab=popular',
             icon: <FlameIcon ref={flameRef} size={16} />,
         },
@@ -140,26 +158,26 @@ export default function NavbarLayout() {
     const mobileMovieItems = [
         {
             key: 'nowplaying',
-            label: 'Phim Đang Chiếu',
+            label: t('navbar.movies_now'),
             href: '/movies?tab=now-playing',
             icon: <Cctv size={16} />,
         },
         {
             key: 'upcoming',
-            label: 'Phim Sắp Chiếu',
+            label: t('navbar.movies_upcoming'),
             href: '/movies?tab=coming-soon',
             icon: <TrendingUpIcon size={16} />,
         },
         {
             key: 'popular',
-            label: 'Phim Hot',
+            label: t('navbar.movies_hot'),
             href: '/movies?tab=popular',
             icon: <FlameIcon size={16} />,
         },
     ];
 
     return (
-        <Navbar 
+        <Navbar
             maxWidth="full"
             position="sticky"
             isMenuOpen={isMenuOpen}
@@ -192,7 +210,7 @@ export default function NavbarLayout() {
                         </div>
                         <div className="hidden md:flex flex-col leading-none">
                             <span className="text-xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">MilkyWayyy</span>
-                            <span className="text-[10px] font-bold tracking-[0.4em] text-amber-500 uppercase">Cinema Experience</span>
+                            <span className="text-[10px] font-bold tracking-[0.4em] text-amber-500 uppercase">{t('navbar.cinema_experience')}</span>
                         </div>
                     </Link>
                 </NavbarBrand>
@@ -208,12 +226,12 @@ export default function NavbarLayout() {
                                 onMouseEnter={() => setHoveredItem('phim')}
                                 onMouseLeave={() => setHoveredItem(null)}
                             >
-                                Phim
+                                {t('navbar.movies')}
                                 <ChevronDown animate={hoveredItem === 'phim'} size={14} />
                             </button>
                         </DropdownTrigger>
                     </NavbarItem>
-                    
+
                     <DropdownMenu aria-label="Movies categories" className="w-50">
                         {desktopMovieItems.map((item) => (
                             <DropdownItem
@@ -238,14 +256,14 @@ export default function NavbarLayout() {
                                 onMouseEnter={() => setHoveredItem('rap')}
                                 onMouseLeave={() => setHoveredItem(null)}
                             >
-                                Rạp
+                                {t('navbar.cinemas')}
                                 <ChevronDown animate={hoveredItem === 'rap'} size={14} />
                             </button>
                         </DropdownTrigger>
                     </NavbarItem>
                     <DropdownMenu aria-label="Cinemas list" className="w-55">
                         {cinemas.map((cinema) => (
-                            <DropdownItem 
+                            <DropdownItem
                                 key={cinema.cinema_id}
                                 className={DROPDOWN_ITEM_CLASS}
                                 startContent={<MapPin animate={hoveredItem === `cinema-${cinema.cinema_id}`} size={16} />}
@@ -261,19 +279,19 @@ export default function NavbarLayout() {
 
                 <NavbarItem>
                     <Link href="/category" className={NAV_LINK_CLASS}>
-                        Thể loại
+                        {t('navbar.categories')}
                     </Link>
                 </NavbarItem>
 
                 <NavbarItem>
                     <Link href="/actors" className={NAV_LINK_CLASS}>
-                        Diễn viên
+                        {t('navbar.actors')}
                     </Link>
                 </NavbarItem>
 
                 <NavbarItem>
                     <Link href="/reviews" className={NAV_LINK_CLASS}>
-                        Review
+                        {t('navbar.reviews')}
                     </Link>
                 </NavbarItem>
             </NavbarContent>
@@ -284,8 +302,8 @@ export default function NavbarLayout() {
                         href="/booking"
                         className="text-white px-4 py-2 bg-linear-to-r from-amber-500 to-orange-600 rounded-sm font-semibold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] active:scale-95 flex items-center gap-2"
                     >
-                        <BsFillTicketPerforatedFill size={16}/>
-                        Đặt vé
+                        <BsFillTicketPerforatedFill size={16} />
+                        {t('navbar.booking')}
                     </Link>
                 </NavbarItem>
 
@@ -294,9 +312,9 @@ export default function NavbarLayout() {
                         <NavbarItem>
                             <DropdownTrigger>
                                 <button className="outline-none transition-transform hover:scale-110 active:scale-95">
-                                    <AvatarElement 
-                                        authUser={authUser} 
-                                        widthDeco="w-12" 
+                                    <AvatarElement
+                                        authUser={authUser}
+                                        widthDeco="w-12"
                                         left="left-1/2"
                                         translatex="-translate-x-1/2"
                                     />
@@ -306,19 +324,19 @@ export default function NavbarLayout() {
 
                         <DropdownMenu aria-label="User actions" variant="flat" className="w-64">
                             <DropdownItem key="user-info" className="h-14 gap-2 opacity-100" textValue="user info">
-                                <p className="text-amber-500">Đăng nhập với: </p>
+                                <p className="text-amber-500">{t('navbar.logged_in_as')} </p>
                                 <p className="font-semibold truncate">{authUser.email}</p>
                             </DropdownItem>
 
-                            <DropdownItem 
-                                key='profile' 
+                            <DropdownItem
+                                key='profile'
                                 startContent={<UserRound animate={hoveredItem === 'profile'} size={18} />}
                                 className={DROPDOWN_ITEM_CLASS}
                                 href={`/profile/${authUser.id}`}
                                 onMouseEnter={() => setHoveredItem('profile')}
                                 onMouseLeave={() => setHoveredItem(null)}
                             >
-                                Hồ sơ cá nhân
+                                {t('navbar.profile')}
                             </DropdownItem>
 
                             <DropdownItem
@@ -328,33 +346,33 @@ export default function NavbarLayout() {
                                 onClick={handleThemeToggle}
                                 showDivider={true}
                             >
-                                <ThemeToggler ref={themeTogglerRef} className="hidden"/>
-                                Giao diện: {isDark ? 'Sáng' : 'Tối'}
+                                <ThemeToggler ref={themeTogglerRef} className="hidden" />
+                                {t('navbar.theme')}: {isDark ? t('navbar.theme_light') : t('navbar.theme_dark')}
                             </DropdownItem>
 
                             {authUser && (isStaff(Number(authUser?.role)) || isAdmin(Number(authUser?.role))) ? (
-                                <DropdownItem 
-                                    key='dashboard' 
+                                <DropdownItem
+                                    key='dashboard'
                                     startContent={<LayoutDashboard size={18} />}
                                     className={cn(DROPDOWN_ITEM_CLASS, "text-amber-500")}
                                     href="/dashboard"
                                 >
-                                    Quản trị hệ thống
+                                    {t('navbar.dashboard')}
                                 </DropdownItem>
                             ) : null}
 
-                            <DropdownItem 
+                            <DropdownItem
                                 key='ticket'
                                 className={DROPDOWN_ITEM_CLASS}
-                                startContent={<Star size={18}/>}
+                                startContent={<Star size={18} />}
                                 href="#"
                                 showDivider={true}
                             >
-                                Vé đã đặt của tôi
+                                {t('navbar.my_tickets')}
                             </DropdownItem>
-                            
-                            <DropdownItem 
-                                key='logout' 
+
+                            <DropdownItem
+                                key='logout'
                                 className="text-rose-500 data-[hover=true]:bg-rose-500/10"
                                 startContent={<LogOut size={18} />}
                                 onClick={() => {
@@ -362,33 +380,98 @@ export default function NavbarLayout() {
                                     router.push('/');
                                 }}
                             >
-                                Đăng xuất
+                                {t('navbar.logout')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 ) : (
                     <NavbarItem>
-                        <Button 
+                        <Button
                             className="bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-black uppercase text-[10px] tracking-widest hover:bg-zinc-200 dark:hover:bg-white/10 rounded-sm"
                             onClick={() => setOpenDialog('signin')}
                         >
-                            Đăng nhập
+                            {t('navbar.login')}
                         </Button>
                     </NavbarItem>
                 )}
 
                 <NavbarItem className="hidden xl:flex">
-                    <Link 
-                        href="https://github.com/thanhnhat23/PBL3_Cinema-Management" 
+                    <Link
+                        href="https://github.com/thanhnhat23/PBL3_Cinema-Management"
                         target="_blank"
                     >
-                        <GitHubStarsButton 
-                            username="thanhnhat23" 
-                            repo="PBL3_Cinema-Management" 
+                        <GitHubStarsButton
+                            username="thanhnhat23"
+                            repo="PBL3_Cinema-Management"
                             variant="ghost"
                             className="cursor-pointer"
                         />
                     </Link>
+                </NavbarItem>
+
+                <NavbarItem>
+                    <Dropdown placement="bottom-end" className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-zinc-200 dark:border-white/10 rounded-xl shadow-2xl">
+                        <DropdownTrigger>
+                            <Button
+                                variant="bordered"
+                                className="h-10 px-3 bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-full hover:bg-zinc-200 dark:hover:bg-white/10 transition-all duration-300 group"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Languages size={16} className="text-amber-500 group-hover:rotate-12 transition-transform duration-500" />
+                                    <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400">
+                                        {currentLang === 'vi' ? 'VN' : currentLang === 'ja' ? 'JA' : 'EN'}
+                                    </span>
+                                    <div className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+                                    <span className="text-base leading-none">
+                                        {currentLang === 'vi' ? '🇻🇳' : currentLang === 'ja' ? '🇯🇵' : '🇺🇸'}
+                                    </span>
+                                </div>
+                            </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                            aria-label="Language selection"
+                            onAction={(key) => changeLanguage(key as string)}
+                            selectedKeys={[currentLang]}
+                            selectionMode="single"
+                            className="p-2"
+                        >
+                            <DropdownItem
+                                key="vi"
+                                startContent={<span className="text-md">🇻🇳</span>}
+                                className={cn(DROPDOWN_ITEM_CLASS, "rounded-lg py-3")}
+                                description="Tiếng Việt"
+                            >
+                                <div className="flex items-center justify-between w-full">
+                                    <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400">VIETNAMESE</span>
+                                    {currentLang === 'vi' && <Chip size="sm" variant="flat" color="warning" className="text-[8px] font-semibold h-5">ACTIVE</Chip>}
+                                </div>
+                            </DropdownItem>
+
+                            <DropdownItem
+                                key="ja"
+                                startContent={<span className="text-md">🇯🇵</span>}
+                                className={cn(DROPDOWN_ITEM_CLASS, "rounded-lg py-3")}
+                                description="日本語"
+                            >
+                                <div className="flex items-center justify-between w-full">
+                                    <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400">JAPANESE</span>
+                                    {currentLang === 'ja' && <Chip size="sm" variant="flat" color="warning" className="text-[8px] font-semibold h-5">ACTIVE</Chip>}
+                                </div>
+                            </DropdownItem>
+
+                            <DropdownItem
+                                key="en"
+                                startContent={<span className="text-md">🇺🇸</span>}
+                                className={cn(DROPDOWN_ITEM_CLASS, "rounded-lg py-3")}
+                                description="English"
+                            >
+                                <div className="flex items-center justify-between w-full">
+                                    <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400">ENGLISH</span>
+                                    {currentLang === 'en' && <Chip size="sm" variant="flat" color="warning" className="text-[8px] font-semibold h-5">ACTIVE</Chip>}
+                                </div>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </NavbarItem>
             </NavbarContent>
 
@@ -401,13 +484,13 @@ export default function NavbarLayout() {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         <BsFillTicketPerforatedFill size={20} />
-                        Mua vé ngay
+                        {t('navbar.buy_tickets_now')}
                     </Link>
                 </NavbarMenuItem>
-                
+
                 <div className="flex flex-col gap-2">
-                    <Accordion 
-                        variant="light" 
+                    <Accordion
+                        variant="light"
                         className="px-0"
                         itemClasses={{
                             title: "text-xl font-semibold tracking-tighter text-zinc-900 dark:text-white",
@@ -415,7 +498,7 @@ export default function NavbarLayout() {
                             content: "flex flex-col gap-2 pl-8 pb-4"
                         }}
                     >
-                        <AccordionItem key="movies" aria-label="Movies" title="Phim">
+                        <AccordionItem key="movies" aria-label="Movies" title={t('navbar.movies')}>
                             {mobileMovieItems.map((item) => (
                                 <Link
                                     key={item.key}
@@ -429,7 +512,7 @@ export default function NavbarLayout() {
                             ))}
                         </AccordionItem>
 
-                        <AccordionItem key="cinemas" aria-label="Cinemas" title="Hệ thống rạp">
+                        <AccordionItem key="cinemas" aria-label="Cinemas" title={t('navbar.cinemas_system')}>
                             {cinemas.map((cinema) => (
                                 <Link
                                     key={cinema.cinema_id}
@@ -445,15 +528,15 @@ export default function NavbarLayout() {
                     </Accordion>
 
                     <div className="flex flex-col gap-4 px-4 mt-2">
-                        <Link href="/category" className="text-xl font-semibold tracking-tighter hover:text-amber-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Thể loại</Link>
-                        <Link href="/actors" className="text-xl font-semibold tracking-tighter hover:text-amber-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Diễn viên</Link>
-                        <Link href="/reviews" className="text-xl font-semibold tracking-tighter hover:text-amber-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Review</Link>
+                        <Link href="/category" className="text-xl font-semibold tracking-tighter hover:text-amber-500 transition-colors" onClick={() => setIsMenuOpen(false)}>{t('navbar.categories')}</Link>
+                        <Link href="/actors" className="text-xl font-semibold tracking-tighter hover:text-amber-500 transition-colors" onClick={() => setIsMenuOpen(false)}>{t('navbar.actors')}</Link>
+                        <Link href="/reviews" className="text-xl font-semibold tracking-tighter hover:text-amber-500 transition-colors" onClick={() => setIsMenuOpen(false)}>{t('navbar.reviews')}</Link>
                     </div>
                 </div>
 
                 <div className="mt-auto pb-12 px-4 flex flex-col gap-4">
                     <div className="w-full h-px bg-white/10" />
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">MilkyWayyy Cinema Experience</p>
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">MilkyWayyy {t('navbar.cinema_experience')}</p>
                 </div>
             </NavbarMenu>
         </Navbar>

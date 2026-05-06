@@ -14,6 +14,7 @@ import { AvatarElement } from "@/components/ui/avatar";
 import DetailPageSkeleton from "@/components/skeletons/detailPage";
 import { BlurFade } from "@/components/ui/effects/blur-fade";
 import UserReviewItem from "@/components/layout/userReviewItem";
+import { useTranslation } from "react-i18next";
 
 export default function MoviePage() {
     const { 
@@ -29,6 +30,7 @@ export default function MoviePage() {
     const { fetchReviewByMovieId, clearReviews, reviews } = useReviewStore();
     const { isOpen: isActorsOpen, onOpen: onActorsOpen, onOpenChange: onActorsOpenChange } = useDisclosure();
     const { isOpen: isReviewsOpen, onOpen: onReviewsOpen, onOpenChange: onReviewsOpenChange } = useDisclosure();
+    const { t } = useTranslation();
 
     const params = useParams();
     const movieId = Number(Array.isArray(params.id) ? params.id[0] : params.id);
@@ -108,7 +110,7 @@ export default function MoviePage() {
                                         {selectedMovie?.adult ? "T18+" : "T16+"}
                                     </div>
                                     <div className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-white/10 backdrop-blur-md border border-zinc-200 dark:border-white/20 text-[10px] font-black text-zinc-500 dark:text-white/80 uppercase tracking-widest">
-                                        Movie Detail
+                                        {t('movie_detail.movie_detail_label')}
                                     </div>
                                 </div>
                                 <h1 className="text-3xl md:text-7xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase drop-shadow-2xl text-center md:text-left">
@@ -120,7 +122,7 @@ export default function MoviePage() {
                                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6 text-zinc-600 dark:text-white/80 font-bold uppercase text-[10px] md:text-xs tracking-widest">
                                     <div className="flex items-center gap-2">
                                         <Clock size={16} className="text-amber-500" />
-                                        <span>{selectedMovie?.runtime} PHÚT</span>
+                                        <span>{selectedMovie?.runtime} {t('movie_detail.runtime')}</span>
                                     </div>
                                     <div className="md:w-1.5 md:h-1.5 w-1 h-1 rounded-full bg-zinc-200 dark:bg-white/20" />
                                     <div className="flex items-center gap-2">
@@ -131,7 +133,7 @@ export default function MoviePage() {
                                     <div className="flex items-center gap-2">
                                         <FaStar size={16} className="text-yellow-400" />
                                         <span className="text-zinc-900 dark:text-white text-xs md:text-sm font-black">{selectedMovie?.vote_average?.toFixed(1)}</span>
-                                        <span className="text-zinc-400 dark:text-white/40 font-medium text-[9px] md:text-xs">({selectedMovie?.vote_count} REVIEWS)</span>
+                                        <span className="text-zinc-400 dark:text-white/40 font-medium text-[9px] md:text-xs">({selectedMovie?.vote_count} {t('movie_detail.reviews_count')})</span>
                                     </div>
                                 </div>
                             </BlurFade>
@@ -152,7 +154,7 @@ export default function MoviePage() {
                                         }}
                                     >
                                         <div className="bg-zinc-100/50 dark:bg-white/20 p-1 rounded-full"><FaStar size={14} /></div>
-                                        Đặt vé ngay
+                                        {t('movie_detail.book_now')}
                                     </button>
                                     
                                     {selectedMovie?.trailer_url && (
@@ -164,7 +166,7 @@ export default function MoviePage() {
                                             }}
                                         >
                                             <div className="bg-zinc-100 dark:bg-white/10 p-1 rounded-full"><Clock size={14} /></div>
-                                            Xem Trailer
+                                            {t('movie_detail.watch_trailer')}
                                         </button>
                                     )}
                                 </div>
@@ -182,10 +184,10 @@ export default function MoviePage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-1.5 h-8 bg-amber-500 rounded-full" />
-                                <h2 className="text-2xl font-black uppercase tracking-tight">Cốt truyện</h2>
+                                <h2 className="text-2xl font-black uppercase tracking-tight">{t('movie_detail.storyline')}</h2>
                             </div>
                             <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed font-medium">
-                                {selectedMovie?.overview || "Hiện chưa có mô tả cho phim này."}
+                                {selectedMovie?.overview || t('movie_detail.no_overview')}
                             </p>
                         </div>
 
@@ -194,7 +196,7 @@ export default function MoviePage() {
                              <div className="p-6 md:p-8 border-b border-zinc-100 dark:border-white/5 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="w-1.5 h-6 md:h-8 bg-amber-500 rounded-full" />
-                                    <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">Trailer Chính Thức</h2>
+                                    <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">{t('movie_detail.official_trailer')}</h2>
                                 </div>
                              </div>
                              <div className="aspect-video w-full">
@@ -208,8 +210,8 @@ export default function MoviePage() {
                                     ></iframe>
                                 ) : (
                                     <div className="w-full h-full flex flex-col items-center justify-center bg-sidebar gap-4">
-                                        <SparklesText className="text-zinc-800 text-4xl font-black">COMING SOON</SparklesText>
-                                        <p className="text-zinc-600 font-bold uppercase tracking-widest text-xs">Trailer hiện chưa sẵn sàng</p>
+                                        <SparklesText className="text-zinc-800 text-4xl font-black">{t('movie_detail.coming_soon')}</SparklesText>
+                                        <p className="text-zinc-600 font-bold uppercase tracking-widest text-xs">{t('movie_detail.trailer_not_ready')}</p>
                                     </div>
                                 )}
                              </div>
@@ -222,7 +224,7 @@ export default function MoviePage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-1.5 h-6 md:h-8 bg-amber-500 rounded-full" />
-                                <h2 className="text-xl font-black uppercase tracking-tight">Diễn viên chính</h2>
+                                <h2 className="text-xl font-black uppercase tracking-tight">{t('movie_detail.main_cast')}</h2>
                             </div>
                             <div className="grid grid-cols-3 gap-4">
                                 {sortedActors.slice(0, 6).map((actor, index) => (
@@ -255,7 +257,7 @@ export default function MoviePage() {
                                 onClick={onActorsOpen}
                                 className="w-full mt-8 flex items-center justify-center py-3 rounded-sm bg-zinc-100 dark:bg-zinc-800 text-[10px] font-black uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all cursor-pointer"
                             >
-                                Xem toàn bộ diễn viên
+                                {t('movie_detail.view_all_cast')}
                             </button>
                         </div>
 
@@ -263,7 +265,7 @@ export default function MoviePage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                              <div className="flex items-center gap-3 mb-6">
                                 <div className="w-1.5 h-6 md:h-8 bg-amber-500 rounded-full" />
-                                <h2 className="text-xl font-black uppercase tracking-tight">Đánh giá mới</h2>
+                                <h2 className="text-xl font-black uppercase tracking-tight">{t('movie_detail.new_reviews')}</h2>
                             </div>
                             {reviews && reviews.length > 0 ? (
                                 <div className="flex flex-col gap-6">
@@ -288,11 +290,11 @@ export default function MoviePage() {
                                         onClick={onReviewsOpen}
                                         className="w-full flex items-center justify-center py-3 rounded-sm border border-dashed border-zinc-200 dark:border-zinc-700 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
                                     >
-                                        Xem tất cả {reviews.length} đánh giá
+                                        {t('movie_detail.view_all_reviews', { count: reviews.length })}
                                     </button>
                                 </div>
                             ) : (
-                                <div className="text-center py-8 text-zinc-400 italic text-sm font-medium">Chưa có đánh giá nào cho phim này.</div>
+                                <div className="text-center py-8 text-zinc-400 italic text-sm font-medium">{t('movie_detail.no_reviews')}</div>
                             )}
                         </div>
                     </div>
@@ -318,9 +320,9 @@ export default function MoviePage() {
                                 <div className="flex flex-col gap-1">
                                     <div className="flex items-center gap-3">
                                         <div className="w-1.5 h-6 bg-amber-500 rounded-full" />
-                                        <h2 className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">Dàn diễn viên</h2>
+                                        <h2 className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">{t('movie_detail.cast_list')}</h2>
                                     </div>
-                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Toàn bộ diễn viên tham gia phim {selectedMovie.title}</p>
+                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{t('movie_detail.all_cast_for', { title: selectedMovie.title })}</p>
                                 </div>
                             </DrawerHeader>
                             <DrawerBody>
@@ -358,7 +360,7 @@ export default function MoviePage() {
                                     onClick={onClose}
                                     className="w-full py-4 rounded-sm bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 transition-all cursor-pointer"
                                 >
-                                    Đóng danh sách
+                                    {t('movie_detail.close_list')}
                                 </button>
                             </DrawerFooter>
                         </>
@@ -385,9 +387,9 @@ export default function MoviePage() {
                                 <div className="flex flex-col gap-1">
                                     <div className="flex items-center gap-3">
                                         <div className="w-1.5 h-6 bg-amber-500 rounded-full" />
-                                        <h2 className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">Tất cả đánh giá</h2>
+                                        <h2 className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">{t('movie_detail.all_reviews')}</h2>
                                     </div>
-                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{reviews.length} đánh giá từ cộng đồng</p>
+                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{t('movie_detail.community_reviews', { count: reviews.length })}</p>
                                 </div>
                             </DrawerHeader>
                             <DrawerBody>
@@ -402,7 +404,7 @@ export default function MoviePage() {
                                     onClick={onClose}
                                     className="w-full py-4 rounded-sm bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 transition-all cursor-pointer"
                                 >
-                                    Quay lại
+                                    {t('movie_detail.back')}
                                 </button>
                             </DrawerFooter>
                         </>

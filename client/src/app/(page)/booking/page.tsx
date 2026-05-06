@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Popcorn, Armchair, Clapperboard, WalletCards, BadgeCheck, ChevronRight, ChevronLeft, Calendar, MapPin, Monitor } from "lucide-react";
 import Image from 'next/image';
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 // Stores
 import { useLocationStore } from '@/stores/useLocationStore';
@@ -65,6 +66,15 @@ export default function BookingPage() {
   
   const seats = useSeatStore(state => state.seats);
   const fetchSeatsForShowtime = useSeatStore(state => state.fetchSeatsForShowtime);
+  const { t } = useTranslation();
+
+  const STEPS = [
+    { key: "select-service", label: t('booking.steps.movie'), icon: <Clapperboard size={20} /> },
+    { key: "select-seat", label: t('booking.steps.seat'), icon: <Armchair size={20} /> },
+    { key: "select-food", label: t('booking.steps.food'), icon: <Popcorn size={20} /> },
+    { key: "payment", label: t('booking.steps.payment'), icon: <WalletCards size={20} /> },
+    { key: "confirmation", label: t('booking.steps.confirmation'), icon: <BadgeCheck size={20} /> }
+  ];
 
   useEffect(() => {
     const init = async () => {
@@ -180,10 +190,10 @@ export default function BookingPage() {
   };
 
   const summaryDisplay = [
-    { label: "Chọn rạp", val: selection.location },
-    { label: "Chọn phim", val: selection.movieTitle },
+    { label: t('booking.selection.select_cinema'), val: selection.location },
+    { label: t('booking.selection.select_movie'), val: selection.movieTitle },
     { 
-      label: "Chọn suất chiếu", 
+      label: t('booking.selection.select_showtime'), 
       val: activeShowtime ? `${selection.showtimeDate} ${new Date(activeShowtime.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}` : "" 
     }
   ];
@@ -231,7 +241,7 @@ export default function BookingPage() {
         <div className="flex-1 space-y-6">
           {currentStep === "select-service" ? (
             <SelectServiceTab
-              select={summaryDisplay.map(s => ({ key: s.label === "Chọn rạp" ? "select-location" : s.label === "Chọn phim" ? "select-movie" : "select-showtime", label: s.label, state: s.val ? `- ${s.val}` : "" }))}
+              select={summaryDisplay.map(s => ({ key: s.label === t('booking.selection.select_cinema') ? "select-location" : s.label === t('booking.selection.select_movie') ? "select-movie" : "select-showtime", label: s.label, state: s.val ? `- ${s.val}` : "" }))}
               showSelect={expandedSections}
               stateSelect={legacyStateSelect}
               locations={locations}
@@ -273,7 +283,7 @@ export default function BookingPage() {
                   {STEPS.find(s => s.key === currentStep)?.label}
                 </h2>
                 <p className="text-zinc-500 font-medium max-w-md">
-                  Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn.
+                  {t('booking.feature_updating')}
                 </p>
              </div>
           )}
@@ -298,13 +308,13 @@ export default function BookingPage() {
 
                   <div className="flex flex-col gap-3 py-1">
                     <h2 className="text-lg font-black leading-tight text-zinc-900 dark:text-white uppercase italic">
-                      {selection.movieTitle || "Chưa chọn phim"}
+                      {selection.movieTitle || t('booking.selection.not_selected_movie')}
                     </h2>
                     
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                         <MapPin size={14} className="text-amber-500" />
-                        <span className="text-xs font-bold uppercase tracking-wider">{selection.location || "Chưa chọn rạp"}</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">{selection.location || t('booking.selection.not_selected_cinema')}</span>
                       </div>
                       
                       {activeShowtime && (
@@ -319,7 +329,7 @@ export default function BookingPage() {
                       {activeShowtime?.Room?.nameRoom && (
                         <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                           <Monitor size={14} className="text-amber-500" />
-                          <span className="text-xs font-bold uppercase tracking-wider">Phòng: {activeShowtime.Room.nameRoom}</span>
+                          <span className="text-xs font-bold uppercase tracking-wider">{t('booking.selection.room')}: {activeShowtime.Room.nameRoom}</span>
                         </div>
                       )}
                     </div>
@@ -330,7 +340,7 @@ export default function BookingPage() {
 
                 {selection.selectedSeats.length > 0 && (
                   <div className="space-y-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Ghế đã chọn</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.sidebar.selected_seats')}</p>
                     <div className="flex flex-wrap gap-2">
                       {selection.selectedSeats.map(seat => (
                         <span key={seat} className="px-3 py-1 rounded-md bg-amber-500/10 text-amber-500 text-xs font-black border border-amber-500/20 shadow-sm">
@@ -342,9 +352,9 @@ export default function BookingPage() {
                 )}
 
                 <div className="flex justify-between items-end pt-4 border-t border-zinc-100 dark:border-white/5">
-                  <span className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">Tổng cộng</span>
+                  <span className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.sidebar.total')}</span>
                   <span className="text-2xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]">
-                    0 <span className="text-sm">VNĐ</span>
+                    0 <span className="text-sm">{t('common.currency_vnd')}</span>
                   </span>
                 </div>
               </div>
@@ -359,7 +369,7 @@ export default function BookingPage() {
                 className="flex gap-2 items-center justify-center px-4 py-2 rounded-sm border-2 font-bold text-sm transition-all hover:bg-zinc-100 dark:hover:bg-white/5"
                 startContent={<ChevronLeft size={18} />}
               >
-                Quay lại
+                {t('booking.buttons.back')}
               </Button>
 
               <Button
@@ -374,7 +384,7 @@ export default function BookingPage() {
                 )}
                 endContent={<ChevronRight size={18} />}
               >
-                Tiếp theo
+                {t('booking.buttons.next')}
               </Button>
             </div>
           </div>

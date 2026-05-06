@@ -3,37 +3,39 @@
 import { Briefcase, Users, Star, GraduationCap, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Button } from "@heroui/react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export default function Recruitment() {
+    const { t } = useTranslation();
     const jobs = [
         {
-            title: "Giám sát sảnh rạp (Floor Supervisor)",
-            location: "Toàn quốc",
-            type: "Toàn thời gian",
-            salary: "8,000,000 - 12,000,000 VNĐ",
-            desc: "Quản lý hoạt động vận hành tại sảnh, điều phối nhân viên và giải quyết các khiếu nại của khách hàng."
+            title: t('recruitment.jobs.j1_title'),
+            location: t('recruitment.jobs.locations.nationwide'),
+            type: t('recruitment.jobs.types.full_time'),
+            salary: t('recruitment.jobs.j1_salary'),
+            desc: t('recruitment.jobs.j1_desc')
         },
         {
-            title: "Nhân viên Phục vụ (Cinema Staff)",
-            location: "Đà Nẵng / Huế / HCM",
-            type: "Bán thời gian",
-            salary: "25,000 - 30,000 VNĐ/giờ",
-            desc: "Bán vé, phục vụ bắp nước và hỗ trợ khách hàng tại khu vực rạp chiếu."
+            title: t('recruitment.jobs.j2_title'),
+            location: t('recruitment.jobs.locations.cities'),
+            type: t('recruitment.jobs.types.part_time'),
+            salary: t('recruitment.jobs.j2_salary'),
+            desc: t('recruitment.jobs.j2_desc')
         },
         {
-            title: "Kỹ thuật viên phòng chiếu",
-            location: "Đà Nẵng / Hà Nội / Nha Trang / Huế",
-            type: "Toàn thời gian",
-            salary: "10,000,000 - 15,000,000 VNĐ",
-            desc: "Vận hành hệ thống máy chiếu, âm thanh và bảo trì thiết bị kỹ thuật trong rạp."
+            title: t('recruitment.jobs.j3_title'),
+            location: t('recruitment.jobs.locations.cities_extended'),
+            type: t('recruitment.jobs.types.full_time'),
+            salary: t('recruitment.jobs.j3_salary'),
+            desc: t('recruitment.jobs.j3_desc')
         }
     ];
 
     const benefits = [
-        { icon: <Star />, text: "Xem phim miễn phí hàng tuần" },
-        { icon: <Users />, text: "Môi trường trẻ trung, năng động" },
-        { icon: <GraduationCap />, text: "Đào tạo kỹ năng chuyên nghiệp" },
-        { icon: <Clock />, text: "Giờ làm việc linh hoạt" }
+        { icon: <Star />, text: t('recruitment.benefits.free_movies') },
+        { icon: <Users />, text: t('recruitment.benefits.environment') },
+        { icon: <GraduationCap />, text: t('recruitment.benefits.training') },
+        { icon: <Clock />, text: t('recruitment.benefits.flex_time') }
     ];
 
     return (
@@ -42,13 +44,13 @@ export default function Recruitment() {
                 {/* Hero Section */}
                 <div className="text-center space-y-6">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-[0.2em]">
-                        Join Our Team
+                        {t('recruitment.join_our_team')}
                     </div>
                     <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic leading-none">
-                        GIA NHẬP <span className="text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">VŨ TRỤ</span> MILKYWAYYY
+                        {t('recruitment.hero_title')} <span className="text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">{t('recruitment.hero_subtitle')}</span> MILKYWAYYY
                     </h1>
                     <p className="text-zinc-500 dark:text-zinc-400 font-medium max-w-2xl mx-auto text-lg">
-                        Bạn đam mê điện ảnh? Bạn muốn làm việc trong môi trường sáng tạo và chuyên nghiệp? Hãy cùng chúng tôi tạo nên những trải nghiệm tuyệt vời cho khán giả.
+                        {t('recruitment.hero_desc')}
                     </p>
                 </div>
 
@@ -70,7 +72,7 @@ export default function Recruitment() {
                 <div className="space-y-8">
                     <div className="flex items-center gap-4">
                         <div className="h-px flex-1 bg-zinc-200 dark:bg-white/10" />
-                        <h2 className="text-2xl font-black uppercase tracking-widest text-zinc-900 dark:text-white italic">Vị trí đang tuyển</h2>
+                        <h2 className="text-2xl font-black uppercase tracking-widest text-zinc-900 dark:text-white italic">{t('recruitment.jobs_title')}</h2>
                         <div className="h-px flex-1 bg-zinc-200 dark:bg-white/10" />
                     </div>
 
@@ -94,17 +96,17 @@ export default function Recruitment() {
                                             &quot;{job.desc}&quot;
                                         </p>
                                         <p className="text-amber-600 font-black text-sm uppercase tracking-widest">
-                                            Lương: {job.salary}
+                                            {t('recruitment.salary_label')} {job.salary}
                                         </p>
                                     </div>
-                                    <Button 
-                                        as={Link}
-                                        href="/recruitment/apply"
-                                        className="w-full md:w-auto px-6 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-black uppercase tracking-widest text-xs group-hover:bg-amber-500 group-hover:text-white transition-all shadow-xl"
-                                        endContent={<ArrowRight size={16} />}
-                                    >
-                                        Ứng tuyển ngay
-                                    </Button>
+                                        <Button 
+                                            as={Link}
+                                            href="/recruitment/apply"
+                                            className="w-full md:w-auto px-6 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-black uppercase tracking-widest text-xs group-hover:bg-amber-500 group-hover:text-white transition-all shadow-xl"
+                                            endContent={<ArrowRight size={16} />}
+                                        >
+                                            {t('recruitment.apply_button')}
+                                        </Button>
                                 </div>
                             </div>
                         ))}
@@ -115,13 +117,13 @@ export default function Recruitment() {
                 <div className="p-12 bg-linear-to-r from-amber-500 to-orange-600 rounded-sm text-center space-y-6 text-white shadow-2xl relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
                     <div className="relative z-10 space-y-4">
-                        <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter">Bạn chưa thấy vị trí phù hợp?</h2>
+                        <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter">{t('recruitment.cta_title')}</h2>
                         <p className="font-medium text-amber-100 max-w-2xl mx-auto">
-                            Đừng ngần ngại gửi hồ sơ của bạn cho chúng tôi. Chúng tôi luôn tìm kiếm những tài năng mới để cùng phát triển MilkyWayyy trong tương lai.
+                            {t('recruitment.cta_desc')}
                         </p>
                         <div className="pt-4">
                             <a href="mailto:hr@milkywayyy.com" className="px-10 py-4 bg-white text-amber-600 font-black uppercase tracking-widest text-sm rounded-lg hover:bg-zinc-900 hover:text-white transition-all inline-block shadow-lg">
-                                Gửi CV tự do
+                                {t('recruitment.cta_button')}
                             </a>
                         </div>
                     </div>

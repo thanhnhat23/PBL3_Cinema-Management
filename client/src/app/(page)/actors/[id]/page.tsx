@@ -8,9 +8,11 @@ import CardSkeleton from "@/components/skeletons/cardMovie";
 import { CalendarDays, MapPin, VenusAndMars, UserCheck, Award, Film } from 'lucide-react';
 import Image from "next/image"; 
 import DetailPageSkeleton from "@/components/skeletons/detailPage";
+import { useTranslation } from "react-i18next";
 import { BlurFade } from "@/components/ui/effects/blur-fade";
 
 export default function ActorDetailPage() {
+    const { t, i18n } = useTranslation();
     const { 
         selectedActor, 
         movieWithActors,
@@ -81,10 +83,10 @@ export default function ActorDetailPage() {
                             <BlurFade delay={0.2}>
                                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
                                     <div className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-white/10 backdrop-blur-md border border-zinc-200 dark:border-white/20 text-[10px] font-black text-zinc-500 dark:text-white/80 uppercase tracking-widest">
-                                        Professional Actor
+                                        {t('actors.professional_actor')}
                                     </div>
                                     <div className="px-3 py-1 rounded-full bg-fuchsia-500/20 backdrop-blur-md border border-fuchsia-500/30 text-[10px] font-black text-fuchsia-300 uppercase tracking-widest">
-                                        Cinema Star
+                                        {t('actors.cinema_star')}
                                     </div>
                                 </div>
                                 <h1 className="text-3xl md:text-7xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase drop-shadow-2xl text-center md:text-left">
@@ -96,7 +98,7 @@ export default function ActorDetailPage() {
                                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6 text-zinc-600 dark:text-white/80 font-bold uppercase text-[10px] md:text-xs tracking-widest">
                                     <div className="flex items-center gap-2">
                                         <CalendarDays size={16} className="text-fuchsia-500" />
-                                        <span>Sinh nhật: {selectedActor?.birthday ? new Date(selectedActor.birthday).toLocaleDateString("vi-VN") : "N/A"}</span>
+                                        <span>{t('actors.birthday')}: {selectedActor?.birthday ? new Date(selectedActor.birthday).toLocaleDateString(i18n.language === 'vi' ? 'vi-VN' : 'ja-JP') : "N/A"}</span>
                                     </div>
                                     <div className="md:w-1.5 md:h-1.5 w-1 h-1 rounded-full bg-zinc-200 dark:bg-white/20" />
                                     <div className="flex items-center gap-2">
@@ -106,7 +108,7 @@ export default function ActorDetailPage() {
                                     <div className="md:w-1.5 md:h-1.5 w-1 h-1 rounded-full bg-zinc-200 dark:bg-white/20" />
                                     <div className="flex items-center gap-2">
                                         <VenusAndMars size={16} className="text-fuchsia-500" />
-                                        <span>Giới tính: {selectedActor?.gender === 1 ? "Nữ" : selectedActor?.gender === 2 ? "Nam" : "Khác"}</span>
+                                        <span>{t('actors.gender')}: {selectedActor?.gender === 1 ? t('actors.gender_female') : selectedActor?.gender === 2 ? t('actors.gender_male') : t('actors.gender_other')}</span>
                                     </div>
                                 </div>
                             </BlurFade>
@@ -124,10 +126,10 @@ export default function ActorDetailPage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-1.5 h-6 md:h-8 bg-fuchsia-500 rounded-full" />
-                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">Tiểu sử</h2>
+                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">{t('actors.biography')}</h2>
                             </div>
                             <p className="text-zinc-600 dark:text-zinc-400 text-base md:text-lg leading-relaxed font-medium whitespace-pre-wrap">
-                                {selectedActor?.biography || "Hiện chưa có tiểu sử cho diễn viên này. Chúng tôi sẽ cập nhật sớm nhất có thể."}
+                                {selectedActor?.biography || t('actors.no_biography')}
                             </p>
                         </div>
 
@@ -135,11 +137,11 @@ export default function ActorDetailPage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="w-1.5 h-6 md:h-8 bg-purple-500 rounded-full" />
-                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">Vai diễn nổi bật</h2>
+                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">{t('actors.known_for')}</h2>
                             </div>
                             <div className="flex flex-wrap gap-3">
                                 {characterWithActors.length === 0 ? (
-                                    <p className="text-zinc-500 italic">Thông tin vai diễn đang được cập nhật.</p>
+                                    <p className="text-zinc-500 italic">{t('actors.no_character')}</p>
                                 ) : (
                                     characterWithActors.map((character, index) => (
                                         <div key={index} className="px-4 py-2 rounded-full bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5 flex items-center gap-1 transition-all hover:border-fuchsia-500/50 hover:bg-fuchsia-500/5 group cursor-default">
@@ -157,33 +159,33 @@ export default function ActorDetailPage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-1.5 h-6 md:h-8 bg-amber-500 rounded-full" />
-                                <h2 className="text-lg md:text-xl font-black uppercase tracking-tight">Thông tin nhanh</h2>
+                                <h2 className="text-lg md:text-xl font-black uppercase tracking-tight">{t('actors.fast_facts')}</h2>
                             </div>
                             <div className="flex flex-col gap-6">
                                 <div className="flex justify-between items-center pb-4 border-b border-zinc-100 dark:border-white/5">
-                                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Số phim</span>
+                                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('actors.movie_count')}</span>
                                     <div className="flex items-center gap-2">
                                         <Film size={14} className="text-fuchsia-500" />
-                                        <span className="text-sm font-bold">{movieWithActors.length} tác phẩm</span>
+                                        <span className="text-sm font-bold">{movieWithActors.length} {t('actors.works')}</span>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Vai diễn</span>
-                                    <span className="text-sm font-bold">{characterWithActors.length} nhân vật</span>
+                                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('actors.character_count')}</span>
+                                    <span className="text-sm font-bold">{characterWithActors.length} {t('actors.characters')}</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Professional Tags */}
                         <div className="bg-linear-to-br from-fuchsia-600/10 to-purple-600/10 backdrop-blur-2xl rounded-sm p-8 shadow-xl border border-fuchsia-500/20">
-                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-fuchsia-500 mb-4">Professional Status</h3>
+                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-fuchsia-500 mb-4">{t('actors.professional_status')}</h3>
                             <div className="space-y-4">
                                 <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
                                     <UserCheck size={18} className="text-fuchsia-500" />
-                                    <span className="text-[10px] font-black uppercase tracking-wider">Hợp tác chính thức</span>
+                                    <span className="text-[10px] font-black uppercase tracking-wider">{t('actors.official_collaboration')}</span>
                                 </div>
                                 <p className="text-[11px] text-zinc-500 font-medium italic leading-relaxed">
-                                    Diễn viên đã đóng góp {movieWithActors.length} tác phẩm xuất sắc trong hệ thống rạp của chúng tôi.
+                                    {t('actors.collaboration_desc', { count: movieWithActors.length })}
                                 </p>
                             </div>
                         </div>
@@ -195,11 +197,11 @@ export default function ActorDetailPage() {
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-6 md:h-8 bg-amber-500 rounded-full" />
-                            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Danh sách Phim</h2>
+                            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">{t('actors.filmography')}</h2>
                         </div>
                         <div className="hidden md:flex gap-2">
                              <div className="px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                                {movieWithActors.length} Movies
+                                {t('actors.movies_count_label', { count: movieWithActors.length })}
                              </div>
                         </div>
                     </div>

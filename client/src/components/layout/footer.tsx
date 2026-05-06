@@ -4,8 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaFacebookF, FaInstagram, FaGithub, FaAt } from "react-icons/fa";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import i18n from "@/lib/i18n";
 
 export default function FooterLayout() {
+  const { t } = useTranslation();
   return (
     <footer className="relative bg-sidebar pt-24 pb-12 overflow-hidden">
         {/* Subtle Background Glow */}
@@ -27,11 +30,11 @@ export default function FooterLayout() {
                         </div>
                         <div className="flex flex-col leading-none">
                             <span className="text-xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">MilkyWayyy</span>
-                            <span className="text-[10px] font-bold tracking-[0.4em] text-amber-500 uppercase">Cinema Experience</span>
+                            <span className="text-[10px] font-bold tracking-[0.4em] text-amber-500 uppercase">{t('navbar.cinema_experience')}</span>
                         </div>
                     </Link>
                     <p className="text-zinc-500 text-sm leading-relaxed max-w-xs font-medium">
-                        Trải nghiệm điện ảnh đỉnh cao với công nghệ hiện đại nhất. Chúng tôi cam kết mang đến những giây phút giải trí tuyệt vời cho mọi khán giả.
+                        {t('footer.description')}
                     </p>
                     <div className="flex items-center gap-4 mt-2">
                         {[
@@ -65,15 +68,15 @@ export default function FooterLayout() {
                 <div className="flex flex-col gap-6">
                     <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white flex items-center gap-2">
                         <div className="w-1.5 h-4 bg-amber-500 rounded-full" />
-                        Điện ảnh
+                        {t('footer.cinema_title')}
                     </h3>
                     <nav className="flex flex-col gap-3">
                         {[
-                            { label: "Phim Đang Chiếu", href: "/movies?tab=nowplaying" },
-                            { label: "Phim Sắp Chiếu", href: "/movies?tab=coming-soon" },
-                            { label: "Phim Hot", href: "/movies?tab=popular" },
-                            { label: "Thể Loại Phim", href: "/category" },
-                            { label: "Đánh Giá Phim", href: "/reviews" }
+                            { label: t('navbar.movies_now'), href: "/movies?tab=nowplaying" },
+                            { label: t('navbar.movies_upcoming'), href: "/movies?tab=coming-soon" },
+                            { label: t('navbar.movies_hot'), href: "/movies?tab=popular" },
+                            { label: t('navbar.categories'), href: "/category" },
+                            { label: t('navbar.reviews'), href: "/reviews" }
                         ].map((link, i) => (
                             <Link 
                                 key={i} 
@@ -90,17 +93,17 @@ export default function FooterLayout() {
                 <div className="flex flex-col gap-6">
                     <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white flex items-center gap-2">
                         <div className="w-1.5 h-4 bg-amber-500 rounded-full" />
-                        Hỗ trợ
+                        {t('footer.support_title')}
                     </h3>
                     <nav className="flex flex-col gap-3">
                         {[
-                            { label: "Hệ Thống Rạp", href: "/cinemas" },
-                            { label: "Giá Vé & Ưu Đãi", href: "/promotions" },
-                            { label: "Tuyển Dụng", href: "/recruitment" },
-                            { label: "Liên Hệ / Góp Ý", href: "/contact" },
-                            { label: "Câu Hỏi Thường Gặp", href: "/faq" },
-                            { label: "Chính Sách Bảo Mật", href: "/policy" },
-                            { label: "Điều Khoản Sử Dụng", href: "/terms" }
+                            { label: t('navbar.cinemas_system'), href: "/cinemas" },
+                            { label: t('footer.links.promotions'), href: "/promotions" },
+                            { label: t('footer.links.recruitment'), href: "/recruitment" },
+                            { label: t('footer.links.contact'), href: "/contact" },
+                            { label: t('footer.links.faq'), href: "/faq" },
+                            { label: t('footer.links.policy'), href: "/policy" },
+                            { label: t('footer.links.terms'), href: "/terms" }
                         ].map((link, i) => (
                             <Link 
                                 key={i} 
@@ -117,24 +120,24 @@ export default function FooterLayout() {
                 <div className="flex flex-col gap-6">
                     <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white flex items-center gap-2">
                         <div className="w-1.5 h-4 bg-amber-500 rounded-full" />
-                        Đăng ký nhận tin
+                        {t('footer.newsletter_title')}
                     </h3>
                     <p className="text-zinc-500 text-xs font-medium leading-relaxed">
-                        Nhận thông tin về các bộ phim bom tấn và ưu đãi độc quyền sớm nhất.
+                        {t('footer.newsletter_desc')}
                     </p>
                     <div className="flex flex-col gap-3">
                         <div className="relative group">
                             <input 
                                 type="email" 
-                                placeholder="Email của bạn..." 
+                                placeholder={t('footer.email_placeholder')}
                                 className="w-full bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-sm py-3 px-4 text-xs text-zinc-900 dark:text-white outline-none focus:border-amber-500/50 transition-all"
                             />
                             <button className="absolute right-2 top-1.5 bottom-1.5 px-4 bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest rounded-sm hover:bg-amber-400 transition-colors">
-                                Gửi
+                                {t('footer.send_button')}
                             </button>
                         </div>
                         <p className="text-[10px] text-zinc-600 italic">
-                            * Chúng tôi cam kết bảo mật thông tin của bạn.
+                            {t('footer.privacy_note')}
                         </p>
                     </div>
                 </div>
