@@ -132,7 +132,7 @@ export const FormForgotPassword = ({
                         className={cn(
                             "w-full h-12 rounded-sm font-bold text-sm uppercase tracking-widest transition-all duration-300",
                             isCheckResetPassFilled 
-                                ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-[0_4px_15px_rgba(168,85,247,0.3)] hover:shadow-[0_8px_25px_rgba(168,85,247,0.4)]"
+                                ? "bg-linear-to-r from-purple-500 to-pink-600 text-white shadow-[0_4px_15px_rgba(168,85,247,0.3)] hover:shadow-[0_8px_25px_rgba(168,85,247,0.4)]"
                                 : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
                         )}
                     >

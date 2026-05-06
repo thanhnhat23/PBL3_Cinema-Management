@@ -35,7 +35,7 @@ import { Moon } from "../icons/moon";
 import { GitHubStarsButton } from "@/components/ui/github-stars";
 import { MapPin } from "../icons/map-pin";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { isStaff } from "@/types";
+import { isAdmin, isStaff } from "@/types";
 import { useCinemaStore } from "@/stores/useCinemaStore";
 import { useDialogStore } from "@/stores/useDialogStore";
 import { useRouter } from "next/navigation";
@@ -338,7 +338,7 @@ export default function NavbarLayout() {
                                 Giao diện: {isDark ? 'Sáng' : 'Tối'}
                             </DropdownItem>
 
-                            {authUser && isStaff(authUser.role) ? (
+                            {authUser && (isStaff(authUser.role) || isAdmin(authUser.role)) ? (
                                 <DropdownItem 
                                     key='dashboard' 
                                     startContent={<LayoutDashboard size={18} />}

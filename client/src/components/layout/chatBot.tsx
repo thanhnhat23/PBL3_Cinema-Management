@@ -179,7 +179,7 @@ export default function ChatBot() {
                                 }}
                                 rows={1}
                                 placeholder="Hỏi tôi bất cứ điều gì..."
-                                className="w-full bg-transparent px-4 py-3 text-sm outline-none resize-none min-h-[44px] max-h-32 custom-scrollbar"
+                                className="w-full bg-transparent px-4 py-3 text-sm outline-none resize-none min-h-11 max-h-32 custom-scrollbar"
                             />
                             <div className="flex items-center gap-1 pr-2">
                                 <button
