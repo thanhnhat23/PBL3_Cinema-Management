@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import { 
@@ -186,17 +186,17 @@ export default function LayoutCoupons() {
                 return (
                     <div className="flex items-center gap-1 font-bold">
                         {coupon.type === 0 ? <Percent size={14} className="text-zinc-400" /> : <Banknote size={14} className="text-zinc-400" />}
-                        <span>{coupon.type === 0 ? `${coupon.discountValue}%` : `${Number(coupon.discountValue).toLocaleString(t('locale_code'))} Ä‘`}</span>
+                        <span>{coupon.type === 0 ? `${coupon.discountValue}%` : `${Number(coupon.discountValue).toLocaleString(t('locale_code'))} ${t('common.currency_vnd')}`}</span>
                     </div>
                 );
             case "minOrderValue":
-                return <span className="text-zinc-500 font-medium">{Number(coupon.minOrderValue).toLocaleString(t('locale_code'))} Ä‘</span>;
+                return <span className="text-zinc-500 font-medium">{Number(coupon.minOrderValue).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>;
             case "endDate":
                 return <span className="text-xs font-medium text-zinc-400">{new Date(String(coupon.endDate)).toLocaleDateString(t('locale_code'))}</span>;
             case "isHoliday":
                 return (
                     <Chip className="capitalize font-bold" color={coupon.isHoliday ? "warning" : "success"} size="sm" variant="flat">
-                        {coupon.isHoliday ? "Holiday" : "Normal"}
+                        {coupon.isHoliday ? t('coupons_tab.cat_holiday') : t('coupons_tab.cat_normal')}
                     </Chip>
                 );
             case "actions":
@@ -335,7 +335,7 @@ export default function LayoutCoupons() {
                                                         <span className="text-[10px] font-bold uppercase tracking-widest">{t('coupons_tab.value_label')}</span>
                                                     </div>
                                                     <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
-                                                        {selectedCoupon.type === 0 ? `${selectedCoupon.discountValue}%` : `${Number(selectedCoupon.discountValue).toLocaleString(t('locale_code'))} Ä‘`}
+                                                        {selectedCoupon.type === 0 ? `${selectedCoupon.discountValue}%` : `${Number(selectedCoupon.discountValue).toLocaleString(t('locale_code'))} ${t('common.currency_vnd')}`}
                                                     </span>
                                                 </div>
                                                 <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
@@ -344,7 +344,7 @@ export default function LayoutCoupons() {
                                                         <span className="text-[10px] font-bold uppercase tracking-widest">{t('coupons_tab.min_order_label')}</span>
                                                     </div>
                                                     <span className="text-lg font-bold text-zinc-700 dark:text-zinc-200">
-                                                        {Number(selectedCoupon.minOrderValue).toLocaleString(t('locale_code'))} Ä‘
+                                                        {Number(selectedCoupon.minOrderValue).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}
                                                     </span>
                                                 </div>
                                             </div>

@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { 
@@ -150,7 +150,7 @@ export default function LayoutRooms() {
                 );
             }
             case "price":
-                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(room.price).toLocaleString(t('locale_code'))} Ä‘</span>;
+                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(room.price).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>;
             case "row":
                 return <span>{`${room.row} x ${room.column}`}</span>;
             case "actions":
@@ -308,7 +308,7 @@ export default function LayoutRooms() {
                                             <div className="flex items-center justify-between p-4 rounded-xl border-1 border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-emerald-900/10">
                                                 <div className="flex flex-col">
                                                     <span className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-500/70 uppercase tracking-wider">{t('rooms_tab.price_label')}</span>
-                                                    <span className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{Number(selectedRoom.price).toLocaleString(t('locale_code'))} Ä‘</span>
+                                                    <span className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{Number(selectedRoom.price).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>
                                                 </div>
                                                 <div className="p-2 bg-white dark:bg-zinc-800 rounded-full shadow-sm text-emerald-600">
                                                     <PenLine size={16} />
