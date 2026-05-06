@@ -262,13 +262,13 @@ export const useMovieStore = create<{
     getStatusLabel: (status: Movie['status']) => {
         switch (status) {
             case 0:
-                return 'Released';
+                return 'released';
             case 1:
-                return 'Upcoming';
+                return 'upcoming';
             case 2:
-                return 'Ended';
+                return 'ended';
             default:
-                return 'Unknown';
+                return 'unknown';
         }
     },
 }));

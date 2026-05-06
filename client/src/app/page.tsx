@@ -23,8 +23,8 @@ import Link from "next/link";
 import { _axios } from "@/lib/axios";
 import Swal from "sweetalert2";
 import { cn } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const Carousel = dynamic(() => import("@/components/layout/carousel"), {
     ssr: true,
@@ -40,7 +40,7 @@ export default function HomePage() {
 
 function Home() {
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-    const [selectedTab, setSelectedTab] = useState<string>('nowplaying');
+    const [selectedTab, setSelectedTab] = useState<string>('now-playing');
     const flameRef = useRef<FlameIconHandle | null>(null);
     const trendingRef = useRef<FlameIconHandle | null>(null);
     const router = useRouter();
@@ -52,6 +52,7 @@ function Home() {
     const popularMovies = useMovieStore(state => state.popularMovies);
     const isFetchingMoviesByStatus = useMovieStore(state => state.isFetchingMoviesByStatus);
     const isFetchingPopularMovies = useMovieStore(state => state.isFetchingPopularMovies);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const verifyEmail = async () => {
@@ -61,16 +62,16 @@ function Home() {
                 await _axios.post('/v1/auth/verify-email', { verificationToken: token });
 
                 Swal.fire({
-                    title: 'Thành công',
-                    text: 'Xác minh email thành công! Bạn có thể đăng nhập ngay bây giờ.',
+                    title: t('common.success'),
+                    text: t('auth.verify_success'),
                     icon: 'success',
                     confirmButtonColor: '#f59e0b'
                 });
             } catch (error) {
                 console.log('Error verifying email: ', error);
                 Swal.fire({
-                    title: 'Lỗi',
-                    text: 'Xác minh email thất bại. Vui lòng thử lại.',
+                    title: t('common.error'),
+                    text: t('auth.verify_failed'),
                     icon: 'error',
                     confirmButtonColor: '#ef4444'
                 });
@@ -124,10 +125,10 @@ function Home() {
                             <div className="w-1.5 h-10 bg-amber-500 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.5)]" />
                             <div className="flex flex-col">
                                 <h2 className="text-3xl md:text-4xl font-black tracking-tight text-zinc-900 dark:text-white uppercase italic">
-                                    Khám phá Phim
+                                    {t('home.explore_title')}
                                 </h2>
                                 <p className="text-xs font-bold tracking-[0.3em] text-amber-500 uppercase opacity-80">
-                                    Xem gì hôm nay?
+                                    {t('home.explore_subtitle')}
                                 </p>
                             </div>
                         </div>
@@ -145,22 +146,22 @@ function Home() {
                                 tabContent: "font-bold text-xs md:text-sm tracking-wider"
                             }}
                         >
-                            <Tab key="nowplaying" title={
+                            <Tab key="now-playing" title={
                                 <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('nowplaying')} onMouseLeave={() => setHoveredItem(null)}>
                                     <Cctv animate={hoveredItem === 'nowplaying'} size={18} />
-                                    <span>Đang chiếu</span>
+                                    <span>{t('home.tabs.now_playing')}</span>
                                 </div>
                             } />
                             <Tab key="coming-soon" title={
                                 <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('upcoming')} onMouseLeave={() => setHoveredItem(null)}>
                                     <TrendingUpIcon ref={trendingRef} size={18} />
-                                    <span>Sắp chiếu</span>
+                                    <span>{t('home.tabs.coming_soon')}</span>
                                 </div>
                             } />
                             <Tab key="popular" title={
                                 <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('popular')} onMouseLeave={() => setHoveredItem(null)}>
                                     <FlameIcon ref={flameRef} size={18} />
-                                    <span>Phổ biến</span>
+                                    <span>{t('home.tabs.popular')}</span>
                                 </div>
                             } />
                         </Tabs>
@@ -171,7 +172,7 @@ function Home() {
                             "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 transition-all duration-500",
                             "animate-in fade-in slide-in-from-bottom-4"
                         )}>
-                            {selectedTab === 'nowplaying' && (
+                            {selectedTab === 'now-playing' && (
                                 isLoadingNowPlaying ? (
                                     Array.from({ length: 8 }).map((_, index) => <CardSkeleton key={index} />)
                                 ) : (
@@ -205,7 +206,7 @@ function Home() {
                             onClick={() => router.push('/movies')}
                             className="group h-12 px-8 border-amber-500/50 text-amber-600 dark:text-amber-500 font-bold hover:bg-amber-500 hover:text-white transition-all duration-300 rounded-sm cursor-pointer"
                         >
-                            XEM THÊM
+                            {t('home.see_more')}
                             <ChevronRight animate={hoveredItem === "see-more"} size={18} className="ml-2 transition-transform group-hover:translate-x-1" />
                         </Button>
                     </div>
@@ -217,7 +218,7 @@ function Home() {
                 <section className="w-full max-w-7xl px-4 md:px-6 py-16 md:py-24 space-y-12">
                     <div className="flex flex-col items-center gap-3 text-center">
                         <h2 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white uppercase">
-                            Ưu đãi đặc biệt
+                            {t('home.special_offers')}
                         </h2>
                         <div className="w-20 h-1 bg-amber-500 rounded-full" />
                     </div>
@@ -226,18 +227,18 @@ function Home() {
                         {[
                             {
                                 src: "https://cdn.galaxycine.vn/media/2026/2/3/tang-qua-nam-moi-3_1770109637475.jpg",
-                                title: "Tết Mã Ngập Quà – Năm Mới Nở Hoa",
-                                desc: "Ưu đãi cực khủng dịp xuân về."
+                                title: t('home.offers.offer1_title'),
+                                desc: t('home.offers.offer1_desc')
                             },
                             {
                                 src: "https://www.galaxycine.vn/media/2025/9/4/momo-galaxy-2_1756958593143.jpg",
-                                title: "MilkyWayyy Cinema Và MoMo Tặng Bắp Nước Miễn Phí",
-                                desc: "Thưởng thức bắp nước hoàn toàn free."
+                                title: t('home.offers.offer2_title'),
+                                desc: t('home.offers.offer2_desc')
                             },
                             {
                                 src: "https://www.galaxycine.vn/media/2025/1/22/bangqltv-digital-1135x660_1737516350592.jpg",
-                                title: "Ưu Đãi Thành Viên MilkyWayyy Cinema 2026",
-                                desc: "Đặc quyền dành riêng cho fan cứng."
+                                title: t('home.offers.offer3_title'),
+                                desc: t('home.offers.offer3_desc')
                             }
                         ].map((offer) => (
                             <Card 
@@ -284,14 +285,13 @@ function Home() {
                         <div className="flex flex-col items-center md:items-start text-center md:text-left gap-8">
                             <div className="space-y-4">
                                 <h2 className="font-black text-white leading-tight">
-                                    <SparklesText>Đặt vé Online</SparklesText>
+                                    <SparklesText>{t('home.banner.book_online')}</SparklesText>
                                     <span className="block mt-2">
-                                        <AuroraText>Không lo trễ nải</AuroraText>
+                                        <AuroraText>{t('home.banner.no_delay')}</AuroraText>
                                     </span>
                                 </h2>
                                 <p className="text-lg text-white/60 font-medium max-w-xl">
-                                    Đặt vé nhanh chóng, tiện lợi ngay từ trang chủ của MilkyWayyy Cinema.
-                                    Không cần chờ đợi, không cần lo lắng về việc hết vé!
+                                    {t('home.banner.desc')}
                                 </p>
                             </div>
                             
@@ -299,7 +299,7 @@ function Home() {
                                 size="lg" 
                                 className="bg-amber-500 text-white font-black px-10 h-10 text-lg hover:bg-amber-600 transition-all shadow-[0_0_30px_rgba(245,158,11,0.3)] rounded-full cursor-pointer"
                             >
-                                MUA VÉ NGAY
+                                {t('navbar.buy_tickets_now')}
                             </Button>
                         </div>
                     </div>
@@ -316,33 +316,33 @@ function Home() {
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-1 bg-amber-500 rounded-full" />
                                 <h2 className="text-3xl font-black text-zinc-900 dark:text-white uppercase italic tracking-tighter">
-                                    Về MilkyWayyy Cinema
+                                    {t('home.about.title')}
                                 </h2>
                             </div>
 
                             <div className="flex flex-col gap-6 text-zinc-600 dark:text-zinc-400 leading-relaxed text-base md:text-lg text-justify">
                                 <p>
-                                    <span className="font-bold text-zinc-900 dark:text-white">MilkyWayyy Cinema</span> là một trong những công ty tư nhân đầu tiên về điện ảnh được thành lập từ năm 2026, đã khẳng định thương hiệu là 1 trong 10 địa điểm vui chơi giải trí được yêu thích nhất. Ngoài hệ thống rạp chiếu phim hiện đại, thu hút hàng triệu lượt người đến xem, <span className="font-medium">MilkyWayyy Cinema</span> còn hấp dẫn khán giả bởi không khí thân thiện cũng như chất lượng dịch vụ hàng đầu.
+                                    <span className="font-bold text-zinc-900 dark:text-white">MilkyWayyy Cinema</span> {t('home.about.p1')}
                                 </p>
 
                                 <p>
-                                    Đến website <Link href="https://milkywayyy.me" className="text-amber-500 font-bold hover:underline underline-offset-4">milkywayyy.me</Link>, khách hàng sẽ dễ dàng tham khảo các phim hay nhất, phim mới nhất đang chiếu hoặc sắp chiếu luôn được cập nhật thường xuyên. Lịch chiếu tại tất cả hệ thống rạp chiếu phim của <span className="font-medium">MilkyWayyy Cinema</span> cũng được cập nhật đầy đủ hàng ngày hàng giờ trên trang chủ.
+                                    {t('home.about.p2')}
                                 </p>
 
                                 <p>
-                                    Giờ đây đặt vé tại <span className="font-medium">MilkyWayyy Cinema</span> càng thêm dễ dàng chỉ với vài thao tác vô cùng đơn giản. Để mua vé, hãy vào tab Mua vé. Quý khách có thể chọn Mua vé theo phim, theo rạp, hoặc theo ngày. Sau đó, tiến hành mua vé theo các bước hướng dẫn.
+                                    {t('home.about.p3')}
                                 </p>
 
                                 <p>
-                                    Nếu bạn đã chọn được phim hay để xem, hãy đặt vé cực nhanh bằng box Mua Vé Nhanh ngay từ Trang Chủ. Chỉ cần một phút, tin nhắn và email phản hồi của <span className="font-medium">MilkyWayyy Cinema</span> sẽ gửi ngay vào điện thoại và hộp mail của bạn.
+                                    {t('home.about.p4')}
                                 </p>
 
                                 <p className="italic text-amber-500/80 font-bold border-l-4 border-amber-500 pl-6 my-4">
-                                    MilkyWayyy Cinema luôn có những chương trình khuyến mãi, ưu đãi, quà tặng vô cùng hấp dẫn dành cho các khách hàng.
+                                    {t('home.about.promo')}
                                 </p>
 
                                 <p>
-                                    Trang web <Link href="https://milkywayyy.me" className="text-amber-500 font-bold hover:underline underline-offset-4">milkywayyy.me</Link> còn có mục Góc Điện Ảnh - nơi lưu trữ dữ liệu về phim, diễn viên và đạo diễn, những bài viết chuyên sâu về điện ảnh, hỗ trợ người yêu phim dễ dàng hơn trong việc lựa chọn phim.
+                                    {t('home.about.p5')}
                                 </p>
                             </div>
                         </div>

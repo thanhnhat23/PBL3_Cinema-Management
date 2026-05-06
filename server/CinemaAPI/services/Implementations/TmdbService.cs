@@ -322,7 +322,7 @@ public class TmdbService : ITmdbService
         {
             _dbContext.MovieGenres.AddRange(newLinks);
             await _dbContext.SaveChangesAsync();
-                RagCacheKeys.Invalidate("movies");
+            RagCacheKeys.Invalidate("movies");
         }
     }
 

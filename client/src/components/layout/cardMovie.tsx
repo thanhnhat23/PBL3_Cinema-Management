@@ -1,5 +1,6 @@
 import { Card, CardFooter, Image, CardHeader } from "@heroui/react";
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
 import { PlayIcon } from "../icons/play";
@@ -35,6 +36,7 @@ export const CardMovie = ({
     const router = useRouter();
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
     const [isTrailerOpen, setIsTrailerOpen] = useState<number | null>(null);
+    const { t } = useTranslation();
     const getStatusLabel = useMovieStore(state => state.getStatusLabel);
 
     const OneDayLeftCurrentNow = useMemo(() => {
@@ -81,7 +83,7 @@ export const CardMovie = ({
                                 ></span>
                             </span>
                             <span className="text-white font-black text-[10px] tracking-widest">
-                                {getStatusLabel(movie.status)}
+                                {t(`movie_status.${getStatusLabel(movie.status)}`)}
                             </span>
                         </div>
 
@@ -130,7 +132,7 @@ export const CardMovie = ({
                     }}
                 >
                     <StarIcon animate={hoveredItem === "ticket"} size={20} />
-                    <span>Đặt vé ngay</span>
+                    <span>{t('movie_card.book_now')}</span>
                 </button>
 
                 <Dialog open={isTrailerOpen === index} onOpenChange={(open) => setIsTrailerOpen(open ? index : null)}>
@@ -141,7 +143,7 @@ export const CardMovie = ({
                             onMouseLeave={() => setHoveredItem(null)}
                         >
                             <PlayIcon animate={hoveredItem === "trailer"} size={20} />
-                            <span>Xem Trailer</span>
+                            <span>{t('movie_card.watch_trailer')}</span>
                         </button>
                     </DialogTrigger>
 
@@ -172,9 +174,9 @@ export const CardMovie = ({
                                 ) : (
                                     <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-900 gap-4">
                                         <SparklesText className="text-zinc-700 text-2xl md:text-5xl font-black">
-                                            COMING SOON
+                                            {t('movie_card.coming_soon')}
                                         </SparklesText>
-                                        <p className="text-zinc-500 font-medium italic">Trailer hiện đang được chuẩn bị...</p>
+                                        <p className="text-zinc-500 font-medium italic">{t('movie_card.trailer_preparing')}</p>
                                     </div>
                                 )}
                             </div>

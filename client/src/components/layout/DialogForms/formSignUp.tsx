@@ -7,6 +7,7 @@ import { Button, DatePicker, type DateValue, Input } from "@heroui/react";
 import Image from "next/image"
 import { User, Mail, Lock, ShieldCheck, Eye, EyeOff } from "lucide-react"
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface FormSignUpProps {
     formSignUp: {
@@ -49,6 +50,8 @@ export const FormSignUp = ({
     resetForms,
     setOpenDialog
 }: FormSignUpProps) => {
+    const { t } = useTranslation();
+
     return (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-h-[85vh] overflow-y-auto px-1 custom-scrollbar p-4 md:p-0">
             <DialogHeader className="mb-8">
@@ -68,10 +71,10 @@ export const FormSignUp = ({
 
                     <div className="text-center space-y-1">
                         <DialogTitle className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white uppercase">
-                            Tạo tài khoản mới
+                            {t('auth.create_account')}
                         </DialogTitle>
                         <p className="text-xs font-bold text-amber-500 uppercase opacity-80">
-                            Gia nhập cộng đồng MilkyWayyy ngay hôm nay
+                            {t('auth.join_us')}
                         </p>
                     </div>
                 </div>
@@ -81,9 +84,9 @@ export const FormSignUp = ({
                 <Input 
                     key="signup-username"
                     isRequired
-                    label="Tên đăng nhập" 
+                    label={t('auth.username')} 
                     labelPlacement="outside"
-                    placeholder="Chọn một tên đăng nhập"
+                    placeholder={t('auth.username_signup_placeholder')}
                     type="text" 
                     variant="bordered"
                     classNames={{
@@ -105,9 +108,9 @@ export const FormSignUp = ({
                 <Input 
                     key="signup-email"
                     isRequired
-                    label="Địa chỉ Email" 
+                    label={t('auth.email')} 
                     labelPlacement="outside"
-                    placeholder="Nhập email của bạn"
+                    placeholder={t('auth.email_placeholder')}
                     type="email" 
                     variant="bordered"
                     classNames={{
@@ -126,7 +129,7 @@ export const FormSignUp = ({
                 <DatePicker
                     key="signup-birthdate"
                     isRequired
-                    label="Ngày sinh"
+                    label={t('auth.birthdate')}
                     labelPlacement="outside"
                     variant="bordered"
                     selectorButtonPlacement="start"
@@ -144,9 +147,9 @@ export const FormSignUp = ({
                     <Input
                         key="signup-password"
                         isRequired
-                        label="Mật khẩu"
+                        label={t('auth.password')}
                         labelPlacement="outside"
-                        placeholder="Mật khẩu của bạn"
+                        placeholder={t('auth.password_signup_placeholder')}
                         type={isVisiblePassword ? "text" : "password"}
                         variant="bordered"
                         classNames={{
@@ -174,9 +177,9 @@ export const FormSignUp = ({
                     <Input
                         key="signup-confirm-password"
                         isRequired
-                        label="Xác nhận mật khẩu"
+                        label={t('auth.confirm_password')}
                         labelPlacement="outside"
-                        placeholder="Nhập lại mật khẩu"
+                        placeholder={t('auth.confirm_password_placeholder')}
                         type={isVisibleConfirmPassword ? "text" : "password"}
                         variant="bordered"
                         classNames={{
@@ -217,12 +220,12 @@ export const FormSignUp = ({
                                 : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
                         )}
                     >
-                        Tạo tài khoản ngay
+                        {t('auth.register_button')}
                     </Button>
 
                     <div className="text-center pb-4">
                         <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
-                            Đã có tài khoản?{" "}
+                            {t('auth.already_have_account')}{" "}
                             <button 
                                 type="button"
                                 onClick={() => {
@@ -231,7 +234,7 @@ export const FormSignUp = ({
                                 }}
                                 className="text-amber-500 font-semibold cursor-pointer hover:underline underline-offset-4"
                             >
-                                Quay lại đăng nhập
+                                {t('auth.login_now')}
                             </button>
                         </p>
                     </div>

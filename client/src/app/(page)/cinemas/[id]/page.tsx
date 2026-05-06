@@ -7,11 +7,13 @@ import { useParams } from "next/navigation";
 import { GoogleMapView } from "@/components/ui/google-map";
 import DetailPageSkeleton from "@/components/skeletons/detailPage";
 import { BlurFade } from "@/components/ui/effects/blur-fade";
+import { useTranslation } from "react-i18next";
 
 export default function CinemasPage() {
   const { selectedCinema, isFetchingCinemaDetails, fetchCinemaById } = useCinemaStore();
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (id) {
@@ -43,14 +45,14 @@ export default function CinemasPage() {
                         <div className="flex flex-col items-start gap-4">
                              <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-white/10 backdrop-blur-md border border-zinc-200 dark:border-white/20 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 dark:text-white shadow-2xl">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                Premium Location
+                                {t('cinema_detail.premium_location')}
                             </div>
                             <h1 className="text-3xl md:text-7xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase drop-shadow-2xl">
                                 {selectedCinema?.name}
                             </h1>
                              <div className="flex flex-col md:flex-row md:items-center gap-2 text-zinc-600 dark:text-white/80 font-bold uppercase text-[10px] md:text-xs tracking-widest bg-zinc-50/80 dark:bg-black/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-zinc-200 dark:border-white/10 w-full md:w-auto">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-emerald-400">ADDRESS:</span>
+                                    <span className="text-emerald-400">{t('cinema_detail.address_label')}</span>
                                     <span className="truncate">{selectedCinema?.address}</span>
                                 </div>
                             </div>
@@ -67,19 +69,19 @@ export default function CinemasPage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="w-1.5 h-6 md:h-8 bg-emerald-500 rounded-full" />
-                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">Biểu phí dịch vụ</h2>
+                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">{t('cinema_detail.service_fees')}</h2>
                             </div>
                             
                             <div className="relative group overflow-hidden rounded-sm border border-zinc-100 dark:border-zinc-800 shadow-lg">
                                 <Image
                                     src="https://cdn.galaxycine.vn/media/2025/12/15/gia-ve---hanoi-centre_1765787046614.jpg" 
-                                    alt="Giá vé"
+                                    alt={t('cinema_detail.ticket_pricing')}
                                     width={800}
                                     height={600}
                                     className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                                    <span className="text-white font-black uppercase tracking-widest text-xs border border-white/40 px-4 py-2 rounded-full backdrop-blur-md">Phóng to để xem</span>
+                                    <span className="text-white font-black uppercase tracking-widest text-xs border border-white/40 px-4 py-2 rounded-full backdrop-blur-md">{t('cinema_detail.zoom_to_view')}</span>
                                 </div>
                             </div>
                         </div>
@@ -90,17 +92,17 @@ export default function CinemasPage() {
                         <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="w-1.5 h-6 md:h-8 bg-emerald-500 rounded-full" />
-                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">Thông tin liên hệ</h2>
+                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">{t('cinema_detail.contact_info')}</h2>
                             </div>
 
                             <div className="flex flex-col gap-6">
                                 <div className="flex flex-col gap-1 p-4 rounded-sm bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-white/5">
-                                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">Điện thoại hỗ trợ</span>
+                                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">{t('cinema_detail.support_phone')}</span>
                                     <span className="text-xl font-bold tracking-tighter">{selectedCinema?.phone_number || "1900 xxxx"}</span>
                                 </div>
 
                                 <div className="flex flex-col gap-1">
-                                    <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2">Vị trí trên bản đồ</span>
+                                    <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2">{t('cinema_detail.map_location')}</span>
                                     <div className="rounded-sm overflow-hidden p-2 shadow-xl border border-zinc-100 dark:border-white/10 grayscale-30 hover:grayscale-0 transition-all duration-700">
                                         <GoogleMapView
                                             latitude={selectedCinema?.latitude}
@@ -112,7 +114,7 @@ export default function CinemasPage() {
 
                                 <div className="p-4 rounded-sm bg-emerald-500/5 border border-emerald-500/10 mt-2">
                                     <p className="text-zinc-600 dark:text-zinc-400 text-sm font-medium leading-relaxed italic">
-                                        {selectedCinema?.description || "Rạp của chúng tôi được trang bị hệ thống âm thanh Dolby Atmos và màn hình IMAX hiện đại, mang đến trải nghiệm điện ảnh chân thực nhất."}
+                                        {selectedCinema?.description || t('cinema_detail.default_description')}
                                     </p>
                                 </div>
                             </div>

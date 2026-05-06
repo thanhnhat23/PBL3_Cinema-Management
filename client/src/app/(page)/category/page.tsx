@@ -17,8 +17,10 @@ import { BlurFade } from "@/components/ui/effects/blur-fade";
 import { useMovieStore } from "@/stores/useMovieStore";
 import { useGenreStore } from "@/stores/useGenreStore";
 import { FiSearch } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 export default function CategoryPage() {
+    const { t } = useTranslation();
     const [selectedTab, setSelectedTab] = useState<string>("all");
     const [page, setPage] = useState<number>(1);
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -69,6 +71,33 @@ export default function CategoryPage() {
         isFetchingGenres ||
         (selectedTab === "all" ? isFetchingMovies : isFetchingMoviesByGenre);
 
+    const genreMapping: Record<string, string> = {
+        "Phim Hành Động": "action",
+        "Phim Phiêu Lưu": "adventure",
+        "Phim Hoạt Hình": "animation",
+        "Phim Hài": "comedy",
+        "Phim Hình Sự": "crime",
+        "Phim Tài Liệu": "documentary",
+        "Phim Chính Kịch": "drama",
+        "Phim Gia Đình": "family",
+        "Phim Giả Tượng": "fantasy",
+        "Phim Lịch Sử": "history",
+        "Phim Kinh Dị": "horror",
+        "Phim Nhạc": "music",
+        "Phim Bí Ẩn": "mystery",
+        "Phim Lãng Mạn": "romance",
+        "Phim Khoa Học Viễn Tưởng": "science_fiction",
+        "Chương Trình Truyền Hình": "tv_movie",
+        "Phim Gây Cấn": "thriller",
+        "Phim Chiến Tranh": "war",
+        "Phim Miền Tây": "western"
+    };
+
+    const getGenreTranslation = (genreName: string) => {
+        const key = genreMapping[genreName];
+        return key ? t(`genres.${key}`) : genreName;
+    };
+
     return (
         <div className="min-h-screen bg-background pb-20">
             {/* Elegant Header Section */}
@@ -79,13 +108,13 @@ export default function CategoryPage() {
                         <div className="flex flex-col items-start gap-4">
                             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-white/5 backdrop-blur-md border border-zinc-200 dark:border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 dark:text-white/60">
                                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                                Genre Discovery
+                                {t('category.genre_discovery')}
                             </div>
                             <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase drop-shadow-2xl">
-                                Phim theo <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-400 to-amber-600">Thể loại</span>
+                                {t('category.hero_title')} <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-400 to-amber-600">{t('category.hero_subtitle')}</span>
                             </h1>
                             <p className="text-zinc-500 font-medium max-w-xl text-sm md:text-base leading-relaxed">
-                                Danh sách phim theo sở thích cá nhân của bạn. Từ hành động kịch tính đến tình cảm lãng mạn, tất cả đều có tại đây.
+                                {t('category.hero_desc')}
                             </p>
                         </div>
                     </BlurFade>
@@ -93,9 +122,9 @@ export default function CategoryPage() {
                     <BlurFade delay={0.2}>
                         <div className="flex flex-col gap-6 w-full md:w-auto min-w-[320px]">
                             <div className="w-full md:w-md mt-4">
-                                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Tìm kiếm phim</span>
+                                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">{t('category.search_label')}</span>
                                 <Input
-                                    placeholder="Nhập tên phim..."
+                                    placeholder={t('category.search_placeholder')}
                                     value={searchQuery}
                                     onValueChange={(val) => {
                                         setSearchQuery(val);
@@ -111,7 +140,7 @@ export default function CategoryPage() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="w-full">
-                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Lọc theo Thể loại</span>
+                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">{t('category.filter_genre')}</span>
                                     <Select
                                         value={selectedTab}
                                         onValueChange={(value) => {
@@ -120,16 +149,16 @@ export default function CategoryPage() {
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-bold h-14 rounded-2xl shadow-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
-                                            <SelectValue placeholder="Chọn thể loại" />
+                                            <SelectValue placeholder={t('category.select_genre_placeholder')} />
                                         </SelectTrigger>
 
                                         <SelectContent className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-2xl shadow-2xl">
                                             <SelectGroup>
-                                                <SelectLabel className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 p-4 pb-2">Danh sách thể loại</SelectLabel>
-                                                <SelectItem value="all" className="font-semibold cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:bg-zinc-100 dark:focus:bg-zinc-800">Tất cả phim</SelectItem>
+                                                <SelectLabel className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 p-4 pb-2">{t('category.genre_list_label')}</SelectLabel>
+                                                <SelectItem value="all" className="font-semibold cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:bg-zinc-100 dark:focus:bg-zinc-800">{t('category.all_movies')}</SelectItem>
                                                 {genres.map((genre) => (
                                                     <SelectItem key={genre.genreId} value={String(genre.genreId)} className="font-semibold cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:bg-zinc-100 dark:focus:bg-zinc-800">
-                                                        {genre.genre}
+                                                        {getGenreTranslation(genre.genre)}
                                                     </SelectItem>
                                                 ))}
                                             </SelectGroup>
@@ -138,7 +167,7 @@ export default function CategoryPage() {
                                 </div>
 
                                 <div className="w-full">
-                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Đánh giá tối thiểu</span>
+                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">{t('category.min_rating')}</span>
                                     <Select
                                         value={minRating}
                                         onValueChange={(value) => {
@@ -147,15 +176,15 @@ export default function CategoryPage() {
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-bold h-14 rounded-2xl shadow-xl">
-                                            <SelectValue placeholder="Đánh giá" />
+                                            <SelectValue placeholder={t('category.rating_placeholder')} />
                                         </SelectTrigger>
 
                                         <SelectContent className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-2xl shadow-2xl">
                                             <SelectGroup>
-                                                <SelectLabel className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 p-4 pb-2">Chọn mức đánh giá</SelectLabel>
+                                                <SelectLabel className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 p-4 pb-2">{t('category.select_rating_level')}</SelectLabel>
                                                 {[0, 3, 5, 7, 8, 9].map((rating) => (
                                                     <SelectItem key={rating} value={String(rating)} className="font-semibold cursor-pointer">
-                                                        {rating === 0 ? "Tất cả" : `${rating}+ Sao`}
+                                                        {rating === 0 ? t('category.all_ratings') : `${rating}+ ${t('category.stars')}`}
                                                     </SelectItem>
                                                 ))}
                                             </SelectGroup>

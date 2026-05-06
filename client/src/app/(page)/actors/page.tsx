@@ -7,9 +7,11 @@ import { Pagination, Input } from "@heroui/react";
 import CardActorSkeleton from "@/components/skeletons/cardActor";
 import { BlurFade } from "@/components/ui/effects/blur-fade";
 import { FiSearch } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 export default function ActorsPage() {
     const { actors, fetchAllActors, isFetchingActors } = useActorStore();
+    const { t } = useTranslation();
     const [page, setPage] = useState<number>(1);
     const [searchQuery, setSearchQuery] = useState<string>("");
     
@@ -41,18 +43,18 @@ export default function ActorsPage() {
                         <div className="flex flex-col items-start gap-4">
                             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-white/5 backdrop-blur-md border border-zinc-200 dark:border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 dark:text-white/60">
                                 <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500 animate-pulse" />
-                                Star Spotlight
+                                {t('actors.star_spotlight')}
                             </div>
                             <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase drop-shadow-2xl">
-                                Những gương mặt <span className="text-transparent bg-clip-text bg-linear-to-r from-fuchsia-400 to-purple-600">Điện ảnh</span>
+                                {t('actors.hero_title')} <span className="text-transparent bg-clip-text bg-linear-to-r from-fuchsia-400 to-purple-600">{t('actors.hero_subtitle')}</span>
                             </h1>
                             <p className="text-zinc-500 font-medium max-w-2xl text-sm md:text-base leading-relaxed">
-                                Gặp gỡ những tài năng đã góp phần làm nên sức hút của các tác phẩm điện ảnh. Từ những ngôi sao gạo cội đến những gương mặt mới đầy triển vọng.
+                                {t('actors.hero_desc')}
                             </p>
                             
                             <div className="w-full max-w-md mt-4">
                                 <Input
-                                    placeholder="Tìm kiếm diễn viên..."
+                                    placeholder={t('actors.search_placeholder')}
                                     value={searchQuery}
                                     onValueChange={(val) => {
                                         setSearchQuery(val);

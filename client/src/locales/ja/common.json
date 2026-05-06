@@ -1,0 +1,539 @@
+{
+  "common": {
+    "success": "成功",
+    "error": "エラー",
+    "loading": "読み込み中...",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "currency_vnd": "VNĐ",
+    "copyright": "© 2026 MilkyWayyy Cinema - 全著作権所有"
+  },
+  "navbar": {
+    "movies": "映画",
+    "movies_now": "公開中",
+    "movies_upcoming": "公開予定",
+    "movies_hot": "人気映画",
+    "cinemas": "映画館",
+    "cinemas_system": "映画館一覧",
+    "categories": "ジャンル",
+    "actors": "俳優",
+    "reviews": "レビュー",
+    "booking": "チケット予約",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "profile": "マイプロフィール",
+    "dashboard": "ダッシュボード",
+    "my_tickets": "予約済みチケット",
+    "theme": "テーマ",
+    "theme_light": "ライト",
+    "theme_dark": "ダーク",
+    "language": "言語",
+    "logged_in_as": "ログイン中:",
+    "buy_tickets_now": "今すぐ予約",
+    "cinema_experience": "映画体験"
+  },
+  "footer": {
+    "description": "最新のテクノロジーで究極 of 映画体験を。すべてのお客様に素晴らしいエンターテインメントのひとときをお届けすることをお約束します。",
+    "cinema_title": "シネマ",
+    "support_title": "サポート",
+    "newsletter_title": "ニュースレター購読",
+    "newsletter_desc": "最新の大ヒット映画や限定特典の情報をいち早くお届けします。",
+    "email_placeholder": "メールアドレスを入力...",
+    "send_button": "送信",
+    "privacy_note": "* お客様の個人情報は厳重に保護いたします。",
+    "links": {
+        "promotions": "チケット料金 & 特典",
+        "recruitment": "採用情報",
+        "contact": "お問い合わせ / フィードバック",
+        "faq": "よくある質問",
+        "policy": "プライバシーポリシー",
+        "terms": "利用規約"
+    }
+  },
+  "home": {
+    "explore_title": "映画を探す",
+    "explore_subtitle": "今日は何を観る？",
+    "tabs": {
+        "now_playing": "公開中",
+        "coming_soon": "近日公開",
+        "popular": "人気順"
+    },
+    "see_more": "もっと見る",
+    "special_offers": "特別キャンペーン",
+    "offers": {
+        "offer1_title": "お年玉キャンペーン – 新年を映画で彩ろう",
+        "offer1_desc": "春の訪れとともに超豪華な特典をプレゼント。",
+        "offer2_title": "MilkyWayyy Cinema × MoMo ポップコーン無料プレゼント",
+        "offer2_desc": "今ならポップコーンとドリンクが完全無料。",
+        "offer3_title": "MilkyWayyy Cinema 会員特典 2026",
+        "offer3_desc": "常連のお客様だけの特別な優待サービス。"
+    },
+    "banner": {
+        "book_online": "オンライン予約",
+        "no_delay": "待ち時間なし",
+        "desc": "MilkyWayyy Cinemaの公式サイトから素早く便利にチケットを予約。待ち時間や売り切れ의 걱정はありません！"
+    },
+    "about": {
+        "title": "MilkyWayyy Cinemaについて",
+        "p1": "is, 2026年に設立された映画界で最初期の民間企業の一つであり、最も人気のあるエンターテインメントスポット10選の一つとしてブランドを確立しています。最新の設備を備えた映画館システムに加え、親しみやすい atmosphere と一流 của サービス品質で多くの観客を魅了しています。",
+        "p2": "公式サイト milkywayyy.me では、最新作や公開予定作品を簡単にチェックできます。全劇場のスケジュールは毎日・毎時間更新されています。",
+        "p3": "チケット予約はわずか数ステップで完了します。「チケット予約」タブ から 映画、劇場、または日付別に選んで進んでください。",
+        "p4": "「クイック予約」ボックスを使えば、1分足らずで予約が完了し、確認メールが届きます。",
+        "promo": "MilkyWayyy Cinemaでは、常にお客様向けの魅力的なプロモーションや特典、プレゼントをご用意しています。",
+        "p5": "「シネマコーナー」セクションでは、映画、俳優、監督に関する詳細なデータや専門的な記事を提供しています。"
+    }
+  },
+  "movies": {
+    "hero_title": "映画の",
+    "hero_subtitle": "世界へ",
+    "hero_desc": "アクション大作から感動の物語まで、最新の映画作品をお楽しみください。",
+    "search_placeholder": "映画のタイトルで検索...",
+    "movie_list_title": "映画一覧",
+    "premium_experience": "プレミアム体験"
+  },
+  "movie_detail": {
+    "runtime": "分",
+    "reviews_count": "レビュー",
+    "book_now": "今すぐ予約",
+    "watch_trailer": "予告編を見る",
+    "storyline": "あらすじ",
+    "no_overview": "この映画のあらすじはまだありません。",
+    "official_trailer": "公式予告編",
+    "coming_soon": "近日公開",
+    "trailer_not_ready": "予告編は現在準備中です",
+    "main_cast": "主な出演者",
+    "view_all_cast": "出演者全員を見る",
+    "new_reviews": "最新のレビュー",
+    "view_all_reviews": "全 {{count}} 件のレビューを見る",
+    "no_reviews": "この映画의 レビューはまだありません。",
+    "cast_list": "出演者リスト",
+    "all_cast_for": "{{title}} の出演者全員",
+    "close_list": "閉じる",
+    "all_reviews": "すべてのレビュー",
+    "community_reviews": "コミュニティからの {{count}} 件のレビュー",
+    "back": "戻る",
+    "movie_detail_label": "映画の詳細"
+  },
+  "booking": {
+    "steps": {
+        "movie": "映画",
+        "seat": "座席",
+        "food": "フード",
+        "payment": "お支払い",
+        "confirmation": "確認"
+    },
+    "selection": {
+        "select_cinema": "映画館を選択",
+        "select_movie": "映画を選択",
+        "select_showtime": "上映回を選択",
+        "not_selected_movie": "映画が選択されていません",
+        "not_selected_cinema": "映画館が選択されていません",
+        "room": "スクリーン"
+    },
+    "sidebar": {
+        "selected_seats": "選択した座席",
+        "total": "合計金額"
+    },
+    "buttons": {
+        "back": "戻る",
+        "next": "次へ"
+    },
+    "feature_updating": "この機能は現在アップデート中です。最高の体験を提供できるよう努めております。"
+  },
+  "cinema_detail": {
+    "address_label": "住所:",
+    "service_fees": "サービス料金表",
+    "ticket_pricing": "チケット料金",
+    "zoom_to_view": "拡大して見る",
+    "contact_info": "お問い合わせ先",
+    "support_phone": "カスタマーサポート",
+    "map_location": "地図上の位置",
+    "default_description": "当館はドルビーアトモス音響システム và 最新のIMAXスクリーンを完備し、最高にリアルな映画体験を提供いたします。",
+    "premium_location": "プレミアムロケーション"
+  },
+  "auth": {
+    "welcome_back": "おかえりなさい",
+    "login_to_account": "アカウントにログイン",
+    "username": "ユーザー名",
+    "username_placeholder": "ユーザー名を入力してください",
+    "password": "パスワード",
+    "password_placeholder": "パスワードを入力してください",
+    "forgot_password": "パスワードをお忘れですか？",
+    "login_button": "ログイン",
+    "or": "または",
+    "no_account": "アカウントをお持ちでないですか？",
+    "register_now": "今すぐ登録",
+    "join_us": "MilkyWayyyコミュニティに今すぐ参加",
+    "create_account": "新規アカウント作成",
+    "full_name": "氏名",
+    "full_name_placeholder": "氏名を入力してください",
+    "email": "メールアドレス",
+    "email_placeholder": "メールアドレスを入力してください",
+    "phone": "電話番号",
+    "phone_placeholder": "0123456xxx",
+    "birthdate": "生年月日",
+    "password_signup_placeholder": "パスワード",
+    "confirm_password": "パスワードの確認",
+    "confirm_password_placeholder": "もう一度パスワードを入力してください",
+    "register_button": "アカウントを作成する",
+    "already_have_account": "すでにアカウントをお持ちですか？",
+    "login_now": "ログインに戻る",
+    "username_signup_placeholder": "ユーザー名を選択",
+    "verify_success": "メール認証に成功しました！",
+    "verify_failed": "メール認証に失敗しました。もう一度お試しください。"
+  },
+  "profile": {
+    "roles": {
+        "admin": "プレミアム管理者",
+        "member": "シネマメンバー"
+    },
+    "spending_year": "{{year}}年の利用金額",
+    "loyalty_point": "ロイヤリティポイント:",
+    "rank": "ランク:",
+    "ranks": {
+        "silver": "シルバー",
+        "gold": "ゴールド",
+        "platinum": "プラチナ"
+    },
+    "project_name": "映画管理システム",
+    "project_info": "プロジェクト情報",
+    "hotline": "サポートホットライン",
+    "email_support": "サポートメール",
+    "source_web": "ソースウェブサイト",
+    "about_us": {
+        "title": "私たちについて",
+        "p1": "これはダナン工科大学のPBL3プロジェクトのアプリケーションです。",
+        "p2": "制作メンバー：Lương Thanh Nhật、Nguyễn Thị Nghĩa",
+        "p3": "これは商用アプリケーションではなく、プロジェクトの成果物であるため、実際のサポートサービスは提供されません。",
+        "p4": "ご質問やフィードバックがある場合は、上記のGitHub経由でご連絡ください。"
+    },
+    "tabs": {
+        "personal_info": "個人情報",
+        "booking_history": "予約履歴"
+    },
+    "info_labels": {
+        "full_name": "氏名",
+        "email": "メールアドレス",
+        "join_date": "入会日",
+        "birthdate": "誕生日",
+        "no_data": "データなし"
+    },
+    "account_status": "アカウントステータス",
+    "verified": "認証済みアカウント",
+    "unverified": "未認証アカウント",
+    "verified_desc": "あなたのアカウントは完全に保護されています。",
+    "unverified_desc": "セキュリティ強化のため、メール認証を行ってください。",
+    "security": "セキュリティ",
+    "password_protection": "パスワード保護",
+    "change_password": "パスワード変更",
+    "no_transactions": "最近の取引はありません。お気に入りの映画を見つけてください！",
+    "explore_now": "今すぐ映画を探す",
+    "currency": "円"
+  },
+  "actors": {
+    "hero_title": "スクリーンの",
+    "hero_subtitle": "スターたち",
+    "hero_desc": "映画の魅力を支える素晴らしい才能たち. ベテランから注目の若手まで, スクリーンを彩る俳優陣をご紹介します.",
+    "search_placeholder": "俳優を検索...",
+    "star_spotlight": "スタースポットライト",
+    "professional_actor": "プロ俳優",
+    "cinema_star": "シネマスター",
+    "birthday": "誕生日",
+    "gender": "性別",
+    "gender_male": "男性",
+    "gender_female": "女性",
+    "gender_other": "その他",
+    "biography": "略歴",
+    "no_biography": "この俳優の略歴はまだありません。できるだけ早く更新いたします。",
+    "known_for": "代表作",
+    "no_character": "役柄情報は更新中です。",
+    "fast_facts": "クイック情報",
+    "movie_count": "出演映画数",
+    "works": "作品",
+    "character_count": "役柄数",
+    "characters": "キャラクター",
+    "professional_status": "プロフェッショナルステータス",
+    "official_collaboration": "公式コラボレーション",
+    "collaboration_desc": "この俳優は、当館のシステムで {{count}} 本の優れた作品に貢献しています。",
+    "filmography": "フィルモグラフィ",
+    "movies_count_label": "{{count}} 作品"
+  },
+  "reviews_page": {
+    "hero_title": "コミュニティ",
+    "hero_subtitle": "フィードバック",
+    "hero_desc": "映画ファンからのリアルな声。客観的な評価を参考に、あなたにぴったりの一本を見つけてください。",
+    "audience_insights": "視聴者のインサイト"
+  },
+  "category": {
+    "hero_title": "ジャンル別",
+    "hero_subtitle": "映画一覧",
+    "hero_desc": "あなたにぴったりの映画を見つけましょう。手に汗握るアクションから感動のラブストーリーまで、幅広く取りそろえています。",
+    "genre_discovery": "ジャンル探索",
+    "search_label": "映画を検索",
+    "search_placeholder": "映画のタイトルを入力...",
+    "filter_genre": "ジャンルで絞り込む",
+    "select_genre_placeholder": "ジャンルを選択",
+    "genre_list_label": "ジャンル一覧",
+    "all_movies": "すべての映画",
+    "min_rating": "最小評価",
+    "rating_placeholder": "評価",
+    "select_rating_level": "評価レベルを選択",
+    "all_ratings": "すべて",
+    "stars": "星以上"
+  },
+  "contact": {
+    "hero_title": "お問い合わせ",
+    "hero_subtitle": "窓口",
+    "hero_desc": "ご質問、ご意見、またはパートナーシップに関するお問い合わせは、以下のフォームよりお送りください。",
+    "contact_us": "お問い合わせ",
+    "info": {
+        "address_title": "本社所在地",
+        "address_detail": "54 Nguyen Luong Bang, Hoa Khanh Bac, Lien Chieu, Da Nang",
+        "address_desc": "MilkyWayyy シネマコンプレックスビル",
+        "hotline_title": "サポートホットライン",
+        "hotline_desc": "毎日 08:00 - 23:00 受付",
+        "email_title": "メールでのお問い合わせ",
+        "email_desc": "24時間以内に返信いたします"
+    },
+    "working_hours": {
+        "title": "営業時間",
+        "weekdays": "月曜 - 金曜",
+        "weekends": "土曜 - 日曜",
+        "holidays": "祝日",
+        "open_all_night": "終夜営業"
+    },
+    "form": {
+        "title": "メッセージを送る",
+        "subtitle": "皆様からの貴重なご意見をお待ちしております。",
+        "name_label": "氏名",
+        "name_placeholder": "例：山田 太郎",
+        "email_label": "メールアドレス",
+        "subject_label": "件名",
+        "subject_placeholder": "お問い合わせ内容の件名を入力してください",
+        "message_label": "メッセージ内容",
+        "message_placeholder": "こちらにメッセージを入力してください...",
+        "send_button": "メッセージを送信"
+    }
+  },
+  "policy": {
+    "hero_title": "プライバシー",
+    "hero_subtitle": "ポリシー",
+    "hero_desc": "MilkyWayyyでは、お客様のプライバシーを最優先事項としています。私たちは、お客様の個人情報を完全に保護することをお約束します。",
+    "privacy_safety": "プライバシーと安全",
+    "footer_quote": "私たちは、透明性が信頼の基盤であると信じています。MilkyWayyyにおけるすべてのデータ処理プロセスは、お客様の最大限の安全を目指しています。",
+    "sections": {
+        "s1_title": "1. 個人情報の収集目的",
+        "s1_content": "MilkyWayyyのウェブサイトで収集されるデータには、メールアドレス、電話番号、ユーザー名、ログインパスワード、お客様の住所が含まれます。これらは、サービス利用登録時にお客様に提供していただく必要があり、MilkyWayyyがサービス利用の確認連絡を行い、消費者の権利を保護するために使用されます。",
+        "s2_title": "2. 個人情報の利用範囲",
+        "s2_content": "当社は、提供されたお客様情報を以下の目的で使用します：お客様へのサービス提供、お客様とMilkyWayyy間の情報交換に関する通知の送信、ユーザーアカウントの不正利用やなりすまし行為の防止、特別な場合におけるお客様への連絡および解決。",
+        "s3_title": "3. 個人情報の保存期間",
+        "s3_content": "お客様の個人データは、削除依頼があるか、お客様自身がログインして削除を実行するまで保存されます。それ以外の場合、お客様の個人情報はMilkyWayyyのサーバー上で厳重に保護されます。",
+        "s4_title": "4. 第三者への情報提供",
+        "s4_content": "当社は、営利目的でお客様の個人情報を販売したり共有したりして漏洩させることはありません。ただし、法的要請がある場合や、MilkyWayyyの正当な権利を保護するために、公的機関に情報を提供する場合があります。",
+        "s5_title": "5. ユーザーの権利",
+        "s5_content": "お客様は、自身のアカウントにログインして個人情報を編集するか、MilkyWayyyに依頼することにより、自身の個人情報を確認、更新、調整、または削除する権利を有します。",
+        "s6_title": "6. ポリシーの変更",
+        "s6_content": "本ポリシーは、サービスの発展や法的規制に合わせて変更される場合があります。すべての変更は、当社のウェブサイト上で公に通知されます。"
+    }
+  },
+  "terms": {
+    "hero_title": "利用",
+    "hero_subtitle": "規約",
+    "hero_desc": "MilkyWayyyへようこそ. 当社のサービスを最大限に活用していただくために、以下の規約をよくお読みください。",
+    "usage_agreement": "利用規約の合意",
+    "footer_disclaimer": "本ウェブサイトの利用を継続することにより、お客様は本規約を読み、理解し、拘束されることに同意したものとみなされます。MilkyWayyyは、事前の通知なくいつでも本規約を更新する権利を有します。",
+    "sections": {
+        "s1_title": "1. 規約への同意",
+        "s1_content": "MilkyWayyyのウェブサイトにアクセスして利用することにより、お客様はここに記載された利用規約を遵守することに同意するものとします。規約に同意できない場合は、直ちに当社のサービスの利用を中止してください。",
+        "s2_title": "2. チケット予約およびサービス利用規定",
+        "s2_content": "お客様は会員登録時に正確な個人情報を提供しなければなりません。MilkyWayyyのシステムを通じて購入されたチケットはメールで確認されます。上映室への入場には、カウンターまたは改札機でチケットコードを提示してください。",
+        "s3_title": "3. お支払いおよび返金ポリシー",
+        "s3_content": "ウェブサイト上でのすべての支払い取引は、信頼できる決済ゲートウェイを通じて行われます。一度購入されたチケットは、MilkyWayyy側の都合で上映が中止された場合を除き、返金や交換はできません。",
+        "s4_title": "4. ユーザーの責任",
+        "s4_content": "ユーザーは、システムに干渉したりデータ構造を変更したりするためのツールやソフトウェアを使用することは許可されていません。有害な情報の拡散、公序良俗に反する行為、またはベトナムの法律に違反する行為は固く禁じられています。",
+        "s5_title": "5. 知的財産権",
+        "s5_content": "デザイン、ロゴ、テキスト、画像を含むウェブサイト上のすべてのコンテンツはMilkyWayyyに帰属します。当社の書面による同意なしの複製や引用は、権利侵害とみなされます。",
+        "s6_title": "6. 紛争 của 解決",
+        "s6_content": "サービスの利用から生じるすべての紛争は、交渉による解決を優先します。合意に至らない場合は、法律の規定に従って管轄当局に委ねられるものとします。"
+    }
+  },
+  "faq": {
+    "hero_title": "よくある",
+    "hero_subtitle": "質問",
+    "hero_desc": "ご不明な点はありますか？私たちが解決します。MilkyWayyyでよく寄せられる質問とその回答を素早く検索できます。",
+    "support_center": "サポートセンター",
+    "cta_title": "解決しない場合は？",
+    "cta_desc": "当社のサポートチームが24時間365日、お客様をサポートいたします。",
+    "cta_button": "今すぐ問い合わせる",
+    "categories": {
+        "c1_title": "アカウント & 登録",
+        "c2_title": "予約 & お支払い",
+        "c3_title": "劇場規定 & 特典"
+    },
+    "questions": {
+        "q1_q": "MilkyWayyyのアカウント登録方法は？",
+        "q1_a": "ツールバーの「ログイン」ボタンをクリックし、「今すぐ登録」を選択してください。個人情報を入力し、メール認証を完了すれば、サービスをご利用いただけます。",
+        "q2_q": "パスワードを忘れた場合は？",
+        "q2_a": "ログインフォームの「パスワードをお忘れですか？」を選択してください。メールアドレスを入力するとOTP（ワンタイムパスワード）が送信され、新しいパスワードを再設定できます。",
+        "q3_q": "個人情報は保護されますか？",
+        "q3_a": "完全に保護されます。MilkyWayyyは最高水準 của データ暗号化を採用しており、お客様の同意なく第三者に情報を提供することはありません。",
+        "q4_q": "一度に最大何枚までチケットを予約できますか？",
+        "q4_a": "公平性を保ち、転売を防止するため、1回の上映につき1アカウント最大8枚まで予約可能です。",
+        "q5_q": "どのような支払い方法がありますか？",
+        "q5_a": "MoMo、VNPayなどの電子マネー、国内ATMカード、国際ブランドカード（Visa、Mastercard）をご利用いただけます。",
+        "q6_q": "予約が成功したか確認する方法は？",
+        "q6_a": "お支払い完了後、画面にQRコードチケットが表示され、同時に詳細がメールで送信されます。プロフィールの「予約履歴」でもご確認いただけます。",
+        "q7_q": "飲食物の持ち込みは可能ですか？",
+        "q7_a": "規定により、衛生面と共有スペースの環境維持のため、外部からの飲食物の持ち込みはご遠慮いただいております。",
+        "q8_q": "クーポンコードの使用方法は？",
+        "q8_a": "お支払い手続き中に「クーポンコード入力」欄があります。コードを入力して適用ボタンを押すと、自動的に割引が適用されます。",
+        "q9_q": "上映開始のどのくらい前に劇場に行くべきですか？",
+        "q9_a": "チケット確認や売店での購入時間を考慮し、上映開始の15〜20分前にお越しいただくことをお勧めします。"
+    }
+  },
+  "recruitment": {
+    "hero_title": "採用",
+    "hero_subtitle": "情報",
+    "hero_desc": "映画が好きですか？クリエイティブでプロフェッショナルな環境で働きたいですか？私たちと一緒に、観客に素晴らしい体験を提供しましょう。",
+    "join_our_team": "チームに参加する",
+    "benefits": {
+        "free_movies": "週1回の映画鑑賞無料特典",
+        "environment": "若くて活気のある職場環境",
+        "training": "専門的なスキル研修",
+        "flex_time": "フレキシブルな勤務時間"
+    },
+    "jobs_title": "現在募集中の職種",
+    "salary_label": "給与:",
+    "apply_button": "今すぐ応募する",
+    "cta_title": "希望の職種が見つかりませんか？",
+    "cta_desc": "お気軽に履歴書をお送りください。MilkyWayyyの未来を共に築く新しい才能を常に探しています。",
+    "cta_button": "自由応募（CV送信）",
+    "jobs": {
+        "j1_title": "フロアスーパーバイザー (Floor Supervisor)",
+        "j1_desc": "ロビー運営の管理、スタッフのコーディネート、お客様からの問い合わせ対応などを行います。",
+        "j1_salary": "8,000,000 - 12,000,000 VNĐ",
+        "j2_title": "劇場スタッフ (Cinema Staff)",
+        "j2_desc": "チケット販売、フード＆ドリンクの提供、シアター内での接客サポートなどを行います。",
+        "j2_salary": "25,000 - 30,000 VNĐ/時間",
+        "j3_title": "映写・音響技術スタッフ",
+        "j3_desc": "映写システムや音響設備の操作、劇場の技術機器のメンテナンスを担当します。",
+        "j3_salary": "10,000,000 - 15,000,000 VNĐ",
+        "locations": {
+            "nationwide": "全国",
+            "cities": "ダナン / フエ / ホーチミン",
+            "cities_extended": "ダナン / ハノイ / ニャチャン / フエ"
+        },
+        "types": {
+            "full_time": "正社員",
+            "part_time": "アルバイト・パート"
+        }
+    },
+    "apply": {
+        "back": "戻る",
+        "success_title": "送信完了！",
+        "success_desc": "MilkyWayyy Cinemaへのご応募ありがとうございます。採用担当者が内容を確認し、追ってご連絡いたします。",
+        "back_to_jobs": "採用ページに戻る",
+        "hero_start": "新しい",
+        "hero_journey": "一歩を",
+        "hero_desc": "あなたのことをもっと教えてください。詳細な情報を入力することで、より魅力的なプロフィールになります。",
+        "info": {
+            "desired_position": "希望職種",
+            "multi_role": "マルチスタッフ / 技術スタッフ",
+            "location": "勤務地",
+            "all_cinemas": "全国のMilkyWayyyシネマ各館"
+        },
+        "form": {
+            "name_label": "氏名",
+            "name_placeholder": "氏名をフルネームで入力",
+            "email_label": "メールアドレス",
+            "phone_label": "電話番号",
+            "position_label": "応募職種",
+            "position_placeholder": "職種を選択",
+            "intro_label": "自己紹介",
+            "intro_placeholder": "MilkyWayyy Cinemaへの志望動機などを自由に入力してください...",
+            "attach_cv": "履歴書・職務経歴書の添付 (PDF, DOCX)",
+            "upload_desc": "ファイルをドロップするか <span class=\"text-amber-500\">アップロード</span>",
+            "max_size": "最大ファイルサイズ 5MB",
+            "declaration": "記載内容に相違ないことを誓約し、自己 của 責任において応募します。",
+            "submit_button": "応募書類を送信する"
+        }
+    }
+  },
+  "dashboard": {
+    "admin_panel": "管理パネル",
+    "overview": "オーバービュー",
+    "system_management": "システム管理",
+    "config_data": "設定 & データ",
+    "stats_overview": "統計オーバービュー",
+    "logged_in": "ログイン中",
+    "home": "ホーム",
+    "profile": "マイプロフィール",
+    "logout": "ログアウト",
+    "chart_color": "グラフの色",
+    "switch_light": "ライトモードへ切り替え",
+    "switch_dark": "ダークモードへ切り替え",
+    "management": {
+        "movies": "映画",
+        "tickets": "チケット",
+        "showtimes": "上映回",
+        "cinemas": "映画館",
+        "foods": "フード",
+        "users": "ユーザー",
+        "sync": "データ同期",
+        "revenue": "収益統計"
+    },
+    "themes": {
+        "blue": "ブルー",
+        "green": "グリーン",
+        "yellow": "イエロー",
+        "red": "レッド",
+        "pink": "ピンク",
+        "purple": "パープル",
+        "cyan": "シアン",
+        "orange": "オレンジ",
+        "light_pink": "ライトピンク",
+        "teal": "ティール",
+        "default": "デフォルト"
+    }
+  },
+  "movie_card": {
+    "book_now": "今すぐ予約",
+    "watch_trailer": "予告編を見る",
+    "coming_soon": "近日公開",
+    "trailer_preparing": "予告編は現在準備中です..."
+  },
+  "movie_status": {
+    "released": "上映中",
+    "upcoming": "近日公開",
+    "ended": "終了",
+    "unknown": "不明"
+  },
+  "genres": {
+    "action": "アクション",
+    "adventure": "アドベンチャー",
+    "animation": "アニメーション",
+    "comedy": "コメディ",
+    "crime": "犯罪",
+    "documentary": "ドキュメンタリー",
+    "drama": "ドラマ",
+    "family": "ファミリー",
+    "fantasy": "ファンタジー",
+    "history": "歴史",
+    "horror": "ホラー",
+    "music": "音楽",
+    "mystery": "ミステリー",
+    "romance": "ロマンス",
+    "science_fiction": "SF",
+    "tv_movie": "テレビ映画",
+    "thriller": "スリラー",
+    "war": "戦争",
+    "western": "西部劇",
+    "action_adventure": "アクション＆アドベンチャー",
+    "kids": "キッズ",
+    "news": "ニュース",
+    "reality": "リアリティ",
+    "sci_fi_fantasy": "SF＆ファンタジー",
+    "soap": "ソープ",
+    "talk": "トーク"
+  }
+}

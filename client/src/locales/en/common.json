@@ -1,0 +1,539 @@
+{
+  "common": {
+    "success": "Success",
+    "error": "Error",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "currency_vnd": "VND",
+    "copyright": "© 2026 MilkyWayyy Cinema - All rights reserved"
+  },
+  "navbar": {
+    "movies": "Movies",
+    "movies_now": "Now Playing",
+    "movies_upcoming": "Upcoming",
+    "movies_hot": "Hot Movies",
+    "cinemas": "Cinemas",
+    "cinemas_system": "Cinemas System",
+    "categories": "Categories",
+    "actors": "Actors",
+    "reviews": "Reviews",
+    "booking": "Booking",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "my_tickets": "My Tickets",
+    "theme": "Theme",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "language": "Language",
+    "logged_in_as": "Logged in as:",
+    "buy_tickets_now": "Buy Tickets Now",
+    "cinema_experience": "Cinema Experience"
+  },
+  "footer": {
+    "description": "Premium cinematic experience with state-of-the-art technology. We are committed to providing great entertainment for all audiences.",
+    "cinema_title": "Cinema",
+    "support_title": "Support",
+    "newsletter_title": "Newsletter",
+    "newsletter_desc": "Get the latest on blockbusters and exclusive offers.",
+    "email_placeholder": "Your email...",
+    "send_button": "Send",
+    "privacy_note": "* We are committed to securing your information.",
+    "links": {
+      "promotions": "Pricing & Promotions",
+      "recruitment": "Recruitment",
+      "contact": "Contact / Feedback",
+      "faq": "FAQ",
+      "policy": "Privacy Policy",
+      "terms": "Terms of Use"
+    }
+  },
+  "home": {
+    "explore_title": "Explore Movies",
+    "explore_subtitle": "What to watch today?",
+    "tabs": {
+      "now_playing": "Now Playing",
+      "coming_soon": "Coming Soon",
+      "popular": "Popular"
+    },
+    "see_more": "SEE MORE",
+    "special_offers": "Special Offers",
+    "offers": {
+      "offer1_title": "New Year Gift Pack - Blooming New Year",
+      "offer1_desc": "Huge deals for the spring season.",
+      "offer2_title": "MilkyWayyy Cinema & MoMo Free Popcorn",
+      "offer2_desc": "Enjoy popcorn and drinks for free.",
+      "offer3_title": "MilkyWayyy Cinema Member Offers 2026",
+      "offer3_desc": "Exclusive privileges for hardcore fans."
+    },
+    "banner": {
+      "book_online": "Book Online",
+      "no_delay": "No Delay",
+      "desc": "Book tickets quickly and conveniently right from MilkyWayyy Cinema's homepage. No waiting, no worrying about running out of tickets!"
+    },
+    "about": {
+      "title": "About MilkyWayyy Cinema",
+      "p1": "is one of the first private cinema companies established in 2026, confirming the brand as one of the top 10 most favorite entertainment locations. In addition to the modern cinema system, attracting millions of viewers, MilkyWayyy Cinema also attracts audiences with a friendly atmosphere and top service quality.",
+      "p2": "Coming to milkywayyy.me, customers will easily refer to the best, latest movies currently playing or coming soon that are always updated regularly. The showtimes at all of MilkyWayyy Cinema's cinema systems are also updated fully every day and every hour on the homepage.",
+      "p3": "Now booking tickets at MilkyWayyy Cinema is even easier with just a few simple steps. To buy tickets, go to the Buy Tickets tab. You can choose to Buy tickets by movie, by cinema, or by date. Then, proceed to buy tickets following the instructions.",
+      "p4": "If you have chosen a good movie to watch, book tickets super fast with the Quick Ticket Box right from the Homepage. In just one minute, MilkyWayyy Cinema's response text and email will be sent right to your phone and mailbox.",
+      "promo": "MilkyWayyy Cinema always has attractive promotions, offers, and gifts for customers.",
+      "p5": "The milkywayyy.me website also has a Cinema Corner - where database of movies, actors and directors are stored, specialized articles on cinema, helping movie lovers more easily in choosing movies."
+    }
+  },
+  "movies": {
+    "hero_title": "World of",
+    "hero_subtitle": "Cinema",
+    "hero_desc": "The latest cinematic masterpieces, from action blockbusters to emotional stories.",
+    "search_placeholder": "Search movies by title...",
+    "movie_list_title": "Movie List",
+    "premium_experience": "Premium Experience"
+  },
+  "movie_detail": {
+    "runtime": "MINUTES",
+    "reviews_count": "REVIEWS",
+    "book_now": "Book Now",
+    "watch_trailer": "Watch Trailer",
+    "storyline": "Storyline",
+    "no_overview": "No overview available for this movie yet.",
+    "official_trailer": "Official Trailer",
+    "coming_soon": "COMING SOON",
+    "trailer_not_ready": "Trailer is not ready yet",
+    "main_cast": "Main Cast",
+    "view_all_cast": "View All Cast",
+    "new_reviews": "New Reviews",
+    "view_all_reviews": "View all {{count}} reviews",
+    "no_reviews": "No reviews for this movie yet.",
+    "cast_list": "Cast List",
+    "all_cast_for": "Full cast for {{title}}",
+    "close_list": "Close List",
+    "all_reviews": "All Reviews",
+    "community_reviews": "There are {{count}} community reviews",
+    "back": "Back",
+    "movie_detail_label": "Movie Detail"
+  },
+  "booking": {
+    "steps": {
+      "movie": "Movie",
+      "seat": "Seat",
+      "food": "Food",
+      "payment": "Payment",
+      "confirmation": "Confirmation"
+    },
+    "selection": {
+      "select_cinema": "Select Cinema",
+      "select_movie": "Select Movie",
+      "select_showtime": "Select Showtime",
+      "not_selected_movie": "Movie not selected",
+      "not_selected_cinema": "Cinema not selected",
+      "room": "Room"
+    },
+    "sidebar": {
+      "selected_seats": "Selected Seats",
+      "total": "Total"
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next"
+    },
+    "feature_updating": "This feature is being updated to bring the best experience to you."
+  },
+  "cinema_detail": {
+    "address_label": "ADDRESS:",
+    "service_fees": "Service Fees",
+    "ticket_pricing": "Ticket Pricing",
+    "zoom_to_view": "Zoom to view",
+    "contact_info": "Contact Info",
+    "support_phone": "Support Phone",
+    "map_location": "Map Location",
+    "default_description": "Our cinema is equipped with Dolby Atmos sound system and modern IMAX screens, providing the most realistic cinematic experience.",
+    "premium_location": "Premium Location"
+  },
+  "auth": {
+    "welcome_back": "Welcome Back",
+    "login_to_account": "Login to your account",
+    "username": "Username",
+    "username_placeholder": "Enter your username",
+    "password": "Password",
+    "password_placeholder": "Enter password",
+    "forgot_password": "Forgot password?",
+    "login_button": "Login Now",
+    "or": "Or",
+    "no_account": "Don't have an account?",
+    "register_now": "Register Now",
+    "join_us": "Join MilkyWayyy community today",
+    "create_account": "Create New Account",
+    "full_name": "Full Name",
+    "full_name_placeholder": "Enter your full name",
+    "email": "Email Address",
+    "email_placeholder": "Enter your email",
+    "phone": "Phone Number",
+    "phone_placeholder": "0123456xxx",
+    "birthdate": "Birthdate",
+    "password_signup_placeholder": "Your password",
+    "confirm_password": "Confirm Password",
+    "confirm_password_placeholder": "Re-enter password",
+    "register_button": "Create Account Now",
+    "already_have_account": "Already have an account?",
+    "login_now": "Back to login",
+    "username_signup_placeholder": "Choose a username",
+    "verify_success": "Email verification successful!",
+    "verify_failed": "Email verification failed. Please try again."
+  },
+  "profile": {
+    "roles": {
+      "admin": "Senior Administrator",
+      "member": "Cinema Member"
+    },
+    "spending_year": "Spending in {{year}}",
+    "loyalty_point": "LOYALTY POINTS:",
+    "rank": "Rank:",
+    "ranks": {
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum"
+    },
+    "project_name": "Cinema Management",
+    "project_info": "Project Information",
+    "hotline": "Support Hotline",
+    "email_support": "Support Email",
+    "source_web": "Website Source Code",
+    "about_us": {
+      "title": "About Us",
+      "p1": "This is an application of the PBL3 project of Da Nang University of Science and Technology",
+      "p2": "Developed by 2 members: Luong Thanh Nhat and Nguyen Thi Nghia.",
+      "p3": "This is not a commercial application, but only a product of the project, so there will be no real support service.",
+      "p4": "If you have any questions or feedback about the application, please contact us via github provided above."
+    },
+    "tabs": {
+      "personal_info": "Personal Info",
+      "booking_history": "Booking History"
+    },
+    "info_labels": {
+      "full_name": "Full Name",
+      "email": "Email Address",
+      "join_date": "Join Date",
+      "birthdate": "Birthdate",
+      "no_data": "No data"
+    },
+    "account_status": "Account Status",
+    "verified": "Verified Account",
+    "unverified": "Unverified Account",
+    "verified_desc": "Your account is fully secured.",
+    "unverified_desc": "Please verify email to enhance security.",
+    "security": "Security",
+    "password_protection": "Password Protection",
+    "change_password": "Change Password",
+    "no_transactions": "You have no recent transactions. Choose your favorite movie now!",
+    "explore_now": "Explore Movies Now",
+    "currency": "đ"
+  },
+  "actors": {
+    "hero_title": "Faces of",
+    "hero_subtitle": "Cinema",
+    "hero_desc": "Meet the talents who contributed to the appeal of cinematic works. From veteran stars to promising new faces.",
+    "search_placeholder": "Search actors...",
+    "star_spotlight": "Star Spotlight",
+    "professional_actor": "Professional Actor",
+    "cinema_star": "Cinema Star",
+    "birthday": "Birthday",
+    "gender": "Gender",
+    "gender_male": "Male",
+    "gender_female": "Female",
+    "gender_other": "Other",
+    "biography": "Biography",
+    "no_biography": "No biography available for this actor yet. We will update as soon as possible.",
+    "known_for": "Known For",
+    "no_character": "Role information is being updated.",
+    "fast_facts": "Fast Facts",
+    "movie_count": "Movie Count",
+    "works": "works",
+    "character_count": "Roles",
+    "characters": "characters",
+    "professional_status": "Professional Status",
+    "official_collaboration": "Official Collaboration",
+    "collaboration_desc": "The actor has contributed {{count}} excellent works in our cinema system.",
+    "filmography": "Filmography",
+    "movies_count_label": "{{count}} Movies"
+  },
+  "reviews_page": {
+    "hero_title": "Community",
+    "hero_subtitle": "Feedback",
+    "hero_desc": "Honest shares from the movie-loving community. Reviews that help you have the most objective view before choosing a movie for yourself.",
+    "audience_insights": "Audience Insights"
+  },
+  "category": {
+    "hero_title": "Movies by",
+    "hero_subtitle": "Genre",
+    "hero_desc": "Movie list according to your personal preference. From dramatic action to romantic love, everything is available here.",
+    "genre_discovery": "Genre Discovery",
+    "search_label": "Search movies",
+    "search_placeholder": "Enter movie title...",
+    "filter_genre": "Filter by Genre",
+    "select_genre_placeholder": "Select genre",
+    "genre_list_label": "Genre list",
+    "all_movies": "All Movies",
+    "min_rating": "Minimum Rating",
+    "rating_placeholder": "Rating",
+    "select_rating_level": "Select rating level",
+    "all_ratings": "All",
+    "stars": "Stars"
+  },
+  "contact": {
+    "hero_title": "CONNECT WITH",
+    "hero_subtitle": "US",
+    "hero_desc": "Any questions, suggestions or partnership requests, please send a message to the MilkyWayyy team.",
+    "contact_us": "Contact Us",
+    "info": {
+      "address_title": "Headquarters",
+      "address_detail": "54 Nguyen Luong Bang, Hoa Khanh Bac, Lien Chieu, Da Nang",
+      "address_desc": "MilkyWayyy Cinema Complex Building",
+      "hotline_title": "Support Hotline",
+      "hotline_desc": "Operating from 08:00 - 23:00 daily",
+      "email_title": "Contact Email",
+      "email_desc": "We will respond within 24 hours"
+    },
+    "working_hours": {
+      "title": "Working Hours",
+      "weekdays": "Mon - Fri",
+      "weekends": "Sat - Sun",
+      "holidays": "Holidays",
+      "open_all_night": "Open all night"
+    },
+    "form": {
+      "title": "Send a Message",
+      "subtitle": "We always listen to your feedback.",
+      "name_label": "Full Name",
+      "name_placeholder": "Ex: John Doe",
+      "email_label": "Email Address",
+      "subject_label": "Subject",
+      "subject_placeholder": "What do you want to contact about?",
+      "message_label": "Message Content",
+      "message_placeholder": "Write your message here...",
+      "send_button": "Send Message Now"
+    }
+  },
+  "policy": {
+    "hero_title": "Privacy",
+    "hero_subtitle": "Policy",
+    "hero_desc": "At MilkyWayyy, your privacy is our top priority. We are committed to protecting your personal information absolutely.",
+    "privacy_safety": "Privacy & Safety",
+    "footer_quote": "We believe transparency is the foundation of trust. Every data processing at MilkyWayyy is towards the highest safety for customers.",
+    "sections": {
+      "s1_title": "1. Purpose of Information Collection",
+      "s1_content": "The collection of data on the MilkyWayyy website includes: Email, phone number, username, login password, customer address. This is the information that MilkyWayyy needs customers to provide compulsorily when registering to use the service and for MilkyWayyy to contact for confirmation when customers register to use the service on the website to ensure the rights of consumers.",
+      "s2_title": "2. Scope of Information Use",
+      "s2_content": "The company uses information provided by customers to: Provide services to customers; Send notifications about information exchange activities between customers and MilkyWayyy; Prevent activities that destroy customer user accounts or customer impersonation activities; Contact and resolve with customers in special cases.",
+      "s3_title": "3. Information Storage Time",
+      "s3_content": "Customers' personal data will be stored until there is a request for cancellation or customers log in and perform cancellation. Otherwise, in all cases, customers' personal information will be kept confidential on MilkyWayyy's server.",
+      "s4_title": "4. Sharing Information with Third Parties",
+      "s4_content": "We are committed not to sell or share leading to the disclosure of your personal information for commercial purposes. However, we may provide information to authorities if there is a legal requirement or to protect MilkyWayyy's legitimate interests.",
+      "s5_title": "5. User Rights",
+      "s5_content": "Customers have the right to self-check, update, adjust or cancel their personal information by logging into the account and editing personal information or requesting MilkyWayyy to do this.",
+      "s6_title": "6. Changes to Policy",
+      "s6_content": "This policy may change to suit the development of the service and legal regulations. Any changes will be announced publicly on our website."
+    }
+  },
+  "terms": {
+    "hero_title": "Terms of",
+    "hero_subtitle": "Use",
+    "hero_desc": "Welcome to MilkyWayyy. Please read the terms below carefully to ensure the best interests when experiencing our service.",
+    "usage_agreement": "Usage agreement",
+    "footer_disclaimer": "By continuing to use the website, you confirm that you have read, understood and agree to be bound by these Terms. MilkyWayyy has the right to update these terms at any time without prior notice.",
+    "sections": {
+      "s1_title": "1. Acceptance of Terms",
+      "s1_content": "By accessing and using the MilkyWayyy website, you agree to comply with the terms and conditions set forth herein. If you do not agree with any terms, please stop using our service immediately.",
+      "s2_title": "2. Regulations on ticket booking and service use",
+      "s2_content": "Customers must provide accurate personal information when registering as a member. Tickets purchased through the MilkyWayyy system will be confirmed via email. Customers please present the ticket code at the counter or ticket checking machine to enter the screening room.",
+      "s3_title": "3. Payment and Refund Policy",
+      "s3_content": "All payment transactions on the website are made through reputable payment gateways. Successfully purchased tickets ARE NOT refundable or exchangeable, except in cases where the showtime is canceled by MilkyWayyy.",
+      "s4_title": "4. User Responsibility",
+      "s4_content": "Users are not allowed to use any tools or software to interfere with the system or change the data structure. All acts of spreading malicious information, contrary to fine customs or violating Vietnamese law are strictly prohibited.",
+      "s5_title": "5. Intellectual Property Rights",
+      "s5_content": "All content on the website including design, logo, text, images are owned by MilkyWayyy. Any act of copying or quoting without our written consent is considered a violation.",
+      "s6_title": "6. Dispute Resolution",
+      "s6_content": "Any disputes arising from the use of the service will be prioritized to be resolved through negotiation. If an agreement cannot be reached, the case will be taken to the competent authority for resolution in accordance with the law."
+    }
+  },
+  "faq": {
+    "hero_title": "Frequently Asked",
+    "hero_subtitle": "Questions",
+    "hero_desc": "Have questions? We have answers. Quickly find solutions to the most common problems at MilkyWayyy.",
+    "support_center": "Support center",
+    "cta_title": "Still haven't found the answer?",
+    "cta_desc": "Our support team is always ready to help you 24/7.",
+    "cta_button": "Contact Now",
+    "categories": {
+      "c1_title": "Account & Registration",
+      "c2_title": "Booking & Payment",
+      "c3_title": "Cinema Regulations & Offers"
+    },
+    "questions": {
+      "q1_q": "How to register a MilkyWayyy account?",
+      "q1_a": "Just click on the Login button on the toolbar, then select 'Register Now'. Fill in your personal information and confirm via email to start experiencing the service.",
+      "q2_q": "What should I do if I forget my password?",
+      "q2_a": "At the Login form, choose 'Forgot password'. The system will ask you to enter Email and send an OTP confirmation code so you can reset a new password.",
+      "q3_q": "Is my personal information secure?",
+      "q3_a": "Absolutely secure. MilkyWayyy applies the highest data encryption standards and is committed not to share your information with any third party without consent.",
+      "q4_q": "How many tickets can I book at most in one transaction?",
+      "q4_a": "To ensure fairness and avoid speculation, each account can book a maximum of 8 tickets for each showtime.",
+      "q5_q": "Which payment methods does the system support?",
+      "q5_a": "We support payment through popular gateways such as: MoMo Wallet, VNPay, domestic ATM cards and international cards (Visa, Mastercard).",
+      "q6_q": "How do I know if I have successfully booked tickets?",
+      "q6_a": "After payment, the system will display the QR ticket code right on the screen and simultaneously send detailed information to your Email. You can also check again in the 'Booking History' section in Profile.",
+      "q7_q": "Can I bring food from outside into the cinema?",
+      "q7_a": "According to general regulations, customers are requested not to bring outside food and drinks into the cinema to ensure hygiene and common space.",
+      "q8_q": "How to apply a discount code?",
+      "q8_a": "At the payment step, you will see the 'Enter discount code' box. Fill in your code there and press apply, the system will automatically deduct before you proceed to payment.",
+      "q9_q": "How early should I arrive at the cinema to receive my tickets?",
+      "q9_a": "We encourage you to arrive at the cinema at least 15-20 minutes before to perform ticket checking procedures and buy popcorn and drinks, ensuring you don't miss the beginning of the movie."
+    }
+  },
+  "recruitment": {
+    "hero_title": "JOIN THE",
+    "hero_subtitle": "UNIVERSE",
+    "hero_desc": "Are you passionate about cinema? Do you want to work in a creative and professional environment? Let's create great experiences for audiences together.",
+    "join_our_team": "Join our team",
+    "benefits": {
+      "free_movies": "Weekly free movies",
+      "environment": "Young and dynamic environment",
+      "training": "Professional skill training",
+      "flex_time": "Flexible working hours"
+    },
+    "jobs_title": "Job Openings",
+    "salary_label": "Salary:",
+    "apply_button": "Apply Now",
+    "cta_title": "Don't see a suitable position yet?",
+    "cta_desc": "Don't hesitate to send us your application. We are always looking for new talents to develop MilkyWayyy together in the future.",
+    "cta_button": "Send free CV",
+    "jobs": {
+      "j1_title": "Floor Supervisor",
+      "j1_desc": "Manage operations in the lobby, coordinate staff and resolve customer complaints.",
+      "j1_salary": "8,000,000 - 12,000,000 VND",
+      "j2_title": "Cinema Staff",
+      "j2_desc": "Sell tickets, serve popcorn and drinks and support customers at the cinema area.",
+      "j2_salary": "25,000 - 30,000 VND/hour",
+      "j3_title": "Projectionist",
+      "j3_desc": "Operate the projector, sound system and maintain technical equipment in the cinema.",
+      "j3_salary": "10,000,000 - 15,000,000 VND",
+      "locations": {
+        "nationwide": "Nationwide",
+        "cities": "Da Nang / Hue / HCM",
+        "cities_extended": "Da Nang / Hanoi / Nha Trang / Hue"
+      },
+      "types": {
+        "full_time": "Full-time",
+        "part_time": "Part-time"
+      }
+    },
+    "apply": {
+      "back": "Back",
+      "success_title": "Sent successfully!",
+      "success_desc": "Thank you for your interest in MilkyWayyy Cinema. Human resources will review your profile and contact you as soon as possible.",
+      "back_to_jobs": "Back to jobs",
+      "hero_start": "Start",
+      "hero_journey": "Journey",
+      "hero_desc": "Let us understand more about you. Please fill in all information to make your profile stand out.",
+      "info": {
+        "desired_position": "Desired position",
+        "multi_role": "Multi-role Staff / Technician",
+        "location": "Location",
+        "all_cinemas": "MilkyWayyy cinema complexes nationwide"
+      },
+      "form": {
+        "name_label": "Full Name",
+        "name_placeholder": "Enter full name",
+        "email_label": "Email",
+        "phone_label": "Phone Number",
+        "position_label": "Applied position",
+        "position_placeholder": "Select position",
+        "intro_label": "Self-introduction",
+        "intro_placeholder": "Share why you want to join MilkyWayyy Cinema...",
+        "attach_cv": "Attach CV (PDF, DOCX)",
+        "upload_desc": "Drag and drop CV here or <span class=\"text-amber-500\">upload</span>",
+        "max_size": "Maximum size 5MB",
+        "declaration": "I declare that the information above is accurate and I am fully responsible.",
+        "submit_button": "Submit Application"
+      }
+    }
+  },
+  "dashboard": {
+    "admin_panel": "Admin Panel",
+    "overview": "Overview",
+    "system_management": "System Management",
+    "config_data": "Config & Data",
+    "stats_overview": "Stats Overview",
+    "logged_in": "Logged in",
+    "home": "Home",
+    "profile": "Profile",
+    "logout": "Logout",
+    "chart_color": "Chart Color",
+    "switch_light": "Switch to light mode",
+    "switch_dark": "Switch to dark mode",
+    "management": {
+      "movies": "Movies",
+      "tickets": "Tickets",
+      "showtimes": "Showtimes",
+      "cinemas": "Cinemas",
+      "foods": "Foods",
+      "users": "Users",
+      "sync": "Data Sync",
+      "revenue": "Revenue Stats"
+    },
+    "themes": {
+      "blue": "Blue",
+      "green": "Green",
+      "yellow": "Yellow",
+      "red": "Red",
+      "pink": "Pink",
+      "purple": "Purple",
+      "cyan": "Cyan",
+      "orange": "Orange",
+      "light_pink": "Light Pink",
+      "teal": "Teal",
+      "default": "Default"
+    }
+  },
+  "movie_card": {
+    "book_now": "Book Now",
+    "watch_trailer": "Watch Trailer",
+    "coming_soon": "COMING SOON",
+    "trailer_preparing": "Trailer is currently being prepared..."
+  },
+  "movie_status": {
+    "released": "Now Playing",
+    "upcoming": "Upcoming",
+    "ended": "Ended",
+    "unknown": "Unknown"
+  },
+  "genres": {
+    "action": "Action",
+    "adventure": "Adventure",
+    "animation": "Animation",
+    "comedy": "Comedy",
+    "crime": "Crime",
+    "documentary": "Documentary",
+    "drama": "Drama",
+    "family": "Family",
+    "fantasy": "Fantasy",
+    "history": "History",
+    "horror": "Horror",
+    "music": "Music",
+    "mystery": "Mystery",
+    "romance": "Romance",
+    "science_fiction": "Science Fiction",
+    "tv_movie": "TV Movie",
+    "thriller": "Thriller",
+    "war": "War",
+    "western": "Western",
+    "action_adventure": "Action & Adventure",
+    "kids": "Kids",
+    "news": "News",
+    "reality": "Reality",
+    "sci_fi_fantasy": "Sci-Fi & Fantasy",
+    "soap": "Soap",
+    "talk": "Talk"
+  }
+}
