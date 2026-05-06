@@ -36,11 +36,12 @@ export const useAuthStore = create<{
     verifyEmail: (userId: string, verificationCode: string) => Promise<void>;
     forgotPassword: (email: string) => Promise<void>;
     resetPassword: (email: string, newPassword: string) => Promise<void>;
-    checkResetPassword: (email: string, resetToken: string) => Promise<void>;
+    checkResetPassword: (email: string, resetToken: string) => Promise<boolean>;
     changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
     changeEmail: (newEmail: string) => Promise<void>;
     changeBirthdate: (newBirthDate: string) => Promise<void>;
     changeAvatar: (newAvatar: File | null) => Promise<void>;
+    clearAuth: () => void;
 }>((set, get) => ({
     authUser: null as null | AuthUser,
 
@@ -262,11 +263,12 @@ export const useAuthStore = create<{
             set({ isCheckingResetPassword: true });
             await _axios.post('v1/auth/check-reset-password', { email, resetToken });
 
-            Swal.fire({
+            await Swal.fire({
                 title: 'Thành công',
                 text: 'Mã đặt lại mật khẩu hợp lệ! Bạn có thể tiếp tục đặt lại mật khẩu mới.',
                 icon: 'success',
             });
+            return true;
         } catch (error) {
             console.log('Error in checkResetPassword: ', error);
             Swal.fire({
@@ -274,6 +276,7 @@ export const useAuthStore = create<{
                 text: 'Mã đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng thử lại.',
                 icon: 'error',
             });
+            return false;
         } finally {
             set({ isCheckingResetPassword: false });
         }
@@ -424,5 +427,11 @@ export const useAuthStore = create<{
         } finally {
             set({ isChangingAvatar: false });
         }
+    },
+
+    clearAuth: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('authUser');
+        set({ authUser: null });
     },
 }));
