@@ -203,17 +203,14 @@ export default function NavbarLayout() {
                 <Dropdown className="bg-sidebar backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-sm">
                     <NavbarItem>
                         <DropdownTrigger>
-                            <Button
-                                disableRipple
-                                className={NAV_LINK_CLASS}
-                                endContent={<ChevronDown animate={hoveredItem === 'phim'} size={14} />}
+                            <button
+                                className={NAV_LINK_CLASS + " flex items-center gap-1"}
                                 onMouseEnter={() => setHoveredItem('phim')}
                                 onMouseLeave={() => setHoveredItem(null)}
-                                radius="none"
-                                variant="underlined"
                             >
                                 Phim
-                            </Button>
+                                <ChevronDown animate={hoveredItem === 'phim'} size={14} />
+                            </button>
                         </DropdownTrigger>
                     </NavbarItem>
                     
@@ -236,17 +233,14 @@ export default function NavbarLayout() {
                 <Dropdown className="bg-sidebar backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-sm">
                     <NavbarItem>
                         <DropdownTrigger>
-                            <Button
-                                disableRipple
-                                className={NAV_LINK_CLASS}
-                                endContent={<ChevronDown animate={hoveredItem === 'rap'} size={14} />}
+                            <button
+                                className={NAV_LINK_CLASS + " flex items-center gap-1"}
                                 onMouseEnter={() => setHoveredItem('rap')}
                                 onMouseLeave={() => setHoveredItem(null)}
-                                radius="none"
-                                variant="underlined"
                             >
                                 Rạp
-                            </Button>
+                                <ChevronDown animate={hoveredItem === 'rap'} size={14} />
+                            </button>
                         </DropdownTrigger>
                     </NavbarItem>
                     <DropdownMenu aria-label="Cinemas list" className="w-55">
