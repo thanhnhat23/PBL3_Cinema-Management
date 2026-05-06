@@ -1,102 +1,167 @@
 'use client';
 
 import Link from "next/link";
-import { Image } from '@heroui/react';
+import Image from "next/image";
+import { FaFacebookF, FaInstagram, FaGithub, FaAt } from "react-icons/fa";
+import { cn } from "@/lib/utils";
 
 export default function FooterLayout() {
   return (
-    <>
-        <footer className="flex flex-col md:flex-row gap-8 bg-zinc-900 text-base-content p-10">
-            <div className="flex sm:flex-1 flex-2 sm:gap-20 gap-8 sm:px-14 px-0">
-                <nav className="hidden sm:flex flex-col gap-2">
-                    <h6 className="footer-title">Giới thiệu</h6>
-                    <a className="link link-hover">Về chúng tôi</a>
-                    <a className="link link-hover">Thỏa thuận sử dụng</a>
-                    <a className="link link-hover">Chính sách bảo mật</a>
-                </nav>
-                <nav className="flex flex-col gap-2">
-                    <h6 className="footer-title">Điện ảnh</h6>
-                    <a className="link link-hover">Thể Loại</a>
-                    <a className="link link-hover">Bình Luận</a>
+    <footer className="relative bg-sidebar pt-24 pb-12 overflow-hidden">
+        {/* Subtle Background Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-150 h-48 bg-amber-500/10 blur-[120px] rounded-full pointer-events-none" />
 
-                    <Link 
-                        href="/movies?tab=popular"
-                        className="link link-hover"
-                    >
-                        Phim Hay
+        <div className="container mx-auto px-6 md:px-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                {/* Brand Identity */}
+                <div className="flex flex-col gap-6">
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <div className="relative w-12 h-12">
+                            <Image
+                                src="/logo.png"
+                                alt="Logo"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
+                        <div className="flex flex-col leading-none">
+                            <span className="text-xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">MilkyWayyy</span>
+                            <span className="text-[10px] font-bold tracking-[0.4em] text-amber-500 uppercase">Cinema Experience</span>
+                        </div>
                     </Link>
-
-                    <Link 
-                        href="/movies?tab=now-playing"
-                        className="link link-hover"
-                    >
-                        Phim Đang Chiếu
-                    </Link>
-                </nav>
-                <nav className="flex flex-col gap-2">
-                    <h6 className="footer-title">Hỗ trợ</h6>
-                    <a className="link link-hover">Góp Ý</a>
-                    <a className="link link-hover">Rạp/Giá Vé</a>
-                    <a className="link link-hover">FAQ</a>
-                </nav>
-            </div>
-
-            <hr className="block md:hidden"/>
-
-            <div className="flex flex-col items-center justify-center md:justify-end md:gap-10 gap-4 md:px-10 px-0">
-                <nav>
-                    <div className="grid grid-flow-col gap-4">
-                        <a>
-                            <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            className="fill-current">
-                            <path
-                                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-                            </svg>
-                        </a>
-                        <a>
-                            <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            className="fill-current">
-                            <path
-                                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-                            </svg>
-                        </a>
-                        <a>
-                            <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            className="fill-current">
-                            <path
-                                d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </nav>
-
-                <aside className="flex items-center justify-end gap-2 text-center">
-                    <Image 
-                        src="/logo.png" 
-                        alt="Logo" 
-                        className="w-12 h-12 object-contain" 
-                    />
-
-                    <p>
-                        MilkyWayyy Cinema Ltd.
-                        <br />
-                        All rights reserved © 2026
+                    <p className="text-zinc-500 text-sm leading-relaxed max-w-xs font-medium">
+                        Trải nghiệm điện ảnh đỉnh cao với công nghệ hiện đại nhất. Chúng tôi cam kết mang đến những giây phút giải trí tuyệt vời cho mọi khán giả.
                     </p>
-                </aside>
+                    <div className="flex items-center gap-4 mt-2">
+                        {[
+                            { icon: <FaFacebookF />, href: "https://www.facebook.com/nekonora.23/", bgHover: "hover:bg-[#1877F2]/10 hover:border-[#1877F2]/30", iconHover: "group-hover:!text-[#1877F2]" },
+                            { icon: <FaAt />, href: "mailto: luongthanhnhat567@gmail.com", bgHover: "hover:bg-red-500/10 hover:border-red-500/30", iconHover: "group-hover:!text-red-500" },
+                            { icon: <FaGithub />, href: "https://github.com/thanhnhat23", bgHover: "hover:bg-zinc-900/10 dark:hover:bg-white/10 hover:border-zinc-900/30 dark:hover:border-white/30", iconHover: "group-hover:!text-zinc-900 dark:group-hover:!text-white" },
+                            { icon: <FaInstagram />, href: "https://www.instagram.com/milky.wayyy_06/", bgHover: "hover:bg-[#E4405F]/10 hover:border-[#E4405F]/30", iconHover: "group-hover:!text-[#E4405F]" }
+                        ].map((social, i) => (
+                            <Link 
+                                key={i} 
+                                href={social.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={cn(
+                                    "group w-10 h-10 rounded-full bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm",
+                                    social.bgHover
+                                )}
+                            >
+                                <div className={cn(
+                                    "text-zinc-600 dark:text-zinc-400 transition-colors duration-300 flex items-center justify-center",
+                                    social.iconHover
+                                )}>
+                                    {social.icon}
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Quick Links: Cinema */}
+                <div className="flex flex-col gap-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white flex items-center gap-2">
+                        <div className="w-1.5 h-4 bg-amber-500 rounded-full" />
+                        Điện ảnh
+                    </h3>
+                    <nav className="flex flex-col gap-3">
+                        {[
+                            { label: "Phim Đang Chiếu", href: "/movies?tab=nowplaying" },
+                            { label: "Phim Sắp Chiếu", href: "/movies?tab=coming-soon" },
+                            { label: "Phim Hot", href: "/movies?tab=popular" },
+                            { label: "Thể Loại Phim", href: "/category" },
+                            { label: "Đánh Giá Phim", href: "/reviews" }
+                        ].map((link, i) => (
+                            <Link 
+                                key={i} 
+                                href={link.href}
+                                className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white text-sm font-bold transition-colors w-fit"
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
+
+                {/* Quick Links: Support */}
+                <div className="flex flex-col gap-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white flex items-center gap-2">
+                        <div className="w-1.5 h-4 bg-amber-500 rounded-full" />
+                        Hỗ trợ
+                    </h3>
+                    <nav className="flex flex-col gap-3">
+                        {[
+                            { label: "Hệ Thống Rạp", href: "/cinemas" },
+                            { label: "Giá Vé & Ưu Đãi", href: "/promotions" },
+                            { label: "Tuyển Dụng", href: "/recruitment" },
+                            { label: "Liên Hệ / Góp Ý", href: "/contact" },
+                            { label: "Câu Hỏi Thường Gặp", href: "/faq" },
+                            { label: "Chính Sách Bảo Mật", href: "/policy" },
+                            { label: "Điều Khoản Sử Dụng", href: "/terms" }
+                        ].map((link, i) => (
+                            <Link 
+                                key={i} 
+                                href={link.href}
+                                className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white text-sm font-bold transition-colors w-fit"
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
+
+                {/* Newsletter / Contact */}
+                <div className="flex flex-col gap-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white flex items-center gap-2">
+                        <div className="w-1.5 h-4 bg-amber-500 rounded-full" />
+                        Đăng ký nhận tin
+                    </h3>
+                    <p className="text-zinc-500 text-xs font-medium leading-relaxed">
+                        Nhận thông tin về các bộ phim bom tấn và ưu đãi độc quyền sớm nhất.
+                    </p>
+                    <div className="flex flex-col gap-3">
+                        <div className="relative group">
+                            <input 
+                                type="email" 
+                                placeholder="Email của bạn..." 
+                                className="w-full bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-sm py-3 px-4 text-xs text-zinc-900 dark:text-white outline-none focus:border-amber-500/50 transition-all"
+                            />
+                            <button className="absolute right-2 top-1.5 bottom-1.5 px-4 bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest rounded-sm hover:bg-amber-400 transition-colors">
+                                Gửi
+                            </button>
+                        </div>
+                        <p className="text-[10px] text-zinc-600 italic">
+                            * Chúng tôi cam kết bảo mật thông tin của bạn.
+                        </p>
+                    </div>
+                </div>
             </div>
-        </footer>
-    </>
+
+            {/* Bottom Bar */}
+            <div className="pt-12 border-t border-zinc-100 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="flex flex-col items-center md:items-start gap-1">
+                    <p className="text-[10px] font-black text-zinc-900 dark:text-white uppercase tracking-[0.4em]">MilkyWayyy Cinema Ltd.</p>
+                    <p className="text-zinc-600 text-[10px] font-medium uppercase tracking-widest">
+                        © 2026 MILKYWAYYY CINEMA EXPERIENCE. ALL RIGHTS RESERVED.
+                    </p>
+                </div>
+                
+                <div className="flex items-center gap-8">
+                    <div className="flex flex-col items-end gap-1">
+                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Powered by</span>
+                        <span className="text-[10px] font-black text-zinc-900 dark:text-white uppercase tracking-widest">Next.js & HeroUI</span>
+                    </div>
+                    <div className="w-px h-8 bg-zinc-200 dark:bg-white/10" />
+                    <div className="flex flex-col items-end gap-1">
+                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Region</span>
+                        <span className="text-[10px] font-black text-zinc-900 dark:text-white uppercase tracking-widest italic">VIETNAM - GLOBAL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
   );
 }

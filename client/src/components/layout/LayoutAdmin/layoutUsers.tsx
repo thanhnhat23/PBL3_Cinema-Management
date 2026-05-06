@@ -133,10 +133,25 @@ export default function LayoutUsers() {
 
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <User />
-                Dashboard: Quản lí người dùng
-            </h1>
+            <div className="relative overflow-hidden rounded-sm border border-zinc-100 dark:border-zinc-800 bg-sidebar p-8 shadow-sm">
+                <div className="absolute top-0 right-0 p-8 opacity-10 dark:opacity-20 pointer-events-none">
+                    <User size={120} />
+                </div>
+                <div className="relative z-10 flex flex-col gap-4">
+                    <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                        Management System
+                    </div>
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
+                            Quản lý Người dùng
+                        </h1>
+                        <p className="text-sm text-zinc-500 font-medium max-w-lg">
+                            Xem danh sách, phân quyền và quản lý trạng thái hoạt động của toàn bộ người dùng trong hệ thống.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
             <DataTableAdmin<AppUser>
                 columns={columns}
@@ -151,6 +166,34 @@ export default function LayoutUsers() {
                 rowKey={(item) => `${item.user_id || "user"}-${item.profile_slug}-${item.email}-${item.createdAt}`}
                 searchBy={(item) => item.username}
                 renderCell={renderCell}
+                hideDeleteSelected={true}
+                filters={[
+                    {
+                        uid: "role",
+                        name: "Vai trò",
+                        options: [
+                            { name: "Admin", uid: "0" },
+                            { name: "Staff", uid: "1" },
+                            { name: "User", uid: "2" },
+                        ]
+                    },
+                    {
+                        uid: "isVerified",
+                        name: "Xác minh",
+                        options: [
+                            { name: "Đã xác minh", uid: "true" },
+                            { name: "Chưa xác minh", uid: "false" },
+                        ]
+                    },
+                    {
+                        uid: "isBanned",
+                        name: "Trạng thái",
+                        options: [
+                            { name: "Bị khóa", uid: "true" },
+                            { name: "Hoạt động", uid: "false" },
+                        ]
+                    }
+                ]}
             />
         </div>
     )

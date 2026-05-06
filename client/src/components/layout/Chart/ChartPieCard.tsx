@@ -41,7 +41,7 @@ const getChartConfig = (colors: [string, string, string]): ChartConfig => ({
   },
 } satisfies ChartConfig)
 
-export const ChartPieCard = ({ color, data }: { color: [string, string, string]; data: PieChartItem[] }) => {
+export const ChartPieCard = React.memo(({ color, data }: { color: [string, string, string]; data: PieChartItem[] }) => {
   const chartConfig = getChartConfig(color);
 
   const totalMovies = React.useMemo(() => {
@@ -76,7 +76,8 @@ export const ChartPieCard = ({ color, data }: { color: [string, string, string];
               innerRadius={100}
               strokeWidth={0}
               style={{
-                filter: `drop-shadow(0 0 4px ${color[0]})`,
+                filter:
+                  `drop-shadow(0 0 4px ${color[0]})`, 
               }}
               className="h-96 w-full"
             >
@@ -126,4 +127,6 @@ export const ChartPieCard = ({ color, data }: { color: [string, string, string];
       </CardContent>
     </Card>
   )
-}
+})
+
+ChartPieCard.displayName = "ChartPieCard";

@@ -195,8 +195,10 @@ export const AuthDialog = () => {
     };
 
     const onSubmitCheckResetPassword = async () => {
-        await checkResetPassword(formResetPass.email, formResetPass.resetToken);
-        setOpenDialog('reset-password');
+        const success = await checkResetPassword(formResetPass.email, formResetPass.resetToken);
+        if (success) {
+            setOpenDialog('reset-password');
+        }
     };
 
     const onSubmitResetPassword = async () => {
@@ -299,25 +301,24 @@ export const AuthDialog = () => {
         >
             {openDialog && (
                 <DialogContent 
-                    from="top" 
                     showCloseButton={false} 
-                    className="sm:max-w-106.25"
+                    className="sm:max-w-112.5 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-zinc-200 dark:border-white/10 rounded-2xl shadow-2xl p-0 overflow-hidden"
                     key={openDialog}
                 >
-                    <DialogClose asChild className="flex justify-center">
+                    <DialogClose asChild>
                         <Button 
                             type="button"
                             isIconOnly 
-                            aria-label="Close" 
+                            radius="full"
                             variant="light" 
                             size="sm" 
-                            className="absolute top-2 right-2"
+                            className="absolute top-4 right-4 z-50 text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/10"
                             onClick={() => {
                                 setOpenDialog(null);
                                 resetForms();
                             }}
                         >
-                            <XIcon size={18}/>
+                            <XIcon size={20}/>
                         </Button>
                     </DialogClose>
 

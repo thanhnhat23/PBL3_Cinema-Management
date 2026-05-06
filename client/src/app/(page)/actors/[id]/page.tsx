@@ -1,16 +1,14 @@
 'use client'
 
 import { useActorStore } from "@/stores/useActorStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { CardMovie } from "@/components/layout/cardMovie";
 import CardSkeleton from "@/components/skeletons/cardMovie";
-import { SparklesText } from "@/components/ui/texts/sparkles-text";
-import { UserRound } from "@/components/icons/user-round";
-import { Chip, Breadcrumbs, BreadcrumbItem } from "@heroui/react";
-import { CalendarDays, MapPin, VenusAndMars, CircleEllipsis, House, UserCheck } from 'lucide-react';
-import Image from "next/image";
+import { CalendarDays, MapPin, VenusAndMars, UserCheck, Award, Film } from 'lucide-react';
+import Image from "next/image"; 
 import DetailPageSkeleton from "@/components/skeletons/detailPage";
+import { BlurFade } from "@/components/ui/effects/blur-fade";
 
 export default function ActorDetailPage() {
     const { 
@@ -26,175 +24,203 @@ export default function ActorDetailPage() {
     const { id } = useParams();
     const actorId = Number(id);
 
+    const [imageError, setImageError] = useState(false);
+
     useEffect(() => {
         fetchActorById(actorId);
         fetchMovieWithActors(actorId);
         fetchCharacterWithActors(actorId);
     }, [fetchActorById, fetchMovieWithActors, fetchCharacterWithActors, actorId]);
 
-    const colorChip = ["success", "warning", "danger"];
-    const textColor = ["text-green-100", "text-yellow-100", "text-red-100"];
+    const profileSrc = imageError
+        ? "/h.png"
+        : selectedActor?.profile_path
+        ? `https://image.tmdb.org/t/p/original${selectedActor.profile_path}`
+        : "/h.png";
 
     if (isFetchingActorDetails || !selectedActor) {
         return <DetailPageSkeleton />;
     }
 
+    const backdropSrc = selectedActor?.profile_path ? `https://image.tmdb.org/t/p/original${selectedActor.profile_path}` : "https://i.pinimg.com/originals/f8/13/28/f8132830a83552794411ece15fa15390.gif";
+
     return (
-        <div className="min-h-screen relative flex flex-col items-center p-4 md:p-8">
-            <Image 
-                src="https://i.pinimg.com/originals/f8/13/28/f8132830a83552794411ece15fa15390.gif"
-                alt="Loading"
-                width={1000}
-                height={1000}
-                className="absolute inset-0 top-0 w-full h-48 md:h-105 object-cover object-center z-0 border-b border-gray-500/20"
-            />
-
-            {/* Info actor Overlay */}
-            <div className="flex gap-4 items-center w-full pt-24 md:px-8 md:pt-56 z-10 md:w-[72%] mx-auto cursor-default">
-                <Image
-                    src={selectedActor?.profile_path ? `https://image.tmdb.org/t/p/original${selectedActor.profile_path}` : "/h.png"}
-                    alt="Actor Profile"
-                    width={400}
-                    height={600}
-                    className="w-36 h-56 md:w-64 md:h-96 object-cover rounded-md border border-gray-500/20 shadow-md"
+        <div className="min-h-screen bg-background pb-20">
+            {/* Cinematic Immersive Header */}
+            <div className="relative w-full h-[70vh] md:h-[65vh] overflow-hidden">
+                <div className="absolute inset-0 z-10 bg-linear-to-t from-background via-background/60 to-transparent" />
+                <div className="absolute inset-0 z-10 bg-linear-to-r from-background via-transparent to-background dark:from-background/80 dark:via-transparent dark:to-background/80" />
+                <Image 
+                    src={backdropSrc}
+                    alt="Actor Background"
+                    fill
+                    priority
+                    unoptimized={!selectedActor?.profile_path}
+                    className="object-cover object-center scale-105 blur-sm opacity-40 grayscale"
                 />
+                
+                {/* Floating Content Overlay */}
+                <div className="absolute inset-0 z-20 flex flex-col justify-end px-4 md:px-0 md:w-[85%] mx-auto pb-12 md:pb-20 pt-32">
+                    <div className="flex flex-col md:flex-row items-center md:items-end gap-8">
+                        {/* High-End Portrait */}
+                        <BlurFade delay={0.1}>
+                            <div className="relative group mx-auto md:mx-0">
+                                <div className="absolute -inset-1 bg-linear-to-r from-fuchsia-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000" />
+                                <Image
+                                    src={profileSrc || "/h.png"}
+                                    alt={selectedActor.name}
+                                    width={280}
+                                    height={420}
+                                    onError={() => setImageError(true)}
+                                    className="relative object-cover rounded-2xl border border-white/10 shadow-2xl w-45 md:w-70 h-auto"
+                                />
+                            </div>
+                        </BlurFade>
 
-                <div className="flex flex-col gap-4 justify-end p-2 h-56 md:h-96 w-full">
-                    
-                    <div className="mt-auto">
-                        <div className="hidden md:flex items-center gap-2 text-sm md:text-base text-gray-500/80 mb-10">
-                            <Breadcrumbs size="lg">
-                                <BreadcrumbItem href="/" startContent={<House size={18}/>}>
-                                    Home
-                                </BreadcrumbItem>
-
-                                <BreadcrumbItem href="/actors" startContent={<UserRound size={18} />}>
-                                    Diễn viên
-                                </BreadcrumbItem>
-
-                                <BreadcrumbItem startContent={<UserCheck size={18} />}>
+                        <div className="flex-1 flex flex-col gap-6">
+                            <BlurFade delay={0.2}>
+                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
+                                    <div className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-white/10 backdrop-blur-md border border-zinc-200 dark:border-white/20 text-[10px] font-black text-zinc-500 dark:text-white/80 uppercase tracking-widest">
+                                        Professional Actor
+                                    </div>
+                                    <div className="px-3 py-1 rounded-full bg-fuchsia-500/20 backdrop-blur-md border border-fuchsia-500/30 text-[10px] font-black text-fuchsia-300 uppercase tracking-widest">
+                                        Cinema Star
+                                    </div>
+                                </div>
+                                <h1 className="text-3xl md:text-7xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase drop-shadow-2xl text-center md:text-left">
                                     {selectedActor?.name}
-                                </BreadcrumbItem>
-                            </Breadcrumbs>
-                        </div>
+                                </h1>
+                            </BlurFade>
 
-                        <div className="flex items-center justify-center gap-2 md:gap-4 font-bold mb-2 md:mb-4">
-                            <UserRound animateOnHover className="size-5 md:size-12" />
-
-                            <SparklesText className="text-lg md:text-6xl text-center">
-                                {selectedActor?.name}
-                            </SparklesText>
-                        </div>
-
-                        <hr />
-
-                        <div className="flex flex-col md:flex-row mt-2 gap-2 md:gap-16 justify-center md:items-center">
-                            <div className="flex gap-2">
-                                <CalendarDays className="size-4 md:size-5" />
-                                
-                                <p className="text-xs md:text-base">
-                                    <span className="font-semibold">Birthday:</span> {selectedActor?.birthday ? new Date(selectedActor?.birthday).toLocaleDateString("vi-VN") : "N/A"}
-                                </p>
-                            </div>
-
-                            <span className="hidden md:block w-px md:h-8 bg-black dark:bg-gray-500/20"></span>
-
-                            <div className="flex gap-2">
-                                <MapPin className="size-4 md:size-5" />
-
-                                <p className="text-xs md:text-base">
-                                    {selectedActor?.place_of_birth || "N/A"}
-                                </p>
-                            </div>
-
-                            <span className="hidden md:block w-px md:h-8 bg-black dark:bg-gray-500/20"></span>
-
-                            <div className="flex gap-2">
-                                <VenusAndMars className="size-4 md:size-5" />
-
-                                <p className="text-xs md:text-base">
-                                    <span className="font-semibold">Gender:</span> {selectedActor?.gender === 1 ? "Female" : selectedActor?.gender === 2 ? "Male" : "N/A"}
-                                </p>
-                            </div>
+                            <BlurFade delay={0.3}>
+                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6 text-zinc-600 dark:text-white/80 font-bold uppercase text-[10px] md:text-xs tracking-widest">
+                                    <div className="flex items-center gap-2">
+                                        <CalendarDays size={16} className="text-fuchsia-500" />
+                                        <span>Sinh nhật: {selectedActor?.birthday ? new Date(selectedActor.birthday).toLocaleDateString("vi-VN") : "N/A"}</span>
+                                    </div>
+                                    <div className="md:w-1.5 md:h-1.5 w-1 h-1 rounded-full bg-zinc-200 dark:bg-white/20" />
+                                    <div className="flex items-center gap-2">
+                                        <MapPin size={16} className="text-fuchsia-500" />
+                                        <span className="truncate max-w-37.5 md:max-w-none">{selectedActor?.place_of_birth || "N/A"}</span>
+                                    </div>
+                                    <div className="md:w-1.5 md:h-1.5 w-1 h-1 rounded-full bg-zinc-200 dark:bg-white/20" />
+                                    <div className="flex items-center gap-2">
+                                        <VenusAndMars size={16} className="text-fuchsia-500" />
+                                        <span>Giới tính: {selectedActor?.gender === 1 ? "Nữ" : selectedActor?.gender === 2 ? "Nam" : "Khác"}</span>
+                                    </div>
+                                </div>
+                            </BlurFade>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Character with this actor */}
-            <div className="w-full md:w-[72%] mt-12 cursor-default">
-                <div className="flex gap-2 w-full items-center justify-start mb-4">
-                    <span className="w-1 h-5 md:h-8 bg-black dark:bg-white"></span>
-                    <h1 className="text-xl md:text-3xl font-bold">Được biết đến với các vai diễn</h1>
-                </div>
-                
-                <div className="flex gap-2 md:gap-4 pt-2 items-center">
-                    {characterWithActors.length === 0 ? (
-                        <p className="text-sm md:text-base">Không có vai diễn nào được tìm thấy.</p>
-                    ) : (
-                        <div className="flex flex-wrap gap-2">
-                            {characterWithActors.map((character, index) => (
-                                <Chip
-                                    key={index}
-                                    color={colorChip[index % colorChip.length] as "success" | "warning" | "danger"}
-                                    variant="shadow"
-                                    radius="sm"
-                                    className={`text-base md:text-lg p-4 ${textColor[index % textColor.length]}`}
-                                >
-                                    {character?.char_name || "N/A"}
-                                </Chip>
-                            ))}
-
-                            <Chip
-                                isDisabled
-                                color="primary"
-                                variant="shadow"
-                                radius="sm"
-                                className="text-base md:text-lg p-4"
-                            >
-                                <CircleEllipsis />
-                            </Chip>
+            {/* Main Content Area */}
+            <div className="md:w-[85%] mx-auto px-4 md:px-0 md:-mt-10 mt-6 relative z-30">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+                    {/* Left Column: Biography & Known For */}
+                    <div className="lg:col-span-2 flex flex-col gap-8 md:gap-12">
+                        {/* Biography Card */}
+                        <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-1.5 h-6 md:h-8 bg-fuchsia-500 rounded-full" />
+                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">Tiểu sử</h2>
+                            </div>
+                            <p className="text-zinc-600 dark:text-zinc-400 text-base md:text-lg leading-relaxed font-medium whitespace-pre-wrap">
+                                {selectedActor?.biography || "Hiện chưa có tiểu sử cho diễn viên này. Chúng tôi sẽ cập nhật sớm nhất có thể."}
+                            </p>
                         </div>
-                    )}
-                </div>
-            </div>
 
-            {/* Movies with this actor */}
-            <div className="w-full md:w-[72%] mt-12">
-                <div className="flex gap-2 w-full items-center justify-start mb-4 cursor-default">
-                    <span className="w-1 h-5 md:h-8 bg-black dark:bg-white"></span>
-                    <h1 className="text-xl md:text-3xl font-bold">Phim đã tham gia</h1>
+                        {/* Known Roles Card */}
+                        <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="w-1.5 h-6 md:h-8 bg-purple-500 rounded-full" />
+                                <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight">Vai diễn nổi bật</h2>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                {characterWithActors.length === 0 ? (
+                                    <p className="text-zinc-500 italic">Thông tin vai diễn đang được cập nhật.</p>
+                                ) : (
+                                    characterWithActors.map((character, index) => (
+                                        <div key={index} className="px-4 py-2 rounded-full bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5 flex items-center gap-1 transition-all hover:border-fuchsia-500/50 hover:bg-fuchsia-500/5 group cursor-default">
+                                            <Award size={16} className="text-fuchsia-500 group-hover:scale-125 transition-transform" />
+                                            <span className="text-sm font-bold tracking-tight">{character?.char_name || "N/A"}</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Column: Fast Facts & Stats */}
+                    <div className="flex flex-col gap-8">
+                        <div className="bg-white dark:bg-zinc-900/50 backdrop-blur-2xl rounded-sm p-6 md:p-8 shadow-2xl border border-white/20 dark:border-white/5">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-1.5 h-6 md:h-8 bg-amber-500 rounded-full" />
+                                <h2 className="text-lg md:text-xl font-black uppercase tracking-tight">Thông tin nhanh</h2>
+                            </div>
+                            <div className="flex flex-col gap-6">
+                                <div className="flex justify-between items-center pb-4 border-b border-zinc-100 dark:border-white/5">
+                                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Số phim</span>
+                                    <div className="flex items-center gap-2">
+                                        <Film size={14} className="text-fuchsia-500" />
+                                        <span className="text-sm font-bold">{movieWithActors.length} tác phẩm</span>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Vai diễn</span>
+                                    <span className="text-sm font-bold">{characterWithActors.length} nhân vật</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Professional Tags */}
+                        <div className="bg-linear-to-br from-fuchsia-600/10 to-purple-600/10 backdrop-blur-2xl rounded-sm p-8 shadow-xl border border-fuchsia-500/20">
+                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-fuchsia-500 mb-4">Professional Status</h3>
+                            <div className="space-y-4">
+                                <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
+                                    <UserCheck size={18} className="text-fuchsia-500" />
+                                    <span className="text-[10px] font-black uppercase tracking-wider">Hợp tác chính thức</span>
+                                </div>
+                                <p className="text-[11px] text-zinc-500 font-medium italic leading-relaxed">
+                                    Diễn viên đã đóng góp {movieWithActors.length} tác phẩm xuất sắc trong hệ thống rạp của chúng tôi.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10">
-                    {movieWithActors.length === 0 ? (
-                        Array.from({ length: 3 }).map((_, index) => (
-                            <CardSkeleton key={index} />
-                        ))
-                    ) : (
-                        movieWithActors
-                            .filter((mv) => mv.Movie != null)
-                            .map((mv, index) => (
-                                <CardMovie 
-                                    key={index} 
-                                    movie={mv.Movie!} 
-                                    index={index}
-                                />
+
+                {/* Filmography Section */}
+                <div className="mt-16">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="w-1.5 h-6 md:h-8 bg-amber-500 rounded-full" />
+                            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Danh sách Phim</h2>
+                        </div>
+                        <div className="hidden md:flex gap-2">
+                             <div className="px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-[10px] font-black uppercase tracking-widest text-zinc-500">
+                                {movieWithActors.length} Movies
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
+                        {movieWithActors.length === 0 ? (
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <CardSkeleton key={index} />
                             ))
-                    )}
-                </div>
-            </div>
-
-            {/* Biography */}
-            <div className="w-full md:w-[72%] mt-12 cursor-default">
-                <div className="flex gap-2 w-full items-center justify-start mb-4">
-                    <span className="w-1 h-5 md:h-8 bg-black dark:bg-white"></span>
-                    <h1 className="text-xl md:text-3xl font-bold">Tiểu sử</h1>
-                </div>
-                
-                <div className="bg-gray-200/80 dark:bg-gray-500/30 rounded-md p-4 md:p-8">
-                    <div className="text-sm md:text-base whitespace-pre-wrap">
-                        {selectedActor?.biography || "Hiện chưa có tiểu sử cho diễn viên này. Chúng tôi sẽ cập nhật sớm nhất có thể."}
+                        ) : (
+                            movieWithActors
+                                .filter((mv) => mv.Movie != null)
+                                .map((mv, index) => (
+                                    <BlurFade key={index} delay={index * 0.05}>
+                                        <CardMovie 
+                                            movie={mv.Movie!} 
+                                            index={index}
+                                        />
+                                    </BlurFade>
+                                ))
+                        )}
                     </div>
                 </div>
             </div>

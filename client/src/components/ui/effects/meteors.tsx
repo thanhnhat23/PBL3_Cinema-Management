@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -23,25 +23,31 @@ export const Meteors = ({
   angle = 215,
   className,
 }: MeteorsProps) => {
-  const [meteorStyles, setMeteorStyles] = useState<Array<React.CSSProperties>>(
-    []
-  )
-  const [isDark, setIsDark] = useState(false)
+  const [isMounted, setIsMounted] = React.useState(false);
+  const [isDark, setIsDark] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    setIsMounted(true);
     const checkDarkMode = () => {
-      setIsDark(document.documentElement.classList.contains('dark'))
-    }
-    checkDarkMode()
-    const observer = new MutationObserver(checkDarkMode)
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
-    })
-    return () => observer.disconnect()
-  }, [])
+    });
+    return () => observer.disconnect();
+  }, []);
 
-  useEffect(() => {
+  const [meteorStyles, setMeteorStyles] = React.useState<Array<React.CSSProperties & Record<string, string>>>([]);
+
+  React.useEffect(() => {
+    if (!isMounted || typeof window === "undefined") {
+      setMeteorStyles([]);
+      return;
+    }
+
     const styles = [...new Array(number)].map(() => ({
       "--angle": -angle + "deg",
       top: "-5%",
@@ -50,9 +56,10 @@ export const Meteors = ({
       animationDuration:
         Math.floor(Math.random() * (maxDuration - minDuration) + minDuration) +
         "s",
-    }))
-    setMeteorStyles(styles)
-  }, [number, minDelay, maxDelay, minDuration, maxDuration, angle])
+    }));
+
+    setMeteorStyles(styles);
+  }, [isMounted, number, minDelay, maxDelay, minDuration, maxDuration, angle]);
 
   return (
     <>
@@ -73,7 +80,7 @@ export const Meteors = ({
           )}
         >
           {/* Meteor Tail */}
-          <div className="pointer-events-none absolute top-1/2 -z-10 h-px w-[50px] -translate-y-1/2 bg-gradient-to-r from-sky-400 dark:from-zinc-200 via-sky-300 dark:via-zinc-200 to-transparent" />
+          <div className="pointer-events-none absolute top-1/2 -z-10 h-px w-12.5 -translate-y-1/2 bg-linear-to-r from-sky-400 dark:from-zinc-200 via-sky-300 dark:via-zinc-200 to-transparent" />
         </span>
       ))}
     </>

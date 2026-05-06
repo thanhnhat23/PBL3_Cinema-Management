@@ -9,8 +9,9 @@ import LayoutUsers from "./LayoutAdmin/layoutUsers";
 import LayoutSyncData from "./LayoutAdmin/layoutSyncData";
 import LayoutStatistics from "./LayoutAdmin/layoutStatistics";
 import LayoutFood from "./LayoutAdmin/layoutFoods";
+import React from "react";
 
-export const LayoutAdmin = ({
+export const LayoutAdmin = React.memo(({
     openLayout,
     selectValue
 }: {
@@ -30,4 +31,6 @@ export const LayoutAdmin = ({
             {openLayout === "Thức ăn" && <LayoutFood />}
         </div>
     )
-}
+})
+
+LayoutAdmin.displayName = "LayoutAdmin";

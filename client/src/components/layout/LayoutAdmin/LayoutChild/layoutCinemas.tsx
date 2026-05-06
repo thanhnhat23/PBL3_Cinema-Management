@@ -14,7 +14,7 @@ import {
     DrawerFooter,
     useDisclosure,
 } from "@heroui/react";
-import { EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
+import { EllipsisVertical, Eye, MapPinHouse, PenLine, Trash } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -49,19 +49,37 @@ export default function LayoutCinemas() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedCinema, setSelectedCinema] = useState<Cinema | null>(null);
+    const [isAdding, setIsAdding] = useState(false);
     const drawerContainerRef = useRef<HTMLDivElement | null>(null);
     const [editForm, setEditForm] = useState({
         location_id: "",
         name: "",
         address: "",
         phone_number: "",
-        latitude: "",
-        longitude: "",
+        latitude: "10.0",
+        longitude: "106.0",
         description: "",
         image_overview: "",
     });
 
+    const handleOpenAdd = useCallback(() => {
+        setIsAdding(true);
+        setSelectedCinema(null);
+        setEditForm({
+            location_id: locations[0]?.location_id ? String(locations[0].location_id) : "",
+            name: "",
+            address: "",
+            phone_number: "",
+            latitude: "10.0",
+            longitude: "106.0",
+            description: "",
+            image_overview: "",
+        });
+        onEditOpen();
+    }, [locations, onEditOpen]);
+
     const handleOpenEdit = useCallback((cinema: Cinema) => {
+        setIsAdding(false);
         setSelectedCinema(cinema);
         setEditForm({
             location_id: String(cinema.location_id ?? ""),
@@ -77,9 +95,7 @@ export default function LayoutCinemas() {
     }, [onEditOpen]);
 
     const handleSaveCinema = async () => {
-        if (!selectedCinema) return;
-
-        await updateCinema(selectedCinema.cinema_id, {
+        const payload = {
             location_id: Number(editForm.location_id),
             name: editForm.name.trim(),
             address: editForm.address.trim(),
@@ -88,7 +104,14 @@ export default function LayoutCinemas() {
             longitude: Number(editForm.longitude),
             description: editForm.description.trim(),
             image_overview: editForm.image_overview.trim(),
-        });
+        };
+
+        if (isAdding) {
+            const { createCinema } = useCinemaStore.getState();
+            await createCinema(payload);
+        } else if (selectedCinema) {
+            await updateCinema(selectedCinema.cinema_id, payload);
+        }
 
         onEditOpenChange();
     };
@@ -149,7 +172,16 @@ export default function LayoutCinemas() {
                             >
                                 Sửa
                             </DropdownItem>
-                            <DropdownItem key="delete" className="text-danger" color="danger" startContent={<Trash size={16} />}>
+                             <DropdownItem 
+                                key="delete" 
+                                className="text-danger" 
+                                color="danger" 
+                                startContent={<Trash size={16} />}
+                                onPress={() => {
+                                    const { deleteCinema } = useCinemaStore.getState();
+                                    deleteCinema(cinema.cinema_id);
+                                }}
+                            >
                                 Xóa
                             </DropdownItem>
                         </DropdownMenu>
@@ -161,13 +193,33 @@ export default function LayoutCinemas() {
     }, [handleOpenEdit, onOpen]);
 
     return (
-        <>
+        <div className="flex flex-col gap-4">
+            <div className="relative overflow-hidden rounded-sm border border-zinc-100 dark:border-zinc-800 bg-sidebar p-8 shadow-sm">
+                <div className="absolute top-0 right-0 p-8 opacity-10 dark:opacity-20 pointer-events-none">
+                    <MapPinHouse size={120} />
+                </div>
+                <div className="relative z-10 flex flex-col gap-4">
+                    <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        Management System
+                    </div>
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
+                            Quản lý Hệ thống Rạp
+                        </h1>
+                        <p className="text-sm text-zinc-500 font-medium max-w-lg">
+                            Quản lý thông tin các cụm rạp, địa chỉ, hotline và cơ sở vật chất của toàn hệ thống rạp phim.
+                        </p>
+                    </div>
+                </div>
+            </div>
             <DataTableAdmin<Cinema>
                 columns={columns}
                 items={cinemas}
                 isLoading={isFetchingCinemas}
                 searchPlaceholder="Tìm theo tên rạp..."
                 addButtonLabel="Thêm rạp phim"
+                onAdd={handleOpenAdd}
                 totalLabel={(count) => `Tổng cộng ${count} rạp phim`}
                 emptyLabel="Không có rạp phim"
                 loadingLabel="Đang tải dữ liệu rạp phim..."
@@ -175,67 +227,83 @@ export default function LayoutCinemas() {
                 rowKey={(item) => item.cinema_id}
                 searchBy={(item) => item.name}
                 renderCell={renderCell}
+                filters={[
+                    {
+                        uid: "location_id",
+                        name: "Thành phố",
+                        options: locations.map(l => ({ name: l.city, uid: String(l.location_id) }))
+                    }
+                ]}
             />
 
-            <Drawer isOpen={isOpen} onOpenChange={onOpenChange} classNames={{ base: "bg-sidebar" }}>
+            <Drawer isOpen={isOpen} onOpenChange={onOpenChange} size="md" classNames={{ base: "bg-sidebar" }}>
                 <DrawerContent>
                     {(onClose) => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">
+                            <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
                                 {selectedCinema ? `Chi tiết: ${selectedCinema.name}` : "Chi tiết rạp phim"}
                             </DrawerHeader>
-
-                            <DrawerBody>
+ 
+                            <DrawerBody className="px-0">
                                 {selectedCinema ? (
-                                    <div className="flex flex-col gap-3 justify-center items-center">
-                                        <Image
-                                            src={selectedCinema.image_overview || "https://placehold.co/300x600?text=Cinema"}
-                                            alt={selectedCinema.name}
-                                            width={1000}
-                                            height={1000}
-                                            className="w-full h-96 rounded-sm border-1 border-zinc-800 object-cover"
-                                        />
+                                    <div className="flex flex-col gap-0">
+                                        <div className="relative w-full h-64 shadow-inner">
+                                            <Image
+                                                src={selectedCinema.image_overview || "https://placehold.co/1000x500?text=Cinema+View"}
+                                                alt={selectedCinema.name}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-t from-sidebar via-transparent to-transparent" />
+                                        </div>
 
-                                        <div className="flex flex-col gap-2 mt-2">
-                                            <p className="font-semibold text-3xl">{selectedCinema.name}</p>
-
-                                            <div className="flex gap-2 flex-wrap">
-                                                <Badge>
-                                                    {selectedCinema.cinema_id}
-                                                </Badge>
-
-                                                <Badge variant={"secondary"}>
-                                                    {selectedCinema.location?.city ?? "N/A"}
-                                                </Badge>
-
-                                                <Badge variant={"outline"}>
-                                                    {selectedCinema.phone_number || "N/A"}
-                                                </Badge>
+                                        <div className="px-6 -mt-8 relative z-10 flex flex-col gap-6 pb-8">
+                                            <div className="flex flex-col gap-2">
+                                                <h2 className="text-3xl font-bold tracking-tight">{selectedCinema.name}</h2>
+                                                <div className="flex gap-2 items-center">
+                                                    <Badge className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border-none px-2 py-0.5 text-[10px]">ID: {selectedCinema.cinema_id}</Badge>
+                                                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-none px-2 py-0.5 text-[10px] uppercase font-bold">
+                                                        {selectedCinema.location?.city ?? "N/A"}
+                                                    </Badge>
+                                                </div>
                                             </div>
 
-                                            <p>
-                                                {selectedCinema.address}
-                                            </p>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                <div className="flex items-start gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+                                                    <div className="flex flex-col gap-1 w-full">
+                                                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Địa chỉ</span>
+                                                        <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 leading-snug">{selectedCinema.address}</span>
+                                                    </div>
+                                                </div>
 
-                                            {selectedCinema.description ? (
-                                                <p>
-                                                    <span className="font-semibold">Mô tả:</span>
-                                                    <br />
-                                                    {selectedCinema.description}
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="flex items-start gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+                                                        <div className="flex flex-col gap-1">
+                                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Hotline</span>
+                                                            <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{selectedCinema.phone_number || "N/A"}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-start gap-4 p-4 rounded-xl border-1 border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+                                                        <div className="flex flex-col gap-1">
+                                                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Coordinates</span>
+                                                            <span className="text-[11px] font-medium text-zinc-500">{selectedCinema.latitude}, {selectedCinema.longitude}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col gap-3">
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Giới thiệu rạp</span>
+                                                <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 italic">
+                                                    {selectedCinema.description || "Hệ thống rạp chiếu phim hiện đại với công nghệ âm thanh vòm Dolby Atmos và màn hình sắc nét."}
                                                 </p>
-                                            ) : null}
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <p>Không có dữ liệu rạp phim.</p>
+                                    <div className="p-12 text-center text-zinc-500 font-medium tracking-tight">Không có dữ liệu rạp phim.</div>
                                 )}
                             </DrawerBody>
-
-                            <DrawerFooter>
-                                <button onClick={onClose} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
-                                    Đóng
-                                </button>
-                            </DrawerFooter>
                         </>
                     )}
                 </DrawerContent>
@@ -246,7 +314,7 @@ export default function LayoutCinemas() {
                     {() => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1">
-                                Sửa rạp phim
+                                {isAdding ? "Thêm rạp phim mới" : "Sửa rạp phim"}
                             </DrawerHeader>
 
                             <DrawerBody>
@@ -389,6 +457,6 @@ export default function LayoutCinemas() {
                     )}
                 </DrawerContent>
             </Drawer>
-        </>
+        </div>
     )
 }

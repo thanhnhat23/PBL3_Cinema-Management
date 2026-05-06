@@ -29,7 +29,7 @@ export const AuroraText = memo(
       <span className={`relative inline-block ${className}`}>
         <span className="sr-only">{children}</span>
         <span
-          className="animate-aurora relative bg-size-[200%_auto] bg-clip-text text-transparent text-6xl font-bold"
+          className="animate-aurora relative bg-size-[200%_auto] bg-clip-text text-transparent text-4xl md:text-6xl font-bold"
           style={gradientStyle}
           aria-hidden="true"
         >

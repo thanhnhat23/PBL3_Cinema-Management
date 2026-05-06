@@ -41,7 +41,8 @@ const getChartConfig = (color: string): ChartConfig => ({
   },
 })
 
-export const ChartLineCard = ({ color }: { color: string }) => {
+import React from "react"
+export const ChartLineCard = React.memo(({ color }: { color: string }) => {
   const chartConfig = getChartConfig(color);
 
   return (
@@ -109,4 +110,6 @@ export const ChartLineCard = ({ color }: { color: string }) => {
       </CardContent>
     </Card>
   )
-}
+})
+
+ChartLineCard.displayName = "ChartLineCard";
