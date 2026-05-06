@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export interface Booking {
     booking_id: number;
@@ -43,13 +44,22 @@ export const useBookingStore = create<{
 
     isFetchingBookings: boolean;
     isFetchingBookingDetails: boolean;
+    isCreatingBooking: boolean;
 
     fetchAllBookings: () => Promise<void>;
     fetchBookingById: (bookingId: number) => Promise<void>;
+    createBooking: (payload: { showtime_id: number; coupon_id?: number | null; snacks: { snack_id: number; quantity: number }[] }) => Promise<{
+        booking_id: number;
+        totalAmount: number;
+        discountAmount?: number | null;
+        finalAmount: number;
+        status: string;
+    } | null>;
     clearSelectedBooking: () => void;
 }>((set) => ({
     bookings: [],
     selectedBooking: null,
+    isCreatingBooking: false,
     isFetchingBookings: false,
     isFetchingBookingDetails: false,
 
@@ -114,6 +124,44 @@ export const useBookingStore = create<{
             console.error(`Error fetching booking with ID ${bookingId}:`, error);
         } finally {
             set({ isFetchingBookingDetails: false });
+        }
+    },
+
+    createBooking: async (payload: { showtime_id: number; coupon_id?: number | null; snacks: { snack_id: number; quantity: number }[] }) => {
+        try {
+            set({ isCreatingBooking: true });
+
+            const authUser = useAuthStore.getState().authUser;
+            const userId = authUser?.id ?? JSON.parse(localStorage.getItem('authUser') || 'null')?.id ?? '';
+
+            const body = {
+                user_id: userId,
+                showtime_id: payload.showtime_id,
+                coupon_id: payload.coupon_id ?? null,
+                totalAmount: 0,
+                discountAmount: 0,
+                finalAmount: 0,
+                snacks: payload.snacks,
+            };
+
+            const response = await _axios.post('/v1/booking/create', body);
+
+            if (response.data) {
+                return response.data as {
+                    booking_id: number;
+                    totalAmount: number;
+                    discountAmount?: number | null;
+                    finalAmount: number;
+                    status: string;
+                };
+            }
+
+            return null;
+        } catch (error) {
+            console.error('Error creating booking:', error);
+            return null;
+        } finally {
+            set({ isCreatingBooking: false });
         }
     },
 

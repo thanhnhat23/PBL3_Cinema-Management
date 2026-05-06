@@ -161,9 +161,6 @@ function SlidingNumber({
   );
 
   const initialNumeric = Math.abs(Number(number));
-  const prevNumberRef = React.useRef<number>(
-    initiallyStable ? initialNumeric : 0,
-  );
 
   const hasAnimated = fromNumber !== undefined;
 
@@ -252,7 +249,21 @@ function SlidingNumber({
     ? newIntStrRaw.padStart(finalIntLength, '0')
     : newIntStrRaw;
 
-  const prevFormatted = formatNumber(prevNumberRef.current);
+  const [displayState, setDisplayState] = React.useState({
+    current: effectiveNumber,
+    prev: initiallyStable ? initialNumeric : 0
+  });
+
+  if (effectiveNumber !== displayState.current) {
+    setDisplayState({
+      current: effectiveNumber,
+      prev: displayState.current
+    });
+  }
+
+  const prevNumber = displayState.prev;
+
+  const prevFormatted = formatNumber(prevNumber);
   const [prevIntStrRaw = '', prevDecStrRaw = ''] = prevFormatted.split('.');
   const prevIntStr = padStart
     ? prevIntStrRaw.padStart(finalIntLength, '0')
@@ -270,12 +281,6 @@ function SlidingNumber({
       ? prevDecStrRaw.slice(0, newDecStrRaw.length)
       : prevDecStrRaw.padEnd(newDecStrRaw.length, '0');
   }, [prevDecStrRaw, newDecStrRaw]);
-
-  React.useEffect(() => {
-    if (isInView || initiallyStable) {
-      prevNumberRef.current = effectiveNumber;
-    }
-  }, [effectiveNumber, isInView, initiallyStable]);
 
   const intPlaces = React.useMemo(
     () =>

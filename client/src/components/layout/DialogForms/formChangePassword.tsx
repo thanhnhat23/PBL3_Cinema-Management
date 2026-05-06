@@ -3,12 +3,9 @@ import {
     DialogTitle, 
     DialogFooter,
 } from "@/components/ui/dialog"
-import Image from "next/image"
 import { Button, Input } from "@heroui/react"
-import { RiLockPasswordFill } from "react-icons/ri";
-import { MdOutlinePassword } from "react-icons/md"
-import { EyeIcon } from "@/components/icons/eye"
-import { EyeOffIcon } from "@/components/icons/eye-off"
+import { Lock, ShieldCheck, KeyRound, Eye, EyeOff } from "lucide-react"
+import { cn } from "@/lib/utils";
 
 interface FormChangePasswordProps {
     formChangePassword: {
@@ -44,137 +41,126 @@ export const FormChangePassword = ({
     isChangePasswordFilled
 }: FormChangePasswordProps) => {
     return (
-        <>
-            <DialogHeader>
-                <div className="flex flex-col items-center justify-center w-full">
-                    <DialogTitle className="text-center text-2xl font-bold mb-2">
-                        Đổi mật khẩu
-                    </DialogTitle>
+        <div className="animate-in fade-in zoom-in-95 duration-300 p-4 md:p-0">
+            <DialogHeader className="mb-8">
+                <div className="flex flex-col items-center justify-center w-full gap-4">
+                    <div className="relative group">
+                        <div className="absolute -inset-2 bg-linear-to-r from-red-500/20 to-orange-600/20 rounded-2xl blur-xl" />
+                        <div className="relative bg-white dark:bg-zinc-950 p-3 rounded-2xl border border-zinc-200 dark:border-white/10 shadow-lg">
+                            <KeyRound size={32} className="text-orange-500" />
+                        </div>
+                    </div>
 
-                    <div className="relative inline-flex items-center justify-center">
-                        <span className="pointer-events-none absolute h-26 w-26 rounded-full bg-purple-500/55 blur-2xl animate-pulse" />
-                        <span className="pointer-events-none absolute h-32 w-32 rounded-full bg-fuchsia-400/50 blur-3xl" />
-                        <Image 
-                            src="/logo.png" 
-                            alt="Profile image" 
-                            className="rounded-md h-36 object-cover relative z-10"
-                            width={150}
-                            height={150}
-                        />
+                    <div className="text-center space-y-1">
+                        <DialogTitle className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white uppercase">
+                            Đổi mật khẩu
+                        </DialogTitle>
+                        <p className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase opacity-80">
+                            Bảo mật tài khoản của bạn
+                        </p>
                     </div>
                 </div>
             </DialogHeader>
 
-            <div className="grid gap-4">
-                {/* Current Password field input */}
-                <div className="grid gap-3">
-                    <Input
-                        key="change-current-password"
-                        isRequired
-                        label="Mật khẩu hiện tại"
-                        labelPlacement="outside"
-                        placeholder="Nhập Mật Khẩu Hiện Tại"
-                        type="text"
-                        variant="faded"
-                        name="change-current-password"
-                        data-lpignore="true"
-                        data-form-type="change-password"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute('readonly')}
-                        startContent={<RiLockPasswordFill size={20} className="text-gray-500" />}
-                        value={formChangePassword.currentPassword}
-                        onChange={(e) => setFormChangePassword({...formChangePassword, currentPassword: e.target.value})}
-                    />
-                </div>
+            <div className="space-y-5 flex flex-col gap-2">
+                <Input
+                    key="change-current-password"
+                    isRequired
+                    label="Mật khẩu hiện tại"
+                    labelPlacement="outside"
+                    placeholder="Nhập mật khẩu đang sử dụng"
+                    type="password"
+                    variant="bordered"
+                    classNames={{
+                        label: "text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest",
+                        inputWrapper: "h-11 border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 hover:border-orange-500/50 focus-within:!border-orange-500 transition-all rounded-sm",
+                        input: "text-sm font-medium",
+                    }}
+                    startContent={<Lock size={16} className="text-zinc-400" />}
+                    value={formChangePassword.currentPassword}
+                    autoComplete="one-time-code"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onChange={(e) => setFormChangePassword({...formChangePassword, currentPassword: e.target.value})}
+                />
 
-                {/* New Password field input */}
-                <div className="grid gap-3">
-                    <Input
-                        key="change-new-password"
-                        isRequired
-                        label="Mật khẩu mới"
-                        labelPlacement="outside"
-                        placeholder="Nhập Mật Khẩu Mới"
-                        errorMessage="Vui lòng nhập mật khẩu chứa ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số"
-                        type={isVisiblePassword ? "text" : "password"}
-                        variant="faded"
-                        name="change-new-password"
-                        data-lpignore="true"
-                        data-form-type="change-password"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute('readonly')}
-                        startContent={<RiLockPasswordFill size={20} className="text-gray-500" />}
-                        endContent={
-                            <button
-                                type="button"
-                                className="flex items-center justify-center"
-                                onClick={() => setIsVisiblePassword(!isVisiblePassword)}
-                            >
-                                {isVisiblePassword ? (
-                                    <EyeIcon size={18}/>
-                                ) : (
-                                    <EyeOffIcon size={18}/>
-                                )}
-                            </button>
-                        }
-                        value={formChangePassword.newPassword}
-                        onChange={(e) => setFormChangePassword({...formChangePassword, newPassword: e.target.value})}
-                    />
-                </div>
+                <Input
+                    key="change-new-password"
+                    isRequired
+                    label="Mật khẩu mới"
+                    labelPlacement="outside"
+                    placeholder="Nhập mật khẩu mới"
+                    type={isVisiblePassword ? "text" : "password"}
+                    variant="bordered"
+                    classNames={{
+                        label: "text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest",
+                        inputWrapper: "h-11 border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 hover:border-orange-500/50 focus-within:!border-orange-500 transition-all rounded-sm",
+                        input: "text-sm font-medium",
+                    }}
+                    startContent={<ShieldCheck size={16} className="text-zinc-400" />}
+                    endContent={
+                        <button
+                            type="button"
+                            className="p-1 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-full"
+                            onClick={() => setIsVisiblePassword(!isVisiblePassword)}
+                        >
+                            {isVisiblePassword ? <Eye size={14} className="text-zinc-400" /> : <EyeOff size={14} className="text-zinc-400" />}
+                        </button>
+                    }
+                    value={formChangePassword.newPassword}
+                    autoComplete="new-password"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onChange={(e) => setFormChangePassword({...formChangePassword, newPassword: e.target.value})}
+                />
 
-                {/* Confirm Password field input */}
-                <div className="grid gap-3">
-                    <Input
-                        key="change-confirm-new-password"
-                        isRequired
-                        label="Xác nhận mật khẩu"
-                        labelPlacement="outside"
-                        placeholder="Nhập Lại Mật Khẩu"
-                        errorMessage="Vui lòng nhập mật khẩu xác nhận khớp với mật khẩu đã nhập"
-                        type={isVisibleConfirmPassword ? "text" : "password"}
-                        variant="faded"
-                        name="change-confirm-new-password"
-                        data-lpignore="true"
-                        data-form-type="change-password"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute('readonly')}
-                        startContent={<MdOutlinePassword size={20} className="text-gray-500" />}
-                        endContent={
-                            <button
-                                type="button"
-                                className="flex items-center justify-center"
-                                onClick={() => setIsVisibleConfirmPassword(!isVisibleConfirmPassword)}
-                            >
-                                {isVisibleConfirmPassword ? (
-                                    <EyeIcon size={18}/>
-                                ) : (
-                                    <EyeOffIcon size={18}/>
-                                )}
-                            </button>
-                        }
-                        value={formChangePassword.confirmNewPassword}
-                        onChange={(e) => setFormChangePassword({...formChangePassword, confirmNewPassword: e.target.value})}
-                    />
-                </div>
-                <DialogFooter>
-                    <div className="flex flex-col gap-4 w-full">
-                        <div className="flex flex-col justify-center items-start mt-4">
-                            <Button 
-                                type="button"
-                                onClick={onSubmitChangePassword}
-                                radius="sm" 
-                                color="primary" 
-                                variant="shadow" 
-                                isLoading={isChangingPassword}
-                                className="mt-4 w-full"
-                                isDisabled={!isChangePasswordFilled}
-                            >
-                                Thay đổi mật khẩu
-                            </Button>
-                        </div>
-                    </div>
-                </DialogFooter>
+                <Input
+                    key="change-confirm-new-password"
+                    isRequired
+                    label="Xác nhận mật khẩu"
+                    labelPlacement="outside"
+                    placeholder="Nhập lại mật khẩu mới"
+                    type={isVisibleConfirmPassword ? "text" : "password"}
+                    variant="bordered"
+                    classNames={{
+                        label: "text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest",
+                        inputWrapper: "h-11 border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 hover:border-orange-500/50 focus-within:!border-orange-500 transition-all rounded-sm",
+                        input: "text-sm font-medium",
+                    }}
+                    startContent={<ShieldCheck size={16} className="text-zinc-400" />}
+                    endContent={
+                        <button
+                            type="button"
+                            className="p-1 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-full"
+                            onClick={() => setIsVisibleConfirmPassword(!isVisibleConfirmPassword)}
+                        >
+                            {isVisibleConfirmPassword ? <Eye size={14} className="text-zinc-400" /> : <EyeOff size={14} className="text-zinc-400" />}
+                        </button>
+                    }
+                    value={formChangePassword.confirmNewPassword}
+                    autoComplete="new-password"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onChange={(e) => setFormChangePassword({...formChangePassword, confirmNewPassword: e.target.value})}
+                />
             </div>
-        </>
+
+            <DialogFooter className="mt-10">
+                <Button 
+                    type="button"
+                    onClick={onSubmitChangePassword}
+                    isLoading={isChangingPassword}
+                    isDisabled={!isChangePasswordFilled}
+                    className={cn(
+                        "w-full h-12 rounded-sm font-black text-sm uppercase tracking-widest transition-all duration-300",
+                        isChangePasswordFilled 
+                            ? "bg-linear-to-r from-red-500 to-orange-600 text-white shadow-[0_4px_15px_rgba(239,68,68,0.3)] hover:shadow-[0_8px_25px_rgba(239,68,68,0.4)]"
+                            : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                    )}
+                >
+                    Xác nhận thay đổi
+                </Button>
+            </DialogFooter>
+        </div>
     )
 }

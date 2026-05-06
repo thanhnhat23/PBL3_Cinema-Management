@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CinemaAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDatabase : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,9 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     gender = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    birthday = table.Column<DateOnly>(type: "date", nullable: true)
+                    birthday = table.Column<DateOnly>(type: "date", nullable: true),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -72,7 +74,9 @@ namespace CinemaAPI.Migrations
                     endDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     isHoliday = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     applies_to = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -102,7 +106,9 @@ namespace CinemaAPI.Migrations
                     location_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     city = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -123,8 +129,8 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     overview = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    release_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    end_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    release_date = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    end_date = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     backdrop_path = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     poster_path = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
@@ -135,7 +141,9 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     runtime = table.Column<int>(type: "int", nullable: false),
                     status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -159,6 +167,26 @@ namespace CinemaAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "ShowTimeSlots",
+                columns: table => new
+                {
+                    slot_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    dayOfWeek = table.Column<int>(type: "int", nullable: false),
+                    startTime = table.Column<TimeSpan>(type: "time(6)", nullable: false),
+                    endTime = table.Column<TimeSpan>(type: "time(6)", nullable: false),
+                    reusable = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShowTimeSlots", x => x.slot_id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Snacks",
                 columns: table => new
                 {
@@ -170,7 +198,9 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     imageUrl = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -190,6 +220,8 @@ namespace CinemaAPI.Migrations
                     passwordHash = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     birthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    avatar_path = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     isBanned = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     role = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -226,7 +258,9 @@ namespace CinemaAPI.Migrations
                     description = table.Column<string>(type: "varchar(5000)", maxLength: 5000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     image_overview = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -297,14 +331,21 @@ namespace CinemaAPI.Migrations
                 name: "ComboDetails",
                 columns: table => new
                 {
-                    combo_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    combo_id = table.Column<int>(type: "int", nullable: false),
                     snack_id = table.Column<int>(type: "int", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: false)
+                    quantity = table.Column<int>(type: "int", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ComboDetails", x => x.combo_id);
+                    table.PrimaryKey("PK_ComboDetails", x => new { x.combo_id, x.snack_id });
+                    table.ForeignKey(
+                        name: "FK_ComboDetails_Snacks_combo_id",
+                        column: x => x.combo_id,
+                        principalTable: "Snacks",
+                        principalColumn: "snack_id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ComboDetails_Snacks_snack_id",
                         column: x => x.snack_id,
@@ -381,7 +422,9 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     row = table.Column<int>(type: "int", nullable: false),
-                    column = table.Column<int>(type: "int", nullable: false)
+                    column = table.Column<int>(type: "int", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -434,8 +477,12 @@ namespace CinemaAPI.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     room_id = table.Column<int>(type: "int", nullable: false),
                     movie_id = table.Column<int>(type: "int", nullable: false),
+                    slot_id = table.Column<int>(type: "int", nullable: true),
+                    pricing_model = table.Column<int>(type: "int", nullable: false),
                     startTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    endTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    endTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    deleted_by = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -452,6 +499,12 @@ namespace CinemaAPI.Migrations
                         principalTable: "Rooms",
                         principalColumn: "room_id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShowTimes_ShowTimeSlots_slot_id",
+                        column: x => x.slot_id,
+                        principalTable: "ShowTimeSlots",
+                        principalColumn: "slot_id",
+                        onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -554,19 +607,31 @@ namespace CinemaAPI.Migrations
                     payment_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     booking_id = table.Column<int>(type: "int", nullable: false),
-                    amount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     method = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    provider = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                    vnp_BankCode = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    transaction_code = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
+                    vnp_TransactionNo = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    paidAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    refund_code = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
+                    vnp_IpAddr = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    refundAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    vnp_TxnRef = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    vnp_ResponseCode = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    vnp_OrderInfo = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    vnp_SecureHash = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    vnp_CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    vnp_ExpireDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    paid_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    refund_code = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    refund_at = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -619,11 +684,8 @@ namespace CinemaAPI.Migrations
                     stseat_id = table.Column<int>(type: "int", nullable: false),
                     booking_id = table.Column<int>(type: "int", nullable: true),
                     status = table.Column<int>(type: "int", nullable: false),
-                    hold_token = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    hold_expires_at = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    held_by_user = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    price_override = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -768,24 +830,20 @@ namespace CinemaAPI.Migrations
                 column: "booking_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_paidAt",
-                table: "Payments",
-                column: "paidAt");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Payments_status",
                 table: "Payments",
                 column: "status");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_status_paidAt",
+                name: "IX_Payments_vnp_TransactionNo",
                 table: "Payments",
-                columns: new[] { "status", "paidAt" });
+                column: "vnp_TransactionNo",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_transaction_code",
+                name: "IX_Payments_vnp_TxnRef",
                 table: "Payments",
-                column: "transaction_code",
+                column: "vnp_TxnRef",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -836,6 +894,11 @@ namespace CinemaAPI.Migrations
                 columns: new[] { "room_id", "startTime" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShowTimes_slot_id",
+                table: "ShowTimes",
+                column: "slot_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShowTimes_startTime",
                 table: "ShowTimes",
                 column: "startTime");
@@ -844,11 +907,6 @@ namespace CinemaAPI.Migrations
                 name: "IX_ShowTimeSeats_booking_id",
                 table: "ShowTimeSeats",
                 column: "booking_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShowTimeSeats_hold_token",
-                table: "ShowTimeSeats",
-                column: "hold_token");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShowTimeSeats_seat_id",
@@ -865,6 +923,11 @@ namespace CinemaAPI.Migrations
                 name: "IX_ShowTimeSeats_showtime_id_status",
                 table: "ShowTimeSeats",
                 columns: new[] { "showtime_id", "status" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowTimeSlots_dayOfWeek",
+                table: "ShowTimeSlots",
+                column: "dayOfWeek");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_passwordResetToken",
@@ -955,6 +1018,9 @@ namespace CinemaAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "ShowTimeSlots");
 
             migrationBuilder.DropTable(
                 name: "Cinemas");

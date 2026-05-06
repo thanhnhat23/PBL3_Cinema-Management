@@ -16,7 +16,7 @@ import {
     useDisclosure,
 } from "@heroui/react";
 
-import { CalendarIcon, EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
+import { CalendarIcon, Clapperboard, EllipsisVertical, Eye, PenLine, Trash } from "lucide-react";
 import { StarIcon } from "@/components/icons/star";
 import { useMovieStore, type Movie } from "@/stores/useMovieStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
@@ -71,6 +71,7 @@ export default function LayoutMovie() {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+    const [isAdding, setIsAdding] = useState(false);
     const popoverContainerRef = useRef<HTMLDivElement | null>(null);
     const [editForm, setEditForm] = useState({
         title: "",
@@ -80,6 +81,8 @@ export default function LayoutMovie() {
         status: "0",
         runtime: "",
         adult: "false",
+        poster_path: "",
+        backdrop_path: "",
     });
 
     const toDateInputValue = (value?: Date | string | null) => {
@@ -113,19 +116,37 @@ export default function LayoutMovie() {
             status: String(movie.status ?? 0),
             runtime: movie.runtime ? String(movie.runtime) : "",
             adult: String(Boolean(movie.adult)),
+            poster_path: movie.poster_path ?? "",
+            backdrop_path: movie.backdrop_path ?? "",
         });
     }, []);
 
+    const handleOpenAdd = useCallback(() => {
+        setIsAdding(true);
+        setSelectedMovie(null);
+        setEditForm({
+            title: "",
+            overview: "",
+            release_date: "",
+            end_date: "",
+            status: "0",
+            runtime: "",
+            adult: "false",
+            poster_path: "",
+            backdrop_path: "",
+        });
+        onEditOpen();
+    }, [onEditOpen]);
+
     const handleOpenEdit = useCallback((movie: Movie) => {
+        setIsAdding(false);
         setSelectedMovie(movie);
         syncEditForm(movie);
         onEditOpen();
     }, [onEditOpen, syncEditForm]);
 
     const handleSave = async () => {
-        if (!selectedMovie) return;
-
-        const updatedMovie = await updateMovie(selectedMovie.movie_id, {
+        const payload = {
             title: editForm.title.trim(),
             overview: editForm.overview.trim(),
             release_date: editForm.release_date ? toApiDate(editForm.release_date) : undefined,
@@ -133,11 +154,20 @@ export default function LayoutMovie() {
             status: Number(editForm.status) as Movie["status"],
             runtime: editForm.runtime ? Number(editForm.runtime) : undefined,
             adult: editForm.adult === "true",
-        });
+            poster_path: editForm.poster_path.trim(),
+            backdrop_path: editForm.backdrop_path.trim(),
+        };
 
-        if (updatedMovie) {
-            setSelectedMovie(updatedMovie);
+        if (isAdding) {
+            const { createMovie } = useMovieStore.getState();
+            await createMovie(payload);
             onEditOpenChange();
+        } else if (selectedMovie) {
+            const updatedMovie = await updateMovie(selectedMovie.movie_id, payload);
+            if (updatedMovie) {
+                setSelectedMovie(updatedMovie);
+                onEditOpenChange();
+            }
         }
     };
 
@@ -206,7 +236,16 @@ export default function LayoutMovie() {
                                 Sửa
                             </DropdownItem>
 
-                            <DropdownItem key="delete" startContent={<Trash size={18} />}>
+                            <DropdownItem 
+                                key="delete" 
+                                startContent={<Trash size={18} />}
+                                className="text-danger"
+                                color="danger"
+                                onPress={() => {
+                                    const { deleteMovie } = useMovieStore.getState();
+                                    deleteMovie(movie.movie_id);
+                                }}
+                            >
                                 Xóa
                             </DropdownItem>
                         </DropdownMenu>
@@ -218,13 +257,33 @@ export default function LayoutMovie() {
     }, [getStatusLabel, handleOpenEdit, onOpen]);
 
     return (
-        <>
+        <div className="flex flex-col gap-4">
+            <div className="relative overflow-hidden rounded-sm border border-zinc-100 dark:border-zinc-800 bg-sidebar p-8 shadow-sm">
+                <div className="absolute top-0 right-0 p-8 opacity-10 dark:opacity-20 pointer-events-none">
+                    <Clapperboard size={120} />
+                </div>
+                <div className="relative z-10 flex flex-col gap-4">
+                    <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        Management System
+                    </div>
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
+                            Quản lý Phim
+                        </h1>
+                        <p className="text-sm text-zinc-500 font-medium max-w-lg">
+                            Duyệt danh sách phim, cập nhật trạng thái chiếu, và quản lý thông tin chi tiết của từng tác phẩm trong hệ thống.
+                        </p>
+                    </div>
+                </div>
+            </div>
             <DataTableAdmin<Movie>
                 columns={movieColumns}
                 items={movies}
                 isLoading={isFetchingMovies}
                 searchPlaceholder="Tìm theo tên phim..."
                 addButtonLabel="Thêm phim"
+                onAdd={handleOpenAdd}
                 totalLabel={(count) => `Tổng cộng ${count} phim`}
                 emptyLabel="Không có phim"
                 loadingLabel="Đang tải dữ liệu phim..."
@@ -232,79 +291,101 @@ export default function LayoutMovie() {
                 rowKey={(item) => item.movie_id}
                 searchBy={(item) => item.title}
                 renderCell={renderCell}
+                filters={[
+                    {
+                        uid: "status",
+                        name: "Trạng thái",
+                        options: [
+                            { name: "Released", uid: "0" },
+                            { name: "Upcoming", uid: "1" },
+                            { name: "Ended", uid: "2" },
+                        ]
+                    }
+                ]}
             />
 
-            <Drawer isOpen={isOpen} onOpenChange={onOpenChange} classNames={{ base: "bg-sidebar" }}>
+            <Drawer isOpen={isOpen} onOpenChange={onOpenChange} size="md" classNames={{ base: "bg-sidebar" }}>
                 <DrawerContent>
                     {() => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">
+                            <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
                                 {selectedMovie ? `Chi tiết: ${selectedMovie.title}` : "Chi tiết phim"}
                             </DrawerHeader>
                             
-                            <DrawerBody>
+                            <DrawerBody className="px-0">
                                 {selectedMovie ? (
-                                    <div className="flex flex-col gap-3 justify-center items-center">
-                                        <Image 
-                                            src={`https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`}
-                                            alt={selectedMovie.title} 
-                                            width={300} 
-                                            height={600}
-                                            className="w-56 h-96 rounded-sm shadow-sm border-1 border-zinc-800" 
-                                        />
+                                    <div className="flex flex-col gap-0">
+                                        <div className="relative w-full h-64">
+                                            <Image 
+                                                src={`https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path}`}
+                                                alt={selectedMovie.title} 
+                                                fill
+                                                className="object-cover opacity-50 grayscale-[0.5]" 
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-t from-sidebar to-transparent" />
+                                            <div className="absolute bottom-0 left-0 p-6 flex items-end gap-6 w-full">
+                                                <div className="relative w-32 h-48 shrink-0 shadow-2xl rounded-lg overflow-hidden border-2 border-white/10">
+                                                    <Image 
+                                                        src={getPosterSrc(selectedMovie.poster_path)}
+                                                        alt={selectedMovie.title} 
+                                                        fill
+                                                        className="object-cover" 
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-2 pb-2">
+                                                    <h2 className="text-3xl font-bold text-white drop-shadow-md">{selectedMovie.title}</h2>
+                                                    <div className="flex gap-2 flex-wrap">
+                                                        <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
+                                                            {getStatusLabel(selectedMovie.status)}
+                                                        </Badge>
+                                                        <Badge className="bg-yellow-500/20 text-yellow-500 border-yellow-500/30 flex gap-1 items-center">
+                                                            {Number(selectedMovie.vote_average ?? 0).toFixed(1)}
+                                                            <StarIcon className="w-3 h-3" />
+                                                        </Badge>
+                                                        <Badge variant="outline" className="text-white/60 border-white/10">
+                                                            {selectedMovie.runtime} min
+                                                        </Badge>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        <div className="flex flex-col gap-2 mt-2">
-                                            <p className="font-semibold text-3xl">{selectedMovie.title}</p>
-
-                                            <div className="flex gap-2">
-                                                <Badge>
-                                                    {selectedMovie.movie_id}
-                                                </Badge>
-
-                                                <Badge variant={"secondary"}>
-                                                    {getStatusLabel(selectedMovie.status)}
-                                                </Badge>
-
-                                                <Badge className="flex gap-1 items-center justify-center" variant={"outline"}>
-                                                    {Number(selectedMovie.vote_average ?? 0).toFixed(1)}
-                                                    <StarIcon className="text-yellow-500" />
-                                                </Badge>
+                                        <div className="p-6 flex flex-col gap-6">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="flex flex-col gap-1.5 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Release Date</span>
+                                                    <span className="text-sm font-semibold">{new Date(String(selectedMovie.release_date)).toLocaleDateString("vi-VN")}</span>
+                                                </div>
+                                                <div className="flex flex-col gap-1.5 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
+                                                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Vote Count</span>
+                                                    <span className="text-sm font-semibold">{selectedMovie.vote_count.toLocaleString()}</span>
+                                                </div>
                                             </div>
 
-                                            <p>
-                                                <span className="font-semibold">Thời lượng:</span> {" "}
-                                                {selectedMovie.runtime} phút
-                                            </p>
-
-                                            <p>
-                                                <span className="font-semibold">Lượt đánh giá:</span> {" "}
-                                                {selectedMovie.vote_count}
-                                            </p>
-
-                                            <p>
-                                                <span className="font-semibold">Ngày chiếu:</span> {" "}
-                                                {new Date(String(selectedMovie.release_date)).toLocaleDateString("vi-VN")}
-                                            </p>
-
-                                            {selectedMovie.overview ? (
-                                                <p>
-                                                    <span className="font-semibold">Mô tả:</span> 
-                                                    <br />
-                                                    {selectedMovie.overview}
+                                            <div className="flex flex-col gap-2">
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Overview</span>
+                                                <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                                    {selectedMovie.overview || "No overview available for this movie."}
                                                 </p>
-                                            ) : null}
+                                            </div>
+
+                                            <div className="flex flex-col gap-4">
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Metadata</span>
+                                                <div className="flex flex-wrap gap-2">
+                                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-sidebar border border-zinc-200 dark:border-zinc-800 text-[11px] font-medium">
+                                                        <span className="text-zinc-400">ID:</span> {selectedMovie.movie_id}
+                                                    </div>
+                                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-sidebar border border-zinc-200 dark:border-zinc-800 text-[11px] font-medium">
+                                                        <span className="text-zinc-400">18+:</span> {selectedMovie.adult ? "Yes" : "No"}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <p>Không có dữ liệu phim.</p>
+                                    <div className="p-12 text-center text-zinc-500">Không có dữ liệu phim.</div>
                                 )}
                             </DrawerBody>
-
-                            <DrawerFooter>
-                                <button onClick={onOpenChange} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
-                                    Đóng
-                                </button>
-                            </DrawerFooter>
                         </>
                     )}
                 </DrawerContent>
@@ -315,7 +396,7 @@ export default function LayoutMovie() {
                     {() => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1">
-                                Sửa phim
+                                {isAdding ? "Thêm phim mới" : "Sửa phim"}
                             </DrawerHeader>
 
                             <DrawerBody>
@@ -457,6 +538,32 @@ export default function LayoutMovie() {
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="poster" className="text-right">
+                                            Poster Path
+                                        </Label>
+                                        <Input
+                                            id="poster"
+                                            value={editForm.poster_path}
+                                            placeholder="/path/to/poster.jpg"
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, poster_path: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="backdrop" className="text-right">
+                                            Backdrop Path
+                                        </Label>
+                                        <Input
+                                            id="backdrop"
+                                            value={editForm.backdrop_path}
+                                            placeholder="/path/to/backdrop.jpg"
+                                            onChange={(event) => setEditForm((prev) => ({ ...prev, backdrop_path: event.target.value }))}
+                                            className="col-span-3 bg-sidebar"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="adult" className="text-right">
                                             Giới hạn tuổi
                                         </Label>
@@ -495,6 +602,6 @@ export default function LayoutMovie() {
                     )}
                 </DrawerContent>
             </Drawer>
-        </>
+        </div>
     )
 }

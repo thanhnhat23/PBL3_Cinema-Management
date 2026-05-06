@@ -3,11 +3,9 @@ import {
     DialogTitle, 
     DialogFooter,
 } from "@/components/ui/dialog"
-import Image from "next/image"
 import { Button, Input } from "@heroui/react"
-import { MdEmail, MdOutlinePassword } from "react-icons/md"
-import { EyeIcon } from "@/components/icons/eye"
-import { EyeOffIcon } from "@/components/icons/eye-off"
+import { Mail, Lock, Eye, EyeOff, MailCheck } from "lucide-react"
+import { cn } from "@/lib/utils";
 
 interface FormChangeEmailProps {
     formChangeEmail: {
@@ -39,108 +37,93 @@ export const FormChangeEmail = ({
     isChangeEmailFilled
 }: FormChangeEmailProps) => {
     return (
-        <>
-            <DialogHeader>
-                <div className="flex flex-col items-center justify-center w-full">
-                    <DialogTitle className="text-center text-2xl font-bold mb-2">
-                        Đổi Email
-                    </DialogTitle>
+        <div className="animate-in fade-in slide-in-from-right-4 duration-300 p-4 md:p-0">
+            <DialogHeader className="mb-8">
+                <div className="flex flex-col items-center justify-center w-full gap-4">
+                    <div className="relative group">
+                        <div className="absolute -inset-2 bg-linear-to-r from-blue-500/20 to-indigo-600/20 rounded-2xl blur-xl" />
+                        <div className="relative bg-white dark:bg-zinc-950 p-3 rounded-2xl border border-zinc-200 dark:border-white/10 shadow-lg">
+                            <MailCheck size={32} className="text-blue-500" />
+                        </div>
+                    </div>
 
-                    <div className="relative inline-flex items-center justify-center">
-                        <span className="pointer-events-none absolute h-26 w-26 rounded-full bg-purple-500/55 blur-2xl animate-pulse" />
-                        <span className="pointer-events-none absolute h-32 w-32 rounded-full bg-fuchsia-400/50 blur-3xl" />
-                        <Image 
-                            src="/logo.png" 
-                            alt="Profile image" 
-                            className="rounded-md h-36 object-cover relative z-10"
-                            width={150}
-                            height={150}
-                        />
+                    <div className="text-center space-y-1">
+                        <DialogTitle className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white uppercase">
+                            Thay đổi Email
+                        </DialogTitle>
+                        <p className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase opacity-80">
+                            Cập nhật thông tin liên lạc của bạn
+                        </p>
                     </div>
                 </div>
             </DialogHeader>
 
-            <div className="grid gap-4">
-                {/* New email field input */}
-                <div className="grid gap-3">
-                    <Input 
-                        key="change-new-email"
-                        isRequired
-                        isClearable
-                        label="Email" 
-                        labelPlacement="outside"
-                        placeholder="Nhập Email mới"
-                        errorMessage="Vui lòng nhập email không bỏ trống"
-                        type="text" 
-                        variant="faded"
-                        name="change-new-email"
-                        data-lpignore="true"
-                        data-form-type="change-email"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute('readonly')}
-                        startContent={<MdEmail size={20} className="text-gray-500" />}
-                        value={formChangeEmail.newEmail}
-                        onChange={(e) => setFormChangeEmail({
-                            ...formChangeEmail,
-                            newEmail: e.target.value.trimEnd()
-                        })}
-                        onClear={() => setFormChangeEmail({...formChangeEmail, newEmail: ""})}
-                    />
-                </div>
+            <div className="space-y-6 flex flex-col gap-2">
+                <Input 
+                    key="change-new-email"
+                    isRequired
+                    label="Địa chỉ Email mới" 
+                    labelPlacement="outside"
+                    placeholder="Nhập địa chỉ email mới"
+                    type="email" 
+                    variant="bordered"
+                    classNames={{
+                        label: "text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest",
+                        inputWrapper: "h-11 border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 hover:border-blue-500/50 focus-within:!border-blue-500 transition-all rounded-sm",
+                        input: "text-sm font-medium",
+                    }}
+                    startContent={<Mail size={16} className="text-zinc-400" />}
+                    value={formChangeEmail.newEmail}
+                    onChange={(e) => setFormChangeEmail({
+                        ...formChangeEmail,
+                        newEmail: e.target.value.trimEnd()
+                    })}
+                />
 
-                {/* Password field input */}
-                <div className="grid gap-3">
-                    <Input
-                        key="confirm-password"
-                        isRequired
-                        label="Mật khẩu"
-                        labelPlacement="outside"
-                        placeholder="Nhập Mật Khẩu"
-                        errorMessage=""
-                        type={isVisiblePassword ? "text" : "password"}
-                        variant="faded"
-                        name="confirm-password"
-                        data-lpignore="true"
-                        data-form-type="change-password"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute('readonly')}
-                        startContent={<MdOutlinePassword size={20} className="text-gray-500" />}
-                        endContent={
-                            <button
-                                type="button"
-                                className="flex items-center justify-center"
-                                onClick={() => setIsVisiblePassword(!isVisiblePassword)}
-                            >
-                                {isVisiblePassword ? (
-                                    <EyeIcon size={18}/>
-                                ) : (
-                                    <EyeOffIcon size={18}/>
-                                )}
-                            </button>
-                        }
-                        value={formChangeEmail.password}
-                        onChange={(e) => setFormChangeEmail({...formChangeEmail, password: e.target.value})}
-                    />
-                </div>
-                <DialogFooter>
-                    <div className="flex flex-col gap-4 w-full">
-                        <div className="flex flex-col justify-center items-start mt-4">
-                            <Button 
-                                type="button"
-                                onClick={onSubmitChangeEmail}
-                                radius="sm" 
-                                color="primary" 
-                                variant="shadow" 
-                                isLoading={isChangingEmail}
-                                className="mt-4 w-full"
-                                isDisabled={!isChangeEmailFilled}
-                            >
-                                Thay đổi email
-                            </Button>
-                        </div>
-                    </div>
-                </DialogFooter>
+                <Input
+                    key="confirm-password-email"
+                    isRequired
+                    label="Xác nhận mật khẩu"
+                    labelPlacement="outside"
+                    placeholder="Nhập mật khẩu để xác nhận"
+                    type={isVisiblePassword ? "text" : "password"}
+                    variant="bordered"
+                    classNames={{
+                        label: "text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest",
+                        inputWrapper: "h-11 border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 hover:border-blue-500/50 focus-within:!border-blue-500 transition-all rounded-sm",
+                        input: "text-sm font-medium",
+                    }}
+                    startContent={<Lock size={16} className="text-zinc-400" />}
+                    endContent={
+                        <button
+                            type="button"
+                            className="p-1 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-full"
+                            onClick={() => setIsVisiblePassword(!isVisiblePassword)}
+                        >
+                            {isVisiblePassword ? <Eye size={14} className="text-zinc-400" /> : <EyeOff size={14} className="text-zinc-400" />}
+                        </button>
+                    }
+                    value={formChangeEmail.password}
+                    onChange={(e) => setFormChangeEmail({...formChangeEmail, password: e.target.value})}
+                />
             </div>
-        </>
+
+            <DialogFooter className="mt-10">
+                <Button 
+                    type="button"
+                    onClick={onSubmitChangeEmail}
+                    isLoading={isChangingEmail}
+                    isDisabled={!isChangeEmailFilled}
+                    className={cn(
+                        "w-full h-12 rounded-sm font-bold text-sm uppercase tracking-widest transition-all duration-300",
+                        isChangeEmailFilled 
+                            ? "bg-linear-to-r from-blue-500 to-indigo-600 text-white shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_8px_25px_rgba(59,130,246,0.4)]"
+                            : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                    )}
+                >
+                    Cập nhật Email
+                </Button>
+            </DialogFooter>
+        </div>
     )
 }

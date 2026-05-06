@@ -48,7 +48,7 @@ namespace CinemaAPI.Services.Implementations
                     char rowLabel = (char)('A' + row - 1);
                     for (int col = 1; col <= room.column; col++)
                     {
-                        bool isCoupleSeat = (col <= 2);
+                        bool isCoupleSeat = (row > room.row - 2);
 
                         seats.Add(new Seat
                         {
@@ -56,7 +56,7 @@ namespace CinemaAPI.Services.Implementations
                             row_index = row,
                             column_index = col,
                             seat_code = $"{rowLabel}{col}",
-                            type_id = isCoupleSeat ? (int)SeatEnum.Single : (int)SeatEnum.Couple
+                            type_id = isCoupleSeat ? (int)SeatEnum.Couple : (int)SeatEnum.Single
                         });
                     }
                 }
@@ -87,11 +87,14 @@ namespace CinemaAPI.Services.Implementations
 
         public async Task UpdateRoom(int room_id, RoomUpdateRequest request)
         {
-            var room = await _appDbContext.Rooms.FindAsync(room_id);
+            var room = await _appDbContext.Rooms
+                .Include(r => r.Seats)
+                .FirstOrDefaultAsync(r => r.room_id == room_id);
 
             if (room == null)
                 throw new Exception("Room not found");
 
+            using var transaction = await _appDbContext.Database.BeginTransactionAsync();
             try
             {
                 if (request.nameRoom != null)
@@ -103,11 +106,56 @@ namespace CinemaAPI.Services.Implementations
                 if (request.price.HasValue)
                     room.price = request.price.Value;
 
+                int newRow = request.row ?? room.row;
+                int newCol = request.column ?? room.column;
+
+                if (newRow != room.row || newCol != room.column)
+                {
+                    var seatIds = room.Seats.Select(s => s.seat_id).ToList();
+                    if (seatIds.Any())
+                    {
+                        var inUse = await _appDbContext.ShowTimeSeats.AnyAsync(sts => seatIds.Contains(sts.seat_id));
+                        if (inUse)
+                            throw new Exception("Cannot change room dimensions: some seats in this room are already assigned to showtimes.");
+
+                        _appDbContext.Seats.RemoveRange(room.Seats);
+                    }
+
+                    room.row = newRow;
+                    room.column = newCol;
+
+                    var newSeats = new List<Seat>();
+                    for (int r = 1; r <= newRow; r++)
+                    {
+                        char rowLabel = (char)('A' + r - 1);
+                        for (int c = 1; c <= newCol; c++)
+                        {
+                            bool isCoupleSeat = (r > newRow - 2);
+                            newSeats.Add(new Seat
+                            {
+                                room_id = room.room_id,
+                                row_index = r,
+                                column_index = c,
+                                seat_code = $"{rowLabel}{c}",
+                                type_id = isCoupleSeat ? (int)SeatEnum.Couple : (int)SeatEnum.Single
+                            });
+                        }
+                    }
+
+                    if (newSeats.Any())
+                    {
+                        await _appDbContext.Seats.AddRangeAsync(newSeats);
+                    }
+                }
+
                 await _appDbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
                 RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 Console.WriteLine($"UpdateRoom Error: {ex.Message}");
                 throw new Exception($"An error occurred while updating the room: {ex.Message}");
             }

@@ -26,11 +26,15 @@ export const useActorStore = create<{
 
     isFetchingActors: boolean;
     isFetchingActorDetails: boolean;
-    isUpdateingActor: boolean;
+    isUpdatingActor: boolean;
+    isCreatingActor: boolean;
+    isDeletingActor: boolean;
 
     fetchAllActors: () => Promise<void>;
     fetchActorById: (actorId: number) => Promise<Actor | null>;
+    createActor: (actorData: ActorUpdatePayload) => Promise<void>;
     updateActor: (actorId: number, actorData: ActorUpdatePayload) => Promise<void>;
+    deleteActor: (actorId: number) => Promise<void>;
     fetchMovieWithActors: (movieId: number) => Promise<void>;
     fetchCharacterWithActors: (movieId: number) => Promise<void>;
     clearSelectedActor: () => void;
@@ -41,7 +45,9 @@ export const useActorStore = create<{
     selectedActor: null,
     isFetchingActors: false,
     isFetchingActorDetails: false,
-    isUpdateingActor: false,
+    isUpdatingActor: false,
+    isCreatingActor: false,
+    isDeletingActor: false,
 
     fetchAllActors: async () => {
         const currentActors = useActorStore.getState().actors;
@@ -83,9 +89,23 @@ export const useActorStore = create<{
         }
     },
 
+    createActor: async (actorData: ActorUpdatePayload) => {
+        try {
+            set({ isCreatingActor: true });
+            const response = await _axios.post('/v1/actor/create', actorData);
+            if (response.data) {
+                set((state) => ({ actors: [...state.actors, response.data] }));
+            }
+        } catch (error) {
+            console.error('Error creating actor:', error);
+        } finally {
+            set({ isCreatingActor: false });
+        }
+    },
+
     updateActor: async (actorId: number, actorData: ActorUpdatePayload) => {
         try {
-            set({ isUpdateingActor: true });
+            set({ isUpdatingActor: true });
             await _axios.put(`/v1/actor/update/${actorId}`, actorData);
 
             const refreshedActor = await useActorStore.getState().fetchActorById(actorId);
@@ -100,8 +120,23 @@ export const useActorStore = create<{
         } catch (error) {
             console.error(`Error updating actor with ID ${actorId}:`, error);
         } finally {
-            set({ isUpdateingActor: false });
+            set({ isUpdatingActor: false });
         }   
+    },
+
+    deleteActor: async (actorId: number) => {
+        try {
+            set({ isDeletingActor: true });
+            await _axios.delete(`/v1/actor/delete/${actorId}`);
+            set((state) => ({
+                actors: state.actors.filter((actor) => actor.actor_id !== actorId),
+                selectedActor: state.selectedActor?.actor_id === actorId ? null : state.selectedActor,
+            }));
+        } catch (error) {
+            console.error(`Error deleting actor with ID ${actorId}:`, error);
+        } finally {
+            set({ isDeletingActor: false });
+        }
     },
 
     fetchMovieWithActors: async (movieId: number) => {

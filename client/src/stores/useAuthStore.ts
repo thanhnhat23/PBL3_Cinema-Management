@@ -28,7 +28,7 @@ export const useAuthStore = create<{
     isChangingEmail: boolean;
     isChangingBirthdate: boolean;
     isChangingAvatar: boolean;
-    
+
     checkAuth: () => Promise<void>;
     signin: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
@@ -36,11 +36,12 @@ export const useAuthStore = create<{
     verifyEmail: (userId: string, verificationCode: string) => Promise<void>;
     forgotPassword: (email: string) => Promise<void>;
     resetPassword: (email: string, newPassword: string) => Promise<void>;
-    checkResetPassword: (email: string, resetToken: string) => Promise<void>;
+    checkResetPassword: (email: string, resetToken: string) => Promise<boolean>;
     changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
     changeEmail: (newEmail: string) => Promise<void>;
     changeBirthdate: (newBirthDate: string) => Promise<void>;
     changeAvatar: (newAvatar: File | null) => Promise<void>;
+    clearAuth: () => void;
 }>((set, get) => ({
     authUser: null as null | AuthUser,
 
@@ -62,7 +63,7 @@ export const useAuthStore = create<{
 
             const token = localStorage.getItem('token');
             if (!token) {
-                set({ 
+                set({
                     authUser: null,
                     isCheckingAuth: false
                 });
@@ -155,7 +156,7 @@ export const useAuthStore = create<{
             localStorage.removeItem('token');
             localStorage.removeItem('authUser');
             set({ authUser: null });
-            
+
             if (token) {
                 await _axios.post('v1/auth/logout', {}, {
                     headers: {
@@ -262,11 +263,12 @@ export const useAuthStore = create<{
             set({ isCheckingResetPassword: true });
             await _axios.post('v1/auth/check-reset-password', { email, resetToken });
 
-            Swal.fire({
+            await Swal.fire({
                 title: 'Thành công',
                 text: 'Mã đặt lại mật khẩu hợp lệ! Bạn có thể tiếp tục đặt lại mật khẩu mới.',
                 icon: 'success',
             });
+            return true;
         } catch (error) {
             console.log('Error in checkResetPassword: ', error);
             Swal.fire({
@@ -274,6 +276,7 @@ export const useAuthStore = create<{
                 text: 'Mã đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng thử lại.',
                 icon: 'error',
             });
+            return false;
         } finally {
             set({ isCheckingResetPassword: false });
         }
@@ -314,7 +317,7 @@ export const useAuthStore = create<{
             });
         } catch (error) {
             console.log('Error in changePassword: ', error);
-            
+
             addToast({
                 title: "Lỗi đổi mật khẩu",
                 description: "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại.",
@@ -339,7 +342,7 @@ export const useAuthStore = create<{
             });
         } catch (error) {
             console.log('Error in changeEmail: ', error);
-            
+
             addToast({
                 title: "Lỗi đổi email",
                 description: "Đã xảy ra lỗi khi đổi email. Vui lòng thử lại.",
@@ -355,7 +358,7 @@ export const useAuthStore = create<{
         try {
             set({ isChangingBirthdate: true });
             await _axios.post('v1/auth/change-birthdate', { newBirthDate: newBirthDate });
-            
+
             addToast({
                 title: "Đổi ngày sinh thành công",
                 description: "Ngày sinh của bạn đã được đổi thành công.",
@@ -364,7 +367,7 @@ export const useAuthStore = create<{
             });
         } catch (error) {
             console.log('Error in changeBirthdate: ', error);
-            
+
             addToast({
                 title: "Lỗi đổi ngày sinh",
                 description: "Đã xảy ra lỗi khi đổi ngày sinh. Vui lòng thử lại.",
@@ -384,7 +387,7 @@ export const useAuthStore = create<{
             if (newAvatar) {
                 formData.append('file', newAvatar);
             }
-            
+
             const response = await _axios.post('v1/auth/upload-avatar', formData);
             const avatarUrl = response.data?.avatarUrl ?? response.data?.data?.avatarUrl;
 
@@ -414,7 +417,7 @@ export const useAuthStore = create<{
             });
         } catch (error) {
             console.log('Error in changeAvatar: ', error);
-            
+
             addToast({
                 title: "Lỗi đổi ảnh đại diện",
                 description: "Đã xảy ra lỗi khi đổi ảnh đại diện. Vui lòng thử lại.",
@@ -424,5 +427,11 @@ export const useAuthStore = create<{
         } finally {
             set({ isChangingAvatar: false });
         }
+    },
+
+    clearAuth: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('authUser');
+        set({ authUser: null });
     },
 }));

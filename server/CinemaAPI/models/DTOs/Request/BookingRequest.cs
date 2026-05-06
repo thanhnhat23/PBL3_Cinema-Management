@@ -22,7 +22,7 @@ namespace CinemaAPI.Models.DTOs
 
         public int? coupon_id { get; set; }
 
-        // Server will recalculate totals based on snacks and combo rules.
+        // Server will recalculate totals based on snacks, seats, and combo rules.
         public decimal totalAmount { get; set; }
         public decimal? discountAmount { get; set; }
         public decimal finalAmount { get; set; }
@@ -31,6 +31,9 @@ namespace CinemaAPI.Models.DTOs
         public DateTime? createAt { get; set; } = DateTime.Now;
 
         public List<BookingSnackRequest> snacks { get; set; } = new();
+
+        // Optional: list of seat IDs to be booked with this booking
+        public List<int>? seat_ids { get; set; }
     }
 
     public class BookingUpdateRequest

@@ -1,5 +1,5 @@
 import type { Key, ReactNode } from "react";
-import type { Selection, SortDescriptor } from "@heroui/react";
+import type { Selection as TableSelection, SortDescriptor } from "@heroui/react";
 
 import { useState, useMemo, useCallback } from "react";
 import {
@@ -12,8 +12,13 @@ import {
   Input,
   Button,
   Pagination,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Chip,
 } from "@heroui/react";
-import { Plus, Trash, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Trash, Search, ChevronLeft, ChevronRight, Filter, ChevronDown, X } from "lucide-react";
 
 export type AdminColumn = {
   name: string;
@@ -28,7 +33,7 @@ type AdminDataTableProps<T> = {
   items: T[];
   isLoading: boolean;
   searchPlaceholder: string;
-  addButtonLabel: string;
+  addButtonLabel?: string;
   totalLabel: (count: number) => string;
   emptyLabel: string;
   loadingLabel: string;
@@ -37,6 +42,15 @@ type AdminDataTableProps<T> = {
   searchBy: (item: T) => string;
   renderCell: (item: T, columnKey: Key) => ReactNode;
   getSortValue?: (item: T, columnKey: string) => SortValue;
+  onAdd?: () => void;
+  onDeleteSelected?: (selectedKeys: TableSelection) => void;
+  selectionMode?: "multiple" | "single" | "none";
+  hideDeleteSelected?: boolean;
+  filters?: {
+    uid: string;
+    name: string;
+    options: { name: string; uid: string }[];
+  }[];
 };
 
 function normalizeSortValue(value: SortValue): string | number {
@@ -64,21 +78,41 @@ export default function DataTableAdmin<T>({
   searchBy,
   renderCell,
   getSortValue,
+  onAdd,
+  onDeleteSelected,
+  selectionMode = "multiple",
+  hideDeleteSelected = false,
+  filters,
 }: AdminDataTableProps<T>) {
   const [filterValue, setFilterValue] = useState("");
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [selectedKeys, setSelectedKeys] = useState<TableSelection>(new Set([]) as TableSelection);
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, TableSelection>>({});
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(defaultSort);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 9;
+  const rowsPerPage = 10;
 
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = useMemo(() => {
-    if (!hasSearchFilter) return items;
+    let filtered = [...items];
 
-    const query = filterValue.toLowerCase();
-    return items.filter((item) => searchBy(item).toLowerCase().includes(query));
-  }, [items, filterValue, hasSearchFilter, searchBy]);
+    if (hasSearchFilter) {
+      const query = filterValue.toLowerCase();
+      filtered = filtered.filter((item) => searchBy(item).toLowerCase().includes(query));
+    }
+
+    // Apply active filters
+    Object.entries(selectedFilters).forEach(([uid, selection]) => {
+      if (selection !== "all" && selection.size > 0) {
+        filtered = filtered.filter((item) => {
+          const val = String((item as Record<string, unknown>)[uid] as unknown);
+          return selection.has(val);
+        });
+      }
+    });
+
+    return filtered;
+  }, [items, filterValue, hasSearchFilter, searchBy, selectedFilters]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage) || 1;
 
@@ -122,13 +156,8 @@ export default function DataTableAdmin<T>({
   }, [page]);
 
   const onSearchChange = useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-      return;
-    }
-
-    setFilterValue("");
+    setFilterValue(value || "");
+    setPage(1);
   }, []);
 
   const onClear = useCallback(() => {
@@ -136,122 +165,258 @@ export default function DataTableAdmin<T>({
     setPage(1);
   }, []);
 
+  const onClearFilters = useCallback(() => {
+    setSelectedFilters({});
+    setPage(1);
+  }, []);
+
+  const removeFilter = useCallback((uid: string, value: string) => {
+    setSelectedFilters((prev) => {
+      const current = prev[uid];
+      if (current instanceof Set || (typeof current === "object" && current !== null && "delete" in current)) {
+        const next = new Set(current as Set<Key>);
+        next.delete(value);
+        return { ...prev, [uid]: next as TableSelection };
+      }
+      return prev;
+    });
+    setPage(1);
+  }, []);
+
   const topContent = useMemo(() => {
+    const hasActiveFilters = Object.values(selectedFilters).some(s => s !== "all" && s.size > 0);
+
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            className="w-full sm:max-w-[44%]"
-            classNames={{
-              inputWrapper: "rounded-sm",
-            }}
-            placeholder={searchPlaceholder}
-            startContent={<Search size={18} />}
-            value={filterValue}
-            onClear={onClear}
-            onValueChange={onSearchChange}
-          />
+      <div className="flex flex-col gap-4 mb-2">
+        <div className="flex justify-between gap-4 items-center">
+          <div className="flex-1 max-w-100">
+            <Input
+              isClearable
+              classNames={{
+                base: "w-full",
+                inputWrapper: "h-11 bg-white dark:bg-zinc-900 border-1 border-zinc-200 dark:border-zinc-800 rounded-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-sm",
+                input: "text-sm",
+              }}
+              placeholder={searchPlaceholder}
+              startContent={<Search size={18} className="text-zinc-400" />}
+              value={filterValue}
+              onClear={onClear}
+              onValueChange={onSearchChange}
+            />
+          </div>
 
-          <div className="flex gap-4">
-            <button className="flex items-center justify-center gap-2 bg-sidebar hover:bg-neutral-300 dark:hover:bg-neutral-800 border-1 border-zinc-200 dark:border-zinc-800 px-4 py-2 rounded-sm cursor-pointer font-semibold shadow-sm">
-              <Plus size={18} />
-              {addButtonLabel}
-            </button>
+          <div className="flex gap-3">
+            {onAdd && (
+              <button 
+                onClick={() => onAdd?.()}
+                className="group flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 px-5 py-2.5 rounded-sm cursor-pointer font-bold text-sm shadow-md hover:shadow-lg transition-all active:scale-95"
+              >
+                <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
+                {addButtonLabel || "Thêm mới"}
+              </button>
+            )}
 
-            <button className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-400 dark:hover:bg-red-600 border-1 border-zinc-200 dark:border-zinc-800 px-4 py-2 rounded-sm cursor-pointer font-semibold text-red-100 shadow-sm">
-              <Trash size={18} />
-              Xóa
-            </button>
+            {!hideDeleteSelected && (
+              <button 
+                onClick={() => onDeleteSelected?.(selectedKeys)}
+                className="flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-1 border-rose-100 dark:border-rose-900/50 px-5 py-2.5 rounded-sm cursor-pointer font-bold text-sm hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors active:scale-95"
+              >
+                <Trash size={18} />
+                Xóa mục chọn
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">{totalLabel(items.length)}</span>
+        {/* Active Filters Display */}
+        {hasActiveFilters && (
+            <div className="flex flex-wrap items-center gap-2 px-1">
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mr-1">Đang lọc:</span>
+                {filters?.map(f => {
+                    const selection = selectedFilters[f.uid];
+                    if (!selection || selection === "all" || selection.size === 0) return null;
+                    
+                    return Array.from(selection).map(val => {
+                        const option = f.options.find(opt => String(opt.uid) === String(val));
+                        return (
+                            <Chip
+                                key={`${f.uid}-${val}`}
+                                size="sm"
+                                variant="flat"
+                                className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-none h-6 px-2 text-[11px] font-bold"
+                                endContent={<X size={12} className="cursor-pointer hover:text-rose-500 transition-colors" onClick={() => removeFilter(f.uid, String(val))} />}
+                            >
+                                <span className="opacity-50 font-medium mr-1">{f.name}:</span>
+                                {option?.name || val}
+                            </Chip>
+                        );
+                    });
+                })}
+                <button 
+                    onClick={onClearFilters}
+                    className="text-[10px] font-black text-rose-500 uppercase tracking-tighter hover:underline cursor-pointer ml-1"
+                >
+                    Xóa tất cả lọc
+                </button>
+            </div>
+        )}
+
+        <div className="flex justify-between items-center px-1">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{totalLabel(filteredItems.length)}</span>
+            <div className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Trang {page} / {pages}</span>
+          </div>
+          <div className="flex gap-2">
+             {filters && filters.map((f) => (
+                <Dropdown key={f.uid} classNames={{
+                    content: "bg-sidebar border-1 border-zinc-200 dark:border-zinc-800 shadow-xl",
+                }}>
+                    <DropdownTrigger>
+                        <button className="flex items-center gap-2 px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors text-[11px] font-bold uppercase tracking-wider">
+                            <Filter size={14} />
+                            {f.name}
+                            <ChevronDown size={14} className="opacity-50" />
+                        </button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                        aria-label={`Filter ${f.name}`}
+                        closeOnSelect={false}
+                        selectedKeys={selectedFilters[f.uid] || new Set([])}
+                        selectionMode="multiple"
+                        onSelectionChange={(keys) => {
+                            setSelectedFilters(prev => ({ ...prev, [f.uid]: keys as TableSelection }));
+                            setPage(1);
+                        }}
+                    >
+                        {f.options.map((opt) => (
+                            <DropdownItem key={opt.uid} className="capitalize">
+                                {opt.name}
+                            </DropdownItem>
+                        ))}
+                    </DropdownMenu>
+                </Dropdown>
+             ))}
+          </div>
         </div>
       </div>
     );
-  }, [searchPlaceholder, filterValue, onClear, onSearchChange, addButtonLabel, totalLabel, items.length]);
+  }, [searchPlaceholder, filterValue, onClear, onSearchChange, addButtonLabel, totalLabel, filteredItems.length, onAdd, page, pages, filters, selectedFilters, onClearFilters, removeFilter, hideDeleteSelected, selectedKeys, onDeleteSelected]);
 
   const bottomContent = useMemo(() => {
+    const hasSelection = (selectedKeys === "all" || selectedKeys.size > 0);
+
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-            ? "Đã chọn toàn bộ"
-            : `${selectedKeys.size} / ${filteredItems.length} mục được chọn`}
-        </span>
+      <div className="py-4 px-4 flex justify-between items-center bg-white dark:bg-zinc-900/50 border-t border-zinc-100 dark:border-zinc-800 rounded-b-sm shadow-sm mt-4">
+        <div className="flex items-center gap-3">
+             <div className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-[10px] font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-tighter">
+                {selectedKeys === "all"
+                    ? "ALL SELECTED"
+                    : `${selectedKeys.size} SELECTED`}
+             </div>
+             {hasSelection && (
+                <button 
+                    onClick={() => setSelectedKeys(new Set([]) as TableSelection)}
+                    className="text-[10px] font-black text-rose-500 uppercase tracking-tighter hover:underline cursor-pointer"
+                >
+                    Hủy chọn tất cả
+                </button>
+             )}
+        </div>
 
         <Pagination
           isCompact
           showControls
           showShadow
-          color="primary"
+          classNames={{
+            cursor: "bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold rounded-lg",
+            item: "rounded-lg font-medium",
+            next: "rounded-lg",
+            prev: "rounded-lg",
+          }}
           page={page}
           total={pages}
           onChange={setPage}
         />
 
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+        <div className="hidden sm:flex items-center gap-2">
           <Button
-            isDisabled={pages === 1}
+            isDisabled={page === 1}
             size="sm"
             variant="flat"
             onPress={onPreviousPage}
-            startContent={<ChevronLeft size={18} />}
+            className="bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg font-bold"
           >
-            Previous
+            <ChevronLeft size={18} />
           </Button>
 
           <Button
-            isDisabled={pages === 1}
+            isDisabled={page === pages}
             size="sm"
             variant="flat"
             onPress={onNextPage}
-            endContent={<ChevronRight size={18} />}
+            className="bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg font-bold"
           >
-            Next
+            <ChevronRight size={18} />
           </Button>
         </div>
       </div>
     );
-  }, [filteredItems.length, selectedKeys, page, pages, onPreviousPage, onNextPage]);
+  }, [selectedKeys, page, pages, onPreviousPage, onNextPage]);
 
   return (
-    <Table
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-      classNames={{
-        wrapper: "bg-sidebar rounded-sm",
-      }}
-    >
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
+    <div className="w-full">
+      <Table
+        isHeaderSticky
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        selectedKeys={selectedKeys}
+        selectionMode={selectionMode}
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+        classNames={{
+          wrapper: "bg-white dark:bg-zinc-900/40 p-0 rounded-sm border-1 border-zinc-100 dark:border-zinc-800 shadow-xl shadow-zinc-200/50 dark:shadow-none",
+          th: "bg-zinc-50/50 dark:bg-zinc-900/50 text-zinc-500 dark:text-zinc-400 font-black text-[10px] uppercase tracking-[0.15em] h-14 border-b border-zinc-100 dark:border-zinc-800 first:rounded-tl-2xl last:rounded-tr-2xl",
+          td: "h-15 px-6 border-b border-zinc-50 dark:border-zinc-800/50 group-hover:bg-zinc-50/50 dark:group-hover:bg-zinc-800/20 transition-colors",
+          tr: "group",
+        }}
+      >
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
 
-      <TableBody emptyContent={isLoading ? loadingLabel : emptyLabel} items={sortedItems}>
-        {(item) => (
-          <TableRow key={rowKey(item)}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        <TableBody 
+            emptyContent={isLoading ? (
+                <div className="flex flex-col items-center justify-center gap-4 py-20">
+                    <div className="w-12 h-12 border-4 border-zinc-200 dark:border-zinc-800 border-t-zinc-900 dark:border-t-zinc-100 rounded-full animate-spin" />
+                    <span className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">{loadingLabel}</span>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center gap-2 py-20 opacity-30">
+                    <Search size={48} />
+                    <span className="text-sm font-medium">{emptyLabel}</span>
+                </div>
+            )} 
+            items={sortedItems}
+        >
+          {(item) => (
+            <TableRow key={rowKey(item)} className="cursor-default">
+              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

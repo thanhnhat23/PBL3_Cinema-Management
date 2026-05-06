@@ -2,23 +2,37 @@ import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
 import { addToast } from '@heroui/toast';
 
-const abortControllers: Record<string, AbortController | null> = {
-    movie: null,
+type MovieSyncStatus = 'upcoming' | 'nowplaying' | 'popular';
+
+const abortControllers: Record<MovieSyncStatus | 'status' | 'review', AbortController | null> = {
+    upcoming: null,
+    nowplaying: null,
+    popular: null,
     status: null,
     review: null
 };
 
+const movieStateKeyMap: Record<MovieSyncStatus, 'isSyncingUpcomingMovie' | 'isSyncingNowPlayingMovie' | 'isSyncingPopularMovie'> = {
+    upcoming: 'isSyncingUpcomingMovie',
+    nowplaying: 'isSyncingNowPlayingMovie',
+    popular: 'isSyncingPopularMovie'
+};
+
 export const useSyncDateStore = create<{
-    isSyncingMovie: boolean;
+    isSyncingUpcomingMovie: boolean;
+    isSyncingNowPlayingMovie: boolean;
+    isSyncingPopularMovie: boolean;
     isSyncingStatusMovie: boolean;
     isSyncingReviewMovie: boolean;
 
-    syncMovie: (status: string) => Promise<void>;
+    syncMovie: (status: MovieSyncStatus) => Promise<void>;
     syncStatusMovie: () => Promise<void>;
     syncReviewMovie: () => Promise<void>;
-    stopSync: (type: 'movie' | 'status' | 'review') => void;
+    stopSync: (type: MovieSyncStatus | 'status' | 'review') => void;
 }>((set) => ({
-    isSyncingMovie: false,
+    isSyncingUpcomingMovie: false,
+    isSyncingNowPlayingMovie: false,
+    isSyncingPopularMovie: false,
     isSyncingStatusMovie: false,
     isSyncingReviewMovie: false,
 
@@ -29,13 +43,20 @@ export const useSyncDateStore = create<{
         }
     },
 
-    syncMovie: async (status: string) => {
-        set({ isSyncingMovie: true });
-        abortControllers.movie = new AbortController();
+    syncMovie: async (status: MovieSyncStatus) => {
+        const stateKey = movieStateKeyMap[status];
+        set({ [stateKey]: true } as Partial<{
+            isSyncingUpcomingMovie: boolean;
+            isSyncingNowPlayingMovie: boolean;
+            isSyncingPopularMovie: boolean;
+            isSyncingStatusMovie: boolean;
+            isSyncingReviewMovie: boolean;
+        }>);
+        abortControllers[status] = new AbortController();
 
         try {
             await _axios.post(`/v1/tmdb/sync-movies/${status}`, {}, {
-                signal: abortControllers.movie.signal
+                signal: abortControllers[status]?.signal
             })
 
             addToast({ 
@@ -62,7 +83,14 @@ export const useSyncDateStore = create<{
                 });
             }
         } finally {
-            set({ isSyncingMovie: false });
+            set({ [stateKey]: false } as Partial<{
+                isSyncingUpcomingMovie: boolean;
+                isSyncingNowPlayingMovie: boolean;
+                isSyncingPopularMovie: boolean;
+                isSyncingStatusMovie: boolean;
+                isSyncingReviewMovie: boolean;
+            }>);
+            abortControllers[status] = null;
         }
     },
 

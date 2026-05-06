@@ -15,7 +15,7 @@ namespace CinemaAPI.Services.Implementations
         {
             "cho", "phim", "movie", "rạp", "cinema", "bao giờ", "khi nào", "ở đâu", "có", "không",
             "chiếu", "gì", "thế nào", "như thế nào", "thông", "tin", "về", "thông tin", "tôi", "bạn", "em", "anh",
-            "còn", "thêm", "nữa", "tiếp", "vậy", "thế", "nhé", "lịch", "suất", "giờ"
+            "còn", "thêm", "nữa", "tiếp", "vậy", "thế", "nhé", "lịch", "suất", "giờ", "xem", "muốn", "tìm", "hỏi"
         };
 
         private readonly MongoDbContext _mongoDbContext;
@@ -100,36 +100,52 @@ namespace CinemaAPI.Services.Implementations
                     searchKeyword = ExtractSearchKeyword(GetMostRecentUserMessage(session.messages) ?? message);
                 }
 
+                Console.WriteLine($"[ChatBot] User Message: {message}");
+                Console.WriteLine($"[ChatBot] Detected Category: {resolvedCategory}");
+                Console.WriteLine($"[ChatBot] Search Keyword: {searchKeyword}");
+
                 // Only load data relevant to query
-                if (resolvedCategory == "movies" || msgLower.Contains("phim") || msgLower.Contains("movie"))
-                {
-                    db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
-                    if (string.IsNullOrWhiteSpace(db) && !string.IsNullOrEmpty(searchKeyword))
-                        db += await GetCachedDataAsync("movies", null, () => _Service.GetMoviesAsync(null));
-                }
-                else if (resolvedCategory == "showtimes"
+                if (resolvedCategory == "showtimes"
                         || msgLower.Contains("lịch chiếu")
                         || msgLower.Contains("suất chiếu")
                         || msgLower.Contains("giờ chiếu")
+                        || msgLower.Contains("vé")
+                        || msgLower.Contains("rạp")
                         || msgLower.Contains("showtime"))
+                {
                     db += await GetCachedDataAsync("showtimes", searchKeyword, () => _Service.GetShowtimesAsync(searchKeyword));
-                else if (resolvedCategory == "rooms" || msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
+                }
+                
+                if (resolvedCategory == "movies" || msgLower.Contains("phim") || msgLower.Contains("movie"))
+                {
+                    db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
+                }
+
+                if (resolvedCategory == "rooms" || msgLower.Contains("phòng") || msgLower.Contains("room") || msgLower.Contains("giá"))
                     db += await GetCachedDataAsync("rooms", searchKeyword, () => _Service.GetRoomsAsync(searchKeyword));
-                else if (resolvedCategory == "snacks" || msgLower.Contains("ăn")
+                
+                if (resolvedCategory == "snacks" || msgLower.Contains("ăn")
                         || msgLower.Contains("đồ ăn")
                         || msgLower.Contains("snack")
                         || msgLower.Contains("bỏng")
                         || msgLower.Contains("nước uống")
                         || msgLower.Contains("drink"))
                     db += await GetCachedDataAsync("snacks", searchKeyword, () => _Service.GetSnacksAsync(searchKeyword));
-                else if (resolvedCategory == "genres" || msgLower.Contains("thể loại") || msgLower.Contains("genre"))
+                
+                if (resolvedCategory == "genres" || msgLower.Contains("thể loại") || msgLower.Contains("genre"))
                     db += await GetCachedDataAsync("genres", searchKeyword, () => _Service.GetGenresAsync(searchKeyword));
-                else if (resolvedCategory == "actors" || msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
+                
+                if (resolvedCategory == "actors" || msgLower.Contains("diễn viên") || msgLower.Contains("actor") || msgLower.Contains("cast"))
                     db += await GetCachedDataAsync("actors", searchKeyword, () => _Service.GetActorsAsync(searchKeyword));
-                else
-                    db += await GetCachedDataAsync("movies", searchKeyword, () => _Service.GetMoviesAsync(searchKeyword));
+
+                // Fallback if db is still empty
+                if (string.IsNullOrWhiteSpace(db))
+                {
+                    db += await GetCachedDataAsync("movies", null, () => _Service.GetMoviesAsync(null));
+                }
 
                 db = TrimContext(db, MaxLlmContextLength);
+                Console.WriteLine($"[ChatBot] DB Context Length: {db.Length}");
 
                 // NODE 4: GENERATE ANSWER
                 string reply;
@@ -298,7 +314,7 @@ namespace CinemaAPI.Services.Implementations
         {
             var normalized = message.ToLowerInvariant();
 
-            if (normalized.Contains("lịch chiếu") || normalized.Contains("suất chiếu") || normalized.Contains("giờ chiếu") || normalized.Contains("showtime"))
+            if (normalized.Contains("lịch chiếu") || normalized.Contains("suất chiếu") || normalized.Contains("giờ chiếu") || normalized.Contains("showtime") || normalized.Contains("vé") || normalized.Contains("rạp"))
             {
                 return "showtimes";
             }

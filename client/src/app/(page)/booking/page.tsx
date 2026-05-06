@@ -1,302 +1,385 @@
 "use client"
 
-import { Tabs, Tab, Divider } from "@heroui/react";
-import { useState, useEffect } from "react";
-import { Popcorn, Armchair, Clapperboard, WalletCards, BadgeCheck } from "lucide-react";
+import { Tabs, Tab, Divider, Button } from "@heroui/react";
+import { useState, useEffect, useMemo } from "react";
+import { Popcorn, Armchair, Clapperboard, WalletCards, BadgeCheck, ChevronRight, ChevronLeft, Calendar, MapPin, Monitor } from "lucide-react";
 import Image from 'next/image';
+import { cn } from "@/lib/utils";
+
+// Stores
 import { useLocationStore } from '@/stores/useLocationStore';
 import { useCinemaStore } from '@/stores/useCinemaStore';
 import { useMovieStore } from '@/stores/useMovieStore';
+import { useShowTimeStore } from '@/stores/useShowTimeStore';
+import { useSeatStore } from '@/stores/useSeatStore';
+
+// Components
 import { SelectServiceTab } from '@/components/layout/SelectTab/SelectServiceTab';
 import { SelectSeatTab } from '@/components/layout/SelectTab/SelectSeatTab';
 
+interface BookingSelection {
+  location: string;
+  movieTitle: string;
+  cinemaId: string;
+  showtimeDate: string;
+  showtimeId: string;
+  selectedSeats: string[];
+}
+
+const STEPS = [
+  { key: "select-service", label: "Phim", icon: <Clapperboard size={20} /> },
+  { key: "select-seat", label: "Ghế", icon: <Armchair size={20} /> },
+  { key: "select-food", label: "Đồ ăn", icon: <Popcorn size={20} /> },
+  { key: "payment", label: "Thanh toán", icon: <WalletCards size={20} /> },
+  { key: "confirmation", label: "Xác nhận", icon: <BadgeCheck size={20} /> }
+];
+
 export default function BookingPage() {
-    const [showSelect, setShowSelect] = useState<Record<string, boolean>>({});
-    const [stateSelect, setStateSelect] = useState<Record<string, string[]>>({});
-    const [selectedStep, setSelectedStep] = useState<string>("select-service");
-    const [maxUnlockedStepIndex, setMaxUnlockedStepIndex] = useState<number>(0);
-    const { locations, fetchAllLocations } = useLocationStore();
-    const { cinemas, fetchAllCinemas } = useCinemaStore();
-    const { movies, fetchAllMovies } = useMovieStore();
+  const [selection, setSelection] = useState<BookingSelection>({
+    location: "",
+    movieTitle: "",
+    cinemaId: "",
+    showtimeDate: "",
+    showtimeId: "",
+    selectedSeats: []
+  });
 
-    const nowShowingMovies = movies.filter((movie) => movie.status === 0);
-    const selectedLocation = locations.find((location) => stateSelect["select-location"]?.includes(location.city));
-    const selectedCinema = cinemas.find((cinema) => cinema.location_id === selectedLocation?.location_id);
-    const selectedShowtimeDate = stateSelect["select-showtime"]?.[0] ?? "";
-    const selectedShowtimeTime = stateSelect["select-showtime"]?.[1] ?? "";
+  const [currentStep, setCurrentStep] = useState("select-service");
+  const [unlockedStepIndex, setUnlockedStepIndex] = useState(0);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    "select-location": true
+  });
 
-    useEffect(() => {
-        fetchAllLocations();
-        fetchAllCinemas();
-        fetchAllMovies();
-    }, [fetchAllLocations, fetchAllCinemas, fetchAllMovies]);
+  const locations = useLocationStore(state => state.locations);
+  const fetchAllLocations = useLocationStore(state => state.fetchAllLocations);
+  
+  const cinemas = useCinemaStore(state => state.cinemas);
+  const fetchAllCinemas = useCinemaStore(state => state.fetchAllCinemas);
+  
+  const movies = useMovieStore(state => state.movies);
+  const fetchAllMovies = useMovieStore(state => state.fetchAllMovies);
+  
+  const showtimes = useShowTimeStore(state => state.showtimes);
+  const isLoadingShowtimes = useShowTimeStore(state => state.isFetching);
+  const fetchAllShowtimes = useShowTimeStore(state => state.fetchAllShowtimes);
+  
+  const seats = useSeatStore(state => state.seats);
+  const fetchSeatsForShowtime = useSeatStore(state => state.fetchSeatsForShowtime);
 
-    const steps = [
-        {
-            key: "select-service",
-            label: "Phim",
-            icon: <Clapperboard size={18} />,
-            tab: ""
-        },
-        {
-            key: "select-seat",
-            label: "Ghế",
-            icon: <Armchair size={18} />
-        },
-        {
-            key: "select-food",
-            label: "Đồ ăn",
-            icon: <Popcorn size={18} />
-        },
-        {
-            key: "payment",
-            label: "Thanh toán",
-            icon: <WalletCards size={18} />
-        },
-        {
-            key: "confirmation",
-            label: "Xác nhận",
-            icon: <BadgeCheck size={18} />
-        }
-    ]
+  useEffect(() => {
+    const init = async () => {
+      await Promise.all([
+        fetchAllLocations(),
+        fetchAllCinemas(),
+        fetchAllMovies(),
+        fetchAllShowtimes()
+      ]);
+    };
+    init();
+  }, [fetchAllLocations, fetchAllCinemas, fetchAllMovies, fetchAllShowtimes]);
 
-    const handleShowSelect = (key: string) => {
-        setShowSelect((prev) => ({
-            ...prev,
-            [key]: !prev[key],
-        }));
+  useEffect(() => {
+    if (selection.showtimeId) {
+      fetchSeatsForShowtime(parseInt(selection.showtimeId, 10));
     }
+  }, [selection.showtimeId, fetchSeatsForShowtime]);
 
-    const getNextSelectKey = (key: string) => {
-        if (key === "select-location") {
-            return "select-movie";
-        }
+  const activeMovie = useMemo(() => 
+    movies.find(m => m.title === selection.movieTitle), 
+  [movies, selection.movieTitle]);
 
-        if (key === "select-movie") {
-            return "select-showtime";
-        }
+  const activeShowtime = useMemo(() => 
+    showtimes.find(st => st.showtime_id === parseInt(selection.showtimeId, 10)),
+  [showtimes, selection.showtimeId]);
 
-        return null;
+  const filteredShowtimes = useMemo(() => {
+    if (!selection.showtimeDate || !activeMovie) return [];
+    
+    return showtimes.filter(st => {
+      const stDate = new Date(st.startTime).toISOString().split('T')[0];
+      const matchesDate = stDate === selection.showtimeDate;
+      const matchesMovie = st.movie_id === activeMovie.movie_id;
+      const matchesCinema = selection.cinemaId ? st.cinema_id === parseInt(selection.cinemaId, 10) : true;
+      
+      return matchesDate && matchesMovie && matchesCinema;
+    });
+  }, [showtimes, selection.showtimeDate, activeMovie, selection.cinemaId]);
+
+  const handleSelectionChange = <K extends keyof BookingSelection>(key: K, value: BookingSelection[K]) => {
+    setSelection(prev => {
+      const next = { ...prev, [key]: value };
+      if (key === 'location') {
+        next.movieTitle = "";
+        next.cinemaId = "";
+        next.showtimeDate = "";
+        next.showtimeId = "";
+        next.selectedSeats = [];
+      } else if (key === 'movieTitle') {
+        next.cinemaId = "";
+        next.showtimeDate = "";
+        next.showtimeId = "";
+        next.selectedSeats = [];
+      } else if (key === 'cinemaId' || key === 'showtimeDate') {
+        next.showtimeId = "";
+        next.selectedSeats = [];
+      }
+      return next;
+    });
+
+    if (key === 'location') {
+      setExpandedSections({ "select-location": false, "select-movie": true });
     }
-
-    const handleSelectState = (key: string, value: string[]) => {
-        const isCompletedSelection = key === "select-showtime"
-            ? Boolean(value[0] && value[1])
-            : Boolean(value[0]);
-
-        setStateSelect((prev) => {
-            const nextState = {
-                ...prev,
-                [key]: value,
-            };
-
-            if (key === "select-location") {
-                nextState["select-movie"] = [];
-                nextState["select-showtime"] = [];
-                nextState["select-seat"] = [];
-            }
-
-            if (key === "select-movie") {
-                nextState["select-showtime"] = [];
-                nextState["select-seat"] = [];
-            }
-
-            return nextState;
-        });
-
-        setShowSelect((prev) => ({
-            ...prev,
-            [key]: key === "select-showtime" ? !isCompletedSelection : false,
-            ...(isCompletedSelection
-                ? (() => {
-                    const nextKey = getNextSelectKey(key);
-                    return nextKey ? { [nextKey]: true } : {};
-                })()
-                : {}),
-        }));
+    if (key === 'movieTitle') {
+      setExpandedSections({ "select-movie": false, "select-showtime": true });
     }
+  };
 
-    const select = [
-        {
-            key: "select-location",
-            label: "Chọn rạp",
-            state: stateSelect["select-location"]?.[0] ? `- ${stateSelect["select-location"][0]}` : ""
-        },
-        {
-            key: "select-movie",
-            label: "Chọn phim",
-            state: stateSelect["select-movie"]?.[0] ? `- ${stateSelect["select-movie"][0]}` : ""
-        },
-        {
-            key: "select-showtime",
-            label: "Chọn suất chiếu",
-            state: selectedShowtimeDate || selectedShowtimeTime
-                ? `- ${[selectedShowtimeDate, selectedShowtimeTime].filter(Boolean).join(" | ")}`
-                : ""
-        }
-    ]
+  const toggleSection = (key: string, forceState?: boolean) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [key]: forceState !== undefined ? forceState : !prev[key]
+    }));
+  };
 
-    const currentStepIndex = Math.max(steps.findIndex((step) => step.key === selectedStep), 0);
-    const disabledKeys = steps.filter((_, index) => index > maxUnlockedStepIndex).map((step) => step.key);
-    const hasSelectedLocation = Boolean(stateSelect["select-location"]?.[0]);
-    const hasSelectedMovie = Boolean(stateSelect["select-movie"]?.[0]);
-    const hasSelectedShowtime = Boolean(selectedShowtimeDate && selectedShowtimeTime);
-    const hasSelectedSeat = (stateSelect["select-seat"]?.length ?? 0) > 0;
-
-    const canGoNext = (() => {
-        if (selectedStep === "select-service") {
-            return hasSelectedLocation && hasSelectedMovie && hasSelectedShowtime;
-        }
-
-        if (selectedStep === "select-seat") {
-            return hasSelectedSeat;
-        }
-
-        return true;
-    })();
-
-    const handleStepChange = (key: string) => {
-        const nextIndex = steps.findIndex((step) => step.key === key);
-        if (nextIndex === -1 || nextIndex > maxUnlockedStepIndex) {
-            return;
-        }
-
-        setSelectedStep(key);
+  const canProceed = useMemo(() => {
+    if (currentStep === "select-service") {
+      return !!(selection.location && selection.movieTitle && selection.showtimeId);
     }
-
-    const handleNextStep = () => {
-        if (!canGoNext) {
-            return;
-        }
-
-        if (currentStepIndex < steps.length - 1) {
-            const nextStepIndex = currentStepIndex + 1;
-            setSelectedStep(steps[nextStepIndex].key);
-            setMaxUnlockedStepIndex((prev) => Math.max(prev, nextStepIndex));
-        }
+    if (currentStep === "select-seat") {
+      return selection.selectedSeats.length > 0;
     }
+    return true;
+  }, [currentStep, selection]);
 
-    const handlePreviousStep = () => {
-        if (currentStepIndex > 0) {
-            setSelectedStep(steps[currentStepIndex - 1].key);
-        }
+  const navigateToStep = (stepKey: string) => {
+    const stepIdx = STEPS.findIndex(s => s.key === stepKey);
+    if (stepIdx <= unlockedStepIndex) setCurrentStep(stepKey);
+  };
+
+  const nextStep = () => {
+    if (!canProceed) return;
+    const currentIdx = STEPS.findIndex(s => s.key === currentStep);
+    if (currentIdx < STEPS.length - 1) {
+      const nextIdx = currentIdx + 1;
+      setCurrentStep(STEPS[nextIdx].key);
+      setUnlockedStepIndex(prev => Math.max(prev, nextIdx));
     }
+  };
 
-    return (
-        <div className="min-h-[62.5vh] flex flex-col">
-            <div className="flex justify-center items-center my-2 bg-neutral-100 dark:bg-neutral-900 md:py-5 border-1 border-neutral-200 dark:border-neutral-800 shadow-sm">
-                <Tabs
-                    items={steps}
-                    variant="underlined"
-                    selectedKey={selectedStep}
-                    onSelectionChange={(key) => handleStepChange(String(key))}
-                    disabledKeys={disabledKeys}
-                >
-                    {(item) => (
-                        <Tab 
-                            key={item.key} 
-                            title={
-                                <div className="flex gap-2 items-center justify-center">
-                                    <span className="md:block hidden">{item.icon}</span>
-                                    <span className="font-medium tracking-wide md:text-base text-xs">{item.label}</span>
-                                </div>
-                            } 
-                            className="pointer-events-none"
-                        />
-                    )}
-                </Tabs>
-            </div>
+  const prevStep = () => {
+    const currentIdx = STEPS.findIndex(s => s.key === currentStep);
+    if (currentIdx > 0) setCurrentStep(STEPS[currentIdx - 1].key);
+  };
 
-            <div className="flex md:flex-row flex-col gap-4 md:w-[72%] w-full h-full px-4 md:my-16 my-8 mx-auto">
-                <div className="md:w-3/4 w-full flex flex-col gap-8 items-center">
-                    {selectedStep === "select-service" ? (
-                        <SelectServiceTab
-                            select={select}
-                            showSelect={showSelect}
-                            stateSelect={stateSelect}
-                            locations={locations}
-                            nowShowingMovies={nowShowingMovies}
-                            selectedCinema={selectedCinema}
-                            onToggleSection={handleShowSelect}
-                            onSelectValue={handleSelectState}
-                        />
-                    ) : selectedStep === "select-seat" ? (
-                        <SelectSeatTab
-                            selectedSeats={stateSelect["select-seat"] ?? []}
-                            selectedShowtime={selectedShowtimeTime}
-                            onSelectSeats={(seats) => handleSelectState("select-seat", seats)}
-                            onSelectShowtime={(time) => handleSelectState("select-showtime", [selectedShowtimeDate, time])}
-                        />
-                    ) : (
-                        <div className="w-full min-h-14 bg-neutral-100 dark:bg-neutral-900 rounded-xs border-1 border-neutral-200 dark:border-neutral-800 shadow-sm px-4 py-6">
-                            <p className="font-semibold text-xl">{steps[currentStepIndex].label}</p>
+  const legacyStateSelect = { 
+    "select-location": [selection.location], 
+    "select-movie": [selection.movieTitle],
+    "select-cinema": [selection.cinemaId],
+    "select-showtime": [selection.showtimeDate, selection.showtimeId],
+    "select-seat": selection.selectedSeats
+  };
+
+  const summaryDisplay = [
+    { label: "Chọn rạp", val: selection.location },
+    { label: "Chọn phim", val: selection.movieTitle },
+    { 
+      label: "Chọn suất chiếu", 
+      val: activeShowtime ? `${selection.showtimeDate} ${new Date(activeShowtime.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}` : "" 
+    }
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#FDFDFD] dark:bg-[#050505]">
+      {/* Step Navigation Header */}
+      <div className="sticky top-0 z-30 w-full bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-zinc-200 dark:border-white/10">
+        <div className="max-w-7xl mx-auto px-6">
+          <Tabs
+            items={STEPS}
+            variant="underlined"
+            selectedKey={currentStep}
+            onSelectionChange={(k) => navigateToStep(String(k))}
+            disabledKeys={STEPS.slice(unlockedStepIndex + 1).map(s => s.key)}
+            classNames={{
+              tabList: "gap-4 md:gap-12 relative rounded-none p-0 border-none h-20",
+              cursor: "w-full bg-amber-500 h-[3px] rounded-full",
+              tab: "max-w-fit px-0 h-20",
+              tabContent: "group-data-[selected=true]:text-amber-500 font-black uppercase text-xs tracking-[0.2em] transition-all duration-300"
+            }}
+          >
+            {(step) => (
+              <Tab 
+                key={step.key} 
+                title={
+                  <div className="flex gap-2.5 items-center justify-center">
+                    <div className={cn(
+                      "p-1.5 rounded-lg transition-colors",
+                      currentStep === step.key ? "bg-amber-500/10 text-amber-500" : "text-zinc-400"
+                    )}>
+                      {step.icon}
+                    </div>
+                    <span className="hidden md:block">{step.label}</span>
+                  </div>
+                } 
+              />
+            )}
+          </Tabs>
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col md:flex-row gap-8 max-w-7xl w-full mx-auto px-6 py-10">
+        {/* Main Content Area */}
+        <div className="flex-1 space-y-6">
+          {currentStep === "select-service" ? (
+            <SelectServiceTab
+              select={summaryDisplay.map(s => ({ key: s.label === "Chọn rạp" ? "select-location" : s.label === "Chọn phim" ? "select-movie" : "select-showtime", label: s.label, state: s.val ? `- ${s.val}` : "" }))}
+              showSelect={expandedSections}
+              stateSelect={legacyStateSelect}
+              locations={locations}
+              cinemas={cinemas}
+              nowShowingMovies={movies.filter(m => m.status === 0)}
+              showtimes={showtimes}
+              selectedCinema={cinemas.find(c => String(c.cinema_id) === selection.cinemaId)}
+              isLoadingShoTimes={isLoadingShowtimes}
+              onToggleSection={toggleSection}
+              onSelectValue={(k, v) => {
+                if (k === 'select-location') handleSelectionChange('location', v[0]);
+                if (k === 'select-movie') handleSelectionChange('movieTitle', v[0]);
+                if (k === 'select-cinema') handleSelectionChange('cinemaId', v[0]);
+                if (k === 'select-showtime') {
+                   handleSelectionChange('showtimeDate', v[0]);
+                   if (v[1]) handleSelectionChange('showtimeId', v[1]);
+                }
+              }}
+              onFetchShowtimes={fetchAllShowtimes}
+            />
+          ) : currentStep === "select-seat" ? (
+            <SelectSeatTab
+              selectedSeatCodes={selection.selectedSeats}
+              activeShowtimeId={selection.showtimeId}
+              seats={seats}
+              showtimeOptions={filteredShowtimes.map(st => ({
+                id: st.showtime_id,
+                label: new Date(st.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+              }))}
+              onSelectSeats={(s) => handleSelectionChange('selectedSeats', s)}
+              onSelectShowtime={(id) => handleSelectionChange('showtimeId', id)}
+            />
+          ) : (
+             <div className="w-full min-h-100 flex flex-col items-center justify-center bg-white dark:bg-zinc-900/50 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/10 shadow-2xl p-12 text-center space-y-4">
+                <div className="w-20 h-20 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
+                  <BadgeCheck size={40} />
+                </div>
+                <h2 className="text-3xl font-black uppercase italic tracking-tighter">
+                  {STEPS.find(s => s.key === currentStep)?.label}
+                </h2>
+                <p className="text-zinc-500 font-medium max-w-md">
+                  Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn.
+                </p>
+             </div>
+          )}
+        </div>
+
+        {/* Sidebar Summary */}
+        <div className="md:w-96 space-y-6">
+          <div className="sticky top-28 space-y-6">
+            <div className="relative group overflow-hidden bg-white dark:bg-zinc-900/50 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-sm shadow-2xl">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-amber-500 to-orange-600" />
+              
+              <div className="p-6 space-y-6">
+                <div className="flex gap-6">
+                  <div className="relative w-28 h-40 shrink-0 rounded-lg overflow-hidden shadow-xl border border-white/10">
+                    <Image
+                      src={activeMovie?.poster_path ? `https://image.tmdb.org/t/p/w185${activeMovie.poster_path}` : "/h.png"}
+                      alt="Movie Poster"
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-3 py-1">
+                    <h2 className="text-lg font-black leading-tight text-zinc-900 dark:text-white uppercase italic">
+                      {selection.movieTitle || "Chưa chọn phim"}
+                    </h2>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
+                        <MapPin size={14} className="text-amber-500" />
+                        <span className="text-xs font-bold uppercase tracking-wider">{selection.location || "Chưa chọn rạp"}</span>
+                      </div>
+                      
+                      {activeShowtime && (
+                        <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
+                          <Calendar size={14} className="text-amber-500" />
+                          <span className="text-xs font-bold uppercase tracking-wider">
+                            {selection.showtimeDate} • {new Date(activeShowtime.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
                         </div>
-                    )}
+                      )}
+
+                      {activeShowtime?.Room?.nameRoom && (
+                        <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
+                          <Monitor size={14} className="text-amber-500" />
+                          <span className="text-xs font-bold uppercase tracking-wider">Phòng: {activeShowtime.Room.nameRoom}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
-               <div className="md:w-1/4 w-full flex flex-col items-startself-start">
-                    <div className="w-full flex flex-col bg-neutral-100 dark:bg-neutral-900 rounded-xs border-1 border-neutral-200 dark:border-neutral-800 shadow-sm ">
-                        <div className="bg-neutral-500 h-2 w-full rounded-t-xs" />
+                <Divider className="bg-zinc-200 dark:bg-white/10" />
 
-                        <div className="flex gap-4 items-start m-4">
-                            <Image
-                                src={stateSelect["select-movie"] && stateSelect["select-movie"].length > 0 ? `https://image.tmdb.org/t/p/w185${movies.find((movie) => movie.title === stateSelect["select-movie"]![0])?.poster_path}` : "/h.png"}
-                                alt="Movie Poster"
-                                width={120}
-                                height={200}
-                                className="border-1 border-neutral-200 dark:border-neutral-800 rounded-sm shadow-sm"
-                            />
-
-                            <div className="flex flex-col gap-2">
-                                <p className="text-sm font-bold text-neutral-800 dark:text-neutral-200">
-                                    {stateSelect["select-movie"] && stateSelect["select-movie"].length > 0 ? stateSelect["select-movie"]![0] : ""}
-                                </p>
-
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                                    {stateSelect["select-location"] && stateSelect["select-location"].length > 0 ? stateSelect["select-location"]![0] : ""}
-                                </p>
-
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                                    {[selectedShowtimeDate, selectedShowtimeTime].filter(Boolean).join(" | ")}
-                                </p>
-
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                                    {stateSelect["select-seat"] && stateSelect["select-seat"].length > 0
-                                        ? `Ghế: ${stateSelect["select-seat"].join(", ")}`
-                                        : ""}
-                                </p>
-                            </div>
-                        </div>
-
-                        <Divider />
-
-                        <div className="flex justify-between w-full p-4">
-                            <span>Tổng cộng: </span>
-                            <span className="font-bold">0 vnđ</span>
-                        </div>
-                    </div> 
-
-                    <div className="flex gap-4 mt-8 justify-end">
-                        <button
-                            type="button"
-                            onClick={handlePreviousStep}
-                            disabled={currentStepIndex === 0}
-                            className="px-4 py-2 rounded-sm border-1 border-neutral-300 dark:border-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-700 cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                            Quay lại
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={handleNextStep}
-                            disabled={currentStepIndex === steps.length - 1 || !canGoNext}
-                            className="px-4 py-2 rounded-sm bg-neutral-900 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-900 border-1 border-neutral-900 dark:border-neutral-100 hover:bg-neutral-700 dark:hover:bg-neutral-300 cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                            Tiếp theo
-                        </button>
+                {selection.selectedSeats.length > 0 && (
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Ghế đã chọn</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selection.selectedSeats.map(seat => (
+                        <span key={seat} className="px-3 py-1 rounded-md bg-amber-500/10 text-amber-500 text-xs font-black border border-amber-500/20 shadow-sm">
+                          {seat}
+                        </span>
+                      ))}
                     </div>
-                </div> 
+                  </div>
+                )}
+
+                <div className="flex justify-between items-end pt-4 border-t border-zinc-100 dark:border-white/5">
+                  <span className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">Tổng cộng</span>
+                  <span className="text-2xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+                    0 <span className="text-sm">VNĐ</span>
+                  </span>
+                </div>
+              </div>
             </div>
+
+            <div className="flex gap-4 justify-end">
+              <Button
+                variant="bordered"
+                size="lg"
+                onClick={prevStep}
+                isDisabled={currentStep === "select-service"}
+                className="flex gap-2 items-center justify-center px-4 py-2 rounded-sm border-2 font-bold text-sm transition-all hover:bg-zinc-100 dark:hover:bg-white/5"
+                startContent={<ChevronLeft size={18} />}
+              >
+                Quay lại
+              </Button>
+
+              <Button
+                size="lg"
+                onClick={nextStep}
+                isDisabled={!canProceed}
+                className={cn(
+                  "flex gap-2 items-center justify-center px-4 py-2 rounded-sm font-bold text-sm transition-all shadow-xl",
+                  canProceed 
+                    ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-[0_10px_30px_rgba(245,158,11,0.3)] hover:shadow-[0_15px_40px_rgba(245,158,11,0.4)] hover:-translate-y-1" 
+                    : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                )}
+                endContent={<ChevronRight size={18} />}
+              >
+                Tiếp theo
+              </Button>
+            </div>
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  );
 }

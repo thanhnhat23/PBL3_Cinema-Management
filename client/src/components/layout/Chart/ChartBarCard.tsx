@@ -29,7 +29,8 @@ const getChartConfig = (color: string): ChartConfig => ({
   },
 })
 
-export const ChartBarCard = ({ color, data }: { color: string; data: BarChartItem[] }) => {
+import React from "react"
+export const ChartBarCard = React.memo(({ color, data }: { color: string; data: BarChartItem[] }) => {
   const chartConfig = getChartConfig(color);
 
   return (
@@ -89,4 +90,6 @@ export const ChartBarCard = ({ color, data }: { color: string; data: BarChartIte
       </CardContent>
     </Card>
   )
-}
+})
+
+ChartBarCard.displayName = "ChartBarCard";

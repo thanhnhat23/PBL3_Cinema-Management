@@ -2,28 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover"
 
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
 } from "@/components/ui/tooltip"
 
 import { useChatBotStore } from "@/stores/useChatBot";
 import { Bot } from "../icons/bot";
-import { Send } from "lucide-react";
+import { Send, Sparkles } from "lucide-react";
 
 function TypingIndicator() {
     return (
-        <div className="w-fit rounded-2xl rounded-tl-md bg-neutral-100 px-3 py-2 text-neutral-600 dark:bg-white/8 dark:text-white/70">
+        <div className="w-fit rounded-2xl rounded-bl-md bg-neutral-100 px-4 py-2.5 text-neutral-600 dark:bg-white/5 dark:text-white/50 border-1 border-neutral-200 dark:border-white/10 shadow-sm">
             <div className="flex items-center gap-1.5">
-                <span className="h-1 w-1 rounded-full bg-current opacity-50 animate-bounce [animation-delay:-0.2s]" />
-                <span className="h-1 w-1 rounded-full bg-current opacity-70 animate-bounce [animation-delay:-0.1s]" />
-                <span className="h-1 w-1 rounded-full bg-current opacity-90 animate-bounce" />
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-400 animate-bounce [animation-delay:-0.3s]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-400 animate-bounce [animation-delay:-0.15s]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-400 animate-bounce" />
             </div>
         </div>
     );
@@ -31,10 +31,7 @@ function TypingIndicator() {
 
 function formatChatTimestamp(value: string) {
     const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-        return value;
-    }
+    if (Number.isNaN(date.getTime())) return value;
 
     return new Intl.DateTimeFormat("vi-VN", {
         day: "2-digit",
@@ -51,158 +48,152 @@ export default function ChatBot() {
     const listRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        listRef.current?.scrollTo({
-            top: listRef.current.scrollHeight,
-            behavior: "smooth",
-        });
-    }, [messages]);
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
+    }, [messages, isSending]);
 
     const handleSend = async () => {
         const trimmed = message.trim();
         if (!trimmed || isSending) return;
-
         setMessage("");
         await sendMessage(trimmed);
     };
 
     return (
-        <div className="fixed bottom-12 right-12 z-50">
+        <div className="fixed bottom-8 right-8 z-50">
             <Popover>
-                    <Tooltip side="bottom" align="center" sideOffset={8}>
-                        <TooltipTrigger>
-                            <PopoverTrigger asChild>
-                                <button className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-neutral-200 bg-white shadow-lg hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                                    <Bot size={24} animateOnHover/>
-                                </button>
-                            </PopoverTrigger>
-                        </TooltipTrigger>
-
-                        <TooltipContent>
-                            <p>Trợ lí Milkywayyy</p>
-                        </TooltipContent>
-                    </Tooltip>
+                <Tooltip side="left" align="center" sideOffset={12}>
+                    <TooltipTrigger asChild>
+                        <PopoverTrigger asChild>
+                            <button className="group relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-1 border-zinc-200 bg-sidebar text-sidebar-foreground shadow-lg transition-all hover:scale-110 active:scale-95 dark:border-neutral-800">
+                                <Bot size={28} animation={isSending ? "thinking" : "blink"} animate={true} />
+                                <div className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 text-white shadow-sm dark:bg-white dark:text-zinc-900">
+                                    <Sparkles size={8} fill="currentColor" />
+                                </div>
+                            </button>
+                        </PopoverTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-neutral-900 text-white border-1 border-black dark:border-neutral-800">
+                        <p className="font-medium">Hỏi Milky Wayyy</p>
+                    </TooltipContent>
+                </Tooltip>
 
                 <PopoverContent
                     side="top"
                     align="end"
-                    sideOffset={12}
-                    className="h-140 w-100 border border-neutral-200 bg-white p-0 text-neutral-900 shadow-2xl dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+                    sideOffset={16}
+                    className="flex h-130 w-95 flex-col overflow-hidden rounded-sm border-1 border-zinc-200 bg-sidebar p-0 shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:border-zinc-800"
                 >
-                    <div className="flex flex-col h-1/8 items-start justify-center border-b border-neutral-200 px-4 py-3 dark:border-white/10">
-                        <p className="flex gap-2 text-sm font-semibold items-center">
-                            <Bot size={16} />
-                            Milky Wayyy đây!
-                        </p>
-
-                        <p className="text-[11px] text-neutral-500 dark:text-white/55">Trợ lí hỗ trợ rạp chiếu phim</p>
+                    {/* Header */}
+                    <div className="relative border-b-1 border-neutral-100 bg-sidebar p-3 text-sidebar-foreground dark:border-white/10">
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900 dark:bg-white/10 dark:text-white">
+                                    <Bot size={22} animation={isSending ? "thinking" : "blink"} animate={true} />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-bold leading-none tracking-tight">Milky Wayyy</h3>
+                                    <p className="mt-1 text-[10px] font-medium text-neutral-400 flex items-center gap-1">
+                                        <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                                        Đang trực tuyến
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
+                    {/* Chat Area */}
                     <div
                         ref={listRef}
-                        className="flex h-6/8 flex-col gap-4 overflow-y-auto px-3 py-3 text-sm"
+                        className="flex-1 overflow-y-auto bg-neutral-50/50 p-4 dark:bg-transparent custom-scrollbar space-y-4"
                     >
                         {messages.length === 0 ? (
-                            <div className="rounded-2xl rounded-tl-xs bg-neutral-100 px-3 py-2 text-neutral-700 dark:bg-white/8 dark:text-white/70 border-1 border-neutral-300 dark:border-white/20">
-                                Xin chào, tôi có thể giúp bạn tìm phim, xem lịch chiếu hoặc hỗ trợ đặt vé.
+                            <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-60">
+                                <div className="p-4 rounded-full bg-neutral-100 dark:bg-white/5">
+                                    <Bot size={40} className="text-neutral-400" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold">Xin chào!</p>
+                                    <p className="text-xs px-10 leading-relaxed">Tôi là Milky Wayyy. Bạn cần tìm phim, lịch chiếu hay hỗ trợ gì không?</p>
+                                </div>
                             </div>
                         ) : (
-                            messages.map((item) => (
-                                <div key={item.id} className={`flex max-w-[85%] flex-col gap-1 ${item.role === 'user' ? 'ml-auto items-end' : 'items-start'}`}>
-                                    <div
-                                        className={`rounded-2xl border-1 px-3 py-2 leading-relaxed ${
-                                            item.role === 'user'
-                                                ? 'rounded-tr-xs bg-primary text-primary-foreground'
-                                                : 'rounded-tl-xs bg-neutral-100 text-neutral-800 dark:bg-white/8 dark:text-white/90'
-                                        }`}
-                                    >
-                                        {item.role === 'assistant' ? (
-                                            <ReactMarkdown
-                                                remarkPlugins={[remarkGfm]}
-                                                components={{
-                                                    p: ({ children }) => (
-                                                        <p className="mb-2 last:mb-0">{children}</p>
-                                                    ),
-                                                    ul: ({ children }) => (
-                                                        <ul className="mb-2 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>
-                                                    ),
-                                                    ol: ({ children }) => (
-                                                        <ol className="mb-2 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>
-                                                    ),
-                                                    li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-                                                    strong: ({ children }) => (
-                                                        <strong className="font-semibold text-neutral-900 dark:text-white">{children}</strong>
-                                                    ),
-                                                    em: ({ children }) => <em className="italic text-inherit">{children}</em>,
-                                                    a: ({ children, href }) => (
-                                                        <a
-                                                            href={href}
-                                                            target="_blank"
-                                                            rel="noreferrer"
-                                                            className="text-blue-700 underline decoration-blue-500/50 underline-offset-2 hover:text-blue-800 dark:text-sky-300 dark:decoration-sky-300/60 dark:hover:text-sky-200"
-                                                        >
-                                                            {children}
-                                                        </a>
-                                                    ),
-                                                    code: ({ children }) => (
-                                                        <code className="rounded-md bg-black/5 px-1.5 py-0.5 font-mono text-[0.85em] text-neutral-800 dark:bg-white/10 dark:text-white">
-                                                            {children}
-                                                        </code>
-                                                    ),
-                                                    blockquote: ({ children }) => (
-                                                        <blockquote className="border-l-2 border-neutral-300 pl-3 text-neutral-600 dark:border-white/20 dark:text-white/75">
-                                                            {children}
-                                                        </blockquote>
-                                                    ),
-                                                    br: () => <br />,
-                                                }}
-                                            >
-                                                {item.content}
-                                            </ReactMarkdown>
-                                        ) : (
-                                            <p className="whitespace-pre-wrap wrap-break-word">{item.content}</p>
+                            messages.map((item, index) => (
+                                <div key={item.id || index} className={`flex flex-col ${item.role === 'user' ? 'items-end' : 'items-start'}`}>
+                                    <div className="flex items-end gap-2 max-w-[85%] group">
+                                        {item.role === 'assistant' && (
+                                            <div className="h-6 w-6 rounded-lg bg-neutral-200 dark:bg-white/10 flex items-center justify-center shrink-0 mb-1">
+                                                <Bot size={14} />
+                                            </div>
                                         )}
-                                    </div>
 
-                                    <span
-                                        className={`px-1 text-[11px] leading-none text-neutral-500 dark:text-neutral-400`}
-                                    >
-                                        {formatChatTimestamp(item.createdAt)}
-                                    </span>
+                                        <div className={`flex flex-col gap-1 ${item.role === 'user' ? 'items-end' : 'items-start'}`}>
+                                            <div
+                                                className={`px-4 py-2.5 text-sm shadow-sm transition-all ${item.role === 'user'
+                                                        ? 'rounded-2xl rounded-tr-none bg-zinc-900 text-white font-medium dark:bg-white dark:text-zinc-900'
+                                                        : 'rounded-2xl rounded-tl-none bg-white text-neutral-800 border-1 border-neutral-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800'
+                                                    }`}
+                                            >
+                                                {item.role === 'assistant' ? (
+                                                    <div className="markdown-content">
+                                                        <ReactMarkdown
+                                                            remarkPlugins={[remarkGfm]}
+                                                            components={{
+                                                                p: ({ children }) => <p className="leading-relaxed mb-2 last:mb-0">{children}</p>,
+                                                                ul: ({ children }) => <ul className="list-disc pl-4 space-y-1 mb-2">{children}</ul>,
+                                                                li: ({ children }) => <li className="text-[13px]">{children}</li>,
+                                                                strong: ({ children }) => <strong className="font-bold text-red-500 dark:text-red-400">{children}</strong>,
+                                                            }}
+                                                        >
+                                                            {item.content}
+                                                        </ReactMarkdown>
+                                                    </div>
+                                                ) : (
+                                                    <p className="whitespace-pre-wrap">{item.content}</p>
+                                                )}
+                                            </div>
+                                            <span className="text-[9px] text-neutral-400 px-1 uppercase font-bold tracking-tighter">
+                                                {formatChatTimestamp(item.createdAt)}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             ))
                         )}
 
-                        {isSending ? (
-                            <TypingIndicator />
-                        ) : null}
+                        {isSending && <TypingIndicator />}
                     </div>
 
-                    <div className="min-h-1/8 border-t border-neutral-200 p-3 dark:border-white/10">
-                        <div className="flex items-end gap-2 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 dark:border-white/10 dark:bg-white/5">
+                    {/* Input Area */}
+                    <div className="p-4 bg-sidebar border-t-1 border-neutral-100 dark:border-white/5">
+                        <div className="relative flex items-center bg-neutral-100 dark:bg-white/5 rounded-2xl border-1 border-transparent focus-within:border-zinc-500/30 focus-within:bg-white dark:focus-within:bg-zinc-900 transition-all shadow-inner">
                             <textarea
                                 value={message}
-                                onChange={(event) => setMessage(event.target.value)}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' && !event.shiftKey) {
-                                        event.preventDefault();
+                                onChange={(e) => setMessage(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
                                         void handleSend();
                                     }
                                 }}
                                 rows={1}
-                                placeholder="Nhập tin nhắn..."
-                                className="h-5 max-h-28 flex-1 resize-none border-0 bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-white dark:placeholder:text-white/35"
+                                placeholder="Hỏi tôi bất cứ điều gì..."
+                                className="w-full bg-transparent px-4 py-3 text-sm outline-none resize-none min-h-11 max-h-32 custom-scrollbar"
                             />
-
-                            <button
-                                type="button"
-                                onClick={() => void handleSend()}
-                                disabled={!message.trim() || isSending}
-                                className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
-                                aria-label="Gửi tin nhắn"
-                            >
-                                <Send size={14} />
-                            </button>
+                            <div className="flex items-center gap-1 pr-2">
+                                <button
+                                    onClick={() => void handleSend()}
+                                    disabled={!message.trim() || isSending}
+                                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900 text-white transition-all enabled:hover:bg-black enabled:active:scale-90 disabled:opacity-30 disabled:grayscale dark:bg-white dark:text-zinc-900"
+                                >
+                                    <Send size={14} />
+                                </button>
+                            </div>
                         </div>
+                        <p className="mt-2 text-center text-[9px] text-neutral-400">
+                            Milky Wayyy có thể đưa ra thông tin không chính xác.
+                        </p>
                     </div>
                 </PopoverContent>
             </Popover>

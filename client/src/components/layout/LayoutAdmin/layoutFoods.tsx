@@ -14,7 +14,7 @@ import {
     DrawerFooter,
     useDisclosure,
 } from "@heroui/react";
-import { EllipsisVertical, Eye, Hamburger, PenLine, Trash } from "lucide-react";
+import { EllipsisVertical, Eye, PenLine, Trash, Pizza, Boxes, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,11 +60,23 @@ const getSnackTypeText = (type: number) => {
 };
 
 export default function LayoutFood() {
-    const { snacks, isFetchingSnacks, fetchAllSnacks, updateSnack, isUpdatingSnack } = useSnackStore();
+    const {
+        snacks,
+        isFetchingSnacks,
+        fetchAllSnacks,
+        createSnack,
+        updateSnack,
+        deleteSnack,
+        isUpdatingSnack,
+        isCreatingSnack
+    } = useSnackStore();
+
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedSnack, setSelectedSnack] = useState<Snack | null>(null);
+    const [isAdding, setIsAdding] = useState(false);
     const drawerContainerRef = useRef<HTMLDivElement | null>(null);
+
     const [editForm, setEditForm] = useState({
         name: "",
         type: "0",
@@ -72,7 +84,24 @@ export default function LayoutFood() {
         imageUrl: "",
     });
 
+    useEffect(() => {
+        fetchAllSnacks();
+    }, [fetchAllSnacks]);
+
+    const handleOpenAdd = () => {
+        setIsAdding(true);
+        setSelectedSnack(null);
+        setEditForm({
+            name: "",
+            type: "0",
+            price: "",
+            imageUrl: "",
+        });
+        onEditOpen();
+    };
+
     const handleOpenEdit = useCallback((snack: Snack) => {
+        setIsAdding(false);
         setSelectedSnack(snack);
         setEditForm({
             name: snack.name ?? "",
@@ -84,21 +113,21 @@ export default function LayoutFood() {
     }, [onEditOpen]);
 
     const handleSaveSnack = async () => {
-        if (!selectedSnack) return;
-
-        await updateSnack(selectedSnack.snack_id, {
+        const payload = {
             name: editForm.name.trim(),
             type: Number(editForm.type) as Snack["type"],
             price: Number(editForm.price),
             imageUrl: editForm.imageUrl.trim() || null,
-        });
+        };
+
+        if (isAdding) {
+            await createSnack(payload);
+        } else if (selectedSnack) {
+            await updateSnack(selectedSnack.snack_id, payload);
+        }
 
         onEditOpenChange();
     };
-
-    useEffect(() => {
-        fetchAllSnacks();
-    }, [fetchAllSnacks]);
 
     const renderCell = useCallback((snack: Snack, columnKey: Key) => {
         const cellValue = snack[columnKey as keyof Snack];
@@ -107,27 +136,27 @@ export default function LayoutFood() {
             case "name":
                 return (
                     <div className="flex gap-3 items-center">
-                        <Image 
-                            src={snack.imageUrl || "https://placehold.co/100x100?text=Snack"}
-                            alt={snack.name}
-                            width={40}
-                            height={40}
-                            className="w-10 h-10 object-cover"
-                        />
-
-                        <span className="font-semibold">{snack.name}</span>
+                        <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-sm">
+                            <Image
+                                src={snack.imageUrl || "https://placehold.co/100x100?text=Snack"}
+                                alt={snack.name}
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                        <span className="font-semibold text-zinc-700 dark:text-zinc-200">{snack.name}</span>
                     </div>
                 );
             case "type": {
                 const typeText = getSnackTypeText(snack.type);
                 return (
-                    <Chip className="capitalize" color={snackTypeColorMap[typeText.toLowerCase()]} size="sm" variant="flat">
+                    <Chip className="capitalize font-bold" color={snackTypeColorMap[typeText.toLowerCase()]} size="sm" variant="flat">
                         {typeText}
                     </Chip>
                 );
             }
             case "price":
-                return <span>{snack.price.toFixed(0)}vnđ</span>;
+                return <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(snack.price).toLocaleString("vi-VN")} đ</span>;
             case "actions":
                 return (
                     <Dropdown classNames={{
@@ -156,7 +185,13 @@ export default function LayoutFood() {
                             >
                                 Sửa
                             </DropdownItem>
-                            <DropdownItem key="delete" className="text-danger" color="danger" startContent={<Trash size={16} />}>
+                            <DropdownItem
+                                key="delete"
+                                className="text-danger"
+                                color="danger"
+                                startContent={<Trash size={16} />}
+                                onPress={() => deleteSnack(snack.snack_id)}
+                            >
                                 Xóa
                             </DropdownItem>
                         </DropdownMenu>
@@ -165,76 +200,116 @@ export default function LayoutFood() {
             default:
                 return String(cellValue ?? "");
         }
-    }, [handleOpenEdit, onOpen]);
+    }, [handleOpenEdit, onOpen, deleteSnack]);
 
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-                <Hamburger />
-                Dashboard: Quản lí thức ăn
-            </h1>
-
+            <div className="relative overflow-hidden rounded-sm border border-zinc-100 dark:border-zinc-800 bg-sidebar p-8 shadow-sm">
+                <div className="absolute top-0 right-0 p-8 opacity-10 dark:opacity-20 pointer-events-none">
+                    <Pizza size={120} />
+                </div>
+                <div className="relative z-10 flex flex-col gap-4">
+                    <div className="inline-flex items-center gap-2 w-fit rounded-full bg-zinc-100 dark:bg-zinc-800 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                        Management System
+                    </div>
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
+                            Quản lý Thực đơn
+                        </h1>
+                        <p className="text-sm text-zinc-500 font-medium max-w-lg">
+                            Cấu hình danh mục đồ ăn, thức uống và các gói combo ưu đãi để phục vụ khách hàng tại quầy popcorn.
+                        </p>
+                    </div>
+                </div>
+            </div>
             <DataTableAdmin<Snack>
                 columns={columns}
                 items={snacks}
                 isLoading={isFetchingSnacks}
-                searchPlaceholder="Tìm theo tên món..."
+                searchPlaceholder="Tìm kiếm tên món ăn, thức uống..."
                 addButtonLabel="Thêm món"
-                totalLabel={(count) => `Tổng cộng ${count} món`}
-                emptyLabel="Không có đồ ăn"
-                loadingLabel="Đang tải dữ liệu đồ ăn..."
+                onAdd={handleOpenAdd}
+                totalLabel={(count) => `Tổng cộng ${count} sản phẩm`}
+                emptyLabel="Danh sách món ăn trống"
+                loadingLabel="Đang tải dữ liệu thực đơn..."
                 defaultSort={{ column: "name", direction: "ascending" }}
                 rowKey={(item) => item.snack_id}
                 searchBy={(item) => item.name}
                 renderCell={renderCell}
+                filters={[
+                    {
+                        uid: "type",
+                        name: "Loại",
+                        options: [
+                            { name: "Food", uid: "0" },
+                            { name: "Drink", uid: "1" },
+                            { name: "Combo", uid: "2" },
+                        ]
+                    }
+                ]}
             />
 
-            <Drawer isOpen={isOpen} onOpenChange={onOpenChange} classNames={{ base: "bg-sidebar" }}>
+            {/* View Drawer */}
+            <Drawer isOpen={isOpen} onOpenChange={onOpenChange} size="sm" classNames={{ base: "bg-sidebar" }}>
                 <DrawerContent>
                     {(onClose) => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">
-                                {selectedSnack ? `Chi tiết: ${selectedSnack.name}` : "Chi tiết đồ ăn"}
+                            <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
+                                Chi tiết sản phẩm
                             </DrawerHeader>
 
-                            <DrawerBody>
+                            <DrawerBody className="p-0">
                                 {selectedSnack ? (
-                                    <div className="flex flex-col gap-3 justify-center items-center">
-                                        <Image
-                                            src={selectedSnack.imageUrl || "https://placehold.co/300x600?text=Snack"}
-                                            alt={selectedSnack.name}
-                                            width={300}
-                                            height={300}
-                                            className="w-full object-cover"
-                                        />
-
-                                        <div className="flex flex-col gap-2 mt-2 items-center">
-                                            <p className="font-semibold text-3xl">{selectedSnack.name}</p>
-
-                                            <div className="flex gap-2 flex-wrap">
-                                                <Badge>
-                                                    {selectedSnack.snack_id}
-                                                </Badge>
-
-                                                <Badge variant={"secondary"}>
+                                    <div className="flex flex-col h-full bg-zinc-50/30 dark:bg-zinc-950/30">
+                                        <div className="relative w-full aspect-video overflow-hidden group">
+                                            <Image
+                                                src={selectedSnack.imageUrl || "https://placehold.co/600x400?text=Snack"}
+                                                alt={selectedSnack.name}
+                                                fill
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+                                            <div className="absolute bottom-6 left-6 flex flex-col gap-1">
+                                                <Badge className="bg-emerald-500 text-white border-none px-3 py-1 font-bold w-fit">
                                                     {getSnackTypeText(selectedSnack.type)}
                                                 </Badge>
+                                                <h2 className="text-3xl font-black text-white tracking-tight drop-shadow-lg">{selectedSnack.name}</h2>
                                             </div>
+                                        </div>
 
-                                            <p>
-                                                <span className="font-semibold">Mệnh giá: </span>
-                                                {selectedSnack.price.toFixed(0)} vnđ
-                                            </p>
+                                        <div className="p-8 grid grid-cols-1 gap-8">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
+                                                    <div className="flex items-center gap-2 text-zinc-400">
+                                                        <DollarSign size={14} />
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">Giá bán</span>
+                                                    </div>
+                                                    <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
+                                                        {Number(selectedSnack.price).toLocaleString("vi-VN")} đ
+                                                    </span>
+                                                </div>
+                                                <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
+                                                    <div className="flex items-center gap-2 text-zinc-400">
+                                                        <Boxes size={14} />
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">Phân loại</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-bold text-zinc-700 dark:text-zinc-200">
+                                                            {getSnackTypeText(selectedSnack.type)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <p>Không có dữ liệu đồ ăn.</p>
+                                    <div className="p-12 text-center text-zinc-500 font-medium italic">Vui lòng chọn một sản phẩm để xem chi tiết.</div>
                                 )}
                             </DrawerBody>
-
-                            <DrawerFooter>
-                                <button onClick={onClose} className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer">
-                                    Đóng
+                            <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
+                                <button onClick={onClose} className="w-full font-bold border border-zinc-200 dark:border-zinc-800 rounded-lg py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer">
+                                    Đóng chi tiết
                                 </button>
                             </DrawerFooter>
                         </>
@@ -242,92 +317,91 @@ export default function LayoutFood() {
                 </DrawerContent>
             </Drawer>
 
-            <Drawer isOpen={isEditOpen} onOpenChange={onEditOpenChange} classNames={{ base: "bg-sidebar" }}>
+            {/* Edit/Add Drawer */}
+            <Drawer isOpen={isEditOpen} onOpenChange={onEditOpenChange} size="sm" classNames={{ base: "bg-sidebar" }}>
                 <DrawerContent>
                     {() => (
                         <>
-                            <DrawerHeader className="flex flex-col gap-1">
-                                Sửa đồ ăn
+                            <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
+                                {isAdding ? "Thêm món mới" : "Sửa món ăn"}
                             </DrawerHeader>
 
                             <DrawerBody>
-                                <p className="text-sm text-zinc-500">Thực hiện các thay đổi cho món ăn</p>
-
-                                <div ref={drawerContainerRef} className="grid gap-4 py-2">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="name" className="text-right">
-                                            Tên món
-                                        </Label>
-
+                                <div ref={drawerContainerRef} className="flex flex-col gap-6 py-6">
+                                    <div className="flex flex-col gap-2">
+                                        <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Tên sản phẩm</Label>
                                         <Input
                                             id="name"
+                                            placeholder="VD: Bắp rang bơ phô mai, Coca Cola..."
                                             value={editForm.name}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="type" className="text-right">
-                                            Loại
-                                        </Label>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex flex-col gap-2">
+                                            <Label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Phân loại</Label>
+                                            <Select
+                                                value={editForm.type}
+                                                onValueChange={(value) => setEditForm((prev) => ({ ...prev, type: value }))}
+                                            >
+                                                <SelectTrigger className="w-full bg-sidebar h-12 rounded-lg">
+                                                    <SelectValue placeholder="Chọn loại" />
+                                                </SelectTrigger>
+                                                <SelectContent container={drawerContainerRef.current}>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Loại sản phẩm</SelectLabel>
+                                                        <SelectItem value="0">Thức ăn (Food)</SelectItem>
+                                                        <SelectItem value="1">Đồ uống (Drink)</SelectItem>
+                                                        <SelectItem value="2">Combo tiết kiệm</SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
 
-                                        <Select
-                                            value={editForm.type}
-                                            onValueChange={(value) => setEditForm((prev) => ({ ...prev, type: value }))}
-                                        >
-                                            <SelectTrigger className="col-span-3 w-full bg-sidebar">
-                                                <SelectValue placeholder="Chọn loại" />
-                                            </SelectTrigger>
-
-                                            <SelectContent container={drawerContainerRef.current}>
-                                                <SelectGroup>
-                                                    <SelectLabel>Loại đồ ăn</SelectLabel>
-                                                    <SelectItem value="0">Food</SelectItem>
-                                                    <SelectItem value="1">Drink</SelectItem>
-                                                    <SelectItem value="2">Combo</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
+                                        <div className="flex flex-col gap-2">
+                                            <Label htmlFor="price" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Giá bán (VNĐ)</Label>
+                                            <Input
+                                                id="price"
+                                                type="number"
+                                                placeholder="VD: 55000"
+                                                value={editForm.price}
+                                                onChange={(event) => setEditForm((prev) => ({ ...prev, price: event.target.value }))}
+                                                className="bg-sidebar h-12 rounded-lg"
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="price" className="text-right">
-                                            Giá
-                                        </Label>
-
-                                        <Input
-                                            id="price"
-                                            type="number"
-                                            value={editForm.price}
-                                            onChange={(event) => setEditForm((prev) => ({ ...prev, price: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
-                                        />
+                                    <div className="flex flex-col gap-2">
+                                        <Label htmlFor="imageUrl" className="text-xs font-bold uppercase tracking-wider text-zinc-500">Đường dẫn hình ảnh (URL)</Label>
+                                        <div className="flex gap-2">
+                                            <Input
+                                                id="imageUrl"
+                                                placeholder="https://..."
+                                                value={editForm.imageUrl}
+                                                onChange={(event) => setEditForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
+                                                className="bg-sidebar h-12 rounded-lg"
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="imageUrl" className="text-right">
-                                            Ảnh
-                                        </Label>
-
-                                        <Input
-                                            id="imageUrl"
-                                            value={editForm.imageUrl}
-                                            onChange={(event) => setEditForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
-                                        />
-                                    </div>
+                                    {editForm.imageUrl && (
+                                        <div className="mt-2 relative w-full aspect-video rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800">
+                                            <Image src={editForm.imageUrl} alt="Preview" fill className="object-cover" />
+                                        </div>
+                                    )}
                                 </div>
                             </DrawerBody>
 
-                            <DrawerFooter>
+                            <DrawerFooter className="border-t border-zinc-100 dark:border-zinc-800">
                                 <button
                                     type="button"
                                     onClick={handleSaveSnack}
-                                    disabled={isUpdatingSnack}
-                                    className="dark:text-black text-white font-semibold border-1 border-zinc-200 dark:border-neutral-200 rounded-sm px-4 py-2 bg-neutral-800 dark:bg-neutral-100 shadow-[0_0_4px_#ffffff] cursor-pointer"
+                                    disabled={isUpdatingSnack || isCreatingSnack}
+                                    className="w-full h-12 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black font-bold rounded-lg hover:opacity-90 transition-all shadow-lg shadow-zinc-200 dark:shadow-none disabled:opacity-50 cursor-pointer"
                                 >
-                                    {isUpdatingSnack ? "Đang lưu..." : "Lưu thay đổi"}
+                                    {isUpdatingSnack || isCreatingSnack ? "Đang xử lý..." : isAdding ? "Thêm món" : "Lưu thay đổi"}
                                 </button>
                             </DrawerFooter>
                         </>

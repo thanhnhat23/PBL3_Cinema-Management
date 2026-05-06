@@ -19,6 +19,7 @@ namespace CinemaAPI.Models
     }
 
     [Index(nameof(roomLayoutType))]
+    [Index(nameof(cinema_id), nameof(nameRoom), IsUnique = true)]
     public class Room
     {
         [Key]

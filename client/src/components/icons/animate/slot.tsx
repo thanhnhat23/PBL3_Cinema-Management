@@ -58,33 +58,32 @@ function mergeProps<T extends HTMLElement>(
   return merged;
 }
 
+function getMotionComponent(type: string | React.ElementType) {
+  if (isMotionComponent(type)) return type as React.ElementType;
+  if (typeof type === 'string') {
+    return (motion as unknown as Record<string, React.ElementType>)[type] ?? type;
+  }
+
+  return type;
+}
+
 function Slot<T extends HTMLElement = HTMLElement>({
   children,
   ref,
   ...props
 }: SlotProps<T>) {
-  const isAlreadyMotion =
-    typeof children.type === 'object' &&
-    children.type !== null &&
-    isMotionComponent(children.type);
-
-  const Base = React.useMemo(
-    () =>
-      isAlreadyMotion
-        ? (children.type as React.ElementType)
-        : motion.create(children.type as React.ElementType),
-    [isAlreadyMotion, children.type],
-  );
-
   if (!React.isValidElement(children)) return null;
+
+  const Base = getMotionComponent(children.type as string | React.ElementType);
 
   const { ref: childRef, ...childProps } = children.props as AnyProps;
 
   const mergedProps = mergeProps(childProps, props);
 
-  return (
-    <Base {...mergedProps} ref={mergeRefs(childRef as React.Ref<T>, ref)} />
-  );
+  return React.createElement(Base, {
+    ...mergedProps,
+    ref: mergeRefs(childRef as React.Ref<T>, ref),
+  });
 }
 
 export {

@@ -3,12 +3,9 @@ import {
     DialogTitle, 
     DialogFooter,
 } from "@/components/ui/dialog"
-import Image from "next/image"
 import { Button, Input } from "@heroui/react"
-import { RiLockPasswordFill } from "react-icons/ri";
-import { MdOutlinePassword } from "react-icons/md"
-import { EyeIcon } from "@/components/icons/eye"
-import { EyeOffIcon } from "@/components/icons/eye-off"
+import { Lock, ShieldCheck, RefreshCcw, Eye, EyeOff } from "lucide-react"
+import { cn } from "@/lib/utils";
 
 interface FormResetPasswordProps {
     formResetPass: {
@@ -45,117 +42,105 @@ export const FormResetPassword = ({
     isResetPassFilled
 }: FormResetPasswordProps) => {
     return (
-        <>
-            <DialogHeader>
-                <div className="flex flex-col items-center justify-center w-full mb-4">
-                    <div className="flex flex-col items-center justify-center w-full">
-                        <DialogTitle className="text-center text-2xl font-bold mb-2">
-                            Đổi mật khẩu
-                        </DialogTitle>
-    
-                        <div className="relative inline-flex items-center justify-center">
-                            <span className="pointer-events-none absolute h-26 w-26 rounded-full bg-purple-500/55 blur-2xl animate-pulse" />
-                            <span className="pointer-events-none absolute h-32 w-32 rounded-full bg-fuchsia-400/50 blur-3xl" />
-                            <Image 
-                                src="/logo.png" 
-                                alt="Profile image" 
-                                className="rounded-md h-36 object-cover relative z-10"
-                                width={150}
-                                height={150}
-                            />
+        <div className="animate-in fade-in zoom-in-95 duration-300 p-4 md:p-0">
+            <DialogHeader className="mb-8">
+                <div className="flex flex-col items-center justify-center w-full gap-4">
+                    <div className="relative group">
+                        <div className="absolute -inset-2 bg-linear-to-r from-emerald-500/20 to-teal-600/20 rounded-2xl blur-xl" />
+                        <div className="relative bg-white dark:bg-zinc-950 p-3 rounded-2xl border border-zinc-200 dark:border-white/10 shadow-lg">
+                            <RefreshCcw size={32} className="text-emerald-500" />
                         </div>
+                    </div>
+
+                    <div className="text-center space-y-1">
+                        <DialogTitle className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white uppercase">
+                            Đặt lại mật khẩu
+                        </DialogTitle>
+                        <p className="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase opacity-80">
+                            Thiết lập mật khẩu mới cho tài khoản
+                        </p>
                     </div>
                 </div>
             </DialogHeader>
-            <div className="grid gap-4">
-                {/* Password field input */}
-                <div className="grid gap-3">
-                    <Input
-                        key="reset-new-password"
-                        isRequired
-                        label="Mật khẩu mới"
-                        labelPlacement="outside"
-                        placeholder="Nhập Mật Khẩu Mới"
-                        errorMessage="Vui lòng nhập mật khẩu chứa ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số"
-                        type={isVisiblePassword ? "text" : "password"}
-                        variant="faded"
-                        name="reset-new-password"
-                        data-lpignore="true"
-                        data-form-type="reset-password"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute('readonly')}
-                        startContent={<RiLockPasswordFill size={20} className="text-gray-500" />}
-                        endContent={
-                            <button
-                                type="button"
-                                className="flex items-center justify-center"
-                                onClick={() => setIsVisiblePassword(!isVisiblePassword)}
-                            >
-                                {isVisiblePassword ? (
-                                    <EyeIcon size={18}/>
-                                ) : (
-                                    <EyeOffIcon size={18}/>
-                                )}
-                            </button>
-                        }
-                        value={formResetPass.newPassword}
-                        onChange={(e) => setFormResetPass({...formResetPass, newPassword: e.target.value})}
-                    />
-                </div>
 
-                {/* Confirm Password field input */}
-                <div className="grid gap-3">
-                    <Input
-                        key="reset-confirm-new-password"
-                        isRequired
-                        label="Xác nhận mật khẩu"
-                        labelPlacement="outside"
-                        placeholder="Nhập Lại Mật Khẩu"
-                        errorMessage="Vui lòng nhập mật khẩu xác nhận khớp với mật khẩu đã nhập"
-                        type={isVisibleConfirmPassword ? "text" : "password"}
-                        variant="faded"
-                        name="reset-confirm-new-password"
-                        data-lpignore="true"
-                        data-form-type="reset-password"
-                        readOnly
-                        onFocus={(e) => e.target.removeAttribute('readonly')}
-                        startContent={<MdOutlinePassword size={20} className="text-gray-500" />}
-                        endContent={
-                            <button
-                                type="button"
-                                className="flex items-center justify-center"
-                                onClick={() => setIsVisibleConfirmPassword(!isVisibleConfirmPassword)}
-                            >
-                                {isVisibleConfirmPassword ? (
-                                    <EyeIcon size={18}/>
-                                ) : (
-                                    <EyeOffIcon size={18}/>
-                                )}
-                            </button>
-                        }
-                        value={formResetPass.confirmNewPassword}
-                        onChange={(e) => setFormResetPass({...formResetPass, confirmNewPassword: e.target.value})}
-                    />
-                </div>
-                <DialogFooter>
-                    <div className="flex flex-col gap-4 w-full">
-                        <div className="flex flex-col justify-center items-start mt-4">
-                            <Button 
-                                type="button"
-                                onClick={onSubmitResetPassword}
-                                radius="sm" 
-                                color="primary" 
-                                variant="shadow" 
-                                isLoading={isResettingPassword}
-                                className="mt-4 w-full"
-                                isDisabled={!isResetPassFilled}
-                            >
-                                Đặt lại mật khẩu
-                            </Button>
-                        </div>
-                    </div>
-                </DialogFooter>
+            <div className="space-y-6 flex flex-col gap-2">
+                <Input
+                    key="reset-new-password"
+                    isRequired
+                    label="Mật khẩu mới"
+                    labelPlacement="outside"
+                    placeholder="Nhập mật khẩu mới của bạn"
+                    type={isVisiblePassword ? "text" : "password"}
+                    variant="bordered"
+                    classNames={{
+                        label: "text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest",
+                        inputWrapper: "h-11 border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 hover:border-emerald-500/50 focus-within:!border-emerald-500 transition-all rounded-sm",
+                        input: "text-sm font-medium",
+                    }}
+                    startContent={<Lock size={16} className="text-zinc-400" />}
+                    endContent={
+                        <button
+                            type="button"
+                            className="p-1 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-full"
+                            onClick={() => setIsVisiblePassword(!isVisiblePassword)}
+                        >
+                            {isVisiblePassword ? <Eye size={14} className="text-zinc-400" /> : <EyeOff size={14} className="text-zinc-400" />}
+                        </button>
+                    }
+                    value={formResetPass.newPassword}
+                    autoComplete="new-password"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onChange={(e) => setFormResetPass({...formResetPass, newPassword: e.target.value})}
+                />
+
+                <Input
+                    key="reset-confirm-new-password"
+                    isRequired
+                    label="Xác nhận mật khẩu mới"
+                    labelPlacement="outside"
+                    placeholder="Nhập lại mật khẩu mới"
+                    type={isVisibleConfirmPassword ? "text" : "password"}
+                    variant="bordered"
+                    classNames={{
+                        label: "text-zinc-500 dark:text-zinc-400 font-bold text-[10px] uppercase tracking-widest",
+                        inputWrapper: "h-11 border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5 hover:border-emerald-500/50 focus-within:!border-emerald-500 transition-all rounded-sm",
+                        input: "text-sm font-medium",
+                    }}
+                    startContent={<ShieldCheck size={16} className="text-zinc-400" />}
+                    endContent={
+                        <button
+                            type="button"
+                            className="p-1 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-full"
+                            onClick={() => setIsVisibleConfirmPassword(!isVisibleConfirmPassword)}
+                        >
+                            {isVisibleConfirmPassword ? <Eye size={14} className="text-zinc-400" /> : <EyeOff size={14} className="text-zinc-400" />}
+                        </button>
+                    }
+                    value={formResetPass.confirmNewPassword}
+                    autoComplete="new-password"
+                    readOnly
+                    onFocus={(e) => e.target.removeAttribute('readonly')}
+                    onChange={(e) => setFormResetPass({...formResetPass, confirmNewPassword: e.target.value})}
+                />
             </div>
-        </>
+
+            <DialogFooter className="mt-10">
+                <Button 
+                    type="button"
+                    onClick={onSubmitResetPassword}
+                    isLoading={isResettingPassword}
+                    isDisabled={!isResetPassFilled}
+                    className={cn(
+                        "w-full h-12 rounded-sm font-bold text-sm uppercase tracking-widest transition-all duration-300",
+                        isResetPassFilled 
+                            ? "bg-linear-to-r from-emerald-500 to-teal-600 text-white shadow-[0_4px_15px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_25px_rgba(16,185,129,0.4)]"
+                            : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400"
+                    )}
+                >
+                    Đặt lại mật khẩu ngay
+                </Button>
+            </DialogFooter>
+        </div>
     )
 }

@@ -29,7 +29,8 @@ const getChartConfig = (color: string): ChartConfig => ({
   }
 })
 
-export const ChartAreaCard = ({ color, data }: { color: string; data: AreaChartItem[] }) => {
+import React from "react"
+export const ChartAreaCard = React.memo(({ color, data }: { color: string; data: AreaChartItem[] }) => {
   const chartConfig = getChartConfig(color);
 
   return (
@@ -48,7 +49,7 @@ export const ChartAreaCard = ({ color, data }: { color: string; data: AreaChartI
             accessibilityLayer
             data={data}
             margin={{
-              left: 12,
+              left: 0,
               right: 12,
             }}
           >
@@ -67,6 +68,7 @@ export const ChartAreaCard = ({ color, data }: { color: string; data: AreaChartI
               axisLine={true}
               tickMargin={8}
               tickCount={3}
+              width={30}
             />
 
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
@@ -103,4 +105,6 @@ export const ChartAreaCard = ({ color, data }: { color: string; data: AreaChartI
       </CardContent>
     </Card>
   )
-}
+});
+
+ChartAreaCard.displayName = "ChartAreaCard";

@@ -1,194 +1,199 @@
-import { showtimeHours } from "./showtime-options";
+import { useMemo } from "react";
+import type { Seat } from "@/stores/useSeatStore";
+import { Monitor, Info } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-type SelectSeatTabProps = {
-    selectedSeats: string[];
-    selectedShowtime: string;
-    onSelectSeats: (seats: string[]) => void;
-    onSelectShowtime: (time: string) => void;
-};
+interface SelectSeatTabProps {
+  selectedSeatCodes: string[];
+  activeShowtimeId: string;
+  seats: Seat[];
+  onSelectSeats: (newSelection: string[]) => void;
+  onSelectShowtime: (showtimeId: string) => void;
+  showtimeOptions?: Array<{ id: number; label: string }>;
+}
 
-const rows = ["G", "F", "E", "D", "C", "B", "A"];
-const rightSeats = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
-const soldSeatMap: Record<string, boolean> = {
-    A1: true,
-    B5: true,
-    C8: true,
-    D3: true,
-    E10: true,
-    F2: true,
-    G9: true,
-};
-const soldSeatImage = "https://i.pinimg.com/1200x/11/c0/1e/11c01ea0714ce8ab63afa0a8a6688e16.jpg";
+const SOLD_SEAT_ICON = "https://i.pinimg.com/1200x/11/c0/1e/11c01ea0714ce8ab63afa0a8a6688e16.jpg";
+
+enum SeatStatus {
+  AVAILABLE = 'available',
+  RESERVED = 'reserved',
+  OCCUPIED = 'occupied'
+}
 
 export function SelectSeatTab({
-    selectedSeats,
-    selectedShowtime,
-    onSelectSeats,
-    onSelectShowtime,
+  selectedSeatCodes,
+  activeShowtimeId,
+  seats,
+  onSelectSeats,
+  onSelectShowtime,
+  showtimeOptions = [],
 }: SelectSeatTabProps) {
+  
+  const layoutData = useMemo(() => {
+    if (!seats.length) {
+      return { rowLabels: [], columnIndices: [], seatMap: new Map<string, Seat>() };
+    }
 
-    const toggleSeat = (seatCode: string) => {
-        if (soldSeatMap[seatCode]) {
-            return;
-        }
+    const seatMap = new Map<string, Seat>();
+    const uniqueRowsSet = new Set<number>();
+    const uniqueColsSet = new Set<number>();
 
-        const hasSeat = selectedSeats.includes(seatCode);
-        if (hasSeat) {
-            onSelectSeats(selectedSeats.filter((seat) => seat !== seatCode));
-            return;
-        }
+    seats.forEach(seat => {
+      const seatCode = `${String.fromCharCode(65 + seat.row)}${seat.column}`;
+      seatMap.set(seatCode, seat);
+      uniqueRowsSet.add(seat.row);
+      uniqueColsSet.add(seat.column);
+    });
 
-        onSelectSeats([...selectedSeats, seatCode]);
-    };
+    const rowLabels = Array.from(uniqueRowsSet)
+      .sort((a, b) => b - a)
+      .map(r => String.fromCharCode(65 + r));
+      
+    const columnIndices = Array.from(uniqueColsSet).sort((a, b) => a - b);
 
-    const renderSeat = (row: string, seatNumber: number) => {
-        const seatCode = `${row}${seatNumber}`;
-        const isSold = Boolean(soldSeatMap[seatCode]);
-        const isSelected = selectedSeats.includes(seatCode);
+    return { rowLabels, columnIndices, seatMap };
+  }, [seats]);
 
-        return (
-            <button
-                key={seatCode}
-                type="button"
-                onClick={() => toggleSeat(seatCode)}
-                disabled={isSold}
-                className={`h-7 w-7 rounded-sm border text-xs transition-colors duration-150 ${
-                    isSold
-                        ? "cursor-not-allowed border-neutral-300 bg-center bg-cover bg-no-repeat text-transparent"
-                        : isSelected
-                          ? "border-fuchsia-500 bg-fuchsia-500"
-                          : "cursor-pointer border-neutral-300 hover:border-blue-500"
-                }`}
-                style={isSold ? { backgroundImage: `url(${soldSeatImage})` } : undefined}
-                aria-pressed={isSelected}
-                aria-label={`Ghế ${seatCode}`}
-            >
-                {seatNumber}
-            </button>
-        );
-    };
+  const { rowLabels, columnIndices, seatMap } = layoutData;
 
-    const renderCoupleSeat = (row: string) => {
-        const coupleSeatCodes = [`${row}11`, `${row}12`];
-        const isSold = coupleSeatCodes.some((seatCode) => Boolean(soldSeatMap[seatCode]));
-        const isSelected = coupleSeatCodes.every((seatCode) => selectedSeats.includes(seatCode));
+  const handleSeatClick = (seatCode: string) => {
+    const targetSeat = seatMap.get(seatCode);
+    if (!targetSeat) return;
 
-        const toggleCoupleSeat = () => {
-            if (isSold) {
-                return;
-            }
+    const isLocked = targetSeat.status === SeatStatus.RESERVED || targetSeat.status === SeatStatus.OCCUPIED;
+    if (isLocked) return;
 
-            if (isSelected) {
-                onSelectSeats(selectedSeats.filter((seat) => !coupleSeatCodes.includes(seat)));
-                return;
-            }
+    const isAlreadySelected = selectedSeatCodes.includes(seatCode);
+    const updatedSelection = isAlreadySelected
+      ? selectedSeatCodes.filter(code => code !== seatCode)
+      : [...selectedSeatCodes, seatCode];
 
-            const nextSeats = Array.from(new Set([...selectedSeats, ...coupleSeatCodes]));
-            onSelectSeats(nextSeats);
-        };
+    onSelectSeats(updatedSelection);
+  };
 
-        return (
-            <button
-                key={`${row}-couple-seat`}
-                type="button"
-                onClick={toggleCoupleSeat}
-                disabled={isSold}
-                className={`h-7 w-14 rounded-md border text-xs transition-colors duration-150 ${
-                    isSold
-                        ? "cursor-not-allowed border-neutral-300 bg-center bg-cover bg-no-repeat text-transparent"
-                        : isSelected
-                          ? "border-fuchsia-500 bg-fuchsia-500"
-                          : "cursor-pointer border-blue-700 hover:border-blue-500"
-                }`}
-                style={isSold ? { backgroundImage: `url(${soldSeatImage})` } : undefined}
-                aria-pressed={isSelected}
-                aria-label={`Ghế đôi ${row}11-${row}12`}
-            >
-                11 - 12
-            </button>
-        );
-    };
+  const renderSeatIcon = (row: string, col: number, isWide = false) => {
+    const seatCode = `${row}${col}`;
+    const seatData = seatMap.get(seatCode);
+    
+    if (!seatData) return <div key={seatCode} className={isWide ? "w-16 h-8" : "w-8 h-8"} />;
+
+    const isSold = seatData.status === SeatStatus.RESERVED || seatData.status === SeatStatus.OCCUPIED;
+    const isSelected = selectedSeatCodes.includes(seatCode);
 
     return (
-        <div className="w-full bg-neutral-100 dark:bg-neutral-900 rounded-xs border-1 border-neutral-200 dark:border-neutral-800 shadow-sm">
-            <div className="flex items-center gap-4 px-4 py-5 border-b border-neutral-200 dark:border-neutral-800">
-                <p className="text-base font-medium text-neutral-700 dark:text-neutral-300">Đổi suất chiếu</p>
-                <div className="flex gap-3">
-                    {showtimeHours.map((time) => {
-                        const isActive = selectedShowtime === time;
-
-                        return (
-                            <button
-                                key={time}
-                                type="button"
-                                onClick={() => onSelectShowtime(time)}
-                                aria-pressed={isActive}
-                                className={`px-4 py-2 text-base font-light rounded-sm border cursor-pointer shadow-sm transition-all duration-200 ${
-                                    isActive
-                                        ? "bg-neutral-900 dark:bg-neutral-100 text-neutral-100 dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 ring-1 ring-neutral-500/40"
-                                        : "bg-neutral-200 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-700"
-                                }`}
-                            >
-                                {time}
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
-
-            <div className="px-4 py-6">
-                <div className="max-h-90 overflow-y-auto pr-2">
-                    <div className="min-w-180">
-                        {rows.map((row) => (
-                            <div key={row} className="mb-4 flex items-center justify-between gap-4">
-                                <span className="w-4 text-sm text-neutral-600 dark:text-neutral-300">{row}</span>
-
-                                <div className="flex items-center gap-12">
-                                    <div className="flex items-center gap-2">{renderCoupleSeat(row)}</div>
-
-                                    <div className="flex items-center gap-2">
-                                        {rightSeats.map((seatNumber) => renderSeat(row, seatNumber))}
-                                    </div>
-                                </div>
-
-                                <span className="w-4 text-sm text-neutral-600 dark:text-neutral-300">{row}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <p className="mt-8 text-center text-xl font-semibold tracking-wide text-neutral-300 dark:text-neutral-700">
-                    Màn hình
-                </p>
-                <div className="mt-3 h-1.5 w-full rounded-full bg-neutral-300" />
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-neutral-200 px-4 py-5 dark:border-neutral-800">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
-                        <span
-                            className="h-5 w-5 rounded-sm border border-neutral-300 bg-center bg-cover bg-no-repeat"
-                            style={{ backgroundImage: `url(${soldSeatImage})` }}
-                        />
-                        Ghế đã bán
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
-                        <span className="h-5 w-5 rounded-sm border border-fuchsia-500 bg-fuchsia-500" />
-                        Ghế đang chọn
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
-                        <span className="h-5 w-5 rounded-sm border border-neutral-300 bg-transparent" />
-                        Ghế đơn
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
-                        <span className="h-5 w-12 rounded-md border border-blue-700 bg-transparent" />
-                        Ghế đôi
-                    </div>
-                </div>
-            </div>
-        </div>
+      <button
+        key={seatCode}
+        type="button"
+        onClick={() => handleSeatClick(seatCode)}
+        disabled={isSold}
+        className={cn(
+          "h-8 transition-all duration-300 rounded-sm border text-[10px] font-black uppercase flex items-center justify-center relative group",
+          isWide ? "w-16" : "w-8",
+          isSold 
+            ? "cursor-not-allowed border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/50 opacity-20 grayscale" 
+            : isSelected
+              ? "border-amber-500 bg-amber-500 text-white shadow-[0_0_15px_rgba(245,158,11,0.5)] scale-110 z-10"
+              : "cursor-pointer border-zinc-300 dark:border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10 text-zinc-500 dark:text-zinc-400"
+        )}
+        aria-label={`Seat ${seatCode}`}
+      >
+        {isSold ? (
+            <div className="absolute inset-0 bg-center bg-cover opacity-30" style={{ backgroundImage: `url(${SOLD_SEAT_ICON})` }} />
+        ) : (
+            <span className="relative z-10">{isWide ? `${col-1}-${col}` : col}</span>
+        )}
+      </button>
     );
+  };
+
+  return (
+    <div className="w-full bg-white dark:bg-zinc-900/50 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/10 shadow-2xl overflow-hidden">
+      {/* Showtime Switcher Header */}
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-6 px-8 py-6 border-b border-zinc-200 dark:border-white/10 bg-zinc-50/50 dark:bg-white/5">
+        <div className="flex items-center gap-2">
+            <Monitor size={16} className="text-amber-500" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Đổi suất chiếu</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {showtimeOptions.map((showtime) => (
+            <button
+              key={showtime.id}
+              type="button"
+              onClick={() => onSelectShowtime(String(showtime.id))}
+              className={cn(
+                "px-5 py-2 text-xs font-bold rounded-sm border transition-all duration-300",
+                activeShowtimeId === String(showtime.id)
+                  ? "bg-amber-500 border-amber-500 text-white shadow-lg"
+                  : "bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10 text-zinc-500 hover:border-amber-500/50"
+              )}
+            >
+              {showtime.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Seat Grid */}
+      <div className="p-8 md:p-12">
+        <div className="overflow-x-auto pb-8 custom-scrollbar">
+          <div className="min-w-fit mx-auto px-4">
+            {rowLabels.length === 0 ? (
+              <div className="py-20 text-center space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto text-zinc-400">
+                    <Info size={32} />
+                  </div>
+                  <p className="text-zinc-500 font-medium italic">Không tìm thấy thông tin sơ đồ ghế</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {rowLabels.map((row) => (
+                  <div key={row} className="flex items-center justify-center gap-6">
+                    <span className="w-8 text-center text-xs font-black text-zinc-300 dark:text-zinc-600">{row}</span>
+                    
+                    <div className="flex items-center gap-12">
+                      <div className="flex gap-2 flex-row-reverse">
+                        {columnIndices
+                          .filter(col => col > 2) 
+                          .map(col => renderSeatIcon(row, col))}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                          {seatMap.has(`${row}1`) && seatMap.has(`${row}2`) && renderSeatIcon(row, 2, true)}
+                      </div>
+                    </div>
+
+                    <span className="w-8 text-center text-xs font-black text-zinc-300 dark:text-zinc-600">{row}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Screen Visualization */}
+        <div className="relative mt-20">
+          <p className="pb-4 text-center text-[10px] font-black uppercase tracking-[1em] text-zinc-400 opacity-50">Màn hình</p>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-2 bg-amber-500/20 blur-xl" />
+          <div className="h-1 w-[70%] mx-auto bg-gradient-to-r from-transparent via-amber-500 to-transparent rounded-full opacity-50 shadow-[0_0_20px_rgba(245,158,11,0.5)]" />
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 pt-10 border-t border-zinc-100 dark:border-white/5">
+            <LegendItem color="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10" label="Ghế đơn" />
+            <LegendItem color="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10 w-8" label="Ghế đôi" />
+            <LegendItem color="bg-amber-500 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]" label="Đang chọn" />
+            <LegendItem color="bg-zinc-100 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 opacity-30" label="Đã bán" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LegendItem({ color, label }: { color: string; label: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className={cn("h-4 w-4 rounded-xs border", color)} />
+      <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{label}</span>
+    </div>
+  );
 }
