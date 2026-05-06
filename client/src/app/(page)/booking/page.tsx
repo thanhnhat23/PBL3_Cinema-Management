@@ -27,8 +27,6 @@ interface BookingSelection {
   selectedSeats: string[];
 }
 
-
-
 export default function BookingPage() {
   const [selection, setSelection] = useState<BookingSelection>({
     location: "",

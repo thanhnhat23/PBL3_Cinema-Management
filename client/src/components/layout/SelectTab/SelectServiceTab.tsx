@@ -131,6 +131,8 @@ function DateSelector({
 }) {
     if (dates.length === 0) return null;
 
+    const { t } = useTranslation();
+
     return (
         <div className="space-y-4">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.service_tab.step1')}</p>
@@ -170,6 +172,8 @@ function CinemaSelector({
 }) {
     if (cinemas.length === 0) return null;
 
+    const { t } = useTranslation();
+
     return (
         <div className="space-y-4">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.service_tab.step2')}</p>
@@ -208,6 +212,7 @@ function ShowtimeSelector({
     isLoading: boolean;
     onSelect: (showtimeId: string) => void;
 }) {
+    const { t } = useTranslation();
     return (
         <div className="space-y-4">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.service_tab.step3')}</p>
@@ -258,7 +263,6 @@ export function SelectServiceTab({
     selectedCinema,
     isLoadingShoTimes,
     onToggleSection,
-    onSelectValue,
     onSelectValue,
     onFetchShowtimes,
 }: SelectServiceTabProps) {  

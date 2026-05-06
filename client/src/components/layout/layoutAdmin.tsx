@@ -20,15 +20,15 @@ export const LayoutAdmin = React.memo(({
 }) => {
     return (
         <div className="p-4">
-            {openLayout === "Thống kê" && <LayoutOverview selectValue={selectValue} />}
-            {openLayout === "Phim" && <LayoutMovie />}
-            {openLayout === "Vé" && <LayoutTicket />}
-            {openLayout === "Suất chiếu" && <LayoutShowtimes />}
-            {openLayout === "Rạp chiếu" && <LayoutLocation />}
-            {openLayout === "Người dùng" && <LayoutUsers />}
-            {openLayout === "Đồng bộ dữ liệu" && <LayoutSyncData />}
-            {openLayout === "Thống kê doanh thu" && <LayoutStatistics />}
-            {openLayout === "Thức ăn" && <LayoutFood />}
+            {openLayout === "stats" && <LayoutOverview selectValue={selectValue} />}
+            {openLayout === "movies" && <LayoutMovie />}
+            {openLayout === "tickets" && <LayoutTicket />}
+            {openLayout === "showtimes" && <LayoutShowtimes />}
+            {openLayout === "cinemas" && <LayoutLocation />}
+            {openLayout === "users" && <LayoutUsers />}
+            {openLayout === "sync" && <LayoutSyncData />}
+            {openLayout === "revenue" && <LayoutStatistics />}
+            {openLayout === "foods" && <LayoutFood />}
         </div>
     )
 })

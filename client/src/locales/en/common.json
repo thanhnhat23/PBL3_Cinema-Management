@@ -506,7 +506,8 @@
       "foods": "Foods",
       "users": "Users",
       "sync": "Data Sync",
-      "revenue": "Revenue Stats"
+      "revenue": "Revenue Stats",
+      "stats": "Dashboard Overview"
     },
     "themes": {
       "blue": "Blue",
@@ -520,6 +521,22 @@
       "light_pink": "Light Pink",
       "teal": "Teal",
       "default": "Default"
+    },
+    "overview_tab": {
+      "title": "Dashboard Overview",
+      "desc": "A comprehensive view of system performance, data volume, and key operating metrics of the cinema complex.",
+      "metrics": {
+        "movies": { "title": "Movies", "desc": "Total number of movies in database" },
+        "reviews": { "title": "Reviews", "desc": "Total number of reviews in database" },
+        "actors": { "title": "Actors", "desc": "Total number of actors in database" },
+        "genres": { "title": "Genres", "desc": "Total number of genres in database" },
+        "stat_label": "{{item}} Statistics"
+      },
+      "admin_team": {
+        "title": "Administrators",
+        "desc": "List of system executive team",
+        "system_cinema": "Cinema System"
+      }
     }
   },
   "movie_card": {

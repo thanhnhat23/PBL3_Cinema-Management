@@ -506,7 +506,8 @@
         "foods": "Thức ăn",
         "users": "Người dùng",
         "sync": "Đồng bộ dữ liệu",
-        "revenue": "Thống kê doanh thu"
+        "revenue": "Thống kê doanh thu",
+        "stats": "Thống kê tổng quan"
     },
     "themes": {
         "blue": "Xanh dương",
@@ -520,6 +521,22 @@
         "light_pink": "Hồng nhạt",
         "teal": "Xanh biển sáng",
         "default": "Mặc định"
+    },
+    "overview_tab": {
+        "title": "Thống kê Tổng quan",
+        "desc": "Cái nhìn toàn cảnh về hiệu suất hệ thống, số lượng dữ liệu và các chỉ số hoạt động chính của cụm rạp.",
+        "metrics": {
+            "movies": { "title": "Phim", "desc": "Tổng số lượng phim trong database" },
+            "reviews": { "title": "Đánh giá", "desc": "Tổng số lượng đánh giá trong database" },
+            "actors": { "title": "Diễn viên", "desc": "Tổng số lượng diễn viên trong database" },
+            "genres": { "title": "Thể loại", "desc": "Tổng số lượng thể loại trong database" },
+            "stat_label": "Thống kê {{item}}"
+        },
+        "admin_team": {
+            "title": "Quản trị viên",
+            "desc": "Danh sách đội ngũ điều hành hệ thống",
+            "system_cinema": "Hệ thống Cinema"
+        }
     }
   },
   "movie_card": {

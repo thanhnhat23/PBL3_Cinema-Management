@@ -506,7 +506,8 @@
         "foods": "フード",
         "users": "ユーザー",
         "sync": "データ同期",
-        "revenue": "収益統計"
+        "revenue": "収益統計",
+        "stats": "ダッシュボード概要"
     },
     "themes": {
         "blue": "ブルー",
@@ -520,6 +521,22 @@
         "light_pink": "ライトピンク",
         "teal": "ティール",
         "default": "デフォルト"
+    },
+    "overview_tab": {
+        "title": "ダッシュボード概要",
+        "desc": "システムパフォーマンス、データ量、およびシネマコンプレックスの主要な運用指標の包括的なビュー。",
+        "metrics": {
+            "movies": { "title": "映画", "desc": "データベース内の総映画数" },
+            "reviews": { "title": "レビュー", "desc": "データベース内の総レビュー数" },
+            "actors": { "title": "俳優", "desc": "データベース内の総俳優数" },
+            "genres": { "title": "ジャンル", "desc": "データベース内の総ジャンル数" },
+            "stat_label": "{{item}} 統計"
+        },
+        "admin_team": {
+            "title": "管理者",
+            "desc": "システム執行チームのリスト",
+            "system_cinema": "シネマシステム"
+        }
     }
   },
   "movie_card": {
