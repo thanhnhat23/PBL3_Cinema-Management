@@ -85,33 +85,34 @@ const THEME_CONFIG = [
 ];
 
 const CHART_THEME_STORAGE_KEY = "dashboard-chart-theme";
-const CHART_THEMES = new Set(THEME_CONFIG.map(t => t.label));
+const CHART_THEMES = new Set(["Xanh dương", "Xanh lá", "Vàng", "Đỏ", "Hồng", "Tím đậm", "Xanh lơ đậm", "Cam đào", "Hồng nhạt", "Xanh biển sáng", "Mặc định"]);
 
 export default function Dashboard() {
     const { authUser, logout } = useAuthStore();
     const [isDark, setIsDark] = useState(false);
-    const [hasLoadedTheme] = useState(true);
     const themeTogglerRef = useRef<HTMLButtonElement>(null);
 
     const { openLayout, setOpenLayout } = useLayoutStore();
     const menuButtonRefs = useRef<Partial<Record<LayoutKey, HTMLButtonElement | null>>>({});
 
-    const [selectedKeys, setSelectedKeys] = useState<Selection>(() => {
-        try {
-            const storedTheme = typeof window !== 'undefined' ? window.localStorage.getItem(CHART_THEME_STORAGE_KEY) : null;
-            if (storedTheme && CHART_THEMES.has(storedTheme)) {
-                return new Set([storedTheme]);
-            }
-        } catch (e) {
-            console.error("Error loading chart theme from localStorage:", e);
-        }
-        return new Set(["Default"]);
-    });
+    const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["Mặc định"]) as Selection);
 
     const selectedValue = useMemo(
         () => Array.from(selectedKeys).join(", ").replace(/_/g, ""),
         [selectedKeys],
     );
+
+    // Load chart theme from localStorage only on client side after hydration
+    useEffect(() => {
+        try {
+            const storedTheme = localStorage.getItem(CHART_THEME_STORAGE_KEY);
+            if (storedTheme && CHART_THEMES.has(storedTheme)) {
+                setSelectedKeys(new Set([storedTheme]) as Selection);
+            }
+        } catch (e) {
+            console.error("Error loading chart theme from localStorage:", e);
+        }
+    }, []);
 
     useEffect(() => {
         const updateTheme = () => {
@@ -127,13 +128,9 @@ export default function Dashboard() {
     }, []);
 
     useEffect(() => {
-        if (!hasLoadedTheme) {
-            return;
-        }
-
         const themeToStore = selectedValue || "Mặc định";
         window.localStorage.setItem(CHART_THEME_STORAGE_KEY, themeToStore);
-    }, [selectedValue, hasLoadedTheme]);
+    }, [selectedValue]);
 
     const handleThemeToggle = useCallback(() => {
         themeTogglerRef.current?.click();
@@ -377,7 +374,7 @@ export default function Dashboard() {
                                         selectedKeys={selectedKeys}
                                         selectionMode="single"
                                         variant="flat"
-                                        onSelectionChange={setSelectedKeys}
+                                        onSelectionChange={(set) => setSelectedKeys(set as Selection)}
                                         className="bg-sidebar"
                                     >
                                         {THEME_CONFIG.map((theme) => (

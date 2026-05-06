@@ -338,7 +338,7 @@ export default function NavbarLayout() {
                                 Giao diện: {isDark ? 'Sáng' : 'Tối'}
                             </DropdownItem>
 
-                            {authUser && (isStaff(authUser.role) || isAdmin(authUser.role)) ? (
+                            {authUser && (isStaff(Number(authUser?.role)) || isAdmin(Number(authUser?.role))) ? (
                                 <DropdownItem 
                                     key='dashboard' 
                                     startContent={<LayoutDashboard size={18} />}
