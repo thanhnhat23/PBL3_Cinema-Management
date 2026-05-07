@@ -137,15 +137,18 @@ export default function LayoutFood() {
             case "name":
                 return (
                     <div className="flex gap-3 items-center">
-                        <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-sm">
+                        <div className="flex-shrink-0 relative w-10 h-10 rounded-lg overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-sm">
                             <Image
                                 src={snack.imageUrl || "https://placehold.co/100x100?text=Snack"}
                                 alt={snack.name}
                                 fill
+                                sizes="40px"
                                 className="object-cover"
                             />
                         </div>
-                        <span className="font-semibold text-zinc-700 dark:text-zinc-200">{snack.name}</span>
+                        <span className="font-semibold text-zinc-700 dark:text-zinc-200 truncate max-w-[120px] sm:max-w-none" title={snack.name}>
+                            {snack.name}
+                        </span>
                     </div>
                 );
             case "type": {
@@ -390,7 +393,7 @@ export default function LayoutFood() {
 
                                     {editForm.imageUrl && (
                                         <div className="mt-2 relative w-full aspect-video rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800">
-                                            <Image src={editForm.imageUrl} alt="Preview" fill className="object-cover" />
+                                            <Image src={editForm.imageUrl} alt="Preview" fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover" />
                                         </div>
                                     )}
                                 </div>

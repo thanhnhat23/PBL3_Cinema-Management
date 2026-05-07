@@ -176,9 +176,20 @@ export default function LayoutActors() {
         switch (columnKey) {
             case "name":
                 return (
-                    <User avatarProps={{ radius: "sm", src: getAvatarSrc(actor.profile_path) }} name={actor.name}>
-                        {actor.name}
-                    </User>
+                    <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 relative rounded-md overflow-hidden border border-zinc-100 dark:border-white/5 shadow-sm">
+                            <Image
+                                src={getAvatarSrc(actor.profile_path)}
+                                alt={actor.name}
+                                fill
+                                sizes="40px"
+                                className="object-cover"
+                            />
+                        </div>
+                        <span className="text-sm font-bold truncate max-w-[120px] sm:max-w-[200px] md:max-w-none" title={actor.name}>
+                            {actor.name}
+                        </span>
+                    </div>
                 );
             case "gender": {
                 const genderText = getGenderText(actor.gender);
@@ -228,8 +239,8 @@ export default function LayoutActors() {
                             >
                                 {t('movie_details.edit_movie')}
                             </DropdownItem>
-                            <DropdownItem 
-                                key="delete" 
+                            <DropdownItem
+                                key="delete"
                                 startContent={<Trash size={18} />}
                                 className="text-danger"
                                 color="danger"
@@ -269,7 +280,7 @@ export default function LayoutActors() {
                     </div>
                 </div>
             </div>
-            
+
             <DataTableAdmin<Actor>
                 columns={getActorColumns(t)}
                 items={actors}
@@ -304,7 +315,7 @@ export default function LayoutActors() {
                             <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
                                 {selectedActor ? t('movie_details.view_details', { title: selectedActor.name }) : t('actors_tab.details_title')}
                             </DrawerHeader>
- 
+
                             <DrawerBody className="px-0">
                                 {selectedActor ? (
                                     <div className="flex flex-col gap-0">
@@ -315,15 +326,18 @@ export default function LayoutActors() {
                                                     src={getAvatarSrc(selectedActor.profile_path)}
                                                     alt=""
                                                     fill
+                                                    sizes="100vw"
                                                     className="object-cover"
                                                 />
                                             </div>
-                                            
+
                                             <div className="relative mt-8 w-48 h-64 shadow-2xl rounded-lg overflow-hidden border-2 border-white/10 z-10">
                                                 <Image
                                                     src={getAvatarSrc(selectedActor.profile_path)}
                                                     alt={selectedActor.name}
                                                     fill
+                                                    sizes="192px"
+                                                    priority
                                                     className="object-cover"
                                                 />
                                             </div>
@@ -349,7 +363,7 @@ export default function LayoutActors() {
                                                     <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('actors_tab.birthplace_label')}</span>
                                                     <span className="text-sm font-semibold">{selectedActor.place_of_birth ?? "Unknown"}</span>
                                                 </div>
-                                                
+
                                                 <div className="flex flex-col gap-3">
                                                     <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('actors_tab.bio_label')}</span>
                                                     <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 italic">
@@ -400,7 +414,7 @@ export default function LayoutActors() {
                             </DrawerHeader>
                             <DrawerBody>
                                 <p className="text-sm text-zinc-500 mb-4 py-4">{isAdding ? t('actors_tab.add_actor_subtitle') : t('actors_tab.edit_actor_subtitle')}</p>
- 
+
                                 <div ref={popoverContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">

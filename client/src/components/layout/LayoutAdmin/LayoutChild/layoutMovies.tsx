@@ -186,9 +186,20 @@ export default function LayoutMovie() {
         switch (columnKey) {
             case "title":
                 return (
-                    <User avatarProps={{ radius: "sm", src: getPosterSrc(movie.poster_path) }} name={movie.title}>
-                        {movie.title}
-                    </User>
+                    <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 relative rounded-md overflow-hidden border border-zinc-100 dark:border-white/5 shadow-sm">
+                            <Image
+                                src={getPosterSrc(movie.poster_path)}
+                                alt={movie.title}
+                                fill
+                                sizes="40px"
+                                className="object-cover"
+                            />
+                        </div>
+                        <span className="text-sm font-bold truncate max-w-[120px] sm:max-w-[200px] md:max-w-none" title={movie.title}>
+                            {movie.title}
+                        </span>
+                    </div>
                 );
             case "runtime":
                 return <span>{movie.runtime} {t('movie_details.minutes')}</span>;
@@ -322,6 +333,8 @@ export default function LayoutMovie() {
                                                 src={`https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path}`}
                                                 alt={selectedMovie.title}
                                                 fill
+                                                sizes="100vw"
+                                                priority
                                                 className="object-cover opacity-50 grayscale-[0.5]"
                                             />
                                             <div className="absolute inset-0 bg-linear-to-t from-sidebar to-transparent" />
@@ -331,6 +344,7 @@ export default function LayoutMovie() {
                                                         src={getPosterSrc(selectedMovie.poster_path)}
                                                         alt={selectedMovie.title}
                                                         fill
+                                                        sizes="128px"
                                                         className="object-cover"
                                                     />
                                                 </div>
