@@ -1006,5 +1006,37 @@
       "view": "表示",
       "ban": "禁止"
     }
+  },
+  "not_found": {
+    "error_404": "Error 404",
+    "title_main": "見つかり",
+    "title_highlight": "ません",
+    "subtitle": "おっと！ページが見つかりません。",
+    "description": "お探しのページは削除されたか、存在しないようです。ご心配なく、私たちがご案内します！",
+    "back_home": "ホームへ戻る",
+    "go_back": "戻る",
+    "bg_text": "NOT FOUND"
+  },
+  "error_500": {
+    "error_label": "サーバーエラー 500",
+    "title_main": "サーバー",
+    "title_highlight": "エラー",
+    "subtitle": "おっと！システムエラーが発生しました。",
+    "description": "システムで予期しない問題が発生しています。技術チームが復旧に向けて全力を尽くしています。しばらくしてからもう一度お試しください！",
+    "retry": "もう一度試す",
+    "back_home": "ホームへ戻る",
+    "bg_text": "SERVER ERROR"
+  },
+  "loading": {
+    "title": "準備中...",
+    "subtitle": "素晴らしい映画が始まります、少々お待ちください！",
+    "bg_text": "CINEMA"
+  },
+  "global_error": {
+    "title": "重大な",
+    "title_highlight": "エラー",
+    "description": "システム全体に影響する重大なエラーが発生しました。状態を復元するにはページを更新してください。",
+    "button": "システムを復元",
+    "bg_text": "CRITICAL"
   }
 }

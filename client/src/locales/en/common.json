@@ -1006,5 +1006,37 @@
       "view": "View",
       "ban": "Ban"
     }
+  },
+  "not_found": {
+    "error_404": "Error 404",
+    "title_main": "NOT",
+    "title_highlight": "FOUND",
+    "subtitle": "Oops! Page is missing.",
+    "description": "It looks like the page you are looking for has been moved or does not exist. Don't worry, let us guide you back!",
+    "back_home": "Back to Home",
+    "go_back": "Go Back",
+    "bg_text": "NOT FOUND"
+  },
+  "error_500": {
+    "error_label": "Server Error 500",
+    "title_main": "SERVER",
+    "title_highlight": "ERROR",
+    "subtitle": "Oops! Something went wrong.",
+    "description": "Our system is experiencing an unexpected issue. Our technical team is working hard to fix it. Please try again in a moment!",
+    "retry": "Try Again",
+    "back_home": "Back to Home",
+    "bg_text": "SERVER ERROR"
+  },
+  "loading": {
+    "title": "Getting ready...",
+    "subtitle": "Great movies are coming, please wait!",
+    "bg_text": "CINEMA"
+  },
+  "global_error": {
+    "title": "CRITICAL",
+    "title_highlight": "ERROR",
+    "description": "The system encountered a critical error affecting the entire application. Please refresh the page to restore the state.",
+    "button": "Restore System",
+    "bg_text": "CRITICAL"
   }
 }
