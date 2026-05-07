@@ -114,7 +114,7 @@ function Home() {
             </div>
 
             <div className="relative z-10 w-full flex flex-col items-center">
-                <div className="w-full max-w-480 pt-5">
+                <div className="w-full max-w-480 md:pt-5">
                     <Carousel />
                 </div>
 
@@ -278,7 +278,7 @@ function Home() {
                     <div className="max-w-7xl w-full px-6 grid md:grid-cols-2 items-center gap-12 relative z-10">
                         <div className="flex justify-center md:justify-start">
                             <div className="w-64 lg:w-72 drop-shadow-[0_0_50px_rgba(245,158,11,0.2)]">
-                                <Iphone src="/banner.jpg" />
+                                <Iphone src="/banner.png" />
                             </div>
                         </div>
 

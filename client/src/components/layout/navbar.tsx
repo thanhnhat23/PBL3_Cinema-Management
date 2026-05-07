@@ -121,7 +121,7 @@ export default function NavbarLayout() {
         themeTogglerRef.current?.click();
     };
 
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const pathname = usePathname();
 
     const changeLanguage = (lng: string) => {
@@ -129,6 +129,7 @@ export default function NavbarLayout() {
         // Ensure cookie is updated for the server to pick up on refresh
         if (typeof window !== 'undefined') {
             document.cookie = `i18next=${lng}; path=/; max-age=31536000; SameSite=Lax`;
+            router.refresh();
         }
     };
 
@@ -198,13 +199,15 @@ export default function NavbarLayout() {
                     className="sm:hidden text-zinc-900 dark:text-white"
                 />
 
-                <NavbarBrand className="gap-3 sm:static absolute left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0">
-                    <Link href="/" className="flex items-center justify-center gap-3 group">
+                <NavbarBrand className="gap-3">
+                    <Link href="/" className="flex items-center justify-start gap-3 group">
                         <div className="relative w-20 h-20">
                             <Image
                                 src="/logo.png"
                                 alt="Logo"
                                 fill
+                                sizes="80px"
+                                priority
                                 className="object-contain"
                             />
                         </div>

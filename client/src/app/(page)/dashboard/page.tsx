@@ -332,33 +332,33 @@ export default function Dashboard() {
             <SidebarInset className="bg-zinc-50/50 dark:bg-zinc-950/50">
                 <header className="flex h-20 shrink-0 items-center transition-all duration-300">
                     <div className="flex items-center justify-between gap-4 px-6 w-full">
-                        <div className='flex items-center gap-4'>
+                        <div className='flex items-center gap-2 sm:gap-4'>
                             <div className="flex items-center gap-2 p-1 bg-sidebar rounded-sm shadow-sm border border-zinc-200/50 dark:border-white/5">
                                 <SidebarTrigger className="hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors" />
                             </div>
 
                             <div className="flex flex-col gap-0.5">
-                                <Breadcrumbs size='lg' isDisabled className="hidden sm:flex opacity-60">
-                                    <BreadcrumbItem>{t('navbar.dashboard')}</BreadcrumbItem>
-                                    <BreadcrumbItem>{t(`dashboard.management.${openLayout}`)}</BreadcrumbItem>
+                                <Breadcrumbs size='sm' isDisabled className="flex opacity-60">
+                                    <BreadcrumbItem className="hidden xs:block">{t('navbar.dashboard')}</BreadcrumbItem>
+                                    <BreadcrumbItem className="max-w-[120px] truncate">{t(`dashboard.management.${openLayout}`)}</BreadcrumbItem>
                                 </Breadcrumbs>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <div className="hidden md:flex items-center gap-2 p-1.5 bg-sidebar rounded-sm shadow-sm border border-zinc-200/50 dark:border-white/5">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 bg-sidebar rounded-sm shadow-sm border border-zinc-200/50 dark:border-white/5">
                                 <Dropdown>
                                     <DropdownTrigger>
-                                        <button className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold transition-all hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm">
-                                            <span className="text-zinc-400 uppercase tracking-widest text-[9px]">{t('dashboard.chart_color')}</span>
-                                            <div className="flex items-center gap-2 border-l border-zinc-200 dark:border-white/10 pl-2.5">
-                                                <div className={cn("w-3.5 h-3.5 rounded-full shadow-inner", getChartColorClass(selectedValue))} />
-                                                <span className="text-zinc-600 dark:text-zinc-300">{t(`dashboard.themes.${selectedValue}`)}</span>
+                                        <button className="flex items-center gap-1 sm:gap-2.5 px-2 sm:px-4 py-2 text-[10px] sm:text-xs font-bold transition-all hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm">
+                                            <span className="hidden xs:inline text-zinc-400 uppercase tracking-widest text-[9px]">{t('dashboard.chart_color')}</span>
+                                            <div className="flex items-center gap-2 border-l border-zinc-200 dark:border-white/10 pl-1 sm:pl-2.5">
+                                                <div className={cn("w-3 sm:w-3.5 h-3 sm:h-3.5 rounded-full shadow-inner", getChartColorClass(selectedValue))} />
+                                                <span className="hidden sm:inline text-zinc-600 dark:text-zinc-300">{t(`dashboard.themes.${selectedValue}`)}</span>
                                             </div>
-                                            <ChevronDown size={14} className="text-zinc-400" />
+                                            <ChevronDown size={12} className="text-zinc-400" />
                                         </button>
                                     </DropdownTrigger>
-
+                                    
                                     <DropdownMenu
                                         disallowEmptySelection
                                         aria-label="Theme Selection"
@@ -381,17 +381,17 @@ export default function Dashboard() {
                                     </DropdownMenu>
                                 </Dropdown>
 
-                                <div className="w-px h-6 bg-zinc-200 dark:bg-white/10 mx-1" />
+                                <div className="w-px h-6 bg-zinc-200 dark:bg-white/10 mx-0.5 sm:mx-1" />
 
                                 <button
-                                    className="p-2 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-xl transition-all group"
+                                    className="p-1.5 sm:p-2 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-xl transition-all group"
                                     onClick={handleThemeToggle}
                                     title={isDark ? t('dashboard.switch_light') : t('dashboard.switch_dark')}
                                 >
                                     <ThemeToggler className='hidden' ref={themeTogglerRef} />
                                     {isDark
-                                        ? <Sun size={20} className="text-amber-500 group-hover:rotate-45 transition-transform" />
-                                        : <Moon size={20} className="text-zinc-600 group-hover:-rotate-12 transition-transform" />
+                                        ? <Sun size={18} className="text-amber-500 group-hover:rotate-45 transition-transform" />
+                                        : <Moon size={18} className="text-zinc-600 group-hover:-rotate-12 transition-transform" />
                                     }
                                 </button>
                             </div>

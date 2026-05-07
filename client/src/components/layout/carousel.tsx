@@ -1,26 +1,42 @@
 "use client";
-
 import { MotionCarousel } from "@/components/ui/motion-carousel";
 import { EmblaOptionsType } from "embla-carousel";
+import { useMovieStore } from "@/stores/useMovieStore";
+import { useMemo } from "react";
+
+const getBackdropSrc = (path?: string | null) => {
+    if (!path) return "https://placehold.co/1200x600?text=No+Image";
+    if (path.startsWith("http")) return path;
+    return `https://image.tmdb.org/t/p/original${path}`;
+};
 
 export default function Carousel() {
     const OPTIONS: EmblaOptionsType = { loop: true };
-    const SLIDE_IMAGE = [
-        "https://cdn.galaxycine.vn/media/2026/2/10/phim-tet-3_1770710921760.jpg",
-        "https://cdn.galaxycine.vn/media/2026/1/29/le-doat-hon-2048_1769654643967.jpg",
-        "https://cdn.galaxycine.vn/media/2026/2/6/huyen-tinh-da-trach-2048_1770358920786.jpg",
-        "https://cdn.galaxycine.vn/media/2026/2/10/te-le-quy-linh-nhi-2048_1770712765405.jpg",
-        "https://cdn.galaxycine.vn/media/2026/2/1/2048-tam-tan-ky_1769883042086.jpg"
-    ];
-    const SLIDES = SLIDE_IMAGE.map((src, index) => ({ 
-        src, 
-        alt: `Slide ${index + 1}`,
-        priority: index === 0
-    }));
+    const { moviesByStatusMap } = useMovieStore();
+    
+    const SLIDES = useMemo(() => {
+        const nowPlaying = moviesByStatusMap[0] ?? [];
+
+        const sortedMovies = [...nowPlaying].sort((a, b) => 
+            new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
+        );
+        const carouselMovies = sortedMovies.slice(0, 8);
+
+        return carouselMovies.map((movie, index) => ({
+            id: movie.movie_id,
+            src: getBackdropSrc(movie.backdrop_path),
+            alt: movie.title,
+            title: movie.title,
+            overview: movie.overview,
+            priority: index === 0
+        }));
+    }, [moviesByStatusMap]);
+
+    if (SLIDES.length === 0) return null;
 
     return (
         <div>
             <MotionCarousel slides={SLIDES} options={OPTIONS} />
         </div>
-    )
+    );
 }

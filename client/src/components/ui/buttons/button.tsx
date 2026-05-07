@@ -18,10 +18,12 @@ function Button({
   asChild = false,
   ...props
 }: ButtonProps) {
-  const Component = asChild ? Slot : motion.button;
+  if (asChild) {
+    return <Slot {...props} />;
+  }
 
   return (
-    <Component
+    <motion.button
       whileTap={{ scale: tapScale }}
       whileHover={{ scale: hoverScale }}
       {...props}

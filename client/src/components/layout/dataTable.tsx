@@ -190,8 +190,8 @@ export default function DataTableAdmin<T>({
 
     return (
       <div className="flex flex-col gap-4 mb-2">
-        <div className="flex justify-between gap-4 items-center">
-          <div className="flex-1 max-w-100">
+        <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+          <div className="w-full sm:flex-1 sm:max-w-100">
             <Input
               isClearable
               classNames={{
@@ -207,24 +207,24 @@ export default function DataTableAdmin<T>({
             />
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex w-full sm:w-auto gap-2 sm:gap-3">
             {onAdd && (
               <button 
                 onClick={() => onAdd?.()}
-                className="group flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 px-5 py-2.5 rounded-sm cursor-pointer font-bold text-sm shadow-md hover:shadow-lg transition-all active:scale-95"
+                className="flex-1 sm:flex-none group flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 px-3 sm:px-5 py-2.5 rounded-sm cursor-pointer font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95"
               >
-                <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
-                {addButtonLabel || t('dashboard.data_table.add_new')}
+                <Plus size={16} className="group-hover:rotate-90 transition-transform duration-300" />
+                <span className="truncate">{addButtonLabel || t('dashboard.data_table.add_new')}</span>
               </button>
             )}
 
             {!hideDeleteSelected && (
               <button 
                 onClick={() => onDeleteSelected?.(selectedKeys)}
-                className="flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-1 border-rose-100 dark:border-rose-900/50 px-5 py-2.5 rounded-sm cursor-pointer font-bold text-sm hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors active:scale-95"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-1 border-rose-100 dark:border-rose-900/50 px-3 sm:px-5 py-2.5 rounded-sm cursor-pointer font-bold text-xs sm:text-sm hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors active:scale-95"
               >
-                <Trash size={18} />
-                {t('dashboard.data_table.delete_selected')}
+                <Trash size={16} />
+                <span className="truncate">{t('dashboard.data_table.delete_selected')}</span>
               </button>
             )}
           </div>
@@ -263,13 +263,13 @@ export default function DataTableAdmin<T>({
             </div>
         )}
 
-        <div className="flex justify-between items-center px-1">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-1">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{totalLabel(filteredItems.length)}</span>
             <div className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
             <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{t('dashboard.data_table.page_info', { page, pages })}</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
              {filters && filters.map((f) => (
                 <Dropdown key={f.uid} classNames={{
                     content: "bg-sidebar border-1 border-zinc-200 dark:border-zinc-800 shadow-xl",
@@ -369,6 +369,7 @@ export default function DataTableAdmin<T>({
   return (
     <div className="w-full">
       <Table
+        aria-label={addButtonLabel || "Data Table"}
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
