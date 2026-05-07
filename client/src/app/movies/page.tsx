@@ -143,7 +143,7 @@ function Movies() {
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-linear-to-b from-black/20 via-transparent to-background z-10 dark:from-black/60 dark:via-black/20" />
                     <div className="absolute inset-0 bg-linear-to-r from-white/40 via-transparent to-white/40 dark:from-black/80 dark:to-black/80 z-10" />
-                    <div className="w-full h-full blur-sm scale-110">
+                    <div className="w-full h-full blur-xs scale-110">
                          <Image 
                             src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop"
                             className="w-full h-full object-cover" 
@@ -163,14 +163,14 @@ function Movies() {
                     </BlurFade>
                     
                     <BlurFade delay={0.2} inView>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-sidebar uppercase drop-shadow-2xl">
+                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase drop-shadow-2xl">
                             {t('movies.hero_title')} <span className="text-transparent bg-clip-text bg-linear-to-b from-orange-400 to-amber-600">{t('movies.hero_subtitle')}</span>
                         </h1>
                     </BlurFade>
 
                     <BlurFade delay={0.3} inView>
                         <p className="text-zinc-400 font-medium max-w-xl text-sm md:text-base leading-relaxed drop-shadow-md">
-                            {t('movies.hero_desc')}
+                            {t('movies.hero_desc')}a
                         </p>
                     </BlurFade>
 

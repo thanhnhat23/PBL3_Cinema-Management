@@ -994,5 +994,37 @@
       "view": "Xem",
       "ban": "Cấm"
     }
+  },
+  "not_found": {
+    "error_404": "Error 404",
+    "title_main": "MẤT",
+    "title_highlight": "TÍCH",
+    "subtitle": "Oops! Trang lỗi mất tiêu rồi.",
+    "description": "Có vẻ như trang bạn đang tìm kiếm đã bị \"bay màu\" hoặc không tồn tại. Đừng lo lắng, hãy để chúng tôi dẫn đường bạn quay lại nhé!",
+    "back_home": "Về Trang Chủ",
+    "go_back": "Quay Lại",
+    "bg_text": "NOT FOUND"
+  },
+  "error_500": {
+    "error_label": "Server Error 500",
+    "title_main": "NGHẼN",
+    "title_highlight": "MẠCH",
+    "subtitle": "Oops! Đã có lỗi xảy ra trên hệ thống.",
+    "description": "Hệ thống đang gặp sự cố ngoài ý muốn. Đội ngũ kỹ thuật của chúng tôi đang nỗ lực khắc phục. Vui lòng thử lại sau giây lát nhé!",
+    "retry": "Thử Lại",
+    "back_home": "Về Trang Chủ",
+    "bg_text": "SERVER ERROR"
+  },
+  "loading": {
+    "title": "Đang chuẩn bị...",
+    "subtitle": "Phim hay sắp bắt đầu rồi, đợi chút nhé!",
+    "bg_text": "CINEMA"
+  },
+  "global_error": {
+    "title": "LỖI",
+    "title_highlight": "NGHIÊM TRỌNG",
+    "description": "Hệ thống gặp sự cố nghiêm trọng ảnh hưởng đến toàn bộ ứng dụng. Vui lòng làm mới trang để khôi phục trạng thái.",
+    "button": "Khôi Phục Hệ Thống",
+    "bg_text": "CRITICAL"
   }
 }

@@ -40,7 +40,7 @@ type GithubStarsProps = WithAsChild<
     value?: number;
     delay?: number;
   } & UseIsInViewOptions &
-    HTMLMotionProps<'div'>
+  HTMLMotionProps<'div'>
 >;
 
 function GithubStars({
