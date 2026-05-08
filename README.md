@@ -7,7 +7,7 @@
 
 **Nền tảng quản lý rạp chiếu phim tối ưu, hỗ trợ đặt vé thời gian thực và tích hợp thanh toán hiện đại.** Dự án được xây dựng nhằm giải quyết bài toán vận hành rạp phim từ khâu quản lý phim, suất chiếu đến trải nghiệm đặt vé của khách hàng.
 
-[🚀 Demo Trực Tuyến](https:milkywayyy.me)
+[🚀 Demo Trực Tuyến](https://milkywayyy.me)
 
 ---
 
