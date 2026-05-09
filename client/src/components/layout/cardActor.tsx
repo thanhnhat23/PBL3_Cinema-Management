@@ -2,6 +2,7 @@ import { Actor } from "@/stores/useActorStore";
 import { Card, CardFooter, Image } from "@heroui/react";
 import { useState } from "react";
 import Link from 'next/link';
+import { useTranslation } from "react-i18next";
 
 interface DataActorProps {
   actor: Actor;
@@ -12,6 +13,7 @@ export const CardActor = ({
     actor,
     index,
 }: DataActorProps) => {
+    const { t } = useTranslation();
     const [imgSrc, setImgSrc] = useState(actor.profile_path ? `https://image.tmdb.org/t/p/original${actor.profile_path}` : "/h.png");
 
     return (
@@ -36,14 +38,14 @@ export const CardActor = ({
                 <CardFooter className="absolute bottom-0 left-0 right-0 p-4 flex flex-col items-start gap-1 backdrop-blur-xl bg-white/80 dark:bg-black/60 border-t border-zinc-200 dark:border-white/10 z-30">
                     <div className="flex items-center gap-2 mb-1">
                         <div className="w-1 h-3 bg-fuchsia-500 rounded-full" />
-                        <span className="text-[10px] text-fuchsia-500 dark:text-fuchsia-400 font-black uppercase tracking-[0.2em]">Star Profile</span>
+                        <span className="text-[10px] text-fuchsia-500 dark:text-fuchsia-400 font-black uppercase tracking-[0.2em]">{t('actor_card.star_profile')}</span>
                     </div>
                     <b className="text-zinc-900 dark:text-white text-sm md:text-lg font-black uppercase tracking-tight truncate w-full drop-shadow-lg group-hover:text-fuchsia-600 dark:group-hover:text-fuchsia-400 transition-colors">
                         {actor.name}
                     </b>
                     <div className="flex items-center gap-2">
                         <p className="text-zinc-600 dark:text-white/60 text-[10px] font-bold uppercase tracking-widest">
-                            {actor.birthday ? new Date(actor.birthday).getFullYear() : "Cinema Star"}
+                            {actor.birthday ? new Date(actor.birthday).getFullYear() : t('actor_card.cinema_star')}
                         </p>
                     </div>
                 </CardFooter>

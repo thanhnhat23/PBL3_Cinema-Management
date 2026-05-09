@@ -40,10 +40,9 @@ export const ThemeToggler = forwardRef<HTMLButtonElement, ThemeTogglerProps>(({
       setIsDark(document.documentElement.classList.contains("dark"))
     }
 
-    // Set initial theme from localStorage or system preference
+    // Set initial theme from localStorage or default to dark
     const savedTheme = localStorage.getItem("theme")
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const initialDark = savedTheme === "dark" || (!savedTheme && prefersDark)
+    const initialDark = savedTheme === "dark" || !savedTheme
     
     if (initialDark) {
       document.documentElement.classList.add("dark")

@@ -1,5 +1,19 @@
 {
   "locale_code": "ja-JP",
+  "months": {
+    "january": "1月",
+    "february": "2月",
+    "march": "3月",
+    "april": "4月",
+    "may": "5月",
+    "june": "6月",
+    "july": "7月",
+    "august": "8月",
+    "september": "9月",
+    "october": "10月",
+    "november": "11月",
+    "december": "12月"
+  },
   "common": {
     "success": "成功",
     "error": "エラー",
@@ -8,17 +22,40 @@
     "delete": "削除",
     "save": "保存",
     "cancel": "キャンセル",
-    "confirm": "確認",
-    "search": "検索",
+    "close": "閉じる",
+    "date": "日付",
+    "released": "上映中",
+    "upcoming": "公開予定",
     "status": "ステータス",
-    "loading": "読み込み中...",
+    "none": "なし",
     "currency_vnd": "VNĐ",
     "email": "メール",
     "actions": "操作",
+    "id": "ID",
     "management_system": "管理システム",
+    "add_new": "新規追加",
+    "saving": "保存中...",
+    "day_names": {
+      "0": "日曜日",
+      "1": "月曜日",
+      "2": "火曜日",
+      "3": "水曜日",
+      "4": "木曜日",
+      "5": "金曜日",
+      "6": "土曜日"
+    },
     "actors": "俳優",
     "reviews": "レビュー",
-    "copyright": "© 2026 MilkyWayyy Cinema - 全著作権所有"
+    "status_names": {
+      "0": "下書き",
+      "1": "予定済み",
+      "2": "公開済み",
+      "3": "終了",
+      "4": "キャンセル"
+    },
+    "copyright": "© 2026 MilkyWayyy Cinema - 無断複写・転載を禁じます",
+    "change_method": "支払い方法を変更",
+    "coming_soon": "近日公開"
   },
   "navbar": {
     "movies": "映画",
@@ -140,11 +177,17 @@
       "select_showtime": "上映回を選択",
       "not_selected_movie": "映画が選択されていません",
       "not_selected_cinema": "映画館が選択されていません",
-      "room": "スクリーン"
+      "room": "スクリーン",
+      "cinema": "映画館",
+      "showtime": "上映時間",
+      "selected_movie": "選択した映画",
+      "selected_cinema": "選択した映画館",
+      "selected_showtime": "選択した上映回"
     },
     "sidebar": {
-      "selected_seats": "選択した座席",
-      "total": "合計金額"
+      "selected_seats": "選択された席",
+      "ticket_qr": "チケットQRコード",
+      "total": "合計"
     },
     "buttons": {
       "back": "戻る",
@@ -156,6 +199,9 @@
       "step2": "2. 映画館を選択",
       "step3": "3. 上映時間を選択",
       "no_showtimes": "利用可能な上映時間はありません",
+      "no_locations": "このエリアに映画館は見つかりませんでした",
+      "no_movies": "現在上映中の映画はありません",
+      "no_snacks": "この映画館では現在売店のサービスを提供しておりません",
       "days": {
         "sun": "日曜日",
         "mon": "月曜日",
@@ -171,10 +217,49 @@
       "no_seat_info": "座席表情報が見つかりません",
       "screen": "スクリーン",
       "legend": {
-        "single": "シングル席",
-        "double": "ダブル席",
+        "single": "一般席",
+        "double": "ペア席",
         "selecting": "選択中",
-        "sold": "販売済み"
+        "sold": "売切"
+      }
+    },
+    "confirmation": {
+      "title": "お支払い内容の確認",
+      "subtitle": "プロモーションコードとお支払い方法を選択してください",
+      "coupon_label": "プロモーションコード",
+      "coupon_placeholder": "コードを入力してください...",
+      "apply_button": "適用",
+      "coupon_applied": "コードが正常に適用されました",
+      "payment_method_label": "お支払い方法",
+      "subtotal": "小計",
+      "discount": "割引",
+      "total_payable": "お支払い合計"
+    },
+    "payment": {
+      "verifying_transaction": "取引を確認中...",
+      "please_wait": "少々お待ちください",
+      "success_title": "お支払い成功",
+      "failed_title": "お支払い失敗",
+      "success_desc": "MilkyWayyy Cinemaをご利用いただきありがとうございます。映画をお楽しみください！",
+      "failed_desc": "お支払いプロセス中にエラーが発生しました。もう一度お試しいただくか、サポートにお問い合わせください。",
+      "momo": {
+        "success_title": "MoMoお支払い成功",
+        "failed_title": "MoMoお支払い失敗",
+        "success_desc": "MoMoウォレット経由で取引が正常に処理されました！",
+        "failed_desc": "MoMoお支払いプロセス中にエラーが発生しました。"
+      },
+      "callback": {
+        "txn_ref": "取引参照番号",
+        "order_id": "注文ID",
+        "order_info": "注文情報",
+        "amount": "金額",
+        "result": "結果",
+        "success": "成功",
+        "failed": "失敗",
+        "view_tickets": "チケットを表示",
+        "retry": "再試行",
+        "back_home": "ホームに戻る",
+        "support_note": "問題が発生した場合は、ホットラインにお問い合わせください: "
       }
     }
   },
@@ -227,12 +312,17 @@
     },
     "spending_year": "{{year}}年の利用金額",
     "loyalty_point": "ロイヤリティポイント:",
-    "rank": "ランク:",
+    "rank": "ランク",
     "ranks": {
+      "bronze": "ブロンズ",
       "silver": "シルバー",
       "gold": "ゴールド",
-      "platinum": "プラチナ"
+      "platinum": "プラチナ",
+      "diamond": "ダイアモンド"
     },
+    "view_details": "詳細を見る",
+    "no_transactions": "最近の取引はありません。お気に入りの映画を見つけてください！",
+    "explore_now": "今すぐ映画を探す",
     "project_name": "映画管理システム",
     "project_info": "プロジェクト情報",
     "hotline": "サポートホットライン",
@@ -264,9 +354,9 @@
     "security": "セキュリティ",
     "password_protection": "パスワード保護",
     "change_password": "パスワード変更",
-    "no_transactions": "最近の取引はありません。お気に入りの映画を見つけてください！",
-    "explore_now": "今すぐ映画を探す",
-    "currency": "円"
+    "currency": " VNĐ",
+    "next_rank_needed": "あと {{amount}}{{currency}} の利用で {{rank}} ランクに昇格します",
+    "total_bookings": "予約"
   },
   "actors": {
     "hero_title": "スクリーンの",
@@ -519,7 +609,8 @@
       "users": "ユーザー",
       "sync": "データ同期",
       "revenue": "収益統計",
-      "stats": "ダッシュボード概要"
+      "stats": "ダッシュボード概要",
+      "inventory": "在庫管理"
     },
     "themes": {
       "blue": "ブルー",
@@ -614,7 +705,8 @@
     "book_now": "今すぐ予約",
     "watch_trailer": "予告編を見る",
     "coming_soon": "近日公開",
-    "trailer_preparing": "予告編は現在準備中です..."
+    "trailer_preparing": "予告編は現在準備中です...",
+    "trailer_label": "予告編"
   },
   "movie_status": {
     "released": "上映中",
@@ -681,11 +773,18 @@
     "age_limit": "年齢制限",
     "no_overview": "この映画の概要はまだありません。",
     "no_data": "映画データがありません。",
-    "edit_desc": "映画情報を変更する"
+    "edit_desc": "映画情報を変更する",
+    "poster_path": "ポスターパス",
+    "backdrop_path": "背景画像パス",
+    "yes": "はい",
+    "no": "いいえ",
+    "all_ages": "全年齢"
   },
   "foods_tab": {
     "title": "メニュー管理",
     "desc": "フード、ドリンク、お得なコンボパッケージの設定。",
+    "desc_combo": "ポップコーンとドリンクがセットになったお得なコンボ。カップルやグループに最適です。",
+    "desc_single": "映画のお供にぴったりな、高品質な単品メニュー。",
     "search_placeholder": "メニューを検索...",
     "add_snack": "アイテムを追加",
     "total_items": "合計 {{count}} アイテム",
@@ -699,13 +798,15 @@
     "name_placeholder": "例：チーズポップコーン...",
     "type_label": "カテゴリー",
     "type_placeholder": "タイプを選択",
-    "price_label": "価格 (円)",
+    "price_label": "価格 (VNĐ)",
     "price_placeholder": "例：500",
     "image_label": "画像URL",
     "image_placeholder": "https://...",
     "close_details": "詳細を閉じる",
     "processing": "処理中...",
     "save_changes": "変更を保存",
+    "add_combo_component": "構成要素を追加",
+    "total_combo_components": "合計 {{count}} 構成要素",
     "types": {
       "food": "フード",
       "drink": "ドリンク",
@@ -736,7 +837,7 @@
     "saving": "保存中...",
     "save_changes": "変更を保存",
     "columns": {
-        "city": "都市"
+      "city": "都市"
     }
   },
   "cinemas_tab": {
@@ -764,10 +865,10 @@
     "no_data": "劇場データがありません。",
     "edit_desc": "劇場情報を変更する",
     "columns": {
-        "name": "劇場名",
-        "address": "住所",
-        "city": "都市",
-        "phone": "電話番号"
+      "name": "劇場名",
+      "address": "住所",
+      "city": "都市",
+      "phone": "電話番号"
     }
   },
   "rooms_tab": {
@@ -792,16 +893,16 @@
     "seat_map_label": "座席レイアウト図",
     "auto_generated": "自動生成",
     "seat_single": "一般席",
-    "seat_couple": "ペアシート（後方2列）",
+    "seat_couple": "ペアシート",
     "edit_warning": "行数や列数を変更すると、古い座席マップが削除され、再生成されます。上映スケジュールが設定されている場合は変更できません。",
     "saving": "保存中...",
     "save_changes": "変更を保存",
     "columns": {
-        "name": "シアター名",
-        "cinema": "劇場",
-        "type": "タイプ",
-        "price": "料金",
-        "layout": "行/列"
+      "name": "シアター名",
+      "cinema": "劇場",
+      "type": "タイプ",
+      "price": "料金",
+      "layout": "行/列"
     }
   },
   "tickets_tab": {
@@ -818,19 +919,22 @@
     "original_price": "元の価格",
     "booking_date": "予約日",
     "total_label": "合計",
+    "booking_id": "予約ID",
+    "customer": "顧客",
+    "user_id": "ユーザーID",
     "status": {
-        "pending": "保留中",
-        "confirmed": "確認済み",
-        "cancelled": "キャンセル済み",
-        "unknown": "不明"
+      "pending": "保留中",
+      "confirmed": "確認済み",
+      "cancelled": "キャンセル済み",
+      "unknown": "不明"
     },
     "columns": {
-        "user": "ユーザー",
-        "cinema": "劇場",
-        "total": "総額",
-        "final": "最終金額",
-        "status": "ステータス",
-        "created": "作成日"
+      "user": "ユーザー",
+      "cinema": "劇場",
+      "total": "総額",
+      "final": "最終金額",
+      "status": "ステータス",
+      "created": "作成日"
     }
   },
   "coupons_tab": {
@@ -846,7 +950,7 @@
     "add_new_coupon": "新しいクーポンを作成",
     "code_label": "クーポンコード",
     "desc_label": "説明",
-    "desc_placeholder": "例：50ドル以上の注文で50%オフ...",
+    "desc_placeholder": "例：100,000 VNĐ以上の注文で50%オフ...",
     "type_label": "割引タイプ",
     "value_label": "割引額",
     "min_order_label": "最小注文額",
@@ -864,16 +968,16 @@
     "processing": "処理中...",
     "create_btn": "クーポンを作成",
     "types": {
-        "percentage": "パーセント (%)",
-        "fixed": "固定額"
+      "percentage": "パーセント (%)",
+      "fixed": "固定額"
     },
     "columns": {
-        "code": "クーポンコード",
-        "type": "タイプ",
-        "value": "割引",
-        "min": "最小金額",
-        "status": "ステータス",
-        "expiry": "有効期限"
+      "code": "クーポンコード",
+      "type": "タイプ",
+      "value": "割引",
+      "min": "最小金額",
+      "status": "ステータス",
+      "expiry": "有効期限"
     }
   },
   "actors_tab": {
@@ -903,15 +1007,15 @@
     "saving": "保存中...",
     "save_changes": "変更を保存",
     "genders": {
-        "male": "男性",
-        "female": "女性",
-        "other": "その他"
+      "male": "男性",
+      "female": "女性",
+      "other": "その他"
     },
     "columns": {
-        "name": "俳優",
-        "gender": "性別",
-        "birthday": "生年月日",
-        "birthplace": "出生地"
+      "name": "俳優",
+      "gender": "性別",
+      "birthday": "生年月日",
+      "birthplace": "出生地"
     }
   },
   "reviews_tab": {
@@ -930,35 +1034,118 @@
     "no_comment": "このユーザーはコメント内容を残していません。",
     "no_data": "データがありません。",
     "status": {
-        "approved": "承認済み",
-        "pending": "承認待ち"
+      "approved": "承認済み",
+      "pending": "承認待ち"
     },
     "columns": {
-        "user": "ユーザー",
-        "movie": "映画",
-        "rating": "評価",
-        "content": "内容",
-        "status": "ステータス",
-        "created": "作成日"
+      "user": "ユーザー",
+      "movie": "映画",
+      "rating": "評価",
+      "content": "内容",
+      "status": "ステータス",
+      "created": "作成日"
     }
   },
   "showtimes_tab": {
     "title": "上映スケジュール管理",
-    "desc": "上映スケジュールの作成、時間枠の管理、スクリーンの割り当て。"
+    "desc": "上映スケジュールの作成、時間枠の管理、スクリーンの割り当て。",
+    "tabs": {
+      "showtime": "上映スケジュール",
+      "seat": "座席管理",
+      "slot": "時間枠テンプレート",
+      "price": "料金モデル"
+    },
+    "columns": {
+      "id": "ID",
+      "room": "スクリーン",
+      "start_time": "開始時間",
+      "end_time": "終了時間",
+      "pricing": "料金モデル"
+    },
+    "search_placeholder": "映画タイトルで検索...",
+    "total_count": "合計 {{count}} 上映スケジュール",
+    "empty_label": "上映スケジュールが見つかりません",
+    "loading_label": "上映データを読み込み中...",
+    "details_title": "上映の詳細",
+    "id_label": "上映ID",
+    "pricing_model": {
+      "label": "料金モデル",
+      "price_based": "価格ベース",
+      "seat_based": "座席ベース",
+      "mixed": "混合"
+    },
+    "placeholders": {
+      "select_movie": "映画を選択",
+      "select_room": "スクリーンを選択",
+      "select_showtime": "上映回を選択",
+      "select_slot": "時間枠を選択",
+      "no_slots_for_day": "この日の時間枠はありません"
+    },
+    "seat_tab": {
+      "title": "座席ステータス",
+      "desc": "各上映回の座席予約状況を監視および管理します。",
+      "seat_id": "座席ID",
+      "total_seats": "合計 {{count}} 席",
+      "status": {
+        "available": "空き",
+        "booked": "予約済み",
+        "holding": "キープ中"
+      }
+    },
+    "price_tab": {
+      "title": "上映料金",
+      "desc": "座席タイプや時間帯に応じたチケット料金を設定します。これらの料金は基本料金を上書きします。",
+      "base_price": "基本料金",
+      "config_desc": "基本料金設定",
+      "slot_id": "枠ID",
+      "seat_type": "座席タイプ",
+      "search_placeholder": "枠IDで検索...",
+      "details_title": "料金詳細",
+      "slot_specific_price": "枠別料金",
+      "add_title": "新規料金追加",
+      "edit_title": "料金編集",
+      "select_slot": "枠を選択",
+      "select_seat_type": "座席タイプを選択",
+      "override_price": "上書き料金 (VNĐ)",
+      "enter_price": "料金を入力..."
+    },
+    "slot_tab": {
+      "title": "枠テンプレート",
+      "desc": "スケジュールを素早く作成するためのテンプレート管理。",
+      "start_time": "開始時間",
+      "end_time": "終了時間",
+      "day_of_week": "曜日"
+    }
   },
   "ticket_tab": {
     "tickets": "チケット",
-    "coupons": "クーポン"
+    "coupons": "クーポン",
+    "booking_id": "予約ID"
   },
   "sync_tab": {
     "title": "データ同期",
     "desc": "TMDBから内部システムへのデータフロー管理。",
     "tasks": {
-      "upcoming": { "name": "公開予定作品", "desc": "TMDBから公開予定映画を同期します。" },
-      "nowplaying": { "name": "上映中作品", "desc": "現在上映中の映画データを更新します。" },
-      "popular": { "name": "人気作品", "desc": "TMDBから高評価作品を取得します。" },
-      "reviews": { "name": "レビュー", "desc": "ユーザーレビューとスコアを更新します。" },
-      "status": { "name": "システム状態", "desc": "内部データの状態を確認します。" }
+      "upcoming": {
+        "name": "公開予定作品",
+        "desc": "TMDBから公開予定映画を同期します。"
+      },
+      "nowplaying": {
+        "name": "上映中作品",
+        "desc": "現在上映中の映画データを更新します。"
+      },
+      "popular": {
+        "name": "人気作品",
+        "desc": "TMDBから高評価作品を取得します。"
+      },
+      "reviews": {
+        "name": "レビュー",
+        "desc": "ユーザーレビューとスコアを更新します。"
+      },
+      "status": {
+        "name": "システム状態",
+        "desc": "内部データの状態を確認します。"
+      }
     },
     "status": {
       "ready": "システム：準備完了",
@@ -1028,9 +1215,8 @@
     "bg_text": "SERVER ERROR"
   },
   "loading": {
-    "title": "準備中...",
-    "subtitle": "素晴らしい映画が始まります、少々お待ちください！",
-    "bg_text": "CINEMA"
+    "title": "銀河を初期化中...",
+    "bg_text": "MILKYWAY"
   },
   "global_error": {
     "title": "重大な",
@@ -1038,5 +1224,127 @@
     "description": "システム全体に影響する重大なエラーが発生しました。状態を復元するにはページを更新してください。",
     "button": "システムを復元",
     "bg_text": "CRITICAL"
+  },
+  "payment_tab": {
+    "order_info_title": "注文情報",
+    "amount_to_pay": "お支払い金額",
+    "discount": "割引",
+    "order_code": "注文番号",
+    "qr_instruction": "QRコードをスキャンしてVNPAY支払いページを開く",
+    "payment_guide": "支払いガイド",
+    "redirect_button": "VNPAYポータルを開く",
+    "footer_instruction": "銀行アプリでQRコードをスキャンするか、上のボタンをクリックしてカード/QRで支払います",
+    "initializing": "支払いを初期化中",
+    "initializing_desc": "決済ゲートウェイに接続しています。少々お待ちください",
+    "test_cards_modal_title": "VNPAY テストカードリスト",
+    "test_cards_modal_title_momo": "MoMo テストカードリスト",
+    "test_labels": {
+      "vnpay": "ATM NCB (テスト):",
+      "momo": "MOMO ATM (テスト):"
+    },
+    "view_all_test_cards": "すべてのテストカードを表示",
+    "test_cards_note": "注意：これらの情報は Sandbox（テスト）環境でのみ使用してください。",
+    "test_instructions": {
+      "momo_atm": [
+        "ステップ1：MOMO決済ゲートウェイ経由で支払いリクエストを作成します。",
+        "ステップ2：「確認」を選択 => MOMOによって作成された銀行/Napas支払いページにリダイレクトされます。",
+        "ステップ3：テストアカウントを使用して試用支払いを行います。"
+      ],
+      "momo_intl": [
+        "ステップ1：MOMO決済ゲートウェイ経 dụngで支払いリクエストを作成します。",
+        "ステップ2：「確認」を選択 => OTP入力ページが開きます（3DSがある場合）。",
+        "ステップ3：テストアカウントを使用して試用支払いを行います。"
+      ]
+    },
+    "card_types": {
+      "atm": "ATM / 国内口座",
+      "visa": "VISA 国際カード",
+      "mastercard": "MasterCard 国際カード",
+      "napas": "国内 ATM カード (NAPAS)",
+      "jcb": "JCB 国際カード"
+    },
+    "status": {
+      "success": "成功",
+      "insufficient_balance": "残高不足",
+      "not_activated": "未有効化のカード",
+      "blocked": "カードロック",
+      "expired": "カード期限切れ",
+      "limit_exceeded": "限度額超え",
+      "failed": "失敗"
+    },
+    "card_labels": {
+      "card_no": "カード番号",
+      "bank_type": "銀行",
+      "holder": "名義人",
+      "date": "発行"
+    },
+    "finish_button": "支払う",
+    "qr_momo_instruction": "QRコードをスキャンしてMOMO支払いページを開く",
+    "momo_atm_qr_instruction": "MOMO ATM支払いページを開く",
+    "momo_guide": "支払いガイド",
+    "momo_atm_guide": "カード情報ガイド",
+    "momo_redirect_button": "MOMO支払いポータルを開く",
+    "momo_footer_instruction": "MOMOアプリでQRコードをスキャンするか、上のボタンをクリックして支払います",
+    "momo_atm_footer_instruction": "上のボタンをクリックしてMoMo支払いページを開き、国内ATMカード情報を入力してください",
+    "methods": {
+      "vnpay": "VNPAY",
+      "momo_wallet": "MoMoウォレット",
+      "momo_atm": "MoMo国内ATM",
+      "sepay": "SEPAY",
+      "paypal": "PAYPAL"
+    }
+  },
+  "payment": {
+    "powered_by": "MilkyWay Cinema {{method}} 決済システム提供",
+    "verifying_transaction": "取引を確認中...",
+    "please_wait": "少々お待ちください",
+    "success_title": "支払い成功",
+    "failed_title": "支払い失敗",
+    "success_desc": "当サービスをご利用いただきありがとうございます。素晴らしい映画の時間をお過ごしください！",
+    "failed_desc": "申し訳ありませんが、支払い処理中にエラーが発生しました。口座残高を確認するか、別の方法をお試しください。",
+    "order_info": "注文情報",
+    "order_payment_info": "注文の支払い",
+    "download_invoice": "領収書をダウンロード (PDF)",
+    "callback": {
+      "order_info": "注文情報",
+      "txn_ref": "取引参照番号",
+      "order_id": "注文ID",
+      "amount": "支払い金額",
+      "time": "支払い時間",
+      "result": "結果",
+      "success": "成功",
+      "failed": "失敗",
+      "view_tickets": "マイチケットを見る",
+      "retry": "もう一度試す",
+      "back_home": "ホームに戻る",
+      "payment_not_found": "支払い取引が見つかりません",
+      "support_note": "問題が発生した場合は、ホットラインまでご連絡ください："
+    }
+  },
+  "inventory_tab": {
+    "title": "在庫管理",
+    "desc": "各映画館の食べ物や飲み物の在庫数を管理します。",
+    "search_placeholder": "映画館またはアイテムを検索...",
+    "add_label": "在庫に追加",
+    "total_items": "合計 {{count}} アイテム",
+    "quantity_label": "在庫数",
+    "update_quantity": "在庫数を更新"
+  },
+  "review_card": {
+    "reviewed_by": "レビュー担当:",
+    "unknown_date": "不明な日付",
+    "no_content": "レビュー内容はありません。",
+    "rating": "評価",
+    "tag": "レビュー"
+  },
+  "actor_card": {
+    "star_profile": "スタープロフィール",
+    "cinema_star": "シネマスター"
+  },
+  "confirmation_tab": {
+    "coupon_not_found": "無効または存在しないクーポンコードです",
+    "coupon_min_value": "このクーポンは{{value}} VND以上のご注文にのみ適用されます",
+    "coupon_expired": "クーポンの有効期限が切れています",
+    "coupon_applied": "クーポンが正常に適用されました"
   }
 }

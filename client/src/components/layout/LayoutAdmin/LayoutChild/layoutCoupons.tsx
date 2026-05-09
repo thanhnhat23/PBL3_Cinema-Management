@@ -32,7 +32,7 @@ import { format } from "date-fns";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-const getCouponColumns = (t: any): AdminColumn[] => [
+const getCouponColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: "ID", uid: "coupon_id", sortable: true },
     { name: t('coupons_tab.columns.code'), uid: "code", sortable: true },
     { name: t('coupons_tab.columns.type'), uid: "type", sortable: true },
@@ -218,14 +218,14 @@ export default function LayoutCoupons() {
                                     onOpen();
                                 }}
                             >
-                                {t('coupons_tab.details_title')}
+                                {t('common.view')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="edit" 
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(coupon)}
                             >
-                                {t('coupons_tab.edit_coupon')}
+                                {t('common.edit')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="delete" 

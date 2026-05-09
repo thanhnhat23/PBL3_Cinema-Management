@@ -1,5 +1,5 @@
-
 'use client';
+
 import { useEffect, useState, useRef, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useMovieStore } from "@/stores/useMovieStore";
@@ -170,7 +170,7 @@ function Movies() {
 
                     <BlurFade delay={0.3} inView>
                         <p className="text-zinc-400 font-medium max-w-xl text-sm md:text-base leading-relaxed drop-shadow-md">
-                            {t('movies.hero_desc')}a
+                            {t('movies.hero_desc')}
                         </p>
                     </BlurFade>
 

@@ -4,7 +4,6 @@ import { RefreshCw, AlertTriangle } from "lucide-react";
 import { Button } from "@heroui/react";
 import { useTranslation } from 'react-i18next';
 
-// Global error must include html and body tags
 export default function GlobalError({
   error,
   reset,

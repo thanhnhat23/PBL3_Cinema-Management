@@ -34,7 +34,7 @@ import { useCinemaStore, type Cinema } from "@/stores/useCinemaStore";
 import { useLocationStore } from "@/stores/useLocationStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
-const getCinemaColumns = (t: any): AdminColumn[] => [
+const getCinemaColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: "ID", uid: "cinema_id", sortable: true },
     { name: t('cinemas_tab.columns.name'), uid: "name", sortable: true },
     { name: t('cinemas_tab.columns.address'), uid: "address", sortable: true },
@@ -171,7 +171,7 @@ export default function LayoutCinemas() {
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(cinema)}
                             >
-                                {t('movie_details.edit_movie')}
+                                {t('common.edit')}
                             </DropdownItem>
                              <DropdownItem 
                                 key="delete" 

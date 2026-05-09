@@ -231,7 +231,7 @@ function MotionCarousel(props: PropType) {
           onClick={onPrev}
           disabled={prevDisabled}
           className={cn(
-            "pointer-events-auto size-12 md:size-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0 disabled:opacity-0",
+            "pointer-events-auto cursor-pointer size-12 md:size-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0 disabled:opacity-0",
           )}
         >
           <ChevronLeft className="size-6 md:size-8" />
@@ -242,7 +242,7 @@ function MotionCarousel(props: PropType) {
           onClick={onNext}
           disabled={nextDisabled}
           className={cn(
-            "pointer-events-auto size-12 md:size-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0 disabled:opacity-0",
+            "pointer-events-auto cursor-pointer size-12 md:size-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0 disabled:opacity-0",
           )}
         >
           <ChevronRight className="size-6 md:size-8" />
@@ -256,7 +256,7 @@ function MotionCarousel(props: PropType) {
             key={index}
             onClick={() => onDotClick(index)}
             className={cn(
-              "h-1.5 transition-all duration-500 rounded-full",
+              "h-1.5 transition-all duration-500 rounded-full cursor-pointer",
               index === selectedIndex
                 ? "w-8 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"
                 : "w-2 bg-white/30 hover:bg-white/50"

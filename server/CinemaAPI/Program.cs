@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -51,6 +52,9 @@ builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("C
 // Configure VNPAY
 builder.Services.Configure<VnpayConfig>(builder.Configuration.GetSection("Vnpay"));
 
+// Configure Momo
+builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("Momo"));
+
 // Configure Services
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<RoomService>();
@@ -79,8 +83,6 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<InventoryService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<BookingService>();
-builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<ISeatService, SeatService>();
 builder.Services.AddScoped<IShowTimeService, ShowTimeService>();
 builder.Services.AddScoped<ShowTimeService>();
@@ -90,6 +92,12 @@ builder.Services.AddScoped<IShowTimePriceService, ShowTimePriceService>();
 builder.Services.AddScoped<ShowTimePriceService>();
 builder.Services.AddScoped<IShowTimeSlotService, ShowTimeSlotService>();
 builder.Services.AddScoped<ShowTimeSlotService>();
+
+// Scope payment
+builder.Services.AddScoped<IMomoPaymentService, MomoPaymentService>();
+builder.Services.AddScoped<MomoPaymentService>();
+builder.Services.AddScoped<IVnpayPaymentService, VnpayPaymentService>();
+builder.Services.AddScoped<VnpayPaymentService>();
 
 // Configure SignalR
 builder.Services.AddSignalR();
@@ -112,7 +120,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
     }
-); ;
+);
 
 builder.Services.AddHostedService<TmdbSyncWorker>();
 builder.Services.AddHostedService<ExpiredResetTokenCleanupService>();

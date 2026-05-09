@@ -24,8 +24,14 @@ namespace CinemaAPI.Services.Implementations
                 .AsNoTracking()
                 .Include(b => b.User)
                 .Include(b => b.ShowTime)
+                    .ThenInclude(st => st.Movie)
+                .Include(b => b.ShowTime)
                     .ThenInclude(st => st.Room)
                         .ThenInclude(r => r.Cinema)
+                .Include(b => b.ShowTimeSeats)
+                    .ThenInclude(sts => sts.Seat)
+                .Include(b => b.VnpayPayments)
+                .Include(b => b.MomoPayments)
                 .OrderByDescending(b => b.createAt)
                 .ToListAsync();
 
@@ -34,8 +40,14 @@ namespace CinemaAPI.Services.Implementations
                 .AsNoTracking()
                 .Include(b => b.User)
                 .Include(b => b.ShowTime)
+                    .ThenInclude(st => st.Movie)
+                .Include(b => b.ShowTime)
                     .ThenInclude(st => st.Room)
                         .ThenInclude(r => r.Cinema)
+                .Include(b => b.ShowTimeSeats)
+                    .ThenInclude(sts => sts.Seat)
+                .Include(b => b.VnpayPayments)
+                .Include(b => b.MomoPayments)
                 .FirstOrDefaultAsync(b => b.booking_id == booking_id);
 
         public async Task<List<Booking>> GetBookingsByUserId(Guid user_id) =>
@@ -43,8 +55,14 @@ namespace CinemaAPI.Services.Implementations
                 .AsNoTracking()
                 .Include(b => b.User)
                 .Include(b => b.ShowTime)
+                    .ThenInclude(st => st.Movie)
+                .Include(b => b.ShowTime)
                     .ThenInclude(st => st.Room)
                         .ThenInclude(r => r.Cinema)
+                .Include(b => b.ShowTimeSeats)
+                    .ThenInclude(sts => sts.Seat)
+                .Include(b => b.VnpayPayments)
+                .Include(b => b.MomoPayments)
                 .Where(b => b.user_id == user_id)
                 .OrderByDescending(b => b.createAt)
                 .ToListAsync();
@@ -133,7 +151,8 @@ namespace CinemaAPI.Services.Implementations
 
                 foreach (var snackRequest in snackRequests)
                 {
-                    var snack = snacks[snackRequest.snack_id];
+                    if (!snacks.TryGetValue(snackRequest.snack_id, out var snack))
+                        throw new Exception($"Snack with ID {snackRequest.snack_id} not found");
 
                     if (snack.type == SnackType.Combo)
                     {
@@ -194,6 +213,7 @@ namespace CinemaAPI.Services.Implementations
                 var inventories = inventorySnackIds.Count == 0
                     ? new List<Inventory>()
                     : await _dbContext.Inventories
+                        .Include(i => i.Snack)
                         .Where(inventory => inventory.cinema_id == showTime.Room.cinema_id
                                             && inventorySnackIds.Contains(inventory.snack_id))
                         .ToListAsync();
@@ -206,12 +226,39 @@ namespace CinemaAPI.Services.Implementations
 
                     var required = inventoryDeduction[snackId];
                     if (inventory.quantity < required)
-                        throw new Exception($"Insufficient inventory for snack {snackId} in cinema {showTime.Room.cinema_id}");
+                        throw new Exception($"Insufficient inventory for snack '{inventory.Snack?.name ?? snackId.ToString()}' in cinema {showTime.Room.cinema_id}. Required: {required}, Available: {inventory.quantity}");
 
                     inventory.quantity -= required;
                 }
 
                 var finalAmount = totalAmount - discountAmount;
+
+                if (request.coupon_id.HasValue)
+                {
+                    var coupon = await _dbContext.Coupons.FindAsync(request.coupon_id.Value);
+                    if (coupon != null)
+                    {
+                        // Validate coupon
+                        var now = DateTime.UtcNow;
+                        if (now >= coupon.startDate && now <= coupon.endDate && totalAmount >= coupon.minOrderValue)
+                        {
+                            decimal couponDiscount = 0;
+                            if (coupon.type == 0) // Percentage
+                            {
+                                couponDiscount = (totalAmount * coupon.discountValue) / 100;
+                                if (coupon.maxDiscountAmount > 0)
+                                    couponDiscount = Math.Min(couponDiscount, coupon.maxDiscountAmount);
+                            }
+                            else // Fixed amount
+                            {
+                                couponDiscount = coupon.discountValue;
+                            }
+                            
+                            discountAmount += couponDiscount;
+                            finalAmount = Math.Max(0, totalAmount - discountAmount);
+                        }
+                    }
+                }
 
                 var booking = new Booking
                 {

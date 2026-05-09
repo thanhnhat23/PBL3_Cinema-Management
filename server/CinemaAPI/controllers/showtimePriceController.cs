@@ -30,12 +30,12 @@ namespace CinemaAPI.Controllers
             }
         }
 
-        [HttpGet("get/{typeId}/{showtimeId}")]
-        public async Task<IActionResult> Get(int typeId, int showtimeId)
+        [HttpGet("get/{typeId}/{slotId}")]
+        public async Task<IActionResult> Get(int typeId, int slotId)
         {
             try
             {
-                var item = await _service.GetPrice(typeId, showtimeId);
+                var item = await _service.GetPrice(typeId, slotId);
                 if (item == null) return NotFound();
                 return Ok(item);
             }
@@ -53,7 +53,7 @@ namespace CinemaAPI.Controllers
                 var p = new ShowTimePrice
                 {
                     type_id = req.type_id,
-                    showtime_id = req.showtime_id,
+                    slot_id = req.slot_id,
                     base_price = req.base_price
                 };
 
@@ -66,12 +66,12 @@ namespace CinemaAPI.Controllers
             }
         }
 
-        [HttpPut("update/{typeId}/{showtimeId}")]
-        public async Task<IActionResult> Update(int typeId, int showtimeId, [FromBody] ShowTimePriceUpdateRequest req)
+        [HttpPut("update/{typeId}/{slotId}")]
+        public async Task<IActionResult> Update(int typeId, int slotId, [FromBody] ShowTimePriceUpdateRequest req)
         {
             try
             {
-                await _service.UpdatePrice(typeId, showtimeId, req);
+                await _service.UpdatePrice(typeId, slotId, req);
                 return Ok("Updated");
             }
             catch (Exception ex)
@@ -80,12 +80,12 @@ namespace CinemaAPI.Controllers
             }
         }
 
-        [HttpDelete("delete/{typeId}/{showtimeId}")]
-        public async Task<IActionResult> Delete(int typeId, int showtimeId)
+        [HttpDelete("delete/{typeId}/{slotId}")]
+        public async Task<IActionResult> Delete(int typeId, int slotId)
         {
             try
             {
-                await _service.DeletePrice(typeId, showtimeId);
+                await _service.DeletePrice(typeId, slotId);
                 return Ok("Deleted");
             }
             catch (Exception ex)

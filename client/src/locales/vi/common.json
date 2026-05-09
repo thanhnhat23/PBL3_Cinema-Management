@@ -1,24 +1,61 @@
 {
   "locale_code": "vi-VN",
+  "months": {
+    "january": "Tháng 1",
+    "february": "Tháng 2",
+    "march": "Tháng 3",
+    "april": "Tháng 4",
+    "may": "Tháng 5",
+    "june": "Tháng 6",
+    "july": "Tháng 7",
+    "august": "Tháng 8",
+    "september": "Tháng 9",
+    "october": "Tháng 10",
+    "november": "Tháng 11",
+    "december": "Tháng 12"
+  },
   "common": {
     "success": "Thành công",
     "error": "Lỗi",
     "view": "Xem",
     "edit": "Sửa",
     "delete": "Xóa",
-    "save": "Lưu",
-    "cancel": "Hủy",
-    "confirm": "Xác nhận",
-    "search": "Tìm kiếm",
     "status": "Trạng thái",
-    "loading": "Đang tải...",
+    "none": "Không có",
     "currency_vnd": "VNĐ",
     "email": "Email",
     "actions": "Hành động",
-    "management_system": "Hệ thống quản lý",
+    "id": "ID",
+    "management_system": "Quản lý hệ thống",
+    "add_new": "Thêm mới",
+    "save": "Lưu thay đổi",
+    "cancel": "Hủy bỏ",
+    "close": "Đóng",
+    "date": "Ngày",
+    "released": "Đang chiếu",
+    "upcoming": "Sắp chiếu",
+    "saving": "Đang lưu...",
+    "day_names": {
+      "0": "Chủ nhật",
+      "1": "Thứ hai",
+      "2": "Thứ ba",
+      "3": "Thứ tư",
+      "4": "Thứ năm",
+      "5": "Thứ sáu",
+      "6": "Thứ bảy"
+    },
     "actors": "Diễn viên",
     "reviews": "Đánh giá",
-    "copyright": "© 2026 MilkyWayyy Cinema - Bản quyền đã được bảo hộ"
+    "status_names": {
+      "0": "Nháp",
+      "1": "Đã lên lịch",
+      "2": "Đã xuất bản",
+      "3": "Đã kết thúc",
+      "4": "Đã hủy"
+    },
+    "copyright": "© 2026 MilkyWayyy Cinema - Bản quyền đã được bảo hộ",
+    "change_method": "Đổi phương thức thanh toán",
+    "coming_soon": "Sắp ra mắt"
   },
   "navbar": {
     "movies": "Phim",
@@ -54,45 +91,45 @@
     "send_button": "Gửi",
     "privacy_note": "* Chúng tôi cam kết bảo mật thông tin của bạn.",
     "links": {
-        "promotions": "Giá Vé & Ưu Đãi",
-        "recruitment": "Tuyển Dụng",
-        "contact": "Liên Hệ / Góp Ý",
-        "faq": "Câu Hỏi Thường Gặp",
-        "policy": "Chính Sách Bảo Mật",
-        "terms": "Điều Khoản Sử Dụng"
+      "promotions": "Giá Vé & Ưu Đãi",
+      "recruitment": "Tuyển Dụng",
+      "contact": "Liên Hệ / Góp Ý",
+      "faq": "Câu Hỏi Thường Gặp",
+      "policy": "Chính Sách Bảo Mật",
+      "terms": "Điều Khoản Sử Dụng"
     }
   },
   "home": {
     "explore_title": "Khám phá Phim",
     "explore_subtitle": "Xem gì hôm nay?",
     "tabs": {
-        "now_playing": "Đang chiếu",
-        "coming_soon": "Sắp chiếu",
-        "popular": "Phổ biến"
+      "now_playing": "Đang chiếu",
+      "coming_soon": "Sắp chiếu",
+      "popular": "Phổ biến"
     },
     "see_more": "XEM THÊM",
     "special_offers": "Ưu đãi đặc biệt",
     "offers": {
-        "offer1_title": "Tết Mã Ngập Quà – Năm Mới Nở Hoa",
-        "offer1_desc": "Ưu đãi cực khủng dịp xuân về.",
-        "offer2_title": "MilkyWayyy Cinema Và MoMo Tặng Bắp Nước Miễn Phí",
-        "offer2_desc": "Thưởng thức bắp nước hoàn toàn free.",
-        "offer3_title": "Ưu Đãi Thành Viên MilkyWayyy Cinema 2026",
-        "offer3_desc": "Đặc quyền dành riêng cho fan cứng."
+      "offer1_title": "Tết Mã Ngập Quà – Năm Mới Nở Hoa",
+      "offer1_desc": "Ưu đãi cực khủng dịp xuân về.",
+      "offer2_title": "MilkyWayyy Cinema Và MoMo Tặng Bắp Nước Miễn Phí",
+      "offer2_desc": "Thưởng thức bắp nước hoàn toàn free.",
+      "offer3_title": "Ưu Đãi Thành Viên MilkyWayyy Cinema 2026",
+      "offer3_desc": "Đặc quyền dành riêng cho fan cứng."
     },
     "banner": {
-        "book_online": "Đặt vé Online",
-        "no_delay": "Không lo trễ nải",
-        "desc": "Đặt vé nhanh chóng, tiện lợi ngay từ trang chủ của MilkyWayyy Cinema. Không cần chờ đợi, không cần lo lắng về việc hết vé!"
+      "book_online": "Đặt vé Online",
+      "no_delay": "Không lo trễ nải",
+      "desc": "Đặt vé nhanh chóng, tiện lợi ngay từ trang chủ của MilkyWayyy Cinema. Không cần chờ đợi, không cần lo lắng về việc hết vé!"
     },
     "about": {
-        "title": "Về MilkyWayyy Cinema",
-        "p1": "là một trong những công ty tư nhân đầu tiên về điện ảnh được thành lập từ năm 2026, đã khẳng định thương hiệu là 1 trong 10 địa điểm vui chơi giải trí được yêu thích nhất. Ngoài hệ thống rạp chiếu phim hiện đại, thu hút hàng triệu lượt người đến xem, MilkyWayyy Cinema còn hấp dẫn khán giả bởi không khí thân thiện cũng như chất lượng dịch vụ hàng đầu.",
-        "p2": "Đến website milkywayyy.me, khách hàng sẽ dễ dàng tham khảo các phim hay nhất, phim mới nhất đang chiếu hoặc sắp chiếu luôn được cập nhật thường xuyên. Lịch chiếu tại tất cả hệ thống rạp chiếu phim của MilkyWayyy Cinema cũng được cập nhật đầy đủ hàng ngày hàng giờ trên trang chủ.",
-        "p3": "Giờ đây đặt vé tại MilkyWayyy Cinema càng thêm dễ dàng chỉ với vài thao tác vô cùng đơn giản. Để mua vé, hãy vào tab Mua vé. Quý khách có thể chọn Mua vé theo phim, theo rạp, hoặc theo ngày. Sau đó, tiến hành mua vé theo các bước hướng dẫn.",
-        "p4": "Nếu bạn đã chọn được phim hay để xem, hãy đặt vé cực nhanh bằng box Mua Vé Nhanh ngay từ Trang Chủ. Chỉ cần một phút, tin nhắn và email phản hồi của MilkyWayyy Cinema sẽ gửi ngay vào điện thoại và hộp mail của bạn.",
-        "promo": "MilkyWayyy Cinema luôn có những chương trình khuyến mãi, ưu đãi, quà tặng vô cùng hấp dẫn dành cho các khách hàng.",
-        "p5": "Trang web milkywayyy.me còn có mục Góc Điện Ảnh - nơi lưu trữ dữ liệu về phim, diễn viên và đạo diễn, những bài viết chuyên sâu về điện ảnh, hỗ trợ người yêu phim dễ dàng hơn trong việc lựa chọn phim."
+      "title": "Về MilkyWayyy Cinema",
+      "p1": "là một trong những công ty tư nhân đầu tiên về điện ảnh được thành lập từ năm 2026, đã khẳng định thương hiệu là 1 trong 10 địa điểm vui chơi giải trí được yêu thích nhất. Ngoài hệ thống rạp chiếu phim hiện đại, thu hút hàng triệu lượt người đến xem, MilkyWayyy Cinema còn hấp dẫn khán giả bởi không khí thân thiện cũng như chất lượng dịch vụ hàng đầu.",
+      "p2": "Đến website milkywayyy.me, khách hàng sẽ dễ dàng tham khảo các phim hay nhất, phim mới nhất đang chiếu hoặc sắp chiếu luôn được cập nhật thường xuyên. Lịch chiếu tại tất cả hệ thống rạp chiếu phim của MilkyWayyy Cinema cũng được cập nhật đầy đủ hàng ngày hàng giờ trên trang chủ.",
+      "p3": "Giờ đây đặt vé tại MilkyWayyy Cinema càng thêm dễ dàng chỉ với vài thao tác vô cùng đơn giản. Để mua vé, hãy vào tab Mua vé. Quý khách có thể chọn Mua vé theo phim, theo rạp, hoặc theo ngày. Sau đó, tiến hành mua vé theo các bước hướng dẫn.",
+      "p4": "Nếu bạn đã chọn được phim hay để xem, hãy đặt vé cực nhanh bằng box Mua Vé Nhanh ngay từ Trang Chủ. Chỉ cần một phút, tin nhắn và email phản hồi của MilkyWayyy Cinema sẽ gửi ngay vào điện thoại và hộp mail của bạn.",
+      "promo": "MilkyWayyy Cinema luôn có những chương trình khuyến mãi, ưu đãi, quà tặng vô cùng hấp dẫn dành cho các khách hàng.",
+      "p5": "Trang web milkywayyy.me còn có mục Góc Điện Ảnh - nơi lưu trữ dữ liệu về phim, diễn viên và đạo diễn, những bài viết chuyên sâu về điện ảnh, hỗ trợ người yêu phim dễ dàng hơn trong việc lựa chọn phim."
     }
   },
   "movies": {
@@ -128,54 +165,102 @@
   },
   "booking": {
     "steps": {
-        "movie": "Phim",
-        "seat": "Ghế",
-        "food": "Đồ ăn",
-        "payment": "Thanh toán",
-        "confirmation": "Xác nhận"
+      "movie": "Phim",
+      "seat": "Ghế",
+      "food": "Đồ ăn",
+      "payment": "Thanh toán",
+      "confirmation": "Xác nhận"
     },
     "selection": {
-        "select_cinema": "Chọn rạp",
-        "select_movie": "Chọn phim",
-        "select_showtime": "Chọn suất chiếu",
-        "not_selected_movie": "Chưa chọn phim",
-        "not_selected_cinema": "Chưa chọn rạp",
-        "room": "Phòng"
+      "select_cinema": "Chọn rạp",
+      "select_movie": "Chọn phim",
+      "select_showtime": "Chọn suất chiếu",
+      "not_selected_movie": "Chưa chọn phim",
+      "not_selected_cinema": "Chưa chọn rạp",
+      "room": "Phòng",
+      "cinema": "Rạp",
+      "showtime": "Suất chiếu",
+      "selected_movie": "PHIM ĐÃ CHỌN",
+      "selected_cinema": "RẠP ĐÃ CHỌN",
+      "selected_showtime": "SUẤT CHIẾU ĐÃ CHỌN"
     },
     "sidebar": {
-        "selected_seats": "Ghế đã chọn",
-        "total": "Tổng cộng"
+      "selected_seats": "Ghế đã chọn",
+      "ticket_qr": "Mã QR vé",
+      "total": "Tổng cộng"
     },
     "buttons": {
-        "back": "Quay lại",
-        "next": "Tiếp theo"
+      "back": "Quay lại",
+      "next": "Tiếp theo"
     },
     "feature_updating": "Tính năng này đang được cập nhật để mang lại trải nghiệm tốt nhất cho bạn.",
     "service_tab": {
-        "step1": "1. Chọn ngày chiếu",
-        "step2": "2. Chọn rạp",
-        "step3": "3. Chọn suất chiếu",
-        "no_showtimes": "Không có suất chiếu khả dụng",
-        "days": {
-            "sun": "Chủ nhật",
-            "mon": "Thứ hai",
-            "tue": "Thứ ba",
-            "wed": "Thứ tư",
-            "thu": "Thứ năm",
-            "fri": "Thứ sáu",
-            "sat": "Thứ bảy"
-        }
+      "step1": "1. Chọn ngày chiếu",
+      "step2": "2. Chọn rạp",
+      "step3": "3. Chọn suất chiếu",
+      "no_showtimes": "Không có suất chiếu khả dụng",
+      "no_locations": "Không tìm thấy rạp tại khu vực này",
+      "no_movies": "Không có phim nào đang chiếu",
+      "no_snacks": "Hiện rạp chưa cung cấp dịch vụ bắp nước tại đây",
+      "days": {
+        "sun": "Chủ nhật",
+        "mon": "Thứ hai",
+        "tue": "Thứ ba",
+        "wed": "Thứ tư",
+        "thu": "Thứ năm",
+        "fri": "Thứ sáu",
+        "sat": "Thứ bảy"
+      }
     },
     "seat_tab": {
-        "change_showtime": "Đổi suất chiếu",
-        "no_seat_info": "Không tìm thấy thông tin sơ đồ ghế",
-        "screen": "Màn hình",
-        "legend": {
-            "single": "Ghế đơn",
-            "double": "Ghế đôi",
-            "selecting": "Đang chọn",
-            "sold": "Đã bán"
-        }
+      "change_showtime": "Đổi suất chiếu",
+      "no_seat_info": "Không tìm thấy thông tin sơ đồ ghế",
+      "screen": "Màn hình",
+      "legend": {
+        "single": "Ghế đơn",
+        "double": "Ghế đôi",
+        "selecting": "Đang chọn",
+        "sold": "Đã bán"
+      }
+    },
+    "confirmation": {
+      "title": "Xác nhận thanh toán",
+      "subtitle": "Vui lòng chọn mã giảm giá và phương thức thanh toán",
+      "coupon_label": "Mã giảm giá",
+      "coupon_placeholder": "Nhập mã khuyến mãi...",
+      "apply_button": "Áp dụng",
+      "coupon_applied": "Mã đã được áp dụng thành công",
+      "payment_method_label": "Phương thức thanh toán",
+      "subtotal": "Tạm tính",
+      "discount": "Giảm giá",
+      "total_payable": "Tổng thanh toán"
+    },
+    "payment": {
+      "verifying_transaction": "Đang xác thực giao dịch...",
+      "please_wait": "Vui lòng chờ trong giây lát",
+      "success_title": "Thanh toán thành công",
+      "failed_title": "Thanh toán thất bại",
+      "success_desc": "Cảm ơn bạn đã lựa chọn MilkyWayyy Cinema. Chúc bạn có những giây phút xem phim tuyệt vời!",
+      "failed_desc": "Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại hoặc liên hệ hỗ trợ.",
+      "momo": {
+        "success_title": "Thanh toán MoMo thành công",
+        "failed_title": "Thanh toán MoMo thất bại",
+        "success_desc": "Giao dịch đã được xử lý thành công qua ví MoMo!",
+        "failed_desc": "Đã có lỗi xảy ra trong quá trình thanh toán MoMo."
+      },
+      "callback": {
+        "txn_ref": "Mã tham chiếu",
+        "order_id": "Mã đơn hàng",
+        "order_info": "Thông tin đơn hàng",
+        "amount": "Số tiền",
+        "result": "Kết quả",
+        "success": "Thành công",
+        "failed": "Thất bại",
+        "view_tickets": "Xem vé của tôi",
+        "retry": "Thử lại",
+        "back_home": "Quay về trang chủ",
+        "support_note": "Nếu bạn gặp bất kỳ vấn đề gì, vui lòng liên hệ hotline: "
+      }
     }
   },
   "cinema_detail": {
@@ -222,39 +307,44 @@
   },
   "profile": {
     "roles": {
-        "admin": "Quản trị viên Cao cấp",
-        "member": "Thành viên Cinema"
+      "admin": "Quản trị viên Cao cấp",
+      "member": "Thành viên Cinema"
     },
     "spending_year": "Chi tiêu năm {{year}}",
     "loyalty_point": "ĐIỂM THÂN THIẾT:",
-    "rank": "Hạng:",
+    "rank": "Hạng",
     "ranks": {
-        "silver": "Bạc",
-        "gold": "Vàng",
-        "platinum": "Bạch kim"
+      "bronze": "Đồng",
+      "silver": "Bạc",
+      "gold": "Vàng",
+      "platinum": "Bạch Kim",
+      "diamond": "Kim Cương"
     },
+    "view_details": "Xem chi tiết",
+    "no_transactions": "Bạn hiện chưa có giao dịch nào gần đây. Hãy chọn cho mình một bộ phim yêu thích nhé!",
+    "explore_now": "Khám phá phim ngay",
     "project_name": "Quản lý Rạp chiếu phim",
     "project_info": "Thông tin dự án",
     "hotline": "Hotline hỗ trợ",
     "email_support": "Email hỗ trợ",
     "source_web": "Mã nguồn website",
     "about_us": {
-        "title": "Về chúng tôi",
-        "p1": "Đây là một ứng dụng của đồ án PBL3 của trường Đại học Bách Khoa Đà Nẵng",
-        "p2": "Gồm 2 thành viên thực hiện: Lương Thanh Nhật và Nguyễn Thị Nghĩa.",
-        "p3": "Đây không phải là một ứng dụng thương mại, mà chỉ là một sản phẩm của đồ án, nên sẽ không có dịch vụ hỗ trợ thực sự nào cả.",
-        "p4": "Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào về ứng dụng, vui lòng liên hệ với chúng tôi qua github đã cung cấp ở trên."
+      "title": "Về chúng tôi",
+      "p1": "Đây là một ứng dụng của đồ án PBL3 của trường Đại học Bách Khoa Đà Nẵng",
+      "p2": "Gồm 2 thành viên thực hiện: Lương Thanh Nhật và Nguyễn Thị Nghĩa.",
+      "p3": "Đây không phải là một ứng dụng thương mại, mà chỉ là một sản phẩm của đồ án, nên sẽ không có dịch vụ hỗ trợ thực sự nào cả.",
+      "p4": "Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào về ứng dụng, vui lòng liên hệ với chúng tôi qua github đã cung cấp ở trên."
     },
     "tabs": {
-        "personal_info": "Thông tin cá nhân",
-        "booking_history": "Lịch sử đặt vé"
+      "personal_info": "Thông tin cá nhân",
+      "booking_history": "Lịch sử đặt vé"
     },
     "info_labels": {
-        "full_name": "Tên cá nhân",
-        "email": "Địa chỉ Email",
-        "join_date": "Ngày tham gia",
-        "birthdate": "Ngày sinh nhật",
-        "no_data": "Không có dữ liệu"
+      "full_name": "Tên cá nhân",
+      "email": "Địa chỉ Email",
+      "join_date": "Ngày tham gia",
+      "birthdate": "Ngày sinh nhật",
+      "no_data": "Không có dữ liệu"
     },
     "account_status": "Trạng thái tài khoản",
     "verified": "Tài khoản đã xác minh",
@@ -264,9 +354,9 @@
     "security": "Bảo mật",
     "password_protection": "Mật khẩu bảo vệ",
     "change_password": "Đổi mật khẩu",
-    "no_transactions": "Bạn hiện chưa có giao dịch nào gần đây. Hãy chọn cho mình một bộ phim yêu thích nhé!",
-    "explore_now": "Khám phá phim ngay",
-    "currency": "đ"
+    "currency": " VNĐ",
+    "next_rank_needed": "Bạn cần chi tiêu thêm {{amount}}{{currency}} để lên hạng {{rank}}",
+    "total_bookings": "đơn đặt vé"
   },
   "actors": {
     "hero_title": "Những gương mặt",
@@ -325,32 +415,32 @@
     "hero_desc": "Mọi thắc mắc, góp ý hoặc yêu cầu hợp tác, vui lòng gửi tin nhắn cho đội ngũ MilkyWayyy.",
     "contact_us": "Liên hệ với chúng tôi",
     "info": {
-        "address_title": "Trụ sở chính",
-        "address_detail": "54 Nguyễn Lương Bằng, Hòa Khánh Bắc, Liên Chiểu, Đà Nẵng",
-        "address_desc": "Tòa nhà MilkyWayyy Cinema Complex",
-        "hotline_title": "Hotline hỗ trợ",
-        "hotline_desc": "Hoạt động từ 08:00 - 23:00 hàng ngày",
-        "email_title": "Email liên hệ",
-        "email_desc": "Chúng tôi sẽ phản hồi trong vòng 24h"
+      "address_title": "Trụ sở chính",
+      "address_detail": "54 Nguyễn Lương Bằng, Hòa Khánh Bắc, Liên Chiểu, Đà Nẵng",
+      "address_desc": "Tòa nhà MilkyWayyy Cinema Complex",
+      "hotline_title": "Hotline hỗ trợ",
+      "hotline_desc": "Hoạt động từ 08:00 - 23:00 hàng ngày",
+      "email_title": "Email liên hệ",
+      "email_desc": "Chúng tôi sẽ phản hồi trong vòng 24h"
     },
     "working_hours": {
-        "title": "Giờ làm việc",
-        "weekdays": "Thứ 2 - Thứ 6",
-        "weekends": "Thứ 7 - Chủ Nhật",
-        "holidays": "Ngày lễ",
-        "open_all_night": "Mở cửa suốt đêm"
+      "title": "Giờ làm việc",
+      "weekdays": "Thứ 2 - Thứ 6",
+      "weekends": "Thứ 7 - Chủ Nhật",
+      "holidays": "Ngày lễ",
+      "open_all_night": "Mở cửa suốt đêm"
     },
     "form": {
-        "title": "Gửi lời nhắn",
-        "subtitle": "Chúng tôi luôn lắng nghe ý kiến đóng góp từ bạn.",
-        "name_label": "Họ và tên",
-        "name_placeholder": "VD: Nguyễn Văn A",
-        "email_label": "Địa chỉ Email",
-        "subject_label": "Tiêu đề",
-        "subject_placeholder": "Bạn muốn liên hệ về vấn đề gì?",
-        "message_label": "Nội dung lời nhắn",
-        "message_placeholder": "Viết lời nhắn của bạn tại đây...",
-        "send_button": "Gửi tin nhắn ngay"
+      "title": "Gửi lời nhắn",
+      "subtitle": "Chúng tôi luôn lắng nghe ý kiến đóng góp từ bạn.",
+      "name_label": "Họ và tên",
+      "name_placeholder": "VD: Nguyễn Văn A",
+      "email_label": "Địa chỉ Email",
+      "subject_label": "Tiêu đề",
+      "subject_placeholder": "Bạn muốn liên hệ về vấn đề gì?",
+      "message_label": "Nội dung lời nhắn",
+      "message_placeholder": "Viết lời nhắn của bạn tại đây...",
+      "send_button": "Gửi tin nhắn ngay"
     }
   },
   "policy": {
@@ -360,18 +450,18 @@
     "privacy_safety": "Quyền riêng tư & An toàn",
     "footer_quote": "Chúng tôi tin rằng minh bạch là nền tảng của niềm tin. Mọi quy trình xử lý dữ liệu tại MilkyWayyy đều hướng tới sự an toàn cao nhất cho khách hàng.",
     "sections": {
-        "s1_title": "1. Mục đích thu thập thông tin",
-        "s1_content": "Việc thu thập dữ liệu trên website MilkyWayyy bao gồm: Email, số điện thoại, tên đăng nhập, mật khẩu đăng nhập, địa chỉ khách hàng. Đây là các thông tin mà MilkyWayyy cần khách hàng cung cấp bắt buộc khi đăng ký sử dụng dịch vụ và để MilkyWayyy liên hệ xác nhận khi khách hàng đăng ký sử dụng dịch vụ trên website nhằm đảm bảo quyền lợi cho cho người tiêu dùng.",
-        "s2_title": "2. Phạm vi sử dụng thông tin",
-        "s2_content": "Công ty sử dụng thông tin khách hàng cung cấp để: Cung cấp các dịch vụ đến khách hàng; Gửi các thông báo về các hoạt động trao đổi thông tin giữa khách hàng và MilkyWayyy; Ngăn ngừa các hoạt động phá hủy tài khoản người dùng của khách hàng hoặc các hoạt động giả mạo khách hàng; Liên lạc và giải quyết với khách hàng trong những trường hợp đặc biệt.",
-        "s3_title": "3. Thời gian lưu trữ thông tin",
-        "s3_content": "Dữ liệu cá nhân của khách hàng sẽ được lưu trữ cho đến khi có yêu cầu hủy bỏ hoặc tự khách hàng đăng nhập và thực hiện hủy bỏ. Còn lại trong mọi trường hợp thông tin cá nhân khách hàng sẽ được bảo mật trên máy chủ của MilkyWayyy.",
-        "s4_title": "4. Chia sẻ thông tin với bên thứ ba",
-        "s4_content": "Chúng tôi cam kết không bán, chia sẻ dẫn đến làm lộ thông tin cá nhân của bạn vì mục đích thương mại. Tuy nhiên, chúng tôi có thể cung cấp thông tin cho các cơ quan chức năng nếu có yêu cầu pháp lý hoặc để bảo vệ quyền lợi chính đáng của MilkyWayyy.",
-        "s5_title": "5. Quyền lợi của người dùng",
-        "s5_content": "Khách hàng có quyền tự kiểm tra, cập nhật, điều chỉnh hoặc hủy bỏ thông tin cá nhân của mình bằng cách đăng nhập vào tài khoản và chỉnh sửa thông tin cá nhân hoặc yêu cầu MilkyWayyy thực hiện việc này.",
-        "s6_title": "6. Thay đổi chính sách",
-        "s6_content": "Chính sách này có thể thay đổi để phù hợp với sự phát triển của dịch vụ và quy định pháp luật. Mọi thay đổi sẽ được thông báo công khai trên website của chúng tôi."
+      "s1_title": "1. Mục đích thu thập thông tin",
+      "s1_content": "Việc thu thập dữ liệu trên website MilkyWayyy bao gồm: Email, số điện thoại, tên đăng nhập, mật khẩu đăng nhập, địa chỉ khách hàng. Đây là các thông tin mà MilkyWayyy cần khách hàng cung cấp bắt buộc khi đăng ký sử dụng dịch vụ và để MilkyWayyy liên hệ xác nhận khi khách hàng đăng ký sử dụng dịch vụ trên website nhằm đảm bảo quyền lợi cho cho người tiêu dùng.",
+      "s2_title": "2. Phạm vi sử dụng thông tin",
+      "s2_content": "Công ty sử dụng thông tin khách hàng cung cấp để: Cung cấp các dịch vụ đến khách hàng; Gửi các thông báo về các hoạt động trao đổi thông tin giữa khách hàng và MilkyWayyy; Ngăn ngừa các hoạt động phá hủy tài khoản người dùng của khách hàng hoặc các hoạt động giả mạo khách hàng; Liên lạc và giải quyết với khách hàng trong những trường hợp đặc biệt.",
+      "s3_title": "3. Thời gian lưu trữ thông tin",
+      "s3_content": "Dữ liệu cá nhân của khách hàng sẽ được lưu trữ cho đến khi có yêu cầu hủy bỏ hoặc tự khách hàng đăng nhập và thực hiện hủy bỏ. Còn lại trong mọi trường hợp thông tin cá nhân khách hàng sẽ được bảo mật trên máy chủ của MilkyWayyy.",
+      "s4_title": "4. Chia sẻ thông tin với bên thứ ba",
+      "s4_content": "Chúng tôi cam kết không bán, chia sẻ dẫn đến làm lộ thông tin cá nhân của bạn vì mục đích thương mại. Tuy nhiên, chúng tôi có thể cung cấp thông tin cho các cơ quan chức năng nếu có yêu cầu pháp lý hoặc để bảo vệ quyền lợi chính đáng của MilkyWayyy.",
+      "s5_title": "5. Quyền lợi của người dùng",
+      "s5_content": "Khách hàng có quyền tự kiểm tra, cập nhật, điều chỉnh hoặc hủy bỏ thông tin cá nhân của mình bằng cách đăng nhập vào tài khoản và chỉnh sửa thông tin cá nhân hoặc yêu cầu MilkyWayyy thực hiện việc này.",
+      "s6_title": "6. Thay đổi chính sách",
+      "s6_content": "Chính sách này có thể thay đổi để phù hợp với sự phát triển của dịch vụ và quy định pháp luật. Mọi thay đổi sẽ được thông báo công khai trên website của chúng tôi."
     }
   },
   "terms": {
@@ -381,18 +471,18 @@
     "usage_agreement": "Thỏa thuận sử dụng",
     "footer_disclaimer": "Bằng việc tiếp tục sử dụng website, bạn xác nhận rằng đã đọc, hiểu và đồng ý bị ràng buộc bởi các Điều khoản này. MilkyWayyy có quyền cập nhật các điều khoản này bất kỳ lúc nào mà không cần báo trước.",
     "sections": {
-        "s1_title": "1. Chấp thuận các điều khoản",
-        "s1_content": "Bằng cách truy cập và sử dụng website MilkyWayyy, bạn đồng ý tuân thủ các điều khoản và điều kiện được nêu tại đây. Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ của chúng tôi ngay lập tức.",
-        "s2_title": "2. Quy định đặt vé và sử dụng dịch vụ",
-        "s2_content": "Khách hàng phải cung cấp thông tin cá nhân chính xác khi đăng ký thành viên. Vé đã mua qua hệ thống MilkyWayyy sẽ được xác nhận qua email. Khách hàng vui lòng xuất trình mã vé tại quầy hoặc máy soát vé để được vào phòng chiếu.",
-        "s3_title": "3. Chính sách thanh toán và hoàn tiền",
-        "s3_content": "Tất cả các giao dịch thanh toán trên website đều được thực hiện thông qua các cổng thanh toán uy tín. Vé đã mua thành công KHÔNG ĐƯỢC hoàn tiền hoặc đổi trả, trừ trường hợp suất chiếu bị hủy từ phía MilkyWayyy.",
-        "s4_title": "4. Trách nhiệm của người dùng",
-        "s4_content": "Người dùng không được phép sử dụng bất kỳ công cụ, phần mềm nào để can thiệp vào hệ thống hoặc làm thay đổi cấu trúc dữ liệu. Nghiêm cấm mọi hành vi phát tán thông tin độc hại, trái với thuần phong mỹ tục hoặc vi phạm pháp luật Việt Nam.",
-        "s5_title": "5. Quyền sở hữu trí tuệ",
-        "s5_content": "Tất cả nội dung trên website bao gồm thiết kế, logo, văn bản, hình ảnh đều thuộc sở hữu của MilkyWayyy. Mọi hành vi sao chép, trích dẫn mà không có sự đồng ý bằng văn bản của chúng tôi đều được coi là vi phạm.",
-        "s6_title": "6. Giải quyết tranh chấp",
-        "s6_content": "Mọi tranh chấp phát sinh từ việc sử dụng dịch vụ sẽ được ưu tiên giải quyết thông qua thương lượng. Nếu không đạt được thỏa thuận, vụ việc sẽ được đưa ra cơ quan có thẩm quyền để giải quyết theo quy định của pháp luật."
+      "s1_title": "1. Chấp thuận các điều khoản",
+      "s1_content": "Bằng cách truy cập và sử dụng website MilkyWayyy, bạn đồng ý tuân thủ các điều khoản và điều kiện được nêu tại đây. Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ của chúng tôi ngay lập tức.",
+      "s2_title": "2. Quy định đặt vé và sử dụng dịch vụ",
+      "s2_content": "Khách hàng phải cung cấp thông tin cá nhân chính xác khi đăng ký thành viên. Vé đã mua qua hệ thống MilkyWayyy sẽ được xác nhận qua email. Khách hàng vui lòng xuất trình mã vé tại quầy hoặc máy soát vé để được vào phòng chiếu.",
+      "s3_title": "3. Chính sách thanh toán và hoàn tiền",
+      "s3_content": "Tất cả các giao dịch thanh toán trên website đều được thực hiện thông qua các cổng thanh toán uy tín. Vé đã mua thành công KHÔNG ĐƯỢC hoàn tiền hoặc đổi trả, trừ trường hợp suất chiếu bị hủy từ phía MilkyWayyy.",
+      "s4_title": "4. Trách nhiệm của người dùng",
+      "s4_content": "Người dùng không được phép sử dụng bất kỳ công cụ, phần mềm nào để can thiệp vào hệ thống hoặc làm thay đổi cấu trúc dữ liệu. Nghiêm cấm mọi hành vi phát tán thông tin độc hại, trái với thuần phong mỹ tục hoặc vi phạm pháp luật Việt Nam.",
+      "s5_title": "5. Quyền sở hữu trí tuệ",
+      "s5_content": "Tất cả nội dung trên website bao gồm thiết kế, logo, văn bản, hình ảnh đều thuộc sở hữu của MilkyWayyy. Mọi hành vi sao chép, trích dẫn mà không có sự đồng ý bằng văn bản của chúng tôi đều được coi là vi phạm.",
+      "s6_title": "6. Giải quyết tranh chấp",
+      "s6_content": "Mọi tranh chấp phát sinh từ việc sử dụng dịch vụ sẽ được ưu tiên giải quyết thông qua thương lượng. Nếu không đạt được thỏa thuận, vụ việc sẽ được đưa ra cơ quan có thẩm quyền để giải quyết theo quy định của pháp luật."
     }
   },
   "faq": {
@@ -404,29 +494,29 @@
     "cta_desc": "Đội ngũ hỗ trợ của chúng tôi luôn sẵn sàng giúp đỡ bạn 24/7.",
     "cta_button": "Liên Hệ Ngay",
     "categories": {
-        "c1_title": "Tài khoản & Đăng ký",
-        "c2_title": "Đặt vé & Thanh toán",
-        "c3_title": "Quy định rạp & Ưu đãi"
+      "c1_title": "Tài khoản & Đăng ký",
+      "c2_title": "Đặt vé & Thanh toán",
+      "c3_title": "Quy định rạp & Ưu đãi"
     },
     "questions": {
-        "q1_q": "Làm thế nào để đăng ký tài khoản MilkyWayyy?",
-        "q1_a": "Bạn chỉ cần nhấn vào nút Đăng nhập trên thanh công cụ, sau đó chọn 'Đăng ký ngay'. Điền đầy đủ thông tin cá nhân và xác nhận qua email để bắt đầu trải nghiệm dịch vụ.",
-        "q2_q": "Tôi quên mật khẩu thì phải làm sao?",
-        "q2_a": "Tại Form đăng nhập, hãy chọn 'Quên mật khẩu'. Hệ thống sẽ yêu cầu bạn nhập Email và gửi một mã OTP xác nhận để bạn có thể thiết lập lại mật khẩu mới.",
-        "q3_q": "Thông tin cá nhân của tôi có được bảo mật không?",
-        "q3_a": "Hoàn toàn bảo mật. MilkyWayyy áp dụng các tiêu chuẩn mã hóa dữ liệu cao nhất và cam kết không chia sẻ thông tin của bạn cho bất kỳ bên thứ ba nào khi chưa có sự đồng ý.",
-        "q4_q": "Tôi có thể đặt tối đa bao nhiêu vé trong một lần giao dịch?",
-        "q4_a": "Để đảm bảo tính công bằng và tránh tình trạng đầu cơ, mỗi tài khoản được đặt tối đa 8 vé cho mỗi suất chiếu.",
-        "q5_q": "Hệ thống hỗ trợ những phương thức thanh toán nào?",
-        "q5_a": "Chúng tôi hỗ trợ thanh toán qua các cổng phổ biến như: Ví MoMo, VNPay, thẻ ATM nội địa và các loại thẻ quốc tế (Visa, Mastercard).",
-        "q6_q": "Làm sao để tôi biết mình đã đặt vé thành công?",
-        "q6_a": "Sau khi thanh toán, hệ thống sẽ hiển thị mã vé QR ngay trên màn hình và đồng thời gửi thông tin chi tiết vào Email của bạn. Bạn cũng có thể kiểm tra lại trong mục 'Lịch sử đặt vé' trong Profile.",
-        "q7_q": "Tôi có được mang thức ăn từ ngoài vào rạp không?",
-        "q7_a": "Theo quy định chung, khách hàng vui lòng không mang thức ăn và nước uống từ bên ngoài vào rạp để đảm bảo vệ sinh và không gian chung.",
-        "q8_q": "Làm thế nào để áp dụng mã giảm giá?",
-        "q8_a": "Tại bước thanh toán, bạn sẽ thấy ô 'Nhập mã giảm giá'. Hãy điền mã của bạn vào đó và nhấn áp dụng, hệ thống sẽ tự động trừ tiền trước khi bạn tiến hành thanh toán.",
-        "q9_q": "Tôi cần đến rạp trước bao lâu để nhận vé?",
-        "q9_a": "Chúng tôi khuyến khích bạn nên đến rạp trước ít nhất 15-20 phút để thực hiện các thủ tục soát vé và mua bắp nước, đảm bảo không bỏ lỡ phần đầu của phim."
+      "q1_q": "Làm thế nào để đăng ký tài khoản MilkyWayyy?",
+      "q1_a": "Bạn chỉ cần nhấn vào nút Đăng nhập trên thanh công cụ, sau đó chọn 'Đăng ký ngay'. Điền đầy đủ thông tin cá nhân và xác nhận qua email để bắt đầu trải nghiệm dịch vụ.",
+      "q2_q": "Tôi quên mật khẩu thì phải làm sao?",
+      "q2_a": "Tại Form đăng nhập, hãy chọn 'Quên mật khẩu'. Hệ thống sẽ yêu cầu bạn nhập Email và gửi một mã OTP xác nhận để bạn có thể thiết lập lại mật khẩu mới.",
+      "q3_q": "Thông tin cá nhân của tôi có được bảo mật không?",
+      "q3_a": "Hoàn toàn bảo mật. MilkyWayyy áp dụng các tiêu chuẩn mã hóa dữ liệu cao nhất và cam kết không chia sẻ thông tin của bạn cho bất kỳ bên thứ ba nào khi chưa có sự đồng ý.",
+      "q4_q": "Tôi có thể đặt tối đa bao nhiêu vé trong một lần giao dịch?",
+      "q4_a": "Để đảm bảo tính công bằng và tránh tình trạng đầu cơ, mỗi tài khoản được đặt tối đa 8 vé cho mỗi suất chiếu.",
+      "q5_q": "Hệ thống hỗ trợ những phương thức thanh toán nào?",
+      "q5_a": "Chúng tôi hỗ trợ thanh toán qua các cổng phổ biến như: Ví MoMo, VNPay, thẻ ATM nội địa và các loại thẻ quốc tế (Visa, Mastercard).",
+      "q6_q": "Làm sao để tôi biết mình đã đặt vé thành công?",
+      "q6_a": "Sau khi thanh toán, hệ thống sẽ hiển thị mã vé QR ngay trên màn hình và đồng thời gửi thông tin chi tiết vào Email của bạn. Bạn cũng có thể kiểm tra lại trong mục 'Lịch sử đặt vé' trong Profile.",
+      "q7_q": "Tôi có được mang thức ăn từ ngoài vào rạp không?",
+      "q7_a": "Theo quy định chung, khách hàng vui lòng không mang thức ăn và nước uống từ bên ngoài vào rạp để đảm bảo vệ sinh và không gian chung.",
+      "q8_q": "Làm thế nào để áp dụng mã giảm giá?",
+      "q8_a": "Tại bước thanh toán, bạn sẽ thấy ô 'Nhập mã giảm giá'. Hãy điền mã của bạn vào đó và nhấn áp dụng, hệ thống sẽ tự động trừ tiền trước khi bạn tiến hành thanh toán.",
+      "q9_q": "Tôi cần đến rạp trước bao lâu để nhận vé?",
+      "q9_a": "Chúng tôi khuyến khích bạn nên đến rạp trước ít nhất 15-20 phút để thực hiện các thủ tục soát vé và mua bắp nước, đảm bảo không bỏ lỡ phần đầu của phim."
     }
   },
   "recruitment": {
@@ -435,10 +525,10 @@
     "hero_desc": "Bạn đam mê điện ảnh? Bạn muốn làm việc trong môi trường sáng tạo và chuyên nghiệp? Hãy cùng chúng tôi tạo nên những trải nghiệm tuyệt vời cho khán giả.",
     "join_our_team": "Gia nhập đội ngũ",
     "benefits": {
-        "free_movies": "Xem phim miễn phí hàng tuần",
-        "environment": "Môi trường trẻ trung, năng động",
-        "training": "Đào tạo kỹ năng chuyên nghiệp",
-        "flex_time": "Giờ làm việc linh hoạt"
+      "free_movies": "Xem phim miễn phí hàng tuần",
+      "environment": "Môi trường trẻ trung, năng động",
+      "training": "Đào tạo kỹ năng chuyên nghiệp",
+      "flex_time": "Giờ làm việc linh hoạt"
     },
     "jobs_title": "Vị trí đang tuyển",
     "salary_label": "Lương:",
@@ -447,54 +537,54 @@
     "cta_desc": "Đừng ngần ngại gửi hồ sơ của bạn cho chúng tôi. Chúng tôi luôn tìm kiếm những tài năng mới để cùng phát triển MilkyWayyy trong tương lai.",
     "cta_button": "Gửi CV tự do",
     "jobs": {
-        "j1_title": "Giám sát sảnh rạp (Floor Supervisor)",
-        "j1_desc": "Quản lý hoạt động vận hành tại sảnh, điều phối nhân viên và giải quyết các khiếu nại của khách hàng.",
-        "j1_salary": "8,000,000 - 12,000,000 VNĐ",
-        "j2_title": "Nhân viên Phục vụ (Cinema Staff)",
-        "j2_desc": "Bán vé, phục vụ bắp nước và hỗ trợ khách hàng tại khu vực rạp chiếu.",
-        "j2_salary": "25,000 - 30,000 VNĐ/giờ",
-        "j3_title": "Kỹ thuật viên phòng chiếu",
-        "j3_desc": "Vận hành hệ thống máy chiếu, âm thanh và bảo trì thiết bị kỹ thuật trong rạp.",
-        "j3_salary": "10,000,000 - 15,000,000 VNĐ",
-        "locations": {
-            "nationwide": "Toàn quốc",
-            "cities": "Đà Nẵng / Huế / HCM",
-            "cities_extended": "Đà Nẵng / Hà Nội / Nha Trang / Huế"
-        },
-        "types": {
-            "full_time": "Toàn thời gian",
-            "part_time": "Bán thời gian"
-        }
+      "j1_title": "Giám sát sảnh rạp (Floor Supervisor)",
+      "j1_desc": "Quản lý hoạt động vận hành tại sảnh, điều phối nhân viên và giải quyết các khiếu nại của khách hàng.",
+      "j1_salary": "8,000,000 - 12,000,000 VNĐ",
+      "j2_title": "Nhân viên Phục vụ (Cinema Staff)",
+      "j2_desc": "Bán vé, phục vụ bắp nước và hỗ trợ khách hàng tại khu vực rạp chiếu.",
+      "j2_salary": "25,000 - 30,000 VNĐ/giờ",
+      "j3_title": "Kỹ thuật viên phòng chiếu",
+      "j3_desc": "Vận hành hệ thống máy chiếu, âm thanh và bảo trì thiết bị kỹ thuật trong rạp.",
+      "j3_salary": "10,000,000 - 15,000,000 VNĐ",
+      "locations": {
+        "nationwide": "Toàn quốc",
+        "cities": "Đà Nẵng / Huế / HCM",
+        "cities_extended": "Đà Nẵng / Hà Nội / Nha Trang / Huế"
+      },
+      "types": {
+        "full_time": "Toàn thời gian",
+        "part_time": "Bán thời gian"
+      }
     },
     "apply": {
-        "back": "Quay lại",
-        "success_title": "Gửi thành công!",
-        "success_desc": "Cảm ơn bạn đã quan tâm đến MilkyWayyy Cinema. Bộ phận nhân sự sẽ xem xét hồ sơ và liên hệ với bạn sớm nhất có thể.",
-        "back_to_jobs": "Quay lại trang tuyển dụng",
-        "hero_start": "Bắt đầu",
-        "hero_journey": "Hành trình",
-        "hero_desc": "Hãy để chúng tôi hiểu thêm về bạn. Hãy điền đầy đủ thông tin để hồ sơ của bạn nổi bật hơn.",
-        "info": {
-            "desired_position": "Vị trí mong muốn",
-            "multi_role": "Nhân viên đa năng / Kỹ thuật viên",
-            "location": "Địa điểm",
-            "all_cinemas": "Các cụm rạp MilkyWayyy trên toàn quốc"
-        },
-        "form": {
-            "name_label": "Họ và tên",
-            "name_placeholder": "Nhập đầy đủ họ tên",
-            "email_label": "Email",
-            "phone_label": "Số điện thoại",
-            "position_label": "Vị trí ứng tuyển",
-            "position_placeholder": "Chọn vị trí",
-            "intro_label": "Giới thiệu bản thân",
-            "intro_placeholder": "Hãy chia sẻ lý do bạn muốn gia nhập MilkyWayyy Cinema...",
-            "attach_cv": "Đính kèm CV (PDF, DOCX)",
-            "upload_desc": "Kéo thả CV vào đây hoặc <span class=\"text-amber-500\">tải lên</span>",
-            "max_size": "Dung lượng tối đa 5MB",
-            "declaration": "Tôi cam đoan các thông tin trên là chính xác và hoàn toàn chịu trách nhiệm.",
-            "submit_button": "Gửi hồ sơ ứng tuyển"
-        }
+      "back": "Quay lại",
+      "success_title": "Gửi thành công!",
+      "success_desc": "Cảm ơn bạn đã quan tâm đến MilkyWayyy Cinema. Bộ phận nhân sự sẽ xem xét hồ sơ và liên hệ với bạn sớm nhất có thể.",
+      "back_to_jobs": "Quay lại trang tuyển dụng",
+      "hero_start": "Bắt đầu",
+      "hero_journey": "Hành trình",
+      "hero_desc": "Hãy để chúng tôi hiểu thêm về bạn. Hãy điền đầy đủ thông tin để hồ sơ của bạn nổi bật hơn.",
+      "info": {
+        "desired_position": "Vị trí mong muốn",
+        "multi_role": "Nhân viên đa năng / Kỹ thuật viên",
+        "location": "Địa điểm",
+        "all_cinemas": "Các cụm rạp MilkyWayyy trên toàn quốc"
+      },
+      "form": {
+        "name_label": "Họ và tên",
+        "name_placeholder": "Nhập đầy đủ họ tên",
+        "email_label": "Email",
+        "phone_label": "Số điện thoại",
+        "position_label": "Vị trí ứng tuyển",
+        "position_placeholder": "Chọn vị trí",
+        "intro_label": "Giới thiệu bản thân",
+        "intro_placeholder": "Hãy chia sẻ lý do bạn muốn gia nhập MilkyWayyy Cinema...",
+        "attach_cv": "Đính kèm CV (PDF, DOCX)",
+        "upload_desc": "Kéo thả CV vào đây hoặc <span class=\"text-amber-500\">tải lên</span>",
+        "max_size": "Dung lượng tối đa 5MB",
+        "declaration": "Tôi cam đoan các thông tin trên là chính xác và hoàn toàn chịu trách nhiệm.",
+        "submit_button": "Gửi hồ sơ ứng tuyển"
+      }
     }
   },
   "dashboard": {
@@ -511,98 +601,112 @@
     "switch_light": "Chuyển sang chế độ sáng",
     "switch_dark": "Chuyển sang chế độ tối",
     "management": {
-        "movies": "Phim",
-        "tickets": "Vé",
-        "showtimes": "Suất chiếu",
-        "cinemas": "Rạp chiếu",
-        "foods": "Thức ăn",
-        "users": "Người dùng",
-        "sync": "Đồng bộ dữ liệu",
-        "revenue": "Thống kê doanh thu",
-        "stats": "Thống kê tổng quan"
+      "movies": "Phim",
+      "tickets": "Vé",
+      "showtimes": "Suất chiếu",
+      "cinemas": "Rạp chiếu",
+      "foods": "Thức ăn",
+      "users": "Người dùng",
+      "sync": "Đồng bộ dữ liệu",
+      "revenue": "Thống kê doanh thu",
+      "stats": "Thống kê tổng quan",
+      "inventory": "Kho hàng"
     },
     "themes": {
-        "blue": "Xanh dương",
-        "green": "Xanh lá",
-        "yellow": "Vàng",
-        "red": "Đỏ",
-        "pink": "Hồng",
-        "purple": "Tím đậm",
-        "cyan": "Xanh lơ đậm",
-        "orange": "Cam đào",
-        "light_pink": "Hồng nhạt",
-        "teal": "Xanh biển sáng",
-        "default": "Mặc định"
+      "blue": "Xanh dương",
+      "green": "Xanh lá",
+      "yellow": "Vàng",
+      "red": "Đỏ",
+      "pink": "Hồng",
+      "purple": "Tím đậm",
+      "cyan": "Xanh lơ đậm",
+      "orange": "Cam đào",
+      "light_pink": "Hồng nhạt",
+      "teal": "Xanh biển sáng",
+      "default": "Mặc định"
     },
     "overview_tab": {
-        "title": "Thống kê Tổng quan",
-        "desc": "Cái nhìn toàn cảnh về hiệu suất hệ thống, số lượng dữ liệu và các chỉ số hoạt động chính của cụm rạp.",
-        "metrics": {
-            "movies": { "title": "Phim", "desc": "Tổng số lượng phim trong database" },
-            "reviews": { "title": "Đánh giá", "desc": "Tổng số lượng đánh giá trong database" },
-            "actors": { "title": "Diễn viên", "desc": "Tổng số lượng diễn viên trong database" },
-            "genres": { "title": "Thể loại", "desc": "Tổng số lượng thể loại trong database" },
-            "stat_label": "Thống kê {{item}}"
+      "title": "Thống kê Tổng quan",
+      "desc": "Cái nhìn toàn cảnh về hiệu suất hệ thống, số lượng dữ liệu và các chỉ số hoạt động chính của cụm rạp.",
+      "metrics": {
+        "movies": {
+          "title": "Phim",
+          "desc": "Tổng số lượng phim trong database"
         },
-        "admin_team": {
-            "title": "Quản trị viên",
-            "desc": "Danh sách đội ngũ điều hành hệ thống",
-            "system_cinema": "Hệ thống Cinema"
-        }
+        "reviews": {
+          "title": "Đánh giá",
+          "desc": "Tổng số lượng đánh giá trong database"
+        },
+        "actors": {
+          "title": "Diễn viên",
+          "desc": "Tổng số lượng diễn viên trong database"
+        },
+        "genres": {
+          "title": "Thể loại",
+          "desc": "Tổng số lượng thể loại trong database"
+        },
+        "stat_label": "Thống kê {{item}}"
+      },
+      "admin_team": {
+        "title": "Quản trị viên",
+        "desc": "Danh sách đội ngũ điều hành hệ thống",
+        "system_cinema": "Hệ thống Cinema"
+      }
     },
     "charts": {
-        "movie_status": {
-            "title": "Thống kê trạng thái phim",
-            "desc": "Đang chiếu - Sắp chiếu - Đã kết thúc",
-            "label": "Phim"
-        },
-        "movie_monthly": {
-            "title": "Thống kê số lượng phim theo tháng",
-            "desc": "Cập nhật từ tháng 1 đến tháng 12"
-        },
-        "movie_genre": {
-            "title": "Thống kê xu hướng thể loại phim",
-            "desc": "Tổng số lượng phim theo từng thể loại"
-        },
-        "ticket_monthly": {
-            "title": "Thống kê số lượng vé bán ra theo tháng",
-            "desc": "Cập nhật từ tháng 1 đến tháng 12"
-        }
+      "movie_status": {
+        "title": "Thống kê trạng thái phim",
+        "desc": "Đang chiếu - Sắp chiếu - Đã kết thúc",
+        "label": "Phim"
+      },
+      "movie_monthly": {
+        "title": "Thống kê số lượng phim theo tháng",
+        "desc": "Cập nhật từ tháng 1 đến tháng 12"
+      },
+      "movie_genre": {
+        "title": "Thống kê xu hướng thể loại phim",
+        "desc": "Tổng số lượng phim theo từng thể loại"
+      },
+      "ticket_monthly": {
+        "title": "Thống kê số lượng vé bán ra theo tháng",
+        "desc": "Cập nhật từ tháng 1 đến tháng 12"
+      }
     },
     "statistics_tab": {
-        "title": "Thống kê Doanh thu",
-        "desc": "Phân tích dữ liệu bán vé, doanh thu từ dịch vụ ăn uống và theo dõi tăng trưởng tài chính của cụm rạp."
+      "title": "Thống kê Doanh thu",
+      "desc": "Phân tích dữ liệu bán vé, doanh thu từ dịch vụ ăn uống và theo dõi tăng trưởng tài chính của cụm rạp."
     },
     "data_table": {
-        "add_new": "Thêm mới",
-        "delete_selected": "Xóa mục chọn",
-        "filtering": "Đang lọc:",
-        "clear_all_filters": "Xóa tất cả lọc",
-        "page_info": "Trang {{page}} / {{pages}}",
-        "selected_count": "{{count}} Đã chọn",
-        "all_selected": "Đã chọn tất cả",
-        "deselect_all": "Hủy chọn tất cả"
+      "add_new": "Thêm mới",
+      "delete_selected": "Xóa mục chọn",
+      "filtering": "Đang lọc:",
+      "clear_all_filters": "Xóa tất cả lọc",
+      "page_info": "Trang {{page}} / {{pages}}",
+      "selected_count": "{{count}} Đã chọn",
+      "all_selected": "Đã chọn tất cả",
+      "deselect_all": "Hủy chọn tất cả"
     },
     "movie_details": {
-        "title": "PHIM",
-        "runtime": "THỜI LƯỢNG",
-        "vote_average": "ĐIỂM",
-        "vote_count": "LƯỢT ĐÁNH GIÁ",
-        "release_date": "NGÀY CHIẾU",
-        "status": "TRẠNG THÁI",
-        "minutes": "phút",
-        "search_placeholder": "Tìm theo tên phim...",
-        "add_movie": "Thêm phim",
-        "total_count": "Tổng cộng {{count}} phim",
-        "empty_label": "Không có phim",
-        "loading_label": "Đang tải dữ liệu phim..."
+      "title": "PHIM",
+      "runtime": "THỜI LƯỢNG",
+      "vote_average": "ĐIỂM",
+      "vote_count": "LƯỢT ĐÁNH GIÁ",
+      "release_date": "NGÀY CHIẾU",
+      "status": "TRẠNG THÁI",
+      "minutes": "phút",
+      "search_placeholder": "Tìm theo tên phim...",
+      "add_movie": "Thêm phim",
+      "total_count": "Tổng cộng {{count}} phim",
+      "empty_label": "Không có phim",
+      "loading_label": "Đang tải dữ liệu phim..."
     }
   },
   "movie_card": {
     "book_now": "Đặt vé ngay",
     "watch_trailer": "Xem Trailer",
     "coming_soon": "SẮP RA MẮT",
-    "trailer_preparing": "Trailer hiện đang được chuẩn bị..."
+    "trailer_preparing": "Trailer hiện đang được chuẩn bị...",
+    "trailer_label": "Trailer"
   },
   "movie_status": {
     "released": "Đang chiếu",
@@ -669,11 +773,18 @@
     "age_limit": "Giới hạn tuổi",
     "no_overview": "Không có mô tả cho phim này.",
     "no_data": "Không có dữ liệu phim.",
-    "edit_desc": "Thực hiện các thay đổi cho phim"
+    "edit_desc": "Thực hiện các thay đổi cho phim",
+    "poster_path": "Poster",
+    "backdrop_path": "Ảnh nền",
+    "yes": "Có",
+    "no": "Không",
+    "all_ages": "Mọi lứa tuổi"
   },
   "foods_tab": {
     "title": "Quản lý Thực đơn",
     "desc": "Cấu hình danh mục đồ ăn, thức uống và các gói combo ưu đãi.",
+    "desc_combo": "Gói combo tiết kiệm bao gồm bắp và nước ngọt, lựa chọn hoàn hảo cho cặp đôi hoặc nhóm bạn.",
+    "desc_single": "Sản phẩm lẻ chất lượng cao, mang lại hương vị tuyệt vời cho buổi xem phim của bạn.",
     "search_placeholder": "Tìm kiếm tên món ăn, thức uống...",
     "add_snack": "Thêm món",
     "total_items": "Tổng cộng {{count}} sản phẩm",
@@ -694,6 +805,8 @@
     "close_details": "Đóng chi tiết",
     "processing": "Đang xử lý...",
     "save_changes": "Lưu thay đổi",
+    "add_combo_component": "Thêm thành phần",
+    "total_combo_components": "Tổng cộng {{count}} thành phần",
     "types": {
       "food": "Thức ăn",
       "drink": "Đồ uống",
@@ -724,7 +837,7 @@
     "saving": "Đang lưu...",
     "save_changes": "Lưu thay đổi",
     "columns": {
-        "city": "Thành phố"
+      "city": "Thành phố"
     }
   },
   "cinemas_tab": {
@@ -752,10 +865,10 @@
     "no_data": "Không có dữ liệu rạp phim.",
     "edit_desc": "Thực hiện các thay đổi cho rạp phim",
     "columns": {
-        "name": "Tên rạp",
-        "address": "Địa chỉ",
-        "city": "Thành phố",
-        "phone": "Số điện thoại"
+      "name": "Tên rạp",
+      "address": "Địa chỉ",
+      "city": "Thành phố",
+      "phone": "Số điện thoại"
     }
   },
   "rooms_tab": {
@@ -780,16 +893,16 @@
     "seat_map_label": "Sơ đồ ghế hệ thống",
     "auto_generated": "Tự động tạo",
     "seat_single": "Ghế đơn",
-    "seat_couple": "Ghế đôi (2 hàng cuối)",
+    "seat_couple": "Ghế đôi",
     "edit_warning": "Việc thay đổi số hàng/cột sẽ xóa toàn bộ sơ đồ ghế cũ và tạo lại mới. Hành động này không thể thực hiện nếu phòng đang có suất chiếu.",
     "saving": "Đang lưu...",
     "save_changes": "Lưu thay đổi",
     "columns": {
-        "name": "Tên phòng",
-        "cinema": "Rạp phim",
-        "type": "Loại phòng",
-        "price": "Giá",
-        "layout": "Hàng/Cột"
+      "name": "Tên phòng",
+      "cinema": "Rạp phim",
+      "type": "Loại phòng",
+      "price": "Giá",
+      "layout": "Hàng/Cột"
     }
   },
   "tickets_tab": {
@@ -806,19 +919,22 @@
     "original_price": "Giá gốc",
     "booking_date": "Ngày đặt",
     "total_label": "Tổng cộng",
+    "booking_id": "Mã đặt vé",
+    "customer": "Khách hàng",
+    "user_id": "Mã người dùng",
     "status": {
-        "pending": "Đang chờ",
-        "confirmed": "Đã xác nhận",
-        "cancelled": "Đã hủy",
-        "unknown": "Không xác định"
+      "pending": "Đang chờ",
+      "confirmed": "Đã xác nhận",
+      "cancelled": "Đã hủy",
+      "unknown": "Không xác định"
     },
     "columns": {
-        "user": "Người dùng",
-        "cinema": "Rạp phim",
-        "total": "Tổng tiền",
-        "final": "Thành tiền",
-        "status": "Trạng thái",
-        "created": "Ngày tạo"
+      "user": "Người dùng",
+      "cinema": "Rạp phim",
+      "total": "Tổng tiền",
+      "final": "Thành tiền",
+      "status": "Trạng thái",
+      "created": "Ngày tạo"
     }
   },
   "coupons_tab": {
@@ -852,16 +968,16 @@
     "processing": "Đang xử lý...",
     "create_btn": "Tạo mã",
     "types": {
-        "percentage": "Phần trăm (%)",
-        "fixed": "Số tiền cố định (đ)"
+      "percentage": "Phần trăm (%)",
+      "fixed": "Số tiền cố định (đ)"
     },
     "columns": {
-        "code": "Mã giảm giá",
-        "type": "Loại",
-        "value": "Giá trị giảm",
-        "min": "Giá trị tối thiểu",
-        "status": "Trạng thái",
-        "expiry": "Hết hạn"
+      "code": "Mã giảm giá",
+      "type": "Loại",
+      "value": "Giá trị giảm",
+      "min": "Giá trị tối thiểu",
+      "status": "Trạng thái",
+      "expiry": "Hết hạn"
     }
   },
   "actors_tab": {
@@ -891,15 +1007,15 @@
     "saving": "Đang lưu...",
     "save_changes": "Lưu thay đổi",
     "genders": {
-        "male": "Nam",
-        "female": "Nữ",
-        "other": "Khác"
+      "male": "Nam",
+      "female": "Nữ",
+      "other": "Khác"
     },
     "columns": {
-        "name": "Diễn viên",
-        "gender": "Giới tính",
-        "birthday": "Ngày sinh",
-        "birthplace": "Nơi sinh"
+      "name": "Diễn viên",
+      "gender": "Giới tính",
+      "birthday": "Ngày sinh",
+      "birthplace": "Nơi sinh"
     }
   },
   "reviews_tab": {
@@ -918,35 +1034,118 @@
     "no_comment": "Người dùng này không để lại nội dung bình luận.",
     "no_data": "Không có dữ liệu.",
     "status": {
-        "approved": "Đã duyệt",
-        "pending": "Chờ duyệt"
+      "approved": "Đã duyệt",
+      "pending": "Chờ duyệt"
     },
     "columns": {
-        "user": "Người dùng",
-        "movie": "Phim",
-        "rating": "Rating",
-        "content": "Nội dung",
-        "status": "Trạng thái",
-        "created": "Ngày tạo"
+      "user": "Người dùng",
+      "movie": "Phim",
+      "rating": "Rating",
+      "content": "Nội dung",
+      "status": "Trạng thái",
+      "created": "Ngày tạo"
     }
   },
   "showtimes_tab": {
     "title": "Quản lý Suất chiếu",
-    "desc": "Lập lịch trình chiếu phim, quản lý khung giờ và phân bổ phòng chiếu."
+    "desc": "Lập lịch trình chiếu phim, quản lý khung giờ và phân bổ phòng chiếu.",
+    "tabs": {
+      "showtime": "Suất chiếu",
+      "seat": "Ghế theo suất",
+      "slot": "Khung giờ mẫu",
+      "price": "Bảng giá"
+    },
+    "columns": {
+      "id": "ID",
+      "room": "Phòng chiếu",
+      "start_time": "Giờ bắt đầu",
+      "end_time": "Giờ kết thúc",
+      "pricing": "Loại bảng giá"
+    },
+    "search_placeholder": "Tìm theo tên phim...",
+    "total_count": "Tổng cộng {{count}} suất chiếu",
+    "empty_label": "Không có suất chiếu",
+    "loading_label": "Đang tải dữ liệu suất chiếu...",
+    "details_title": "Chi tiết suất chiếu",
+    "id_label": "Showtime ID",
+    "pricing_model": {
+      "label": "Mô hình tính giá",
+      "price_based": "Theo bảng giá",
+      "seat_based": "Theo vị trí ghế",
+      "mixed": "Hỗn hợp"
+    },
+    "placeholders": {
+      "select_movie": "Chọn phim",
+      "select_room": "Chọn phòng",
+      "select_showtime": "Chọn suất chiếu",
+      "select_slot": "Chọn khung giờ",
+      "no_slots_for_day": "Không có khung giờ mẫu cho ngày này"
+    },
+    "seat_tab": {
+      "title": "Trạng thái ghế",
+      "desc": "Theo dõi và quản lý tình trạng đặt chỗ của từng ghế trong suất chiếu.",
+      "seat_id": "Mã ghế",
+      "total_seats": "Tổng cộng {{count}} ghế",
+      "status": {
+        "available": "Còn trống",
+        "booked": "Đã đặt",
+        "holding": "Đang giữ"
+      }
+    },
+    "price_tab": {
+      "title": "Bảng giá suất chiếu",
+      "desc": "Cấu hình giá vé áp dụng cho từng loại ghế và khung giờ. Giá này sẽ ghi đè lên giá phòng cơ bản.",
+      "base_price": "Giá cơ bản",
+      "config_desc": "Cấu hình giá mặc định",
+      "slot_id": "Mã khung giờ",
+      "seat_type": "Loại ghế",
+      "search_placeholder": "Tìm theo mã khung giờ...",
+      "details_title": "Chi tiết bảng giá",
+      "slot_specific_price": "Giá riêng cho khung giờ",
+      "add_title": "Thêm bảng giá mới",
+      "edit_title": "Sửa bảng giá",
+      "select_slot": "Chọn khung giờ",
+      "select_seat_type": "Chọn loại ghế",
+      "override_price": "Giá ghi đè (VNĐ)",
+      "enter_price": "Nhập giá..."
+    },
+    "slot_tab": {
+      "title": "Khung giờ mẫu",
+      "desc": "Quản lý các khung giờ mẫu để tạo lịch chiếu nhanh chóng.",
+      "start_time": "Giờ bắt đầu",
+      "end_time": "Giờ kết thúc",
+      "day_of_week": "Ngày trong tuần"
+    }
   },
   "ticket_tab": {
     "tickets": "Vé",
-    "coupons": "Khuyến mãi"
+    "coupons": "Khuyến mãi",
+    "booking_id": "Mã đặt vé"
   },
   "sync_tab": {
     "title": "Đồng bộ Dữ liệu",
     "desc": "Quản lý luồng dữ liệu từ TMDB về hệ thống nội bộ.",
     "tasks": {
-      "upcoming": { "name": "Phim sắp chiếu", "desc": "Đồng bộ danh sách phim sắp ra mắt từ TMDB." },
-      "nowplaying": { "name": "Phim đang chiếu", "desc": "Cập nhật dữ liệu các phim hiện đang tại rạp." },
-      "popular": { "name": "Phim phổ biến", "desc": "Lấy các phim đang đứng đầu bảng xếp hạng TMDB." },
-      "reviews": { "name": "Đánh giá phim", "desc": "Cập nhật các nhận xét và điểm số từ người dùng." },
-      "status": { "name": "Trạng thái hệ thống", "desc": "Chạy tác vụ kiểm tra trạng thái dữ liệu nội bộ." }
+      "upcoming": {
+        "name": "Phim sắp chiếu",
+        "desc": "Đồng bộ danh sách phim sắp ra mắt từ TMDB."
+      },
+      "nowplaying": {
+        "name": "Phim đang chiếu",
+        "desc": "Cập nhật dữ liệu các phim hiện đang tại rạp."
+      },
+      "popular": {
+        "name": "Phim phổ biến",
+        "desc": "Lấy các phim đang đứng đầu bảng xếp hạng TMDB."
+      },
+      "reviews": {
+        "name": "Đánh giá phim",
+        "desc": "Cập nhật các nhận xét và điểm số từ người dùng."
+      },
+      "status": {
+        "name": "Trạng thái hệ thống",
+        "desc": "Chạy tác vụ kiểm tra trạng thái dữ liệu nội bộ."
+      }
     },
     "status": {
       "ready": "Hệ thống: Sẵn sàng",
@@ -1016,9 +1215,8 @@
     "bg_text": "SERVER ERROR"
   },
   "loading": {
-    "title": "Đang chuẩn bị...",
-    "subtitle": "Phim hay sắp bắt đầu rồi, đợi chút nhé!",
-    "bg_text": "CINEMA"
+    "title": "Vũ trụ đang khởi tạo...",
+    "bg_text": "MILKYWAY"
   },
   "global_error": {
     "title": "LỖI",
@@ -1026,5 +1224,127 @@
     "description": "Hệ thống gặp sự cố nghiêm trọng ảnh hưởng đến toàn bộ ứng dụng. Vui lòng làm mới trang để khôi phục trạng thái.",
     "button": "Khôi Phục Hệ Thống",
     "bg_text": "CRITICAL"
+  },
+  "payment_tab": {
+    "order_info_title": "Thông tin đơn hàng",
+    "amount_to_pay": "Số tiền thanh toán",
+    "discount": "Giảm giá",
+    "order_code": "Mã đơn hàng",
+    "qr_instruction": "Quét mã QR để mở trang thanh toán VNPAY",
+    "payment_guide": "Hướng dẫn thanh toán",
+    "redirect_button": "Mở cổng thanh toán VNPAY",
+    "footer_instruction": "Quét mã QR bằng ứng dụng Ngân hàng hoặc nhấn nút trên để thanh toán bằng thẻ/QR",
+    "initializing": "Đang khởi tạo thanh toán",
+    "initializing_desc": "Vui lòng chờ trong giây lát trong khi chúng tôi kết nối với cổng thanh toán",
+    "test_cards_modal_title": "Danh sách thẻ Test VNPAY",
+    "test_cards_modal_title_momo": "Danh sách thẻ Test MoMo",
+    "test_labels": {
+      "vnpay": "ATM NCB (TEST):",
+      "momo": "MOMO ATM (TEST):"
+    },
+    "view_all_test_cards": "Xem tất cả thẻ test",
+    "test_cards_note": "Sử dụng các thông tin thẻ trên để thực hiện thanh toán thử nghiệm trong môi trường Sandbox.",
+    "test_instructions": {
+      "momo_atm": [
+        "Bước 1: Tạo yêu cầu thanh toán qua Cổng thanh toán MoMo.",
+        "Bước 2: Chọn \"Xác Nhận\" => Điều hướng tới trang thanh toán của Ngân hàng/Napas tạo bởi MoMo.",
+        "Bước 3: Sử dụng tài khoản test để thanh toán thử."
+      ],
+      "momo_intl": [
+        "Bước 1: Tạo yêu cầu thanh toán qua Cổng thanh toán MoMo.",
+        "Bước 2: Chọn \"Xác Nhận\" => Trang nhập OTP sẽ được mở ra (nếu có 3DS).",
+        "Bước 3: Sử dụng tài khoản test để thanh toán thử."
+      ]
+    },
+    "card_types": {
+      "atm": "ATM / Tài khoản nội địa",
+      "visa": "Thẻ quốc tế VISA",
+      "mastercard": "Thẻ quốc tế MasterCard",
+      "napas": "Thẻ ATM nội địa (NAPAS)",
+      "jcb": "Thẻ quốc tế JCB"
+    },
+    "status": {
+      "success": "Thành công",
+      "insufficient_balance": "Không đủ số dư",
+      "not_activated": "Chưa kích hoạt",
+      "blocked": "Thẻ bị khóa",
+      "expired": "Thẻ hết hạn",
+      "limit_exceeded": "Vượt hạn mức",
+      "failed": "Thất bại"
+    },
+    "card_labels": {
+      "card_no": "Số thẻ",
+      "bank_type": "Ngân hàng",
+      "holder": "Chủ thẻ",
+      "date": "Ngày phát hành"
+    },
+    "finish_button": "Thanh toán",
+    "qr_momo_instruction": "QUÉT MÃ QR ĐỂ MỞ TRANG THANH TOÁN MOMO",
+    "momo_atm_qr_instruction": "MỞ TRANG THANH TOÁN MOMO ATM",
+    "momo_guide": "HƯỚNG DẪN THANH TOÁN",
+    "momo_atm_guide": "HƯỚNG DẪN NHẬP THẺ",
+    "momo_redirect_button": "MỞ CỔNG THANH TOÁN MOMO",
+    "momo_footer_instruction": "Quét mã QR bằng ứng dụng MoMo hoặc nhấn nút trên để thanh toán",
+    "momo_atm_footer_instruction": "Nhấn nút trên để mở trang thanh toán MoMo và nhập thông tin thẻ ATM nội địa của bạn",
+    "methods": {
+      "vnpay": "VNPAY",
+      "momo_wallet": "Ví MoMo",
+      "momo_atm": "MoMo ATM nội địa",
+      "sepay": "SEPAY",
+      "paypal": "PAYPAL"
+    }
+  },
+  "payment": {
+    "powered_by": "Được cung cấp bởi Hệ thống {{method}} của MilkyWayyy Cinema",
+    "verifying_transaction": "Đang xác thực giao dịch...",
+    "please_wait": "Vui lòng chờ trong giây lát",
+    "success_title": "THANH TOÁN THÀNH CÔNG",
+    "failed_title": "THANH TOÁN THẤT BẠI",
+    "success_desc": "Cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi. Chúc bạn có những phút giây xem phim vui vẻ!",
+    "failed_desc": "Rất tiếc, đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng kiểm tra lại số dư tài khoản hoặc thử phương thức khác.",
+    "order_info": "Thông tin đơn hàng",
+    "order_payment_info": "Thanh toán đơn hàng",
+    "download_invoice": "Tải hóa đơn (PDF)",
+    "callback": {
+      "order_info": "Thông tin đơn hàng",
+      "txn_ref": "Mã giao dịch",
+      "order_id": "Mã đơn hàng",
+      "amount": "Số tiền thanh toán",
+      "time": "Thời gian thanh toán",
+      "result": "Kết quả",
+      "success": "Thành công",
+      "failed": "Thất bại",
+      "view_tickets": "Xem vé của tôi",
+      "retry": "Thử lại ngay",
+      "back_home": "Quay về trang chủ",
+      "payment_not_found": "Không tìm thấy thông tin giao dịch",
+      "support_note": "Nếu bạn gặp bất kỳ vấn đề gì, vui lòng liên hệ hotline: "
+    }
+  },
+  "inventory_tab": {
+    "title": "Quản lý Kho hàng",
+    "desc": "Quản lý số lượng tồn kho của các loại thức ăn, nước uống tại từng rạp chiếu phim.",
+    "search_placeholder": "Tìm rạp hoặc món ăn...",
+    "add_label": "Thêm vào kho",
+    "total_items": "Tổng cộng {{count}} mục kho",
+    "quantity_label": "Số lượng tồn",
+    "update_quantity": "Cập nhật số lượng"
+  },
+  "review_card": {
+    "reviewed_by": "Đánh giá bởi",
+    "unknown_date": "Ngày không xác định",
+    "no_content": "Không có nội dung đánh giá.",
+    "rating": "Đánh giá",
+    "tag": "Đánh giá"
+  },
+  "actor_card": {
+    "star_profile": "Hồ sơ nghệ sĩ",
+    "cinema_star": "Nghệ sĩ điện ảnh"
+  },
+  "confirmation_tab": {
+    "coupon_not_found": "Mã giảm giá không tồn tại hoặc không hợp lệ",
+    "coupon_min_value": "Mã này chỉ áp dụng cho đơn hàng từ {{value}} VND trở lên",
+    "coupon_expired": "Mã giảm giá đã hết hạn sử dụng",
+    "coupon_applied": "Mã giảm giá đã được áp dụng thành công"
   }
 }

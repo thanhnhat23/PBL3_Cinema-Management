@@ -4,6 +4,7 @@ import { useMovieStore } from "@/stores/useMovieStore";
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaStar } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 interface DataReviewProps {
   review: Review;
@@ -11,6 +12,7 @@ interface DataReviewProps {
 }
 
 export default function CardReview ({ review, index }: DataReviewProps) {
+    const { t } = useTranslation();
     const { movies } = useMovieStore();
     const movie = movies.find((item) => item.movie_id === review.movie_id);
 
@@ -36,32 +38,32 @@ export default function CardReview ({ review, index }: DataReviewProps) {
                 <div className="flex flex-col gap-2 w-full min-h-46 whitespace-pre-line truncate">
                     
                     <p className="font-semibold md:text-lg text-sm text-gray-800 dark:text-gray-200">
-                        <span className="font-bold text-yellow-500 dark:text-yellow-300">[Review]</span> {" "}
+                        <span className="font-bold text-yellow-500 dark:text-yellow-300">[{t('review_card.tag')}]</span> {" "}
                         {movie?.title}
                     </p>
 
                     <div className="flex md:flex-row flex-col gap-2">
                         <p className="md:text-sm text-xs text-gray-600 dark:text-gray-400">
-                            Đánh giá bởi <span className="font-medium">{review.username}</span>
+                            {t('review_card.reviewed_by')} <span className="font-medium">{review.username}</span>
                         </p>
 
                         <span className="hidden md:block w-px md:h-5 bg-black dark:bg-gray-500/20"></span>
 
                         <p className="md:text-sm text-xs text-gray-600 dark:text-gray-400">
-                            {review.createAt ? new Date(review.createAt).toLocaleDateString() : "Ngày không xác định"}
+                            {review.createAt ? new Date(review.createAt).toLocaleDateString() : t('review_card.unknown_date')}
                         </p>
                     </div>
 
                     <Divider orientation="horizontal" className="bg-neutral-200 dark:bg-neutral-800" />
 
                     <p className="text-gray-800 dark:text-gray-200 line-clamp-4 md:text-base text-xs">
-                        {review.comment || "Không có nội dung đánh giá."}
+                        {review.comment || t('review_card.no_content')}
                     </p>
 
                     <Divider orientation="horizontal" className="bg-neutral-200 dark:bg-neutral-800" />
 
                     <div className="flex gap-1">
-                        <span className="font-medium md:block hidden">Đánh giá:</span> {" "}
+                        <span className="font-medium md:block hidden">{t('review_card.rating')}:</span> {" "}
                         <span className="text-yellow-500 dark:text-yellow-300 md:flex items-center gap-1 hidden">
                             {Array(Math.round(review.rating)).fill(0).map((_, i) => (
                                 <FaStar key={i} className="text-yellow-400" size={16} />
@@ -69,7 +71,7 @@ export default function CardReview ({ review, index }: DataReviewProps) {
                         </span>
 
                         <p className="block md:hidden font-semibold text-sm">
-                            Rating: {" "}
+                            {t('review_card.rating')}: {" "}
                             <span className="font-bold text-yellow-500 dark:text-yellow-300">
                                 {review.rating}
                             </span>

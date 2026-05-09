@@ -12,8 +12,8 @@ namespace CinemaAPI.Models.DTOs
         public DateTime endTime { get; set; }
         public int? slot_id { get; set; }
 
-        // optional: client can set pricing model when creating showtime
         public int? pricing_model { get; set; }
+        public int? status { get; set; }
     }
 
     public class ShowTimeUpdateRequest
@@ -26,6 +26,7 @@ namespace CinemaAPI.Models.DTOs
         public DateTime? endTime { get; set; }
         public int? slot_id { get; set; }
         public int? pricing_model { get; set; }
+        public int? status { get; set; }
     }
 
     // Create ShowTime from Slot: automatically compute startTime/endTime based on slot dayOfWeek and provided date
@@ -40,5 +41,6 @@ namespace CinemaAPI.Models.DTOs
         public DateTime date { get; set; }
 
         public int? pricing_model { get; set; }
+        public int? status { get; set; }
     }
 }

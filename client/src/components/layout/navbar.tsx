@@ -19,7 +19,7 @@ import {
     AccordionItem,
     Chip
 } from "@heroui/react";
-import { PanelLeftIcon, Languages } from 'lucide-react';
+import { Languages } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { UserRound } from "../icons/user-round";
@@ -43,7 +43,6 @@ import { useCinemaStore } from "@/stores/useCinemaStore";
 import { useDialogStore } from "@/stores/useDialogStore";
 import { useRouter } from "next/navigation";
 import { AvatarElement } from "../ui/avatar";
-import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 const NAV_LINK_CLASS = "relative text-sm font-semibold tracking-[0.2em] text-zinc-600 dark:text-white/70 hover:text-black dark:hover:text-white transition-all duration-300 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-amber-500 after:transition-all hover:after:w-full";
@@ -122,7 +121,6 @@ export default function NavbarLayout() {
     };
 
     const { t, i18n } = useTranslation();
-    const pathname = usePathname();
 
     const changeLanguage = (lng: string) => {
         i18n.changeLanguage(lng);
@@ -239,6 +237,7 @@ export default function NavbarLayout() {
                         {desktopMovieItems.map((item) => (
                             <DropdownItem
                                 key={item.key}
+                                as={Link}
                                 startContent={item.icon}
                                 className={DROPDOWN_ITEM_CLASS}
                                 href={item.href}
@@ -268,6 +267,7 @@ export default function NavbarLayout() {
                         {cinemas.map((cinema) => (
                             <DropdownItem
                                 key={cinema.cinema_id}
+                                as={Link}
                                 className={DROPDOWN_ITEM_CLASS}
                                 startContent={<MapPin animate={hoveredItem === `cinema-${cinema.cinema_id}`} size={16} />}
                                 href={`/cinemas/${cinema.cinema_id}`}
@@ -333,6 +333,7 @@ export default function NavbarLayout() {
 
                             <DropdownItem
                                 key='profile'
+                                as={Link}
                                 startContent={<UserRound animate={hoveredItem === 'profile'} size={18} />}
                                 className={DROPDOWN_ITEM_CLASS}
                                 href={`/profile/${authUser.id}`}
@@ -356,6 +357,7 @@ export default function NavbarLayout() {
                             {authUser && (isStaff(Number(authUser?.role)) || isAdmin(Number(authUser?.role))) ? (
                                 <DropdownItem
                                     key='dashboard'
+                                    as={Link}
                                     startContent={<LayoutDashboard size={18} />}
                                     className={cn(DROPDOWN_ITEM_CLASS, "text-amber-500")}
                                     href="/dashboard"
@@ -368,7 +370,7 @@ export default function NavbarLayout() {
                                 key='ticket'
                                 className={DROPDOWN_ITEM_CLASS}
                                 startContent={<Star size={18} />}
-                                href="#"
+                                href={`/profile/${authUser.id}?tab=history`}
                                 showDivider={true}
                             >
                                 {t('navbar.my_tickets')}

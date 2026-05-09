@@ -14,6 +14,13 @@ export interface Booking {
     createAt: Date;
     userName?: string;
     cinemaName?: string;
+    movieTitle?: string;
+    posterPath?: string;
+    startTime?: string;
+    movie_id?: number;
+    roomName?: string;
+    seats?: string[];
+    paymentMethod?: string;
 }
 
 interface ApiBooking {
@@ -31,11 +38,29 @@ interface ApiBooking {
     };
     ShowTime?: {
         Room?: {
+            nameRoom?: string;
             Cinema?: {
                 name?: string;
             };
         };
+        Movie?: {
+            title?: string;
+            poster_path?: string;
+        };
+        startTime?: string;
+        movie_id?: number;
     };
+    ShowTimeSeats?: {
+        Seat?: {
+            seat_code?: string;
+        };
+    }[];
+    VnpayPayments?: {
+        method?: number;
+    }[];
+    MomoPayments?: {
+        requestType?: string;
+    }[];
 }
 
 export const useBookingStore = create<{
@@ -48,7 +73,15 @@ export const useBookingStore = create<{
 
     fetchAllBookings: () => Promise<void>;
     fetchBookingById: (bookingId: number) => Promise<void>;
-    createBooking: (payload: { showtime_id: number; coupon_id?: number | null; snacks: { snack_id: number; quantity: number }[] }) => Promise<{
+    createBooking: (payload: { 
+        showtime_id: number; 
+        coupon_id?: number | null; 
+        snacks: { snack_id: number; quantity: number }[];
+        seat_ids: number[]; // Backend expects integer IDs
+        totalAmount: number;
+        discountAmount: number;
+        finalAmount: number;
+    }) => Promise<{
         booking_id: number;
         totalAmount: number;
         discountAmount?: number | null;
@@ -85,6 +118,13 @@ export const useBookingStore = create<{
                     createAt: item.createAt,
                     userName: item.User?.userName ?? 'N/A',
                     cinemaName: item.ShowTime?.Room?.Cinema?.name ?? 'N/A',
+                    roomName: item.ShowTime?.Room?.nameRoom ?? 'N/A',
+                    movieTitle: item.ShowTime?.Movie?.title ?? 'N/A',
+                    posterPath: item.ShowTime?.Movie?.poster_path ?? '',
+                    startTime: item.ShowTime?.startTime ?? '',
+                    movie_id: item.ShowTime?.movie_id,
+                    seats: item.ShowTimeSeats?.map(d => d.Seat?.seat_code).filter(Boolean) as string[],
+                    paymentMethod: item.VnpayPayments?.[0] ? 'VNPAY' : (item.MomoPayments?.[0] ? 'MOMO' : 'N/A'),
                 }));
 
                 set({ bookings: mapped });
@@ -117,6 +157,13 @@ export const useBookingStore = create<{
                         createAt: item.createAt,
                         userName: item.User?.userName ?? 'N/A',
                         cinemaName: item.ShowTime?.Room?.Cinema?.name ?? 'N/A',
+                        roomName: item.ShowTime?.Room?.nameRoom ?? 'N/A',
+                        movieTitle: item.ShowTime?.Movie?.title ?? 'N/A',
+                        posterPath: item.ShowTime?.Movie?.poster_path ?? '',
+                        startTime: item.ShowTime?.startTime ?? '',
+                        movie_id: item.ShowTime?.movie_id,
+                        seats: item.ShowTimeSeats?.map(d => d.Seat?.seat_code).filter(Boolean) as string[],
+                        paymentMethod: item.VnpayPayments?.[0] ? 'VNPAY' : (item.MomoPayments?.[0] ? 'MOMO' : 'N/A'),
                     },
                 });
             }
@@ -127,21 +174,36 @@ export const useBookingStore = create<{
         }
     },
 
-    createBooking: async (payload: { showtime_id: number; coupon_id?: number | null; snacks: { snack_id: number; quantity: number }[] }) => {
+    createBooking: async (payload: { 
+        showtime_id: number; 
+        coupon_id?: number | null; 
+        snacks: { snack_id: number; quantity: number }[];
+        seat_ids: number[];
+        totalAmount: number;
+        discountAmount: number;
+        finalAmount: number;
+    }) => {
         try {
             set({ isCreatingBooking: true });
 
             const authUser = useAuthStore.getState().authUser;
             const userId = authUser?.id ?? JSON.parse(localStorage.getItem('authUser') || 'null')?.id ?? '';
 
+            if (!userId) {
+                console.error('Cannot create booking: User is not logged in');
+                return null;
+            }
+
             const body = {
                 user_id: userId,
                 showtime_id: payload.showtime_id,
                 coupon_id: payload.coupon_id ?? null,
-                totalAmount: 0,
-                discountAmount: 0,
-                finalAmount: 0,
+                totalAmount: payload.totalAmount,
+                discountAmount: payload.discountAmount,
+                finalAmount: payload.finalAmount,
                 snacks: payload.snacks,
+                seat_ids: payload.seat_ids,
+                status: 0, // Pending
             };
 
             const response = await _axios.post('/v1/booking/create', body);
@@ -158,7 +220,7 @@ export const useBookingStore = create<{
 
             return null;
         } catch (error) {
-            console.error('Error creating booking:', error);
+            console.error('Error creating booking:', error instanceof Error ? error.message : 'Unknown error');
             return null;
         } finally {
             set({ isCreatingBooking: false });

@@ -21,12 +21,10 @@ namespace CinemaAPI.Models
         [Key]
         public int booking_id { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<BookingSnacks> BookingSnacks { get; set; } = new List<BookingSnacks>();
-        [JsonIgnore]
         public virtual ICollection<ShowTimeSeat> ShowTimeSeats { get; set; } = new List<ShowTimeSeat>();
-        [JsonIgnore]
-        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public virtual ICollection<VnpayPayment> VnpayPayments { get; set; } = new List<VnpayPayment>();
+        public virtual ICollection<MomoPayment> MomoPayments { get; set; } = new List<MomoPayment>();
 
         [JsonIgnore]
         public virtual PointTransaction? PointTransaction { get; set; }

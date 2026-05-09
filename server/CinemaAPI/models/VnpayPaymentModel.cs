@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
-    public enum PaymentType 
+    public enum VnpayPaymentType 
     {
         VNPAYQR = 0,
         VNBANK = 1,
     }
     
-    public enum PaymentStatus 
+    public enum VnpayPaymentStatus 
     {
         Pending = 0,
         Success = 1,
@@ -22,20 +22,21 @@ namespace CinemaAPI.Models
     [Index(nameof(status))]
     [Index(nameof(vnp_TransactionNo), IsUnique = true)] // Ma giao dich tu VNPAY
     [Index(nameof(vnp_TxnRef), IsUnique = true)] // Ma don hang tu VNPAY
-    public class Payment
+    public class VnpayPayment
     {
         [Key]
         public int payment_id { get; set; }
 
         public int booking_id { get; set; }
         [ForeignKey("booking_id")]
+        [JsonIgnore]
         public virtual Booking Booking { get; set; } = null!;
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal amount { get; set; }
 
-        public PaymentType method { get; set; }
-        public PaymentStatus status { get; set; } = PaymentStatus.Pending;
+        public VnpayPaymentType method { get; set; }
+        public VnpayPaymentStatus status { get; set; } = VnpayPaymentStatus.Pending;
 
         [MaxLength(50)] // Ma ngan hang tu VNPAY
         public string? vnp_BankCode { get; set; }
