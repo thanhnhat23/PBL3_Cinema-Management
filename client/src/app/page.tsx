@@ -19,12 +19,13 @@ import { Meteors } from "@/components/ui/effects/meteors";
 import { Iphone } from "@/components/ui/iphone";
 import { SparklesText } from "@/components/ui/texts/sparkles-text";
 import { AuroraText } from "@/components/ui/texts/aurora-text";
-import Link from "next/link";
 import { _axios } from "@/lib/axios";
 import Swal from "sweetalert2";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useDialogStore } from "@/stores/useDialogStore";
 
 const Carousel = dynamic(() => import("@/components/layout/carousel"), {
     ssr: true,
@@ -53,6 +54,8 @@ function Home() {
     const isFetchingMoviesByStatus = useMovieStore(state => state.isFetchingMoviesByStatus);
     const isFetchingPopularMovies = useMovieStore(state => state.isFetchingPopularMovies);
     const { t } = useTranslation();
+    const authUser = useAuthStore(state => state.authUser);
+    const setOpenDialog = useDialogStore(state => state.setOpenDialog);
 
     useEffect(() => {
         const verifyEmail = async () => {
@@ -298,6 +301,13 @@ function Home() {
                             <Button 
                                 size="lg" 
                                 className="bg-amber-500 text-white font-black px-10 h-10 text-lg hover:bg-amber-600 transition-all shadow-[0_0_30px_rgba(245,158,11,0.3)] rounded-full cursor-pointer"
+                                onClick={() => {
+                                    if (!authUser) {
+                                        setOpenDialog('signin');
+                                    } else {
+                                        router.push('/booking');
+                                    }
+                                }}
                             >
                                 {t('navbar.buy_tickets_now')}
                             </Button>

@@ -301,13 +301,19 @@ export default function NavbarLayout() {
 
             <NavbarContent justify="end" className="gap-6">
                 <NavbarItem className="hidden lg:flex">
-                    <Link
-                        href="/booking"
+                    <button
+                        onClick={() => {
+                            if (!authUser) {
+                                setOpenDialog('signin');
+                            } else {
+                                router.push('/booking');
+                            }
+                        }}
                         className="text-white px-4 py-2 bg-linear-to-r from-amber-500 to-orange-600 rounded-sm font-semibold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] active:scale-95 flex items-center gap-2"
                     >
                         <BsFillTicketPerforatedFill size={16} />
                         {t('navbar.booking')}
-                    </Link>
+                    </button>
                 </NavbarItem>
 
                 {authUser ? (
@@ -483,14 +489,20 @@ export default function NavbarLayout() {
             {/* Mobile Menu */}
             <NavbarMenu className="bg-white/95 dark:bg-zinc-950/95 pt-12 gap-8 border-t border-zinc-100 dark:border-white/5">
                 <NavbarMenuItem>
-                    <Link
-                        href="/booking"
+                    <button
                         className="w-full py-4 bg-linear-to-r from-amber-500 to-orange-600 rounded-sm flex items-center justify-center gap-3 text-white font-semibold tracking-widest"
-                        onClick={() => setIsMenuOpen(false)}
+                        onClick={() => {
+                            setIsMenuOpen(false);
+                            if (!authUser) {
+                                setOpenDialog('signin');
+                            } else {
+                                router.push('/booking');
+                            }
+                        }}
                     >
                         <BsFillTicketPerforatedFill size={20} />
                         {t('navbar.buy_tickets_now')}
-                    </Link>
+                    </button>
                 </NavbarMenuItem>
 
                 <div className="flex flex-col gap-2">

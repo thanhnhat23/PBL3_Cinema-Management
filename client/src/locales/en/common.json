@@ -1219,11 +1219,30 @@
     "bg_text": "MILKYWAY"
   },
   "global_error": {
-    "title": "CRITICAL",
-    "title_highlight": "ERROR",
-    "description": "The system encountered a critical error affecting the entire application. Please refresh the page to restore the state.",
+    "title": "ERROR",
+    "title_highlight": "CRITICAL",
+    "description": "The system has encountered a critical error. Please refresh the page to restore state.",
     "button": "Restore System",
     "bg_text": "CRITICAL"
+  },
+  "maintenance": {
+    "label": "Service Suspended",
+    "title_main": "SYSTEM",
+    "title_highlight": "SUSPENDED",
+    "subtitle": "Service is temporarily unavailable",
+    "description": "We are experiencing infrastructure issues or resource limits. The page will automatically reload once the connection is restored.",
+    "bg_text": "SUSPENDED",
+    "auto_reconnect": "Checking connection...",
+    "monitoring": "System Monitoring: Active",
+    "protocol": "Network Protocol",
+    "polling": "Polling...",
+    "report_title": "// System Status Report",
+    "db_conn": "DB_CONN",
+    "api_gateway": "API_GATEWAY",
+    "recovery_mode": "RECOVERY_MODE",
+    "status_failed": "FAILED",
+    "status_unreachable": "UNREACHABLE",
+    "status_active": "ACTIVE"
   },
   "payment_tab": {
     "order_info_title": "Order Information",

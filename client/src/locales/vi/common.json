@@ -1225,6 +1225,25 @@
     "button": "Khôi Phục Hệ Thống",
     "bg_text": "CRITICAL"
   },
+  "maintenance": {
+    "label": "Dịch vụ tạm ngưng",
+    "title_main": "TẠM",
+    "title_highlight": "NGƯNG",
+    "subtitle": "Dịch vụ đang tạm thời gián đoạn",
+    "description": "Chúng tôi đang gặp vấn đề về hạ tầng hoặc giới hạn tài nguyên. Hệ thống sẽ tự động tải lại ngay khi kết nối được khôi phục.",
+    "bg_text": "SUSPENDED",
+    "auto_reconnect": "Đang kiểm tra kết nối...",
+    "monitoring": "Giám sát hệ thống: Đang chạy",
+    "protocol": "Giao thức mạng",
+    "polling": "Đang lấy dữ liệu...",
+    "report_title": "// Báo cáo trạng thái hệ thống",
+    "db_conn": "KẾT NỐI DB",
+    "api_gateway": "CỔNG API",
+    "recovery_mode": "CHẾ ĐỘ KHÔI PHỤC",
+    "status_failed": "THẤT BẠI",
+    "status_unreachable": "KHÔNG THỂ TRUY CẬP",
+    "status_active": "ĐANG HOẠT ĐỘNG"
+  },
   "payment_tab": {
     "order_info_title": "Thông tin đơn hàng",
     "amount_to_pay": "Số tiền thanh toán",
