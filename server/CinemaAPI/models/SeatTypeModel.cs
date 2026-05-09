@@ -21,5 +21,7 @@ namespace CinemaAPI.Models
         public virtual ICollection<ShowTimePrice> ShowTimePrices { get; set; } = new List<ShowTimePrice>();
 
         public SeatEnum type_name { get; set; } = SeatEnum.Single;
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal price { get; set; } = 0;
     }
 }

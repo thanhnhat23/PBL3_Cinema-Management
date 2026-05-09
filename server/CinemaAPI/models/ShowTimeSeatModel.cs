@@ -31,21 +31,16 @@ namespace CinemaAPI.Models
 
         public int? booking_id { get; set; }
         [ForeignKey("booking_id")]
+        [JsonIgnore]
         public virtual Booking? Booking { get; set; }
 
         public ShowTimeSeatStatus status { get; set; }
 
-        // Optional per-seat price override for this showtime (nullable). Added to support seat-level pricing.
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? price_override { get; set; }
-
-        // public string? hold_token { get; set; }
-        // [JsonConverter(typeof(TmdbService.NullableDateTimeConverter))]
-        // public DateTime? hold_expires_at { get; set; }
-        // public string? held_by_user { get; set; }
-
         // dùng để xử lý concurrency khi nhiều người dùng cố gắng đặt cùng một ghế trong cùng một thời điểm
         [Timestamp]
         public byte[]? RowVersion { get; set; }
+
+        [NotMapped]
+        public decimal Price { get; set; }
     }
 }

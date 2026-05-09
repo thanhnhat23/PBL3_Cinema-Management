@@ -29,7 +29,8 @@ namespace CinemaAPI.data
         public DbSet<ShowTimeSlot> ShowTimeSlots { get; set; }
         public DbSet<ShowTimeSeat> ShowTimeSeats { get; set; }
         public DbSet<ShowTimePrice> ShowTimePrices { get; set; }
-        public DbSet<Payment> Payments { get; set; }
+        public DbSet<VnpayPayment> VnpayPayments { get; set; }
+        public DbSet<MomoPayment> MomoPayments { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<ComboDetail> ComboDetails { get; set; }
         public DbSet<SeatType> SeatTypes { get; set; }
@@ -70,7 +71,7 @@ namespace CinemaAPI.data
                 .HasForeignKey(cd => cd.snack_id)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ShowTimePrice>()
-                .HasKey(stp => new { stp.type_id, stp.showtime_id });
+                .HasKey(stp => new { stp.type_id, stp.slot_id });
 
             // ShowTime -> ShowTimeSlot (optional)
             modelBuilder.Entity<ShowTime>()
@@ -113,14 +114,22 @@ namespace CinemaAPI.data
                 .Property(a => a.gender)
                 .HasConversion<string>()
                 .HasMaxLength(20);
-            modelBuilder.Entity<Payment>()
+            modelBuilder.Entity<VnpayPayment>()
                 .Property(p => p.method)
                 .HasConversion<string>()
                 .HasMaxLength(20);
-            modelBuilder.Entity<Payment>()
+            modelBuilder.Entity<VnpayPayment>()
                 .Property(p => p.status)
                 .HasConversion<string>()
                 .HasMaxLength(20);
+
+            modelBuilder.Entity<MomoPayment>()
+                .Property(p => p.status)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+            modelBuilder.Entity<MomoPayment>()
+                .Property(p => p.requestType)
+                .HasMaxLength(50);
             modelBuilder.Entity<PointTransaction>()
                 .Property(pt => pt.type)
                 .HasConversion<string>()

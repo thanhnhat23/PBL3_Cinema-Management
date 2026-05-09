@@ -13,6 +13,15 @@ namespace CinemaAPI.Models
         Mixed = 2
     }
 
+    public enum ShowTimeStatus
+    {
+        Draft = 0,
+        Scheduled = 1,
+        Published = 2,
+        Ended = 3,
+        Cancelled = 4
+    }
+
     [Index(nameof(movie_id), nameof(startTime))]
     [Index(nameof(room_id), nameof(startTime))]
     [Index(nameof(startTime))]
@@ -24,7 +33,6 @@ namespace CinemaAPI.Models
         [JsonIgnore]
         public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public virtual ICollection<ShowTimeSeat> ShowTimeSeats { get; set; } = new List<ShowTimeSeat>();
-        public virtual ICollection<ShowTimePrice> ShowTimePrices { get; set; } = new List<ShowTimePrice>();
 
         public int room_id { get; set; }
         [ForeignKey("room_id")]
@@ -34,12 +42,12 @@ namespace CinemaAPI.Models
         [ForeignKey("movie_id")]
         public virtual Movie Movie { get; set; } = null!;
 
-        // Optional reference to a reusable time slot. Kept nullable so migration can be done separately.
         public int? slot_id { get; set; }
         [ForeignKey("slot_id")]
         public virtual ShowTimeSlot? Slot { get; set; }
 
         public PricingModel pricing_model { get; set; } = PricingModel.PriceBased;
+        public ShowTimeStatus status { get; set; } = ShowTimeStatus.Scheduled;
 
         [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime startTime { get; set; }

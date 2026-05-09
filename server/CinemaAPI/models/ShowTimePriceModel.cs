@@ -10,11 +10,12 @@ namespace CinemaAPI.Models
         [ForeignKey("type_id")]
         public virtual SeatType SeatType{ get; set; } = null!;
 
-        public int showtime_id { get; set; }
-        [ForeignKey("showtime_id")]
+        public int slot_id { get; set; }
+        [ForeignKey("slot_id")]
         [JsonIgnore]
-        public virtual ShowTime ShowTime{ get; set; } = null!;
+        public virtual ShowTimeSlot ShowTimeSlot{ get; set; } = null!;
 
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal base_price { get; set; }
     }
 }

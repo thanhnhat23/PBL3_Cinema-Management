@@ -6,9 +6,9 @@ namespace CinemaAPI.Services.Interfaces
     public interface IShowTimePriceService
     {
         Task<List<ShowTimePrice>> GetAllPrices();
-        Task<ShowTimePrice?> GetPrice(int type_id, int showtime_id);
+        Task<ShowTimePrice?> GetPrice(int type_id, int slot_id);
         Task AddPrice(ShowTimePrice price);
-        Task UpdatePrice(int type_id, int showtime_id, ShowTimePriceUpdateRequest request);
-        Task DeletePrice(int type_id, int showtime_id);
+        Task UpdatePrice(int type_id, int slot_id, ShowTimePriceUpdateRequest request);
+        Task DeletePrice(int type_id, int slot_id);
     }
 }

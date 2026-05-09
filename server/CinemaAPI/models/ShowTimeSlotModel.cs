@@ -34,5 +34,6 @@ namespace CinemaAPI.Models
         public DateTime? deleted_at { get; set; }
         public Guid? deleted_by { get; set; }
         public virtual ICollection<ShowTime>? ShowTimes { get; set; }
+        public virtual ICollection<ShowTimePrice> ShowTimePrices { get; set; } = new List<ShowTimePrice>();
     }
 }

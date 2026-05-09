@@ -10,39 +10,39 @@ using Microsoft.Extensions.Options;
 
 namespace CinemaAPI.Services.Implementations
 {
-    public class PaymentService : IPaymentService
+    public class VnpayPaymentService : IVnpayPaymentService
     {
         private readonly AppDbContext _dbContext;
         private readonly VnpayConfig _vnpayConfig;
 
-        public PaymentService(AppDbContext dbContext, IOptions<VnpayConfig> vnpayConfig)
+        public VnpayPaymentService(AppDbContext dbContext, IOptions<VnpayConfig> vnpayConfig)
         {
             _dbContext = dbContext;
             _vnpayConfig = vnpayConfig.Value;
         }
 
-        public async Task<List<Payment>> GetAllPaymentsAsync() =>
-            await _dbContext.Payments
+        public async Task<List<VnpayPayment>> GetAllPaymentsAsync() =>
+            await _dbContext.VnpayPayments
                 .AsNoTracking()
                 .Include(p => p.Booking)
                 .ThenInclude(b => b.ShowTime)
                 .OrderByDescending(p => p.payment_id)
                 .ToListAsync();
 
-        public async Task<Payment?> GetPaymentByIdAsync(int paymentId) =>
-            await _dbContext.Payments
+        public async Task<VnpayPayment?> GetPaymentByIdAsync(int paymentId) =>
+            await _dbContext.VnpayPayments
                 .AsNoTracking()
                 .Include(p => p.Booking)
                 .ThenInclude(b => b.ShowTime)
                 .FirstOrDefaultAsync(p => p.payment_id == paymentId);
 
-        public async Task<CreatePaymentResult> CreatePaymentUrlAsync(PaymentCreateRequest request, string ipAddress)
+        public async Task<CreateVnpayPaymentResult> CreatePaymentUrlAsync(VnpayPaymentCreateRequest request, string ipAddress)
         {
             var booking = await _dbContext.Bookings.FirstOrDefaultAsync(b => b.booking_id == request.booking_id);
             if (booking == null)
                 throw new Exception($"Booking {request.booking_id} not found.");
 
-            if (request.method != PaymentType.VNPAYQR && request.method != PaymentType.VNBANK)
+            if (request.method != VnpayPaymentType.VNPAYQR && request.method != VnpayPaymentType.VNBANK)
                 throw new Exception("Unsupported payment method.");
 
             var amount = request.amount ?? booking.finalAmount;
@@ -53,27 +53,27 @@ namespace CinemaAPI.Services.Implementations
             var expireAt = vnNow.AddMinutes(15);
             var txnRef = $"B{booking.booking_id}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 
-            var payment = new Payment
+            var payment = new VnpayPayment
             {
                 booking_id = booking.booking_id,
                 amount = amount,
                 method = request.method,
-                status = PaymentStatus.Pending,
+                status = VnpayPaymentStatus.Pending,
                 vnp_TxnRef = txnRef,
                 vnp_OrderInfo = string.IsNullOrWhiteSpace(request.orderInfo)
-                    ? $"Thanh toan booking #{booking.booking_id}"
+                    ? $"Thanh toan booking {booking.booking_id}"
                     : request.orderInfo.Trim(),
                 vnp_IpAddr = ipAddress,
                 vnp_CreateDate = vnNow,
                 vnp_ExpireDate = expireAt
             };
 
-            _dbContext.Payments.Add(payment);
+            _dbContext.VnpayPayments.Add(payment);
             await _dbContext.SaveChangesAsync();
 
             var paymentUrl = BuildPaymentUrl(payment, request.returnUrl, ipAddress);
 
-            return new CreatePaymentResult
+            return new CreateVnpayPaymentResult
             {
                 payment_id = payment.payment_id,
                 txnRef = payment.vnp_TxnRef ?? string.Empty,
@@ -83,7 +83,7 @@ namespace CinemaAPI.Services.Implementations
             };
         }
 
-        public async Task<PaymentCallbackResult> HandleVnpayCallbackAsync(IReadOnlyDictionary<string, string> queryParams)
+        public async Task<VnpayPaymentCallbackResult> HandleVnpayCallbackAsync(IReadOnlyDictionary<string, string> queryParams)
         {
             var secureHash = queryParams.TryGetValue("vnp_SecureHash", out var hash) ? hash : string.Empty;
             var txnRef = queryParams.TryGetValue("vnp_TxnRef", out var refValue) ? refValue : string.Empty;
@@ -91,7 +91,7 @@ namespace CinemaAPI.Services.Implementations
 
             if (string.IsNullOrWhiteSpace(txnRef))
             {
-                return new PaymentCallbackResult
+                return new VnpayPaymentCallbackResult
                 {
                     isValidSignature = false,
                     isSuccess = false,
@@ -103,7 +103,7 @@ namespace CinemaAPI.Services.Implementations
 
             if (!ValidateSignature(queryParams, secureHash))
             {
-                return new PaymentCallbackResult
+                return new VnpayPaymentCallbackResult
                 {
                     isValidSignature = false,
                     isSuccess = false,
@@ -113,13 +113,13 @@ namespace CinemaAPI.Services.Implementations
                 };
             }
 
-            var payment = await _dbContext.Payments
+            var payment = await _dbContext.VnpayPayments
                 .Include(p => p.Booking)
                 .FirstOrDefaultAsync(p => p.vnp_TxnRef == txnRef);
 
             if (payment == null)
             {
-                return new PaymentCallbackResult
+                return new VnpayPaymentCallbackResult
                 {
                     isValidSignature = true,
                     isSuccess = false,
@@ -136,7 +136,7 @@ namespace CinemaAPI.Services.Implementations
 
             if (responseCode == "00")
             {
-                payment.status = PaymentStatus.Success;
+                payment.status = VnpayPaymentStatus.Success;
                 payment.paid_at = DateTime.UtcNow;
 
                 if (payment.Booking.status == BookingStatus.Pending)
@@ -146,12 +146,12 @@ namespace CinemaAPI.Services.Implementations
             }
             else
             {
-                payment.status = PaymentStatus.Failed;
+                payment.status = VnpayPaymentStatus.Failed;
             }
 
             await _dbContext.SaveChangesAsync();
 
-            return new PaymentCallbackResult
+            return new VnpayPaymentCallbackResult
             {
                 isValidSignature = true,
                 isSuccess = responseCode == "00",
@@ -162,34 +162,40 @@ namespace CinemaAPI.Services.Implementations
             };
         }
 
-        private string BuildPaymentUrl(Payment payment, string? returnUrlOverride, string ipAddress)
+        private string BuildPaymentUrl(VnpayPayment payment, string? returnUrlOverride, string ipAddress)
         {
+            // Handle IPv6 localhost
+            if (ipAddress == "::1") ipAddress = "127.0.0.1";
+
+            // Use configured ReturnUrl strictly for testing if signature fails
+            string rUrl = _vnpayConfig.vnp_ReturnUrl;
+
             var vnpParams = new SortedDictionary<string, string>(StringComparer.Ordinal)
             {
-                ["vnp_Version"] = _vnpayConfig.vnp_Version,
-                ["vnp_Command"] = _vnpayConfig.vnp_Command,
+                ["vnp_Version"] = _vnpayConfig.vnp_Version ?? "2.1.0",
+                ["vnp_Command"] = _vnpayConfig.vnp_Command ?? "pay",
                 ["vnp_TmnCode"] = _vnpayConfig.vnp_TmnCode,
                 ["vnp_Amount"] = ((long)(payment.amount * 100)).ToString(CultureInfo.InvariantCulture),
                 ["vnp_CreateDate"] = payment.vnp_CreateDate.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture),
-                ["vnp_ExpireDate"] = payment.vnp_ExpireDate.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture),
-                ["vnp_CurrCode"] = _vnpayConfig.vnp_CurrCode,
+                ["vnp_CurrCode"] = _vnpayConfig.vnp_CurrCode ?? "VND",
                 ["vnp_IpAddr"] = ipAddress,
-                ["vnp_Locale"] = _vnpayConfig.vnp_Locale,
-                ["vnp_OrderInfo"] = payment.vnp_OrderInfo ?? string.Empty,
+                ["vnp_Locale"] = _vnpayConfig.vnp_Locale ?? "vn",
+                ["vnp_OrderInfo"] = $"Thanh toan don hang {payment.booking_id}",
                 ["vnp_OrderType"] = "other",
-                ["vnp_ReturnUrl"] = string.IsNullOrWhiteSpace(returnUrlOverride) ? _vnpayConfig.vnp_ReturnUrl : returnUrlOverride.Trim(),
-                ["vnp_TxnRef"] = payment.vnp_TxnRef ?? string.Empty
+                ["vnp_ReturnUrl"] = rUrl,
+                ["vnp_TxnRef"] = payment.vnp_TxnRef ?? string.Empty,
+                ["vnp_ExpireDate"] = payment.vnp_ExpireDate.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture)
             };
 
-            if (payment.method == PaymentType.VNBANK)
+            if (payment.method == VnpayPaymentType.VNBANK)
             {
                 vnpParams["vnp_BankCode"] = "VNBANK";
             }
 
-            var hashData = BuildQuery(vnpParams, encodeValues: false);
-            var secureHash = ComputeHmacSha512(_vnpayConfig.vnp_HashSecret, hashData);
+            var query = BuildQuery(vnpParams, true);
+            string secret = _vnpayConfig.vnp_HashSecret.Trim();
+            var secureHash = ComputeHmacSha512(secret, query).ToUpper();
 
-            var query = BuildQuery(vnpParams, encodeValues: true);
             return $"{_vnpayConfig.vnp_Url}?{query}&vnp_SecureHash={secureHash}";
         }
 
@@ -210,24 +216,50 @@ namespace CinemaAPI.Services.Implementations
                 }
             }
 
-            var hashData = BuildQuery(sorted, encodeValues: false);
+            var hashData = BuildQuery(sorted, true);
             var computed = ComputeHmacSha512(_vnpayConfig.vnp_HashSecret, hashData);
             return string.Equals(computed, secureHash, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static string BuildQuery(SortedDictionary<string, string> parameters, bool encodeValues)
+        private static string BuildQuery(SortedDictionary<string, string> parameters, bool encode)
         {
             var sb = new StringBuilder();
             foreach (var kv in parameters)
             {
+                if (string.IsNullOrEmpty(kv.Value))
+                    continue;
+
                 if (sb.Length > 0)
                     sb.Append('&');
 
-                var key = Uri.EscapeDataString(kv.Key);
-                var value = encodeValues ? Uri.EscapeDataString(kv.Value) : kv.Value;
-                sb.Append(key).Append('=').Append(value);
+                sb.Append(kv.Key);
+                sb.Append('=');
+                sb.Append(encode ? UrlEncodeVnpay(kv.Value) : kv.Value);
             }
 
+            return sb.ToString();
+        }
+
+        private static string UrlEncodeVnpay(string value)
+        {
+            var encoded = System.Net.WebUtility.UrlEncode(value);
+            if (encoded == null) return "";
+            
+            var sb = new StringBuilder();
+            for (int i = 0; i < encoded.Length; i++)
+            {
+                if (encoded[i] == '%')
+                {
+                    sb.Append('%');
+                    sb.Append(char.ToUpper(encoded[i + 1]));
+                    sb.Append(char.ToUpper(encoded[i + 2]));
+                    i += 2;
+                }
+                else
+                {
+                    sb.Append(encoded[i]);
+                }
+            }
             return sb.ToString();
         }
 
@@ -237,7 +269,7 @@ namespace CinemaAPI.Services.Implementations
             var dataBytes = Encoding.UTF8.GetBytes(data);
             using var hmac = new HMACSHA512(keyBytes);
             var hash = hmac.ComputeHash(dataBytes);
-            return Convert.ToHexString(hash);
+            return Convert.ToHexString(hash).ToLower();
         }
     }
 }

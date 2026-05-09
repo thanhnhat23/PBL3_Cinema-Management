@@ -4,6 +4,7 @@ using CinemaAPI.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507153859_UpdateShowTime")]
+    partial class UpdateShowTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,83 +365,6 @@ namespace CinemaAPI.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.MomoPayment", b =>
-                {
-                    b.Property<int>("payment_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("payment_id"));
-
-                    b.Property<decimal>("amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("booking_id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("createdAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("message")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("orderId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("orderInfo")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime?>("paidAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("requestId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("requestType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int?>("resultCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("signature")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("transId")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("payment_id");
-
-                    b.HasIndex("booking_id");
-
-                    b.HasIndex("orderId")
-                        .IsUnique();
-
-                    b.HasIndex("requestId")
-                        .IsUnique();
-
-                    b.HasIndex("status");
-
-                    b.HasIndex("transId")
-                        .IsUnique();
-
-                    b.ToTable("MomoPayments");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.Movie", b =>
                 {
                     b.Property<int>("movie_id")
@@ -549,6 +475,90 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("genre_id");
 
                     b.ToTable("MovieGenres");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.Payment", b =>
+                {
+                    b.Property<int>("payment_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("payment_id"));
+
+                    b.Property<decimal>("amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("booking_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("method")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime?>("paid_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("refund_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("refund_code")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("vnp_BankCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("vnp_CreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("vnp_ExpireDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("vnp_IpAddr")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("vnp_OrderInfo")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("vnp_ResponseCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("vnp_SecureHash")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("vnp_TransactionNo")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("vnp_TxnRef")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("payment_id");
+
+                    b.HasIndex("booking_id");
+
+                    b.HasIndex("status");
+
+                    b.HasIndex("vnp_TransactionNo")
+                        .IsUnique();
+
+                    b.HasIndex("vnp_TxnRef")
+                        .IsUnique();
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.PointTransaction", b =>
@@ -672,9 +682,6 @@ namespace CinemaAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("type_id"));
 
-                    b.Property<decimal>("price")
-                        .HasColumnType("decimal(18, 2)");
-
                     b.Property<string>("type_name")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -738,15 +745,15 @@ namespace CinemaAPI.Migrations
                     b.Property<int>("type_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("slot_id")
+                    b.Property<int>("showtime_id")
                         .HasColumnType("int");
 
                     b.Property<decimal>("base_price")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(65,30)");
 
-                    b.HasKey("type_id", "slot_id");
+                    b.HasKey("type_id", "showtime_id");
 
-                    b.HasIndex("slot_id");
+                    b.HasIndex("showtime_id");
 
                     b.ToTable("ShowTimePrices");
                 });
@@ -766,6 +773,9 @@ namespace CinemaAPI.Migrations
 
                     b.Property<int?>("booking_id")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("price_override")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -945,90 +955,6 @@ namespace CinemaAPI.Migrations
                     b.ToTable("UserVouchers");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.VnpayPayment", b =>
-                {
-                    b.Property<int>("payment_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("payment_id"));
-
-                    b.Property<decimal>("amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("booking_id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("method")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<DateTime?>("paid_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("refund_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("refund_code")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("vnp_BankCode")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("vnp_CreateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("vnp_ExpireDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("vnp_IpAddr")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("vnp_OrderInfo")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("vnp_ResponseCode")
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("vnp_SecureHash")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("vnp_TransactionNo")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<string>("vnp_TxnRef")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("payment_id");
-
-                    b.HasIndex("booking_id");
-
-                    b.HasIndex("status");
-
-                    b.HasIndex("vnp_TransactionNo")
-                        .IsUnique();
-
-                    b.HasIndex("vnp_TxnRef")
-                        .IsUnique();
-
-                    b.ToTable("VnpayPayments");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.Booking", b =>
                 {
                     b.HasOne("CinemaAPI.Models.Coupon", "Coupon")
@@ -1122,17 +1048,6 @@ namespace CinemaAPI.Migrations
                     b.Navigation("Snack");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.MomoPayment", b =>
-                {
-                    b.HasOne("CinemaAPI.Models.Booking", "Booking")
-                        .WithMany("MomoPayments")
-                        .HasForeignKey("booking_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.MovieActor", b =>
                 {
                     b.HasOne("CinemaAPI.Models.Actor", "Actor")
@@ -1169,6 +1084,17 @@ namespace CinemaAPI.Migrations
                     b.Navigation("Genre");
 
                     b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.Payment", b =>
+                {
+                    b.HasOne("CinemaAPI.Models.Booking", "Booking")
+                        .WithMany("Payments")
+                        .HasForeignKey("booking_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.PointTransaction", b =>
@@ -1248,9 +1174,9 @@ namespace CinemaAPI.Migrations
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTimePrice", b =>
                 {
-                    b.HasOne("CinemaAPI.Models.ShowTimeSlot", "ShowTimeSlot")
+                    b.HasOne("CinemaAPI.Models.ShowTime", "ShowTime")
                         .WithMany("ShowTimePrices")
-                        .HasForeignKey("slot_id")
+                        .HasForeignKey("showtime_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1262,7 +1188,7 @@ namespace CinemaAPI.Migrations
 
                     b.Navigation("SeatType");
 
-                    b.Navigation("ShowTimeSlot");
+                    b.Navigation("ShowTime");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTimeSeat", b =>
@@ -1309,17 +1235,6 @@ namespace CinemaAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.VnpayPayment", b =>
-                {
-                    b.HasOne("CinemaAPI.Models.Booking", "Booking")
-                        .WithMany("VnpayPayments")
-                        .HasForeignKey("booking_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.Actor", b =>
                 {
                     b.Navigation("MovieActors");
@@ -1329,13 +1244,11 @@ namespace CinemaAPI.Migrations
                 {
                     b.Navigation("BookingSnacks");
 
-                    b.Navigation("MomoPayments");
+                    b.Navigation("Payments");
 
                     b.Navigation("PointTransaction");
 
                     b.Navigation("ShowTimeSeats");
-
-                    b.Navigation("VnpayPayments");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Cinema", b =>
@@ -1394,13 +1307,13 @@ namespace CinemaAPI.Migrations
                 {
                     b.Navigation("Bookings");
 
+                    b.Navigation("ShowTimePrices");
+
                     b.Navigation("ShowTimeSeats");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTimeSlot", b =>
                 {
-                    b.Navigation("ShowTimePrices");
-
                     b.Navigation("ShowTimes");
                 });
 

@@ -9,7 +9,7 @@ namespace CinemaAPI.Services.Implementations
 {
     public class ShowTimeService : BaseService<ShowTime>, IShowTimeService
     {
-        private readonly AppDbContext _dbContext;
+        private new readonly AppDbContext _dbContext;
 
         public ShowTimeService(AppDbContext dbContext) : base(dbContext)
         {
@@ -24,7 +24,7 @@ namespace CinemaAPI.Services.Implementations
                     .ThenInclude(r => r.Cinema)
                         .ThenInclude(c => c.Location)
                 .Include(st => st.Slot)
-                .Include(st => st.ShowTimePrices)
+                    .ThenInclude(s => s.ShowTimePrices)
                 .Include(st => st.ShowTimeSeats)
                 .AsSplitQuery()
                 .ToListAsync();
@@ -38,12 +38,24 @@ namespace CinemaAPI.Services.Implementations
                     .ThenInclude(r => r.Cinema)
                         .ThenInclude(c => c.Location)
                 .Include(st => st.Slot)
-                .Include(st => st.ShowTimePrices)
+                    .ThenInclude(s => s.ShowTimePrices)
                 .Include(st => st.ShowTimeSeats)
                     .ThenInclude(sts => sts.Seat)
                         .ThenInclude(seat => seat.SeatType)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(st => st.showtime_id == showtime_id);
+
+            if (showTime != null)
+            {
+                // Populate effective prices for each seat
+                if (showTime.ShowTimeSeats != null)
+                {
+                    foreach (var sts in showTime.ShowTimeSeats)
+                    {
+                        sts.Price = await GetEffectiveSeatPriceInternal(showTime, sts.Seat);
+                    }
+                }
+            }
 
             if (showTime != null && (showTime.ShowTimeSeats == null || !showTime.ShowTimeSeats.Any()))
             {
@@ -72,7 +84,7 @@ namespace CinemaAPI.Services.Implementations
                             .ThenInclude(r => r.Cinema)
                                 .ThenInclude(c => c.Location)
                         .Include(st => st.Slot)
-                        .Include(st => st.ShowTimePrices)
+                            .ThenInclude(s => s.ShowTimePrices)
                         .Include(st => st.ShowTimeSeats)
                             .ThenInclude(sts => sts.Seat)
                                 .ThenInclude(seat => seat.SeatType)
@@ -88,42 +100,55 @@ namespace CinemaAPI.Services.Implementations
         {
             var st = await _dbContext.ShowTimes
                 .AsNoTracking()
-                .Include(s => s.ShowTimePrices)
-                .Include(s => s.ShowTimeSeats)
-                    .ThenInclude(ss => ss.Seat)
-                        .ThenInclude(seat => seat.SeatType)
-                .AsSplitQuery()
+                .Include(s => s.Room)
+                .Include(s => s.Slot)
+                    .ThenInclude(sl => sl.ShowTimePrices)
                 .FirstOrDefaultAsync(s => s.showtime_id == showtime_id);
 
             if (st == null) return null;
 
-            var sts = st.ShowTimeSeats.FirstOrDefault(x => x.seat_id == seat_id);
-            if (sts != null)
-            {
-                if (st.pricing_model == PricingModel.SeatBased || st.pricing_model == PricingModel.Mixed)
-                {
-                    if (sts.price_override.HasValue) return sts.price_override.Value;
-                }
+            var seat = await _dbContext.Seats
+                .AsNoTracking()
+                .Include(s => s.SeatType)
+                .FirstOrDefaultAsync(s => s.seat_id == seat_id);
+            
+            if (seat == null) return null;
 
-                // fallback to seat type price
-                var seatTypeId = sts.Seat?.type_id;
-                if (seatTypeId.HasValue)
-                {
-                    var stPrice = st.ShowTimePrices.FirstOrDefault(p => p.type_id == seatTypeId.Value);
-                    if (stPrice != null) return stPrice.base_price;
-                }
-            }
-            else
+            return await GetEffectiveSeatPriceInternal(st, seat);
+        }
+
+        private async Task<decimal> GetEffectiveSeatPriceInternal(ShowTime st, Seat seat)
+        {
+            int seatTypeId = seat.type_id;
+
+            // Priority 1: Check for ShowTimePrice defined for the SLOT (Absolute Override)
+            if (st.Slot != null && st.Slot.ShowTimePrices != null)
             {
-                var seat = await _dbContext.Seats.Include(s => s.SeatType).FirstOrDefaultAsync(s => s.seat_id == seat_id);
-                if (seat != null)
-                {
-                    var stPrice = st.ShowTimePrices.FirstOrDefault(p => p.type_id == seat.type_id);
-                    if (stPrice != null) return stPrice.base_price;
-                }
+                var slotPrice = st.Slot.ShowTimePrices.FirstOrDefault(p => p.type_id == seatTypeId);
+                if (slotPrice != null && slotPrice.base_price > 0)
+                    return slotPrice.base_price;
+            }
+            else if (st.slot_id.HasValue)
+            {
+                var slotPrice = await _dbContext.ShowTimePrices
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.slot_id == st.slot_id.Value && p.type_id == seatTypeId);
+                
+                if (slotPrice != null && slotPrice.base_price > 0)
+                    return slotPrice.base_price;
             }
 
-            return null;
+            // Priority 2: Relative to ROOM price
+            decimal baseRoomPrice = (st.Room != null && st.Room.price > 0) ? st.Room.price : 50000m;
+            
+            // Multiplier based on Seat Type
+            decimal multiplier = 1.0m;
+            if (seat.SeatType != null && seat.SeatType.type_name == SeatEnum.Couple)
+            {
+                multiplier = 1.0m;
+            }
+
+            return baseRoomPrice * multiplier;
         }
 
         public async Task AddShowTime(ShowTime showTime)
@@ -202,6 +227,7 @@ namespace CinemaAPI.Services.Implementations
                 startTime = startTime,
                 endTime = endTime,
                 pricing_model = request.pricing_model.HasValue ? (PricingModel)request.pricing_model.Value : PricingModel.PriceBased,
+                status = request.status.HasValue ? (ShowTimeStatus)request.status.Value : ShowTimeStatus.Scheduled,
             };
 
             await AddShowTime(showTime);
@@ -220,7 +246,15 @@ namespace CinemaAPI.Services.Implementations
                 if (request.startTime.HasValue) st.startTime = request.startTime.Value;
                 if (request.endTime.HasValue) st.endTime = request.endTime.Value;
                 if (request.slot_id.HasValue) st.slot_id = request.slot_id;
-                if (request.pricing_model.HasValue) st.pricing_model = (PricingModel)request.pricing_model.Value;
+                if (request.pricing_model.HasValue)
+                {
+                    st.pricing_model = (PricingModel)request.pricing_model.Value;
+                }
+
+                if (request.status.HasValue)
+                {
+                    st.status = (ShowTimeStatus)request.status.Value;
+                }
 
                 await _dbContext.SaveChangesAsync();
             }
@@ -253,7 +287,6 @@ namespace CinemaAPI.Services.Implementations
             {
                 var st = await _dbContext.ShowTimes
                     .Include(s => s.ShowTimeSeats)
-                    .Include(s => s.ShowTimePrices)
                     .Include(s => s.Bookings)
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(s => s.showtime_id == showtime_id);
@@ -270,12 +303,6 @@ namespace CinemaAPI.Services.Implementations
                 if (st.ShowTimeSeats.Any())
                 {
                     _dbContext.ShowTimeSeats.RemoveRange(st.ShowTimeSeats);
-                }
-
-                // Delete related showtime prices
-                if (st.ShowTimePrices.Any())
-                {
-                    _dbContext.ShowTimePrices.RemoveRange(st.ShowTimePrices);
                 }
 
                 await _dbContext.SaveChangesAsync();

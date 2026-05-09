@@ -6,11 +6,11 @@ namespace CinemaAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class paymentController : ControllerBase
+    public class VnpayPaymentController : ControllerBase
     {
-        private readonly IPaymentService _paymentService;
+        private readonly IVnpayPaymentService _paymentService;
 
-        public paymentController(IPaymentService paymentService)
+        public VnpayPaymentController(IVnpayPaymentService paymentService)
         {
             _paymentService = paymentService;
         }
@@ -33,7 +33,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost("create-url")]
-        public async Task<IActionResult> CreatePaymentUrl([FromBody] PaymentCreateRequest request)
+        public async Task<IActionResult> CreatePaymentUrl([FromBody] VnpayPaymentCreateRequest request)
         {
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
             var result = await _paymentService.CreatePaymentUrlAsync(request, ipAddress);
@@ -58,10 +58,10 @@ namespace CinemaAPI.Controllers
             if (!result.isValidSignature)
                 return Ok(new { RspCode = "97", Message = "Invalid signature" });
 
-            if (!result.isSuccess)
-                return Ok(new { RspCode = "00", Message = "Confirm Failure" });
+            if (!result.isSuccess && result.isValidSignature)
+                return Ok(new { RspCode = "00", Message = "Notification Received and Processed (Transaction Failed)" });
 
-            return Ok(new { RspCode = "00", Message = "Confirm Success" });
+            return Ok(new { RspCode = "00", Message = "Notification Received and Processed" });
         }
     }
 }

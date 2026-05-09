@@ -38,5 +38,17 @@ namespace CinemaAPI.Services.Implementations
                 .OrderBy(s => s.row_index)
                 .ThenBy(s => s.column_index)
                 .ToListAsync();
+
+        public async Task<List<SeatType>> GetAllSeatTypes() =>
+            await _dbContext.SeatTypes.AsNoTracking().ToListAsync();
+
+        public async Task UpdateSeatTypePrice(int type_id, decimal price)
+        {
+            var type = await _dbContext.SeatTypes.FindAsync(type_id);
+            if (type == null) throw new Exception("Seat type not found");
+            
+            type.price = price;
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

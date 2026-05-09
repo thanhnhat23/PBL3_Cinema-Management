@@ -19,15 +19,15 @@ namespace CinemaAPI.Services.Implementations
             await _dbContext.ShowTimePrices
                 .AsNoTracking()
                 .Include(p => p.SeatType)
-                .Include(p => p.ShowTime)
+                .Include(p => p.ShowTimeSlot)
                 .ToListAsync();
 
-        public async Task<ShowTimePrice?> GetPrice(int type_id, int showtime_id) =>
+        public async Task<ShowTimePrice?> GetPrice(int type_id, int slot_id) =>
             await _dbContext.ShowTimePrices
                 .AsNoTracking()
                 .Include(p => p.SeatType)
-                .Include(p => p.ShowTime)
-                .FirstOrDefaultAsync(p => p.type_id == type_id && p.showtime_id == showtime_id);
+                .Include(p => p.ShowTimeSlot)
+                .FirstOrDefaultAsync(p => p.type_id == type_id && p.slot_id == slot_id);
 
         public async Task AddPrice(ShowTimePrice price)
         {
@@ -39,14 +39,14 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"AddPrice error: {ex.Message}");
-                throw new Exception("An error occurred while adding showtime price.");
+                throw new Exception("An error occurred while adding slot price.");
             }
         }
 
-        public async Task UpdatePrice(int type_id, int showtime_id, ShowTimePriceUpdateRequest request)
+        public async Task UpdatePrice(int type_id, int slot_id, ShowTimePriceUpdateRequest request)
         {
-            var price = await _dbContext.ShowTimePrices.FirstOrDefaultAsync(p => p.type_id == type_id && p.showtime_id == showtime_id);
-            if (price == null) throw new Exception("ShowTimePrice not found");
+            var price = await _dbContext.ShowTimePrices.FirstOrDefaultAsync(p => p.type_id == type_id && p.slot_id == slot_id);
+            if (price == null) throw new Exception("Slot Price not found");
 
             try
             {
@@ -56,14 +56,14 @@ namespace CinemaAPI.Services.Implementations
             catch (Exception ex)
             {
                 Console.WriteLine($"UpdatePrice error: {ex.Message}");
-                throw new Exception("An error occurred while updating showtime price.");
+                throw new Exception("An error occurred while updating slot price.");
             }
         }
 
-        public async Task DeletePrice(int type_id, int showtime_id)
+        public async Task DeletePrice(int type_id, int slot_id)
         {
-            var price = await _dbContext.ShowTimePrices.FirstOrDefaultAsync(p => p.type_id == type_id && p.showtime_id == showtime_id);
-            if (price == null) throw new Exception("ShowTimePrice not found");
+            var price = await _dbContext.ShowTimePrices.FirstOrDefaultAsync(p => p.type_id == type_id && p.slot_id == slot_id);
+            if (price == null) throw new Exception("Slot Price not found");
             _dbContext.ShowTimePrices.Remove(price);
             await _dbContext.SaveChangesAsync();
         }

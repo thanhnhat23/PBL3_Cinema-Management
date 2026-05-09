@@ -26,8 +26,41 @@ namespace CinemaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred in seatController.GetSeatsOnRoom: {ex.Message}");
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
+        [HttpGet("types")]
+        public async Task<IActionResult> GetAllSeatTypes()
+        {
+            try
+            {
+                var types = await _seatService.GetAllSeatTypes();
+                return Ok(types);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        [HttpPut("types/{typeId}/price")]
+        public async Task<IActionResult> UpdateSeatTypePrice(int typeId, [FromBody] UpdatePriceRequest req)
+        {
+            try
+            {
+                await _seatService.UpdateSeatTypePrice(typeId, req.price);
+                return Ok("Price updated");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    public class UpdatePriceRequest
+    {
+        public decimal price { get; set; }
     }
 }

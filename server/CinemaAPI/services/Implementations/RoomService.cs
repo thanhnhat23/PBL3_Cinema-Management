@@ -48,7 +48,7 @@ namespace CinemaAPI.Services.Implementations
                     char rowLabel = (char)('A' + row - 1);
                     for (int col = 1; col <= room.column; col++)
                     {
-                        bool isCoupleSeat = (row > room.row - 2);
+                        bool isCoupleSeat = (col > room.column - 2);
 
                         seats.Add(new Seat
                         {
@@ -130,7 +130,7 @@ namespace CinemaAPI.Services.Implementations
                         char rowLabel = (char)('A' + r - 1);
                         for (int c = 1; c <= newCol; c++)
                         {
-                            bool isCoupleSeat = (r > newRow - 2);
+                            bool isCoupleSeat = (c > newCol - 2);
                             newSeats.Add(new Seat
                             {
                                 room_id = room.room_id,
