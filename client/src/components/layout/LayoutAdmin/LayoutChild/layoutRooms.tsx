@@ -18,6 +18,7 @@ import { DoorOpen, EllipsisVertical, Eye, PenLine, Trash, Users } from "lucide-r
 
 import { useRoomStore, type Room } from "@/stores/useRoomStore";
 import { useCinemaStore } from "@/stores/useCinemaStore";
+import { useSeatTypeStore } from "@/stores/useSeatTypeStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,7 +34,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
 
-const getRoomColumns = (t: any): AdminColumn[] => [
+const getRoomColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: "ID", uid: "room_id", sortable: true },
     { name: t('rooms_tab.columns.name'), uid: "nameRoom", sortable: true },
     { name: t('rooms_tab.columns.cinema'), uid: "cinema", sortable: true },
@@ -64,6 +65,7 @@ export default function LayoutRooms() {
     const { t } = useTranslation();
     const { rooms, isFetchingRooms, fetchAllRooms, createRoom, updateRoom, deleteRoom, isCreatingRoom, isUpdatingRoom } = useRoomStore();
     const { cinemas, fetchAllCinemas } = useCinemaStore();
+    const { seatTypes, fetchAll: fetchSeatTypes } = useSeatTypeStore();
     
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
@@ -84,7 +86,8 @@ export default function LayoutRooms() {
     useEffect(() => {
         fetchAllRooms();
         fetchAllCinemas();
-    }, [fetchAllRooms, fetchAllCinemas]);
+        fetchSeatTypes();
+    }, [fetchAllRooms, fetchAllCinemas, fetchSeatTypes]);
 
     const handleOpenAdd = () => {
         setIsAdding(true);
@@ -179,7 +182,7 @@ export default function LayoutRooms() {
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(room)}
                             >
-                                {t('movie_details.edit_movie')}
+                                {t('common.edit')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="delete" 
@@ -327,11 +330,12 @@ export default function LayoutRooms() {
                                                      style={{ gridTemplateColumns: `repeat(${selectedRoom.column}, minmax(0, 1fr))` }}>
                                                     {Array.from({ length: selectedRoom.row * selectedRoom.column }).map((_, i) => {
                                                         const rowIndex = Math.floor(i / selectedRoom.column) + 1;
-                                                        const isCouple = rowIndex > selectedRoom.row - 2;
+                                                        const colIndex = (i % selectedRoom.column) + 1;
+                                                        const isCouple = colIndex > selectedRoom.column - 2;
                                                         return (
                                                             <div 
                                                                 key={i} 
-                                                                title={`Seat ${i+1}`}
+                                                                title={`Seat ${String.fromCharCode(64 + rowIndex)}${colIndex}`}
                                                                 className={`aspect-square rounded-md transition-all duration-200 ${
                                                                     isCouple 
                                                                     ? "bg-rose-100 dark:bg-rose-900/40 border-rose-200 dark:border-rose-800" 
@@ -343,14 +347,20 @@ export default function LayoutRooms() {
                                                 </div>
                                             </div>
                                             <div className="flex gap-4 mt-1">
-                                                <div className="flex items-center gap-1.5">
-                                                    <div className="w-2.5 h-2.5 rounded-sm bg-zinc-100 dark:bg-zinc-800 border-1 border-zinc-200 dark:border-zinc-700" />
-                                                    <span className="text-[10px] text-zinc-500 font-medium">{t('rooms_tab.seat_single')}</span>
-                                                </div>
-                                                <div className="flex items-center gap-1.5">
-                                                    <div className="w-2.5 h-2.5 rounded-sm bg-rose-100 dark:bg-rose-900/40 border-1 border-rose-200 dark:border-rose-800" />
-                                                    <span className="text-[10px] text-zinc-500 font-medium">{t('rooms_tab.seat_couple')}</span>
-                                                </div>
+                                                {seatTypes.map((type) => (
+                                                    <div key={type.type_id} className="flex items-center gap-1.5">
+                                                        <div className={`w-2.5 h-2.5 rounded-sm border-1 ${
+                                                            type.type_id === 2 
+                                                            ? "bg-rose-100 dark:bg-rose-900/40 border-rose-200 dark:border-rose-800" 
+                                                            : "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
+                                                        }`} />
+                                                        <span className="text-[10px] text-zinc-500 font-medium">
+                                                            {typeof type.type_name === 'number' 
+                                                                ? (type.type_id === 2 ? t('rooms_tab.seat_couple') : t('rooms_tab.seat_single'))
+                                                                : type.type_name}
+                                                        </span>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>

@@ -25,7 +25,7 @@ if (!i18n.isInitialized) {
   i18n.init({
     ...i18nConfig,
     detection: {
-      order: ['cookie', 'localStorage', 'htmlTag'],
+      order: ['cookie', 'localStorage'],
       lookupCookie: 'i18next',
       caches: ['cookie', 'localStorage'],
     },
@@ -47,9 +47,8 @@ export function Providers({children, locale}: { children: React.ReactNode, local
   const pathname = usePathname();
   const isHideNavFooter = pathname === '/dashboard';
 
-  // Sync language on server and client
   if (locale && i18n.language !== locale) {
-    i18n.changeLanguage(locale);
+    void i18n.changeLanguage(locale);
   }
 
   const { authUser, isCheckingAuth } = useAuthStore();

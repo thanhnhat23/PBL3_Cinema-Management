@@ -58,19 +58,44 @@ export function SelectSeatTab({
 
   const { rowLabels, columnIndices, seatMap } = layoutData;
 
-  const handleSeatClick = (seatCode: string) => {
-    const targetSeat = seatMap.get(seatCode);
-    if (!targetSeat) return;
+  const handleSeatClick = (seatCode: string, isWide = false) => {
+    if (isWide) {
+        // Seat code is e.g. "A12" representing A11 and A12
+        const row = seatCode.charAt(0);
+        const col = parseInt(seatCode.substring(1));
+        const prevCol = col - 1;
+        const code1 = `${row}${prevCol}`;
+        const code2 = `${row}${col}`;
+        
+        const s1 = seatMap.get(code1);
+        const s2 = seatMap.get(code2);
+        if (!s1 || !s2) return;
+        
+        if (s1.status !== SeatStatus.AVAILABLE || s2.status !== SeatStatus.AVAILABLE) return;
+        
+        const isAlreadySelected = selectedSeatCodes.includes(code1) || selectedSeatCodes.includes(code2);
+        let updatedSelection = [...selectedSeatCodes];
+        
+        if (isAlreadySelected) {
+            updatedSelection = updatedSelection.filter(c => c !== code1 && c !== code2);
+        } else {
+            updatedSelection.push(code1, code2);
+        }
+        onSelectSeats(updatedSelection);
+    } else {
+        const targetSeat = seatMap.get(seatCode);
+        if (!targetSeat) return;
 
-    const isLocked = targetSeat.status === SeatStatus.RESERVED || targetSeat.status === SeatStatus.OCCUPIED;
-    if (isLocked) return;
+        const isLocked = targetSeat.status === SeatStatus.RESERVED || targetSeat.status === SeatStatus.OCCUPIED;
+        if (isLocked) return;
 
-    const isAlreadySelected = selectedSeatCodes.includes(seatCode);
-    const updatedSelection = isAlreadySelected
-      ? selectedSeatCodes.filter(code => code !== seatCode)
-      : [...selectedSeatCodes, seatCode];
+        const isAlreadySelected = selectedSeatCodes.includes(seatCode);
+        const updatedSelection = isAlreadySelected
+          ? selectedSeatCodes.filter(code => code !== seatCode)
+          : [...selectedSeatCodes, seatCode];
 
-    onSelectSeats(updatedSelection);
+        onSelectSeats(updatedSelection);
+    }
   };
 
   const renderSeatIcon = (row: string, col: number, isWide = false) => {
@@ -79,14 +104,24 @@ export function SelectSeatTab({
     
     if (!seatData) return <div key={seatCode} className={isWide ? "w-16 h-8" : "w-8 h-8"} />;
 
-    const isSold = seatData.status === SeatStatus.RESERVED || seatData.status === SeatStatus.OCCUPIED;
-    const isSelected = selectedSeatCodes.includes(seatCode);
+    let isSold = seatData.status === SeatStatus.RESERVED || seatData.status === SeatStatus.OCCUPIED;
+    let isSelected = selectedSeatCodes.includes(seatCode);
+    
+    if (isWide) {
+        const prevCol = col - 1;
+        const prevSeatCode = `${row}${prevCol}`;
+        const prevSeatData = seatMap.get(prevSeatCode);
+        if (prevSeatData) {
+            isSold = isSold || prevSeatData.status === SeatStatus.RESERVED || prevSeatData.status === SeatStatus.OCCUPIED;
+            isSelected = isSelected || selectedSeatCodes.includes(prevSeatCode);
+        }
+    }
 
     return (
       <button
         key={seatCode}
         type="button"
-        onClick={() => handleSeatClick(seatCode)}
+        onClick={() => handleSeatClick(seatCode, isWide)}
         disabled={isSold}
         className={cn(
           "h-8 transition-all duration-300 rounded-sm border text-[10px] font-black uppercase flex items-center justify-center relative group",
@@ -100,7 +135,7 @@ export function SelectSeatTab({
         aria-label={`Seat ${seatCode}`}
       >
         {isSold ? (
-            <div className="absolute inset-0 bg-center bg-cover opacity-30" style={{ backgroundImage: `url(${SOLD_SEAT_ICON})` }} />
+            <div className="absolute inset-0 bg-center bg-cover rounded-sm" style={{ backgroundImage: `url(${SOLD_SEAT_ICON})` }} />
         ) : (
             <span className="relative z-10">{isWide ? `${col-1}-${col}` : col}</span>
         )}
@@ -148,25 +183,39 @@ export function SelectSeatTab({
               </div>
             ) : (
               <div className="space-y-4">
-                {rowLabels.map((row) => (
-                  <div key={row} className="flex items-center justify-center gap-6">
-                    <span className="w-8 text-center text-xs font-black text-zinc-300 dark:text-zinc-600">{row}</span>
-                    
-                    <div className="flex items-center gap-12">
-                      <div className="flex gap-2 flex-row-reverse">
-                        {columnIndices
-                          .filter(col => col > 2) 
-                          .map(col => renderSeatIcon(row, col))}
-                      </div>
-
+                {rowLabels.map((row) => {
+                  const processedCols = new Set<number>();
+                  return (
+                    <div key={row} className="flex items-center justify-center gap-6">
+                      <span className="w-8 text-center text-xs font-black text-zinc-300 dark:text-zinc-600">{row}</span>
+                      
                       <div className="flex items-center gap-2">
-                          {seatMap.has(`${row}1`) && seatMap.has(`${row}2`) && renderSeatIcon(row, 2, true)}
-                      </div>
-                    </div>
+                        {columnIndices.map(col => {
+                          if (processedCols.has(col)) return null;
 
-                    <span className="w-8 text-center text-xs font-black text-zinc-300 dark:text-zinc-600">{row}</span>
-                  </div>
-                ))}
+                          const seat = seatMap.get(`${row}${col}`);
+                          if (!seat) return <div key={`${row}${col}`} className="w-8 h-8" />;
+
+                          // Check if this is a Couple seat and can be paired with next consecutive column
+                          if (seat.type_id === 2) {
+                            const nextCol = col + 1;
+                            const nextSeat = seatMap.get(`${row}${nextCol}`);
+                            if (nextSeat && nextSeat.type_id === 2) {
+                              processedCols.add(col);
+                              processedCols.add(nextCol);
+                              return renderSeatIcon(row, nextCol, true);
+                            }
+                          }
+
+                          processedCols.add(col);
+                          return renderSeatIcon(row, col, false);
+                        })}
+                      </div>
+
+                      <span className="w-8 text-center text-xs font-black text-zinc-300 dark:text-zinc-600">{row}</span>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -176,7 +225,7 @@ export function SelectSeatTab({
         <div className="relative mt-20">
           <p className="pb-4 text-center text-[10px] font-black uppercase tracking-[1em] text-zinc-400 opacity-50">{t('booking.seat_tab.screen')}</p>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-2 bg-amber-500/20 blur-xl" />
-          <div className="h-1 w-[70%] mx-auto bg-gradient-to-r from-transparent via-amber-500 to-transparent rounded-full opacity-50 shadow-[0_0_20px_rgba(245,158,11,0.5)]" />
+          <div className="h-1 w-[70%] mx-auto bg-linear-to-r from-transparent via-amber-500 to-transparent rounded-full opacity-50 shadow-[0_0_20px_rgba(245,158,11,0.5)]" />
         </div>
 
         {/* Legend */}

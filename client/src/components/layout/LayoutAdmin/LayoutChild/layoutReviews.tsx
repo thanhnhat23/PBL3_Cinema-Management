@@ -23,7 +23,7 @@ import { useReviewStore, type Review } from "@/stores/useReviewStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { useTranslation } from "react-i18next";
 
-const getReviewColumns = (t: any): AdminColumn[] => [
+const getReviewColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: "ID", uid: "review_id", sortable: true },
     { name: t('reviews_tab.columns.user'), uid: "username", sortable: true },
     { name: t('reviews_tab.columns.movie'), uid: "movie_id", sortable: true },
@@ -119,7 +119,7 @@ export default function LayoutReviews() {
                                     onOpen();
                                 }}
                             >
-                                {t('reviews_tab.view_details')}
+                                {t('common.view')}
                             </DropdownItem>
 
                             <DropdownItem key="delete" startContent={<Ban size={18} />} className="text-danger" color="danger">

@@ -16,7 +16,6 @@ export default function Error({
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error(error);
   }, [error]);
 
@@ -53,13 +52,13 @@ export default function Error({
               <AlertTriangle size={12} />
               {t('error_500.error_label')}
             </div>
-            <h1 className={`flex ${i18n.language === 'ja' ? 'flex-col' : ''} text-7xl md:text-9xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic leading-none`}>
+            <h1 className={`flex ${i18n.language === 'ja' ? 'flex-col' : ''} text-5xl md:text-8xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic leading-none`}>
               {t('error_500.title_main')}<span className={`text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)] ${i18n.language !== 'ja' ? 'ml-2' : ''}`}>{t('error_500.title_highlight')}</span>
             </h1>
           </div>
 
           <div className="space-y-4 max-w-md">
-            <h2 className="text-2xl md:text-3xl font-bold text-zinc-800 dark:text-zinc-200">
+            <h2 className="text-xl md:text-2xl font-bold text-zinc-800 dark:text-zinc-200">
               {t('error_500.subtitle')}
             </h2>
             <p className="text-sm md:text-base text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium">

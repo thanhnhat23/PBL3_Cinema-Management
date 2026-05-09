@@ -1,5 +1,19 @@
 {
   "locale_code": "en-US",
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
   "common": {
     "success": "Success",
     "error": "Error",
@@ -8,17 +22,40 @@
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
-    "confirm": "Confirm",
-    "search": "Search",
+    "close": "Close",
+    "date": "Date",
     "status": "Status",
-    "loading": "Loading...",
+    "none": "None",
     "currency_vnd": "VND",
     "email": "Email",
     "actions": "Actions",
+    "id": "ID",
     "management_system": "Management System",
+    "add_new": "Add New",
+    "released": "Released",
+    "upcoming": "Upcoming",
+    "saving": "Saving...",
+    "day_names": {
+      "0": "Sunday",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday"
+    },
     "actors": "Actors",
     "reviews": "Reviews",
-    "copyright": "© 2026 MilkyWayyy Cinema - All rights reserved"
+    "status_names": {
+      "0": "Draft",
+      "1": "Scheduled",
+      "2": "Published",
+      "3": "Ended",
+      "4": "Cancelled"
+    },
+    "copyright": "© 2026 MilkyWayyy Cinema - All rights reserved",
+    "change_method": "Change Payment Method",
+    "coming_soon": "Coming Soon"
   },
   "navbar": {
     "movies": "Movies",
@@ -140,10 +177,16 @@
       "select_showtime": "Select Showtime",
       "not_selected_movie": "Movie not selected",
       "not_selected_cinema": "Cinema not selected",
-      "room": "Room"
+      "room": "Room",
+      "cinema": "Cinema",
+      "showtime": "Showtime",
+      "selected_movie": "MOVIE SELECTED",
+      "selected_cinema": "CINEMA SELECTED",
+      "selected_showtime": "SHOWTIME SELECTED"
     },
     "sidebar": {
       "selected_seats": "Selected Seats",
+      "ticket_qr": "Ticket QR Code",
       "total": "Total"
     },
     "buttons": {
@@ -156,6 +199,9 @@
       "step2": "2. Select cinema",
       "step3": "3. Select showtime",
       "no_showtimes": "No available showtimes",
+      "no_locations": "No cinemas found in this area",
+      "no_movies": "No movies currently showing",
+      "no_snacks": "Concessions are currently unavailable at this cinema",
       "days": {
         "sun": "Sunday",
         "mon": "Monday",
@@ -175,6 +221,45 @@
         "double": "Double seat",
         "selecting": "Selecting",
         "sold": "Sold"
+      }
+    },
+    "confirmation": {
+      "title": "Payment Confirmation",
+      "subtitle": "Please select a discount coupon and payment method",
+      "coupon_label": "Discount Coupon",
+      "coupon_placeholder": "Enter promo code...",
+      "apply_button": "Apply",
+      "coupon_applied": "Coupon applied successfully",
+      "payment_method_label": "Payment Method",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total_payable": "Total Payable"
+    },
+    "payment": {
+      "verifying_transaction": "Verifying transaction...",
+      "please_wait": "Please wait a moment",
+      "success_title": "Payment Successful",
+      "failed_title": "Payment Failed",
+      "success_desc": "Thank you for choosing MilkyWayyy Cinema. Enjoy your movie!",
+      "failed_desc": "An error occurred during the payment process. Please try again or contact support.",
+      "momo": {
+        "success_title": "MoMo Payment Successful",
+        "failed_title": "MoMo Payment Failed",
+        "success_desc": "Transaction processed successfully via MoMo wallet!",
+        "failed_desc": "An error occurred during the MoMo payment process."
+      },
+      "callback": {
+        "txn_ref": "Transaction Ref",
+        "order_id": "Order ID",
+        "order_info": "Order Info",
+        "amount": "Amount",
+        "result": "Result",
+        "success": "Success",
+        "failed": "Failed",
+        "view_tickets": "View My Tickets",
+        "retry": "Try Again",
+        "back_home": "Back to Home",
+        "support_note": "If you encounter any issues, please contact the hotline: "
       }
     }
   },
@@ -227,12 +312,17 @@
     },
     "spending_year": "Spending in {{year}}",
     "loyalty_point": "LOYALTY POINTS:",
-    "rank": "Rank:",
+    "rank": "Rank",
     "ranks": {
+      "bronze": "Bronze",
       "silver": "Silver",
       "gold": "Gold",
-      "platinum": "Platinum"
+      "platinum": "Platinum",
+      "diamond": "Diamond"
     },
+    "view_details": "View Details",
+    "no_transactions": "You have no recent transactions. Choose your favorite movie now!",
+    "explore_now": "Explore Movies Now",
     "project_name": "Cinema Management",
     "project_info": "Project Information",
     "hotline": "Support Hotline",
@@ -264,9 +354,9 @@
     "security": "Security",
     "password_protection": "Password Protection",
     "change_password": "Change Password",
-    "no_transactions": "You have no recent transactions. Choose your favorite movie now!",
-    "explore_now": "Explore Movies Now",
-    "currency": "đ"
+    "currency": " VND",
+    "next_rank_needed": "Spend {{amount}}{{currency}} more to reach {{rank}} rank",
+    "total_bookings": "bookings"
   },
   "actors": {
     "hero_title": "Faces of",
@@ -519,7 +609,8 @@
       "users": "Users",
       "sync": "Data Sync",
       "revenue": "Revenue Stats",
-      "stats": "Dashboard Overview"
+      "stats": "Dashboard Overview",
+      "inventory": "Inventory"
     },
     "themes": {
       "blue": "Blue",
@@ -614,7 +705,8 @@
     "book_now": "Book Now",
     "watch_trailer": "Watch Trailer",
     "coming_soon": "COMING SOON",
-    "trailer_preparing": "Trailer is currently being prepared..."
+    "trailer_preparing": "Trailer is currently being prepared...",
+    "trailer_label": "Trailer"
   },
   "movie_status": {
     "released": "Now Playing",
@@ -681,11 +773,18 @@
     "age_limit": "Age Limit",
     "no_overview": "No overview available for this movie.",
     "no_data": "No movie data available.",
-    "edit_desc": "Make changes to the movie"
+    "edit_desc": "Make changes to the movie",
+    "poster_path": "Poster Path",
+    "backdrop_path": "Backdrop Path",
+    "yes": "Yes",
+    "no": "No",
+    "all_ages": "All Ages"
   },
   "foods_tab": {
     "title": "Menu Management",
     "desc": "Configure food, drink categories and promotional combo packages.",
+    "desc_combo": "Value combo package including popcorn and drinks, perfect for couples or groups.",
+    "desc_single": "High-quality single items, bringing great flavor to your movie experience.",
     "search_placeholder": "Search for food, drinks...",
     "add_snack": "Add Item",
     "total_items": "Total {{count}} products",
@@ -699,13 +798,15 @@
     "name_placeholder": "e.g. Cheese Popcorn...",
     "type_label": "Category",
     "type_placeholder": "Select type",
-    "price_label": "Price (USD)",
+    "price_label": "Price (VND)",
     "price_placeholder": "e.g. 5.50",
     "image_label": "Image URL",
     "image_placeholder": "https://...",
     "close_details": "Close Details",
     "processing": "Processing...",
     "save_changes": "Save Changes",
+    "add_combo_component": "Add Component",
+    "total_combo_components": "Total {{count}} components",
     "types": {
       "food": "Food",
       "drink": "Drink",
@@ -736,7 +837,7 @@
     "saving": "Saving...",
     "save_changes": "Save Changes",
     "columns": {
-        "city": "City"
+      "city": "City"
     }
   },
   "cinemas_tab": {
@@ -764,10 +865,10 @@
     "no_data": "No cinema data available.",
     "edit_desc": "Make changes to the cinema",
     "columns": {
-        "name": "Cinema Name",
-        "address": "Address",
-        "city": "City",
-        "phone": "Phone Number"
+      "name": "Cinema Name",
+      "address": "Address",
+      "city": "City",
+      "phone": "Phone Number"
     }
   },
   "rooms_tab": {
@@ -783,7 +884,7 @@
     "add_new_room": "Add New Room",
     "name_label": "Room Name",
     "type_label": "Room Type",
-    "price_label": "Base Price (USD)",
+    "price_label": "Base Price (VND)",
     "rows_label": "Rows",
     "cols_label": "Columns",
     "layout_label": "Layout",
@@ -792,16 +893,16 @@
     "seat_map_label": "System Seat Layout",
     "auto_generated": "Auto-generated",
     "seat_single": "Single Seat",
-    "seat_couple": "Couple Seat (Last 2 rows)",
+    "seat_couple": "Couple Seat",
     "edit_warning": "Changing the number of rows/columns will delete the old seat map and regenerate it. This action cannot be performed if the room has active showtimes.",
     "saving": "Saving...",
     "save_changes": "Save Changes",
     "columns": {
-        "name": "Room Name",
-        "cinema": "Cinema",
-        "type": "Room Type",
-        "price": "Price",
-        "layout": "Row/Col"
+      "name": "Room Name",
+      "cinema": "Cinema",
+      "type": "Room Type",
+      "price": "Price",
+      "layout": "Row/Col"
     }
   },
   "tickets_tab": {
@@ -818,19 +919,22 @@
     "original_price": "Original Price",
     "booking_date": "Booking Date",
     "total_label": "Total",
+    "booking_id": "Booking ID",
+    "customer": "Customer",
+    "user_id": "User ID",
     "status": {
-        "pending": "Pending",
-        "confirmed": "Confirmed",
-        "cancelled": "Cancelled",
-        "unknown": "Unknown"
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "unknown": "Unknown"
     },
     "columns": {
-        "user": "User",
-        "cinema": "Cinema",
-        "total": "Total Amount",
-        "final": "Final Amount",
-        "status": "Status",
-        "created": "Created At"
+      "user": "User",
+      "cinema": "Cinema",
+      "total": "Total Amount",
+      "final": "Final Amount",
+      "status": "Status",
+      "created": "Created At"
     }
   },
   "coupons_tab": {
@@ -846,10 +950,10 @@
     "add_new_coupon": "Create New Coupon",
     "code_label": "Coupon Code",
     "desc_label": "Description",
-    "desc_placeholder": "e.g. 50% off for orders over $50...",
+    "desc_placeholder": "e.g. 50% off for orders over 100k VND...",
     "type_label": "Discount Type",
     "value_label": "Discount Value",
-    "min_order_label": "Min Order Value (USD)",
+    "min_order_label": "Min Order Value (VND)",
     "start_date": "Start Date",
     "end_date": "End Date",
     "category_label": "Coupon Category",
@@ -864,16 +968,16 @@
     "processing": "Processing...",
     "create_btn": "Create Coupon",
     "types": {
-        "percentage": "Percentage (%)",
-        "fixed": "Fixed Amount ($)"
+      "percentage": "Percentage (%)",
+      "fixed": "Fixed Amount (VND)"
     },
     "columns": {
-        "code": "Coupon Code",
-        "type": "Type",
-        "value": "Discount",
-        "min": "Min Value",
-        "status": "Status",
-        "expiry": "Expiry"
+      "code": "Coupon Code",
+      "type": "Type",
+      "value": "Discount",
+      "min": "Min Value",
+      "status": "Status",
+      "expiry": "Expiry"
     }
   },
   "actors_tab": {
@@ -903,15 +1007,15 @@
     "saving": "Saving...",
     "save_changes": "Save Changes",
     "genders": {
-        "male": "Male",
-        "female": "Female",
-        "other": "Other"
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
     },
     "columns": {
-        "name": "Actor",
-        "gender": "Gender",
-        "birthday": "Birthday",
-        "birthplace": "Birthplace"
+      "name": "Actor",
+      "gender": "Gender",
+      "birthday": "Birthday",
+      "birthplace": "Birthplace"
     }
   },
   "reviews_tab": {
@@ -930,35 +1034,118 @@
     "no_comment": "This user left no comment content.",
     "no_data": "No data available.",
     "status": {
-        "approved": "Approved",
-        "pending": "Pending"
+      "approved": "Approved",
+      "pending": "Pending"
     },
     "columns": {
-        "user": "User",
-        "movie": "Movie",
-        "rating": "Rating",
-        "content": "Content",
-        "status": "Status",
-        "created": "Created At"
+      "user": "User",
+      "movie": "Movie",
+      "rating": "Rating",
+      "content": "Content",
+      "status": "Status",
+      "created": "Created At"
     }
   },
   "showtimes_tab": {
     "title": "Showtime Management",
-    "desc": "Schedule movie screenings, manage time slots, and allocate theaters."
+    "desc": "Schedule movie screenings, manage time slots, and allocate theaters.",
+    "tabs": {
+      "showtime": "Showtimes",
+      "seat": "Showtime Seats",
+      "slot": "Time Slots",
+      "price": "Price Models"
+    },
+    "columns": {
+      "id": "ID",
+      "room": "Room",
+      "start_time": "Start Time",
+      "end_time": "End Time",
+      "pricing": "Pricing Model"
+    },
+    "search_placeholder": "Search by movie title...",
+    "total_count": "Total {{count}} showtimes",
+    "empty_label": "No showtimes found",
+    "loading_label": "Loading showtime data...",
+    "details_title": "Showtime Details",
+    "id_label": "Showtime ID",
+    "pricing_model": {
+      "label": "Pricing Model",
+      "price_based": "Price Based",
+      "seat_based": "Seat Based",
+      "mixed": "Mixed"
+    },
+    "placeholders": {
+      "select_movie": "Select Movie",
+      "select_room": "Select Room",
+      "select_showtime": "Select Showtime",
+      "select_slot": "Select time slot",
+      "no_slots_for_day": "No time slots available for this day"
+    },
+    "seat_tab": {
+      "title": "Showtime Seats",
+      "desc": "Monitor and manage the booking status of each seat in the showtime.",
+      "seat_id": "Seat ID",
+      "total_seats": "Total {{count}} seats",
+      "status": {
+        "available": "Available",
+        "booked": "Booked",
+        "holding": "Holding"
+      }
+    },
+    "price_tab": {
+      "title": "Showtime Pricing",
+      "desc": "Configure ticket prices for each seat type and time slot. These prices override the base room price.",
+      "base_price": "Base Price",
+      "config_desc": "Base Price Configuration",
+      "slot_id": "Slot ID",
+      "seat_type": "Seat Type",
+      "search_placeholder": "Search by slot ID...",
+      "details_title": "Slot Price Details",
+      "slot_specific_price": "Slot-specific price",
+      "add_title": "Add New Slot Price",
+      "edit_title": "Edit Slot Price",
+      "select_slot": "Select a slot",
+      "select_seat_type": "Select seat type",
+      "override_price": "Override Price (VNĐ)",
+      "enter_price": "Enter price..."
+    },
+    "slot_tab": {
+      "title": "Slot Templates",
+      "desc": "Manage slot templates to create show schedules quickly.",
+      "start_time": "Start Time",
+      "end_time": "End Time",
+      "day_of_week": "Day of Week"
+    }
   },
   "ticket_tab": {
     "tickets": "Tickets",
-    "coupons": "Coupons"
+    "coupons": "Coupons",
+    "booking_id": "Booking ID"
   },
   "sync_tab": {
     "title": "Data Synchronization",
     "desc": "Manage data flow from TMDB to internal system.",
     "tasks": {
-      "upcoming": { "name": "Upcoming Movies", "desc": "Sync upcoming movies list from TMDB." },
-      "nowplaying": { "name": "Now Playing", "desc": "Update currently screening movie data." },
-      "popular": { "name": "Popular Movies", "desc": "Fetch top-rated movies from TMDB." },
-      "reviews": { "name": "Movie Reviews", "desc": "Update user reviews and scores." },
-      "status": { "name": "System Status", "desc": "Check internal data status." }
+      "upcoming": {
+        "name": "Upcoming Movies",
+        "desc": "Sync upcoming movies list from TMDB."
+      },
+      "nowplaying": {
+        "name": "Now Playing",
+        "desc": "Update currently screening movie data."
+      },
+      "popular": {
+        "name": "Popular Movies",
+        "desc": "Fetch top-rated movies from TMDB."
+      },
+      "reviews": {
+        "name": "Movie Reviews",
+        "desc": "Update user reviews and scores."
+      },
+      "status": {
+        "name": "System Status",
+        "desc": "Check internal data status."
+      }
     },
     "status": {
       "ready": "System: Ready",
@@ -1028,9 +1215,8 @@
     "bg_text": "SERVER ERROR"
   },
   "loading": {
-    "title": "Getting ready...",
-    "subtitle": "Great movies are coming, please wait!",
-    "bg_text": "CINEMA"
+    "title": "Initializing the galaxy...",
+    "bg_text": "MILKYWAY"
   },
   "global_error": {
     "title": "CRITICAL",
@@ -1038,5 +1224,127 @@
     "description": "The system encountered a critical error affecting the entire application. Please refresh the page to restore the state.",
     "button": "Restore System",
     "bg_text": "CRITICAL"
+  },
+  "payment_tab": {
+    "order_info_title": "Order Information",
+    "amount_to_pay": "Amount to pay",
+    "discount": "Discount",
+    "order_code": "Order Code",
+    "qr_instruction": "Scan QR code to open VNPAY payment page",
+    "payment_guide": "Payment Guide",
+    "redirect_button": "Open VNPAY Portal",
+    "footer_instruction": "Scan QR code with Banking app or click the button above to pay by card/QR",
+    "initializing": "Initializing payment",
+    "initializing_desc": "Please wait a moment while we connect to the payment gateway",
+    "test_cards_modal_title": "VNPAY Test Cards List",
+    "test_cards_modal_title_momo": "MoMo Test Cards List",
+    "test_labels": {
+      "vnpay": "ATM NCB (TEST):",
+      "momo": "MOMO ATM (TEST):"
+    },
+    "view_all_test_cards": "View all test cards",
+    "test_cards_note": "Use the card details above to perform test payments in the Sandbox environment.",
+    "test_instructions": {
+      "momo_atm": [
+        "Step 1: Create a payment request via MoMo Payment Gateway.",
+        "Step 2: Select \"Confirm\" => Redirect to Bank/Napas payment page created by MoMo.",
+        "Step 3: Use the test account to perform a trial payment."
+      ],
+      "momo_intl": [
+        "Step 1: Create a payment request via MoMo Payment Gateway.",
+        "Step 2: Select \"Confirm\" => OTP entry page will open (if 3DS is present).",
+        "Step 3: Use the test account to perform a trial payment."
+      ]
+    },
+    "card_types": {
+      "atm": "ATM / Domestic Account",
+      "visa": "VISA International Card",
+      "mastercard": "MasterCard International Card",
+      "napas": "Domestic ATM Card (NAPAS)",
+      "jcb": "JCB International Card"
+    },
+    "status": {
+      "success": "Success",
+      "insufficient_balance": "Insufficient balance",
+      "not_activated": "Card not activated",
+      "blocked": "Card blocked",
+      "expired": "Card expired",
+      "limit_exceeded": "Limit exceeded",
+      "failed": "Failed"
+    },
+    "card_labels": {
+      "card_no": "Card Number",
+      "bank_type": "Bank",
+      "holder": "Card Holder",
+      "date": "Issue"
+    },
+    "finish_button": "Pay Now",
+    "qr_momo_instruction": "SCAN QR CODE TO OPEN MOMO PAYMENT PAGE",
+    "momo_atm_qr_instruction": "OPEN MOMO ATM PAYMENT PAGE",
+    "momo_guide": "PAYMENT GUIDE",
+    "momo_atm_guide": "CARD INFO GUIDE",
+    "momo_redirect_button": "OPEN MOMO PAYMENT PORTAL",
+    "momo_footer_instruction": "Scan QR code with MoMo app or click the button above to pay",
+    "momo_atm_footer_instruction": "Click the button above to open MoMo payment page and enter your domestic ATM card info",
+    "methods": {
+      "vnpay": "VNPAY",
+      "momo_wallet": "MoMo Wallet",
+      "momo_atm": "MoMo Domestic ATM",
+      "sepay": "SEPAY",
+      "paypal": "PAYPAL"
+    }
+  },
+  "payment": {
+    "powered_by": "Powered by MilkyWay Cinema {{method}} Integration",
+    "verifying_transaction": "Verifying transaction...",
+    "please_wait": "Please wait a moment",
+    "success_title": "PAYMENT SUCCESSFUL",
+    "failed_title": "PAYMENT FAILED",
+    "success_desc": "Thank you for choosing our service. Have a great movie time!",
+    "failed_desc": "Unfortunately, an error occurred during the payment process. Please check your account balance or try another method.",
+    "order_info": "Order Information",
+    "order_payment_info": "Order Payment",
+    "download_invoice": "Download Invoice (PDF)",
+    "callback": {
+      "order_info": "Order Information",
+      "txn_ref": "Transaction Ref",
+      "order_id": "Order ID",
+      "amount": "Payment Amount",
+      "time": "Payment Time",
+      "result": "Result",
+      "success": "Success",
+      "failed": "Failed",
+      "view_tickets": "View My Tickets",
+      "retry": "Try Again Now",
+      "back_home": "Back to Home",
+      "payment_not_found": "Payment transaction not found",
+      "support_note": "If you encounter any issues, please contact the hotline: "
+    }
+  },
+  "inventory_tab": {
+    "title": "Inventory Management",
+    "desc": "Manage stock levels for food and drinks at each cinema location.",
+    "search_placeholder": "Search cinema or item...",
+    "add_label": "Add to Inventory",
+    "total_items": "Total {{count}} inventory items",
+    "quantity_label": "Stock Quantity",
+    "update_quantity": "Update Quantity"
+  },
+  "review_card": {
+    "reviewed_by": "Reviewed by",
+    "unknown_date": "Unknown date",
+    "no_content": "No review content.",
+    "rating": "Rating",
+    "tag": "Review"
+  },
+  "actor_card": {
+    "star_profile": "Star Profile",
+    "cinema_star": "Cinema Star"
+  },
+  "confirmation_tab": {
+    "coupon_not_found": "Invalid or non-existent coupon code",
+    "coupon_min_value": "This coupon is only applicable for orders over {{value}} VND",
+    "coupon_expired": "Coupon has expired",
+    "coupon_applied": "Coupon applied successfully"
   }
 }

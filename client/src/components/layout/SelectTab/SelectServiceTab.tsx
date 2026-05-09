@@ -1,7 +1,9 @@
-import { ChevronDown, MapPin, Film, Calendar, Monitor } from "lucide-react";
+import { ChevronDown, MapPin, Film, Calendar } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
+import { Skeleton } from "@heroui/react";
 
 import type { Cinema } from "@/stores/useCinemaStore";
 import type { Location } from "@/stores/useLocationStore";
@@ -23,7 +25,9 @@ type SelectServiceTabProps = {
     nowShowingMovies: Movie[];
     showtimes: ShowTime[];
     selectedCinema?: Cinema;
-    isLoadingShoTimes?: boolean;
+    isLoadingShowtimes?: boolean;
+    isLoadingMovies?: boolean;
+    isLoadingLocations?: boolean;
     onToggleSection: (key: string) => void;
     onSelectValue: (key: string, value: string[]) => void;
     onFetchShowtimes?: (location: string, cinemaId: number, movieId: number, date: string) => void;
@@ -33,11 +37,29 @@ function LocationSelector({
     locations,
     selected,
     onSelect,
+    isLoading,
+    t,
 }: {
     locations: Location[];
     selected: string;
     onSelect: (city: string) => void;
+    t: (key: string) => string;
+    isLoading?: boolean;
 }) {
+    if (isLoading) {
+        return (
+            <div className="flex flex-wrap gap-3">
+                {[1, 2, 3].map(i => (
+                    <Skeleton key={i} className="w-24 h-10 rounded-sm" />
+                ))}
+            </div>
+        );
+    }
+
+    if (locations.length === 0) {
+        return <p className="text-sm text-zinc-500 italic">{t('booking.service_tab.no_locations')}</p>;
+    }
+
     return (
         <div className="flex flex-wrap gap-3">
             {locations.map((location) => {
@@ -66,11 +88,32 @@ function MovieSelector({
     movies,
     selected,
     onSelect,
+    isLoading,
+    t,
 }: {
     movies: Movie[];
     selected: string;
     onSelect: (title: string) => void;
+    isLoading?: boolean;
+    t: (key: string) => string;
 }) {
+    if (isLoading) {
+        return (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className="flex flex-col gap-3">
+                        <Skeleton className="aspect-2/3 rounded-sm" />
+                        <Skeleton className="h-4 w-3/4 rounded-sm" />
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    if (movies.length === 0) {
+        return <p className="text-sm text-zinc-500 italic">{t('booking.service_tab.no_movies')}</p>;
+    }
+
     const hasSelectedMovie = selected.length > 0;
 
     return (
@@ -89,7 +132,7 @@ function MovieSelector({
                         className="group relative flex flex-col gap-3 text-left"
                     >
                         <div className={cn(
-                            "relative aspect-[2/3] rounded-sm overflow-hidden border-2 transition-all duration-500 cursor-pointer",
+                            "relative aspect-2/3 rounded-sm overflow-hidden border-2 transition-all duration-500 cursor-pointer",
                             isSelected
                                 ? "border-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.4)] scale-[1.02]"
                                 : "border-transparent group-hover:border-amber-500/50 shadow-xl"
@@ -124,14 +167,29 @@ function DateSelector({
     dates,
     selectedDate,
     onSelect,
+    t,
+    isLoading,
 }: {
     dates: Array<{ dayLabel: string; dateLabel: string; value: string }>;
     selectedDate: string;
     onSelect: (date: string) => void;
+    t: (key: string) => string;
+    isLoading?: boolean;
 }) {
-    if (dates.length === 0) return null;
+    if (isLoading) {
+        return (
+            <div className="space-y-4">
+                <Skeleton className="h-4 w-24 rounded-sm" />
+                <div className="flex flex-wrap gap-3">
+                    {[1, 2, 3].map(i => (
+                        <Skeleton key={i} className="min-w-25 h-14 rounded-sm" />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
-    const { t } = useTranslation();
+    if (dates.length === 0) return null;
 
     return (
         <div className="space-y-4">
@@ -145,7 +203,7 @@ function DateSelector({
                             type="button"
                             onClick={() => onSelect(date.value)}
                             className={cn(
-                                "flex flex-col items-center justify-center min-w-[100px] p-2 border rounded-sm transition-all duration-300 cursor-pointer",
+                                "flex flex-col items-center justify-center min-w-25 p-2 border rounded-sm transition-all duration-300 cursor-pointer",
                                 isActive
                                     ? "bg-amber-500 border-amber-500 text-white shadow-lg scale-105"
                                     : "bg-white dark:bg-zinc-800 border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400 hover:border-amber-500/50"
@@ -165,14 +223,29 @@ function CinemaSelector({
     cinemas,
     selectedCinemaId,
     onSelect,
+    t,
+    isLoading,
 }: {
     cinemas: Cinema[];
     selectedCinemaId: number | undefined;
     onSelect: (cinema: Cinema) => void;
+    t: (key: string) => string;
+    isLoading?: boolean;
 }) {
-    if (cinemas.length === 0) return null;
+    if (isLoading) {
+        return (
+            <div className="space-y-4">
+                <Skeleton className="h-4 w-24 rounded-sm" />
+                <div className="flex flex-wrap gap-3">
+                    {[1, 2].map(i => (
+                        <Skeleton key={i} className="w-32 h-10 rounded-sm" />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
-    const { t } = useTranslation();
+    if (cinemas.length === 0) return null;
 
     return (
         <div className="space-y-4">
@@ -206,20 +279,21 @@ function ShowtimeSelector({
     selectedShowtimeId,
     isLoading,
     onSelect,
+    t,
 }: {
     showtimes: ShowTime[];
     selectedShowtimeId: string;
     isLoading: boolean;
     onSelect: (showtimeId: string) => void;
+    t: (key: string) => string;
 }) {
-    const { t } = useTranslation();
     return (
         <div className="space-y-4">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">{t('booking.service_tab.step3')}</p>
             {isLoading ? (
                 <div className="flex gap-2">
                     {[1, 2, 3].map(i => (
-                        <div key={i} className="w-24 h-12 rounded-sm bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+                        <Skeleton key={i} className="w-24 h-10 rounded-sm" />
                     ))}
                 </div>
             ) : showtimes.length > 0 ? (
@@ -261,7 +335,9 @@ export function SelectServiceTab({
     nowShowingMovies,
     showtimes,
     selectedCinema,
-    isLoadingShoTimes,
+    isLoadingShowtimes,
+    isLoadingMovies,
+    isLoadingLocations,
     onToggleSection,
     onSelectValue,
     onFetchShowtimes,
@@ -278,15 +354,12 @@ export function SelectServiceTab({
     const selectedMovieTitle = stateSelect["select-movie"]?.[0] ?? "";
     const selectedMovieId = nowShowingMovies.find(m => m.title === selectedMovieTitle)?.movie_id;
     
-    const movieShowtimes = selectedMovieId 
-        ? showtimes.filter(st => st.movie_id === selectedMovieId)
-        : [];
+    const movieShowtimes = useMemo(() => {
+        if (!selectedMovieId) return [];
+        return showtimes.filter(st => st.movie_id === selectedMovieId && (st.status === 1 || st.status === 2));
+    }, [showtimes, selectedMovieId]);
 
-    const getAvailableDatesFromShowtimes = (): Array<{
-        dayLabel: string;
-        dateLabel: string;
-        value: string;
-    }> => {
+    const availableDates = useMemo(() => {
         const dateSet = new Set<string>();
         const days = [
             t('booking.service_tab.days.sun'),
@@ -319,36 +392,31 @@ export function SelectServiceTab({
                     value: isoDate,
                 };
             });
-    };
+    }, [movieShowtimes, t]);
 
-    const getAvailableCinemasForDate = (date: string): Cinema[] => {
+    const cinemasForDate = useMemo(() => {
+        if (!selectedShowtimeDate) return [];
         const cinemaIds = new Set<number>();
 
         movieShowtimes
             .filter((st) => {
                 const stDate = new Date(st.startTime).toISOString().split("T")[0];
-                return stDate === date;
+                return stDate === selectedShowtimeDate;
             })
             .forEach((st) => {
                 if (st.cinema_id) cinemaIds.add(st.cinema_id);
             });
 
         return cinemas.filter((c) => cinemaIds.has(c.cinema_id));
-    };
+    }, [movieShowtimes, selectedShowtimeDate, cinemas]);
 
-    const getShowtimesForDateAndCinema = (date: string, cinemaId: number): ShowTime[] => {
+    const showtimesForDateAndCinema = useMemo(() => {
+        if (!selectedShowtimeDate || !selectedCinema) return [];
         return movieShowtimes.filter((st) => {
             const stDate = new Date(st.startTime).toISOString().split("T")[0];
-            return stDate === date && st.cinema_id === cinemaId;
+            return stDate === selectedShowtimeDate && st.cinema_id === selectedCinema.cinema_id;
         });
-    };
-
-    const availableDates = getAvailableDatesFromShowtimes();
-    const cinemasForDate = selectedShowtimeDate ? getAvailableCinemasForDate(selectedShowtimeDate) : [];
-    const showtimesForDateAndCinema =
-        selectedShowtimeDate && selectedCinema
-            ? getShowtimesForDateAndCinema(selectedShowtimeDate, selectedCinema.cinema_id)
-            : [];
+    }, [movieShowtimes, selectedShowtimeDate, selectedCinema]);
     
     const handleLocationSelect = (city: string) => {
         onSelectValue("select-location", [city]);
@@ -386,16 +454,17 @@ export function SelectServiceTab({
         }
     };
 
+    const icons: Record<string, React.ReactNode> = useMemo(() => ({
+        "select-location": <MapPin size={20} />,
+        "select-movie": <Film size={20} />,
+        "select-showtime": <Calendar size={20} />
+    }), []);
+
     return (
         <div className="space-y-6">
             {select.map((item) => {
                 const unlocked = isUnlocked(item.key);
-                const icons: Record<string, any> = {
-                    "select-location": <MapPin size={20} />,
-                    "select-movie": <Film size={20} />,
-                    "select-showtime": <Calendar size={20} />
-                };
-
+                
                 return (
                     <SelectSectionCard
                         key={item.key}
@@ -410,6 +479,8 @@ export function SelectServiceTab({
                                 locations={locations}
                                 selected={selectedLocation}
                                 onSelect={handleLocationSelect}
+                                isLoading={isLoadingLocations}
+                                t={t}
                             />
                         )}
 
@@ -418,6 +489,8 @@ export function SelectServiceTab({
                                 movies={nowShowingMovies}
                                 selected={selectedMovie}
                                 onSelect={handleMovieSelect}
+                                isLoading={isLoadingMovies}
+                                t={t}
                             />
                         )}
 
@@ -427,6 +500,8 @@ export function SelectServiceTab({
                                     dates={availableDates}
                                     selectedDate={selectedShowtimeDate}
                                     onSelect={handleDateSelect}
+                                    t={t}
+                                    isLoading={isLoadingShowtimes}
                                 />
 
                                 {selectedShowtimeDate && (
@@ -434,6 +509,8 @@ export function SelectServiceTab({
                                         cinemas={cinemasForDate}
                                         selectedCinemaId={selectedCinema?.cinema_id}
                                         onSelect={handleCinemaSelect}
+                                        t={t}
+                                        isLoading={isLoadingShowtimes}
                                     />
                                 )}
 
@@ -441,8 +518,9 @@ export function SelectServiceTab({
                                     <ShowtimeSelector
                                         showtimes={showtimesForDateAndCinema}
                                         selectedShowtimeId={selectedShowtimeId}
-                                        isLoading={isLoadingShoTimes ?? false}
+                                        isLoading={isLoadingShowtimes ?? false}
                                         onSelect={handleShowtimeSelect}
+                                        t={t}
                                     />
                                 )}
                             </div>
@@ -506,7 +584,7 @@ function SelectSectionCard({
             <div
                 className={cn(
                     "transition-all duration-500 ease-in-out",
-                    isExpanded ? "max-h-[1000px] overflow-y-auto opacity-100 border-t border-zinc-100 dark:border-white/5" : "max-h-0 overflow-hidden opacity-0"
+                    isExpanded ? "max-h-250 overflow-y-auto opacity-100 border-t border-zinc-100 dark:border-white/5" : "max-h-0 overflow-hidden opacity-0"
                 )}
             >
                 <div className="p-8">

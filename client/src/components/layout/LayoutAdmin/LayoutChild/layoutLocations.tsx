@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
 
-const getLocationColumns = (t: any): AdminColumn[] => [
+const getLocationColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: "ID", uid: "location_id", sortable: true },
     { name: t('locations_tab.columns.city'), uid: "city", sortable: true },
     { name: t('common.actions'), uid: "actions" },
@@ -114,7 +114,7 @@ export default function LayoutLocations() {
                                 startContent={<PenLine size={16} />}
                                 onPress={() => handleOpenEdit(location)}
                             >
-                                {t('movie_details.edit_movie')}
+                                {t('common.edit')}
                             </DropdownItem>
                             <DropdownItem 
                                 key="delete" 

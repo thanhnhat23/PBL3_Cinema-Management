@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export interface ShowTime {
     showtime_id: number;
@@ -8,11 +9,13 @@ export interface ShowTime {
     cinema_id?: number | null;
     slot_id?: number | null;
     pricing_model: number; // 0=PriceBased, 1=SeatBased, 2=Mixed
+    price: number;
+    status: number; // 0=Draft, 1=Scheduled, 2=Published, 3=Ended, 4=Cancelled
     startTime: string;
     endTime: string;
     deleted_at?: string | null;
     deleted_by?: string | null;
-    Room?: { room_id: number; nameRoom?: string; Cinema?: { name?: string } } | null;
+    Room?: { room_id: number; nameRoom?: string; price: number; Cinema?: { name?: string } } | null;
     Movie?: { movie_id: number; title?: string } | null;
     Slot?: { slot_id: number; dayOfWeek: number; startTime: string; endTime: string } | null;
 }
@@ -28,9 +31,9 @@ export const useShowTimeStore = create<{
 
     fetchAllShowtimes: () => Promise<void>;
     fetchShowtimeById: (id: number) => Promise<void>;
-    createShowtime: (payload: { room_id: number; movie_id: number; startTime: string; endTime: string; slot_id?: number | null; pricing_model?: number }) => Promise<void>;
-    createShowtimeFromSlot: (payload: { room_id: number; movie_id: number; slot_id: number; date: string; pricing_model?: number }) => Promise<ShowTime | void>;
-    updateShowtime: (id: number, payload: Partial<ShowTime & { slot_id?: number | null; pricing_model?: number }>) => Promise<void>;
+    createShowtime: (payload: { room_id: number; movie_id: number; startTime: string; endTime: string; slot_id?: number | null; pricing_model?: number; status?: number }) => Promise<void>;
+    createShowtimeFromSlot: (payload: { room_id: number; movie_id: number; slot_id: number; date: string; pricing_model?: number; status?: number }) => Promise<ShowTime | void>;
+    updateShowtime: (id: number, payload: Partial<ShowTime & { slot_id?: number | null; pricing_model?: number; status?: number }>) => Promise<void>;
     deleteShowtime: (id: number) => Promise<void>;
     clearSelected: () => void;
 }>((set) => ({
@@ -50,8 +53,8 @@ export const useShowTimeStore = create<{
                 set({ showtimes: res.data as ShowTime[] });
                 console.log('Showtimes fetched:', res.data);
             }
-        } catch (err) {
-            console.error('Error fetching showtimes', err);
+        } catch (error) {
+            console.error('Error fetching showtimes', error);
         } finally {
             set({ isFetching: false });
         }
@@ -62,8 +65,8 @@ export const useShowTimeStore = create<{
             set({ isFetching: true });
             const res = await _axios.get(`/v1/showtime/get/${id}`);
             if (res.data) set({ selectedShowtime: res.data as ShowTime });
-        } catch (err) {
-            console.error(`Error fetching showtime ${id}`, err);
+        } catch (error) {
+            console.error(`Error fetching showtime ${id}`, error);
         } finally {
             set({ isFetching: false });
         }
@@ -75,8 +78,8 @@ export const useShowTimeStore = create<{
             await _axios.post('/v1/showtime/create', payload);
             // invalidate list to force refetch later
             set({ showtimes: [] });
-        } catch (err) {
-            console.error('Error creating showtime', err);
+        } catch (error) {
+            console.error('Error creating showtime', error);
         } finally {
             set({ isCreating: false });
         }
@@ -94,8 +97,17 @@ export const useShowTimeStore = create<{
                 }));
                 return newShowtime;
             }
-        } catch (err) {
-            console.error('Error creating showtime from slot', err);
+        } catch (error: any) {
+            const authUser = useAuthStore.getState().authUser;
+            const userId = authUser?.id ?? JSON.parse(localStorage.getItem('authUser') || 'null')?.id ?? '';
+
+            if (!userId) {
+                console.error('Cannot create booking: User is not logged in');
+                return;
+            }
+            const msg = error.response?.data || error.message;
+            console.error('Error creating showtime from slot:', msg);
+            throw new Error(msg);
         } finally {
             set({ isCreating: false });
         }

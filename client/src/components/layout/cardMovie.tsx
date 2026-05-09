@@ -1,7 +1,6 @@
 import { Card, CardFooter, Image, CardHeader } from "@heroui/react";
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useRouter } from "next/navigation";
 import Link from 'next/link';
 import { PlayIcon } from "../icons/play";
 import { StarIcon } from "../icons/star";
@@ -33,7 +32,6 @@ export const CardMovie = ({
     widthCard,
     heightCard,
 }: DataMovieProps) => {
-    const router = useRouter();
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
     const [isTrailerOpen, setIsTrailerOpen] = useState<number | null>(null);
     const { t } = useTranslation();
@@ -117,23 +115,18 @@ export const CardMovie = ({
 
             {/* Immersive Button Overlay on Hover - Outside Link */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out hidden md:flex flex-col items-center justify-center bg-black/40 gap-4 z-40 pointer-events-none">
-                <button
-                    disabled={movie.status !== 0 && movie.status !== 1}
+                <Link
+                    href={movie.status === 0 || (movie.status === 1 && OneDayLeftCurrentNow) ? '/booking/' + movie.movie_id : '#'}
                     className={`min-w-32 px-6 py-3 rounded-sm flex items-center justify-center gap-2 font-bold tracking-tight transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 shadow-lg pointer-events-auto ${movie.status === 0 || (movie.status === 1 && OneDayLeftCurrentNow)
                         ? "bg-linear-to-r from-orange-500 to-amber-500 text-white cursor-pointer hover:scale-105 active:scale-95"
-                        : "bg-zinc-600 text-zinc-300 cursor-not-allowed"
+                        : "bg-zinc-600 text-zinc-300 cursor-not-allowed pointer-events-none"
                         }`}
                     onMouseEnter={() => setHoveredItem("ticket")}
                     onMouseLeave={() => setHoveredItem(null)}
-                    onClick={() => {
-                        if (movie.status === 0 || (movie.status === 1 && OneDayLeftCurrentNow)) {
-                            router.push('/booking/' + movie.movie_id);
-                        }
-                    }}
                 >
                     <StarIcon animate={hoveredItem === "ticket"} size={20} />
                     <span>{t('movie_card.book_now')}</span>
-                </button>
+                </Link>
 
                 <Dialog open={isTrailerOpen === index} onOpenChange={(open) => setIsTrailerOpen(open ? index : null)}>
                     <DialogTrigger asChild>
@@ -155,7 +148,7 @@ export const CardMovie = ({
                         <DialogHeader>
                             <DialogTitle className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
                                 <div className="w-1.5 h-8 bg-amber-500 rounded-full" />
-                                Trailer: {movie.title}
+                                {t('movie_card.trailer_label')}: {movie.title}
                             </DialogTitle>
                         </DialogHeader>
                         {isTrailerOpen === index && (

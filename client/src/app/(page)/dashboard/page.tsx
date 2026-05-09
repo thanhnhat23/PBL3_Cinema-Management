@@ -89,7 +89,7 @@ export default function Dashboard() {
     const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["default"]) as Selection);
 
     const selectedValue = useMemo(
-        () => Array.from(selectedKeys).join(", ").replace(/_/g, ""),
+        () => Array.from(selectedKeys).join(", "),
         [selectedKeys],
     );
 
@@ -98,7 +98,7 @@ export default function Dashboard() {
         try {
             const storedTheme = localStorage.getItem(CHART_THEME_STORAGE_KEY);
             if (storedTheme && CHART_THEMES.has(storedTheme)) {
-                setSelectedKeys(new Set([storedTheme]) as Selection);
+                setTimeout(() => setSelectedKeys(new Set([storedTheme]) as Selection), 0);
             }
         } catch (e) {
             console.error("Error loading chart theme from localStorage:", e);
@@ -118,7 +118,12 @@ export default function Dashboard() {
         return () => observer.disconnect();
     }, []);
 
+    const isFirstMount = useRef(true);
     useEffect(() => {
+        if (isFirstMount.current) {
+            isFirstMount.current = false;
+            return;
+        }
         const themeToStore = selectedValue || "default";
         window.localStorage.setItem(CHART_THEME_STORAGE_KEY, themeToStore);
     }, [selectedValue]);
@@ -337,10 +342,10 @@ export default function Dashboard() {
                                 <SidebarTrigger className="hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors" />
                             </div>
 
-                            <div className="flex flex-col gap-0.5">
-                                <Breadcrumbs size='sm' isDisabled className="flex opacity-60">
-                                    <BreadcrumbItem className="hidden xs:block">{t('navbar.dashboard')}</BreadcrumbItem>
-                                    <BreadcrumbItem className="max-w-[120px] truncate">{t(`dashboard.management.${openLayout}`)}</BreadcrumbItem>
+                            <div className="hidden sm:flex gap-0.5">
+                                <Breadcrumbs size='lg' isDisabled className="flex opacity-60">
+                                    <BreadcrumbItem>{t('navbar.dashboard')}</BreadcrumbItem>
+                                    <BreadcrumbItem>{t(`dashboard.management.${openLayout}`)}</BreadcrumbItem>
                                 </Breadcrumbs>
                             </div>
                         </div>

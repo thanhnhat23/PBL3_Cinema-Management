@@ -7,6 +7,8 @@ export interface Seat {
     row: number;
     column: number;
     status: 'available' | 'reserved' | 'occupied';
+    price: number;
+    type_id: number;
 }
 
 const mapSeatStatus = (status: string): 'available' | 'reserved' | 'occupied' => {
@@ -48,9 +50,11 @@ export const useSeatStore = create<{
             const mappedSeats: Seat[] = seatsSource.map((seat: any) => ({
                 seat_id: seat.seat_id,
                 room_id: seat.room_id,
-                row: seat.row,
-                column: seat.column,
+                row: (seat.row_index ?? seat.row ?? 1) - 1,
+                column: seat.column_index ?? seat.column ?? 1,
                 status: mapSeatStatus(seat.status),
+                type_id: seat.type_id ?? 1,
+                price: 0
             }));
 
             set({ seats: mappedSeats });
@@ -85,6 +89,8 @@ export const useSeatStore = create<{
                     row: (rowIndex ?? 1) - 1,
                     column: colIndex ?? 1,
                     status: statusStr as 'available' | 'reserved' | 'occupied',
+                    price: stsItem.price ?? stsItem.Price ?? 0,
+                    type_id: seatObj?.type_id ?? stsItem.type_id ?? 1,
                 };
             });
 

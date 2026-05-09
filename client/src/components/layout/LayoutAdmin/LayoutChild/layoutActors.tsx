@@ -7,7 +7,6 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-    User,
     Drawer,
     DrawerContent,
     DrawerHeader,
@@ -33,7 +32,7 @@ import { useActorStore, type Actor } from "@/stores/useActorStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { useTranslation } from "react-i18next";
 
-const getActorColumns = (t: any): AdminColumn[] => [
+const getActorColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: "ID", uid: "actor_id", sortable: true },
     { name: t('actors_tab.columns.name'), uid: "name", sortable: true },
     { name: t('actors_tab.columns.gender'), uid: "gender", sortable: true },
@@ -177,7 +176,7 @@ export default function LayoutActors() {
             case "name":
                 return (
                     <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 relative rounded-md overflow-hidden border border-zinc-100 dark:border-white/5 shadow-sm">
+                        <div className="shrink-0 w-10 h-10 relative rounded-md overflow-hidden border border-zinc-100 dark:border-white/5 shadow-sm">
                             <Image
                                 src={getAvatarSrc(actor.profile_path)}
                                 alt={actor.name}
@@ -186,7 +185,7 @@ export default function LayoutActors() {
                                 className="object-cover"
                             />
                         </div>
-                        <span className="text-sm font-bold truncate max-w-[120px] sm:max-w-[200px] md:max-w-none" title={actor.name}>
+                        <span className="text-sm font-bold truncate max-w-30 sm:max-w-50 md:max-w-none" title={actor.name}>
                             {actor.name}
                         </span>
                     </div>
@@ -237,7 +236,7 @@ export default function LayoutActors() {
                                 showDivider
                                 onPress={() => handleOpenEdit(actor)}
                             >
-                                {t('movie_details.edit_movie')}
+                                {t('common.edit')}
                             </DropdownItem>
                             <DropdownItem
                                 key="delete"
@@ -498,7 +497,7 @@ export default function LayoutActors() {
                                             value={editForm.biography}
                                             placeholder={t('actors_tab.bio_placeholder')}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, biography: event.target.value }))}
-                                            className="col-span-3 text-sm min-h-[120px]"
+                                            className="col-span-3 text-sm min-h-30"
                                         />
                                     </div>
                                 </div>

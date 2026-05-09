@@ -20,8 +20,8 @@ import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
 
-const getTicketColumns = (t: any): AdminColumn[] => [
-    { name: "ID", uid: "booking_id", sortable: true },
+const getTicketColumns = (t: (key: string) => string): AdminColumn[] => [
+    { name: t('common.id'), uid: "booking_id", sortable: true },
     { name: t('tickets_tab.columns.user'), uid: "userName", sortable: true },
     { name: t('tickets_tab.columns.cinema'), uid: "cinemaName", sortable: true },
     { name: t('tickets_tab.columns.total'), uid: "totalAmount", sortable: true },
@@ -114,7 +114,7 @@ export default function LayoutTickets() {
                                     onOpen();
                                 }}
                             >
-                                {t('tickets_tab.view_details')}
+                                {t('common.view')}
                             </DropdownItem>
                             <DropdownItem key="delete" startContent={<Trash size={18} />} className="text-danger" color="danger">
                                 {t('tickets_tab.cancel_ticket')}
@@ -164,7 +164,7 @@ export default function LayoutTickets() {
 
             <Drawer isOpen={isOpen} onOpenChange={onOpenChange} size="md" classNames={{ base: "bg-sidebar" }}>
                 <DrawerContent>
-                    {(onClose) => (
+                    {() => (
                         <>
                             <DrawerHeader className="border-b border-zinc-100 dark:border-zinc-800">
                                 {t('tickets_tab.details_title')}
@@ -178,8 +178,8 @@ export default function LayoutTickets() {
                                                 <Ticket size={32} />
                                             </div>
                                             <div className="text-center">
-                                                <h2 className="text-2xl font-bold tracking-tight">{selectedBooking.userName || "Customer"}</h2>
-                                                <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-1">Booking ID: #{selectedBooking.booking_id}</p>
+                                                <h2 className="text-2xl font-bold tracking-tight">{selectedBooking.userName || t('tickets_tab.customer')}</h2>
+                                                <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-1">{t('tickets_tab.booking_id')}: #{selectedBooking.booking_id}</p>
                                             </div>
                                             <div className="mt-2">
                                                 <Chip className="font-bold px-3 py-1" color={statusColorMap[getStatusKey(String(selectedBooking.status))] || "default"} variant="flat">
@@ -229,10 +229,10 @@ export default function LayoutTickets() {
                                             </div>
 
                                             <div className="flex flex-col gap-3">
-                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Metadata</span>
+                                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('movie_details.metadata')}</span>
                                                 <div className="flex flex-wrap gap-2">
-                                                    <Badge variant="outline" className="text-[10px] border-zinc-200 dark:border-zinc-800">User ID: {selectedBooking.user_id}</Badge>
-                                                    <Badge variant="outline" className="text-[10px] border-zinc-200 dark:border-zinc-800">Booking: {selectedBooking.booking_id}</Badge>
+                                                    <Badge variant="outline" className="text-[10px] border-zinc-200 dark:border-zinc-800">{t('tickets_tab.user_id')}: {selectedBooking.user_id}</Badge>
+                                                    <Badge variant="outline" className="text-[10px] border-zinc-200 dark:border-zinc-800">{t('tickets_tab.booking_id')}: {selectedBooking.booking_id}</Badge>
                                                 </div>
                                             </div>
                                         </div>

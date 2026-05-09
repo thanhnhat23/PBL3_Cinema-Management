@@ -8,7 +8,6 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
-    User,
     Drawer,
     DrawerContent,
     DrawerHeader,
@@ -44,8 +43,8 @@ import {
 } from "@/components/ui/popover"
 import { format } from "date-fns";
 
-const getMovieColumns = (t: any): AdminColumn[] => [
-    { name: "ID", uid: "movie_id", sortable: true },
+const getMovieColumns = (t: (key: string) => string): AdminColumn[] => [
+    { name: t('common.id'), uid: "movie_id", sortable: true },
     { name: t('movie_details.title'), uid: "title", sortable: true },
     { name: t('movie_details.runtime'), uid: "runtime", sortable: true },
     { name: t('movie_details.vote_average'), uid: "vote_average", sortable: true },
@@ -187,7 +186,7 @@ export default function LayoutMovie() {
             case "title":
                 return (
                     <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 relative rounded-md overflow-hidden border border-zinc-100 dark:border-white/5 shadow-sm">
+                        <div className="shrink-0 w-10 h-10 relative rounded-md overflow-hidden border border-zinc-100 dark:border-white/5 shadow-sm">
                             <Image
                                 src={getPosterSrc(movie.poster_path)}
                                 alt={movie.title}
@@ -196,7 +195,7 @@ export default function LayoutMovie() {
                                 className="object-cover"
                             />
                         </div>
-                        <span className="text-sm font-bold truncate max-w-[120px] sm:max-w-[200px] md:max-w-none" title={movie.title}>
+                        <span className="text-sm font-bold truncate max-w-30 sm:max-w-50 md:max-w-none" title={movie.title}>
                             {movie.title}
                         </span>
                     </div>
@@ -246,7 +245,7 @@ export default function LayoutMovie() {
                                     handleOpenEdit(movie);
                                 }}
                             >
-                                {t('movie_details.edit_movie')}
+                                {t('common.edit')}
                             </DropdownItem>
 
                             <DropdownItem
@@ -389,10 +388,10 @@ export default function LayoutMovie() {
                                                 <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('movie_details.metadata')}</span>
                                                 <div className="flex flex-wrap gap-2">
                                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-sidebar border border-zinc-200 dark:border-zinc-800 text-[11px] font-medium">
-                                                        <span className="text-zinc-400">ID:</span> {selectedMovie.movie_id}
+                                                        <span className="text-zinc-400">{t('common.id')}:</span> {selectedMovie.movie_id}
                                                     </div>
                                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-sidebar border border-zinc-200 dark:border-zinc-800 text-[11px] font-medium">
-                                                        <span className="text-zinc-400">{t('movie_details.age_limit')}:</span> {selectedMovie.adult ? "18+" : "All"}
+                                                        <span className="text-zinc-400">{t('movie_details.age_limit')}:</span> {selectedMovie.adult ? "18+" : t('movie_details.all_ages')}
                                                     </div>
                                                 </div>
                                             </div>
@@ -554,30 +553,30 @@ export default function LayoutMovie() {
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="poster" className="text-right">
-                                            Poster Path
-                                        </Label>
-                                        <Input
-                                            id="poster"
-                                            value={editForm.poster_path}
-                                            placeholder="/path/to/poster.jpg"
-                                            onChange={(event) => setEditForm((prev) => ({ ...prev, poster_path: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
-                                        />
-                                    </div>
+                                         <Label htmlFor="poster" className="text-right">
+                                             {t('movie_details.poster_path')}
+                                         </Label>
+                                         <Input
+                                             id="poster"
+                                             value={editForm.poster_path}
+                                             placeholder="/path/to/poster.jpg"
+                                             onChange={(event) => setEditForm((prev) => ({ ...prev, poster_path: event.target.value }))}
+                                             className="col-span-3 bg-sidebar"
+                                         />
+                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="backdrop" className="text-right">
-                                            Backdrop Path
-                                        </Label>
-                                        <Input
-                                            id="backdrop"
-                                            value={editForm.backdrop_path}
-                                            placeholder="/path/to/backdrop.jpg"
-                                            onChange={(event) => setEditForm((prev) => ({ ...prev, backdrop_path: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
-                                        />
-                                    </div>
+                                         <Label htmlFor="backdrop" className="text-right">
+                                             {t('movie_details.backdrop_path')}
+                                         </Label>
+                                         <Input
+                                             id="backdrop"
+                                             value={editForm.backdrop_path}
+                                             placeholder="/path/to/backdrop.jpg"
+                                             onChange={(event) => setEditForm((prev) => ({ ...prev, backdrop_path: event.target.value }))}
+                                             className="col-span-3 bg-sidebar"
+                                         />
+                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="adult" className="text-right">
@@ -594,9 +593,9 @@ export default function LayoutMovie() {
 
                                             <SelectContent container={popoverContainerRef.current}>
                                                 <SelectGroup>
-                                                    <SelectLabel>18+</SelectLabel>
-                                                    <SelectItem value="false">False</SelectItem>
-                                                    <SelectItem value="true">True</SelectItem>
+                                                    <SelectLabel>{t('movie_details.age_limit')}</SelectLabel>
+                                                    <SelectItem value="false">{t('movie_details.no')}</SelectItem>
+                                                    <SelectItem value="true">{t('movie_details.yes')}</SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>

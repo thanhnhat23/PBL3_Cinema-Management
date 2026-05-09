@@ -87,7 +87,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const locale = cookieStore.get('i18next')?.value || 'vi';
+  const locale = cookieStore.get('i18next')?.value || 'en';
   
   // Initialize i18n for the server
   if (!i18n.isInitialized) {
@@ -107,8 +107,7 @@ export default async function RootLayout({
             __html: `
               try {
                 const theme = localStorage.getItem('theme');
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (theme === 'dark' || (!theme && prefersDark)) {
+                if (theme === 'dark' || !theme) {
                   document.documentElement.classList.add('dark');
                 }
               } catch (e) {}
@@ -119,14 +118,14 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NextTopLoader 
           color="#f59e0b"
-          initialPosition={0.08}
+          initialPosition={0.05}
           crawlSpeed={200}
-          height={3}
+          height={4}
           crawl={true}
           showSpinner={false}
           easing="ease"
           speed={200}
-          shadow="0 0 10px #f59e0b,0 0 5px #f59e0b"
+          shadow="0 0 15px #f59e0b,0 0 10px #f59e0b"
         />
         <TooltipProvider>
           <Providers locale={locale}>{children}</Providers>

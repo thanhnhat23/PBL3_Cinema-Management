@@ -1,4 +1,4 @@
-import i18n from 'i18next';
+import i18n, { type InitOptions } from 'i18next';
 
 import viCommon from '../locales/vi/common.json';
 import jaCommon from '../locales/ja/common.json';
@@ -10,9 +10,10 @@ export const resources = {
   en: { common: enCommon }
 };
 
-export const i18nConfig = {
+export const i18nConfig: InitOptions = {
   resources,
-  fallbackLng: 'vi',
+  fallbackLng: 'en',
+  supportedLngs: ['en', 'vi', 'ja'],
   ns: ['common'],
   defaultNS: 'common',
   interpolation: {

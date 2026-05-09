@@ -1,14 +1,15 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
 
-export type PaymentMethod = 'VNPAYQR' | 'VNBANK';
-export type PaymentStatus = 'Pending' | 'Success' | 'Failed' | 'Refunded';
+import { PaymentStatus } from '@/types/payment';
 
-export interface Payment {
+export type VnpayPaymentMethod = 'VNPAYQR' | 'VNBANK';
+
+export interface VnpayPayment {
   payment_id: number;
   booking_id: number;
   amount: number;
-  method: PaymentMethod;
+  method: VnpayPaymentMethod;
   status: PaymentStatus;
   vnp_BankCode?: string | null;
   vnp_TransactionNo?: string | null;
@@ -20,19 +21,17 @@ export interface Payment {
   vnp_CreateDate: string;
   vnp_ExpireDate: string;
   paid_at?: string | null;
-  refund_code?: string | null;
-  refund_at?: string | null;
 }
 
-export interface CreatePaymentPayload {
+export interface CreateVnpayPaymentPayload {
   booking_id: number;
-  method: PaymentMethod;
+  method: VnpayPaymentMethod;
   amount?: number;
   orderInfo?: string;
   returnUrl?: string;
 }
 
-export interface CreatePaymentResult {
+export interface CreateVnpayPaymentResult {
   payment_id: number;
   txnRef: string;
   paymentUrl: string;
@@ -40,7 +39,7 @@ export interface CreatePaymentResult {
   expireAt: string;
 }
 
-export interface PaymentCallbackResult {
+export interface VnpayPaymentCallbackResult {
   isValidSignature: boolean;
   isSuccess: boolean;
   txnRef: string;
@@ -49,19 +48,19 @@ export interface PaymentCallbackResult {
   status?: PaymentStatus;
 }
 
-export const usePaymentStore = create<{
-  payments: Payment[];
-  selectedPayment: Payment | null;
-  latestCreateResult: CreatePaymentResult | null;
-  callbackResult: PaymentCallbackResult | null;
+export const useVnpayStore = create<{
+  payments: VnpayPayment[];
+  selectedPayment: VnpayPayment | null;
+  latestCreateResult: CreateVnpayPaymentResult | null;
+  callbackResult: VnpayPaymentCallbackResult | null;
   isFetchingPayments: boolean;
   isFetchingPayment: boolean;
   isCreatingPayment: boolean;
   isVerifyingCallback: boolean;
   fetchAllPayments: () => Promise<void>;
   fetchPaymentById: (paymentId: number) => Promise<void>;
-  createPaymentUrl: (payload: CreatePaymentPayload) => Promise<CreatePaymentResult | null>;
-  verifyVnpayReturn: (query: Record<string, string>) => Promise<PaymentCallbackResult | null>;
+  createPaymentUrl: (payload: CreateVnpayPaymentPayload) => Promise<CreateVnpayPaymentResult | null>;
+  verifyVnpayReturn: (query: Record<string, string>) => Promise<VnpayPaymentCallbackResult | null>;
   clearPaymentState: () => void;
 }>((set) => ({
   payments: [],
@@ -76,10 +75,10 @@ export const usePaymentStore = create<{
   fetchAllPayments: async () => {
     try {
       set({ isFetchingPayments: true });
-      const response = await _axios.get<Payment[]>('/v1/payment/get-all');
+      const response = await _axios.get<VnpayPayment[]>('/v1/VnpayPayment/get-all');
       set({ payments: response.data ?? [] });
     } catch (error) {
-      console.error('Error fetching payments:', error);
+      console.error('Error fetching VNPAY payments:', error);
     } finally {
       set({ isFetchingPayments: false });
     }
@@ -88,20 +87,20 @@ export const usePaymentStore = create<{
   fetchPaymentById: async (paymentId: number) => {
     try {
       set({ isFetchingPayment: true });
-      const response = await _axios.get<Payment>(`/v1/payment/get/${paymentId}`);
+      const response = await _axios.get<VnpayPayment>(`/v1/VnpayPayment/get/${paymentId}`);
       set({ selectedPayment: response.data ?? null });
     } catch (error) {
-      console.error(`Error fetching payment ${paymentId}:`, error);
+      console.error(`Error fetching VNPAY payment ${paymentId}:`, error);
       set({ selectedPayment: null });
     } finally {
       set({ isFetchingPayment: false });
     }
   },
 
-  createPaymentUrl: async (payload: CreatePaymentPayload) => {
+  createPaymentUrl: async (payload: CreateVnpayPaymentPayload) => {
     try {
       set({ isCreatingPayment: true });
-      const response = await _axios.post<CreatePaymentResult>('/v1/payment/create-url', {
+      const response = await _axios.post<CreateVnpayPaymentResult>('/v1/VnpayPayment/create-url', {
         booking_id: payload.booking_id,
         method: payload.method,
         amount: payload.amount,
@@ -113,7 +112,7 @@ export const usePaymentStore = create<{
       set({ latestCreateResult: result });
       return result;
     } catch (error) {
-      console.error('Error creating payment URL:', error);
+      console.error('Error creating VNPAY payment URL:', error);
       return null;
     } finally {
       set({ isCreatingPayment: false });
@@ -124,7 +123,7 @@ export const usePaymentStore = create<{
     try {
       set({ isVerifyingCallback: true });
       const params = new URLSearchParams(query).toString();
-      const response = await _axios.get<PaymentCallbackResult>(`/v1/payment/vnpay-return?${params}`);
+      const response = await _axios.get<VnpayPaymentCallbackResult>(`/v1/VnpayPayment/vnpay-return?${params}`);
       const result = response.data;
 
       set({ callbackResult: result });
