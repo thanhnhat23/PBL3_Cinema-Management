@@ -36,9 +36,17 @@ builder.Services.AddCors(options =>
 
 // Configure Database Connection
 var connectionString = builder.Configuration.GetConnectionString("CinemaDatabase");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string 'CinemaDatabase' not found. Please set 'ConnectionStrings__CinemaDatabase' environment variable.");
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, Microsoft.EntityFrameworkCore.ServerVersion.AutoDetect(connectionString))
-);
+{
+    var serverVersion = new MySqlServerVersion(new Version(8, 0, 33));
+    options.UseMySql(connectionString, serverVersion);
+});
 
 // Configure MongoDB
 builder.Services.AddSingleton<MongoDbContext>();
