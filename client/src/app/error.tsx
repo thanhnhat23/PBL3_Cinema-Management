@@ -20,7 +20,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 relative overflow-hidden p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden p-4">
       {/* Background Decorative Elements */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full opacity-20 pointer-events-none">
         <div className="absolute top-0 left-0 w-72 h-72 bg-red-500 rounded-full blur-[120px] animate-pulse" />

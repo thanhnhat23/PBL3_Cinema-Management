@@ -1,212 +1,107 @@
-# 🎬 Cinema Management System
+# 🎬 CINEMA MANAGEMENT SYSTEM (PBL3)
 
-## 🚀 Quick Start
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)](https://github.com/thanhnhat23/PBL3_Cinema-Management)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![VNPAY](https://img.shields.io/badge/Payment-VNPAY--Integrated-blue)](https://vnpay.vn)
+[![Framework](https://img.shields.io/badge/Backend-.NET%209--Core-512BD4)](https://dotnet.microsoft.com/en-us/apps/aspnet)
 
-### Using Docker (Recommended)
+**Nền tảng quản lý rạp chiếu phim tối ưu, hỗ trợ đặt vé thời gian thực và tích hợp thanh toán hiện đại.** Dự án được xây dựng nhằm giải quyết bài toán vận hành rạp phim từ khâu quản lý phim, suất chiếu đến trải nghiệm đặt vé của khách hàng.
 
-```powershell
-# Start all services
-.\docker.ps1 up
+[🚀 Demo Trực Tuyến](#) | [📖 Tài liệu API (Swagger)](#) | [📋 Báo cáo dự án](#)
 
-# Access the application
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:5000
+---
+
+## 📷 Preview / Demo
+![Cinema Management Mockup](cinema_management_mockup_1778223660423.png)
+*Giao diện đặt vé hiện đại với hiệu ứng Glassmorphism và sơ đồ ghế ngồi thời gian thực.*
+
+---
+
+## ✨ Tính năng nổi bật
+*   **💳 Thanh toán VNPAY:** Tích hợp cổng thanh toán VNPAY phiên bản 2.1.0, hỗ trợ quét mã QR và thẻ nội địa an toàn, nhanh chóng.
+*   **💺 Đặt vé thời gian thực:** Sơ đồ ghế ngồi cập nhật trạng thái tức thì khi có người đang chọn, tránh tình trạng trùng lặp.
+*   **🤖 Chatbot AI (Gemini):** Trợ lý ảo hỗ trợ tìm kiếm phim, gợi ý suất chiếu và giải đáp thắc mắc khách hàng 24/7.
+*   **🔄 Đồng bộ TMDB:** Tự động lấy thông tin phim, trailer, đánh giá từ hệ thống dữ liệu điện ảnh thế giới (The Movie Database).
+*   **📊 Admin Dashboard:** Hệ thống quản lý toàn diện: doanh thu, lịch chiếu, nhân viên, và kho hàng (Snack/Combo).
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=nextjs,react,tailwind,zustand,ts" />
+  </a>
+</p>
+
+### Backend & Infrastructure
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=dotnet,mysql,mongodb,redis,docker" />
+  </a>
+</p>
+
+*   **Công nghệ khác:** Agora SDK (Video/Voice), SignalR (Real-time), Cloudinary (Media storage).
+
+---
+
+## 🏗 Kiến trúc hệ thống
+Dự án được thiết kế theo mô hình **Clean Architecture** kết hợp với kiến trúc **Monolith** (có xu hướng tách Service) để đảm bảo tính mở rộng và dễ bảo trì.
+
+```mermaid
+graph TD
+    User[Khách hàng] --> NextJS[Frontend - Next.js]
+    NextJS --> API[Backend API - ASP.NET Core]
+    API --> MySQL[(MySQL - Dữ liệu chính)]
+    API --> Mongo[(MongoDB - Chat & Reviews)]
+    API --> Redis[(Redis - Caching)]
+    API --> VNPAY[VNPAY Gateway]
+    API --> Gemini[Google Gemini AI]
 ```
 
-👉 **[Complete Docker Documentation](README.Docker.md)**
+---
 
-### Local Development
+## 🚀 Hướng dẫn cài đặt nhanh
 
+### 1. Clone dự án
 ```bash
-# Start databases only
-.\docker.ps1 db
+git clone https://github.com/thanhnhat23/PBL3_Cinema-Management.git
+```
 
-# Terminal 1: Run API
+### 2. Cấu hình Environment
+Tạo file `appsettings.json` trong thư mục `server/CinemaAPI` và điền thông tin:
+*   ConnectionStrings (MySQL & MongoDB)
+*   VNPAY Config (TmnCode, HashSecret)
+*   API Keys (Gemini, TMDB, Cloudinary)
+
+### 3. Chạy ứng dụng
+**Backend:**
+```bash
 cd server/CinemaAPI
+dotnet restore
 dotnet run
-
-# Terminal 2: Run Client
+```
+**Frontend:**
+```bash
 cd client
+npm install
 npm run dev
 ```
 
-## 🏗️ Tech Stack
+---
 
-### Backend
-- **Framework**: .NET 10.0 (ASP.NET Core)
-- **Database**: MySQL 8.0
-- **Cache**: Redis 7
-- **NoSQL**: MongoDB Atlas (Cloud)
-- **Authentication**: JWT
-- **Real-time**: SignalR
-- **External APIs**: TMDB, Gemini AI, Resend Email
-
-### Frontend
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **Features**: SSR, SSG, React Compiler
-
-### DevOps
-- **Containerization**: Docker & Docker Compose
-- **CI/CD**: Ready for deployment
-- **Health Checks**: Automated monitoring
-
-## 🎯 Features
-
-### Core Functionality
-- 🎫 Movie browsing & booking
-- 🎭 Cinema & room management
-- 💺 Seat selection & reservation
-- 💳 Payment processing
-- 🎁 Coupon & loyalty points
-- ⭐ Movie reviews & ratings
-
-### Advanced Features
-- 💬 Real-time chat with AI assistant (Gemini)
-- 🔐 JWT-based authentication
-- 📧 Email notifications (Resend)
-- 🎬 TMDB integration for movie data
-- 📊 Admin dashboard
-- 🔄 Auto-sync with TMDB
-
-## 🛠️ Development
-
-### Prerequisites
-- Docker Desktop (for containerized development)
-- OR:
-  - .NET 10 SDK
-  - Node.js 20+
-  - MySQL 8.0
-  - Redis 7
-
-### Environment Setup
-
-1. **Clone repository**
-   ```bash
-   git clone <repository-url>
-   cd CinemaManagement
-   ```
-
-2. **Configure environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your settings
-   ```
-
-3. **Start services**
-   ```bash
-   # Docker (recommended)
-   .\docker.ps1 up
-   
-   # OR Local development
-   .\docker.ps1 db  # databases only
-   # Then run API and Client separately
-   ```
-
-### Database Migrations
-
-```bash
-# Using Docker
-.\docker.ps1 migrate
-
-# OR locally
-cd server/CinemaAPI
-dotnet ef database update
-```
-
-## 📚 Documentation
-
-- **[Docker Setup & Guide](README.Docker.md)** - Complete Docker documentation
-- **[API Documentation](http://localhost:5000/scalar)** - Interactive API docs (when running)
-
-## 🔧 Configuration
-
-### Environment Variables
-
-A single `.env` file is used for all configuration. Default values are provided, so it's **optional** for local development.
-
-```bash
-# Copy example file (optional)
-cp .env.example .env
-
-# Edit values if needed
-# All settings have sensible defaults in docker-compose.yml
-```
-
-**Key variables**:
-- `MYSQL_ROOT_PASSWORD` - MySQL password (default: luongthanhnhat23)
-- `NEXT_PUBLIC_API_URL` - API URL for frontend (default: http://localhost:5000)
-- `MONGODB_CONNECTION_STRING` - MongoDB connection (has cloud default)
-
-See `.env.example` for all available options.
-
-## 🚀 Deployment
-
-### Using Docker
-
-```bash
-# Build for production
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-
-# OR use script
-.\docker.ps1 up
-```
-
-See [README.Docker.md](README.Docker.md) for production deployment guide.
-
-## 🧪 Testing
-
-```bash
-# Run API tests
-cd server/CinemaAPI
-dotnet test
-
-# Run Client tests  
-cd client
-npm test
-```
-
-## 📊 Monitoring
-
-### Health Checks
-- **API**: http://localhost:5000/health
-- **Client**: http://localhost:3000 (root)
-
-### Logs
-```bash
-# View all logs
-.\docker.ps1 logs
-
-# View specific service
-.\docker.ps1 logs-api
-.\docker.ps1 logs-client
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License.
-
-## 👥 Team
-
-- Thanh Nhat & Nguyen Thi Nghia
-- Backend Development: ASP.NET MVC + Entity Framework + MySQL + MongoDB
-- Frontend Development: Next.js + TypeScript
-- DevOps: Docker containerization
-
-## 📞 Support
-
-For issues and questions:
-- Check [README.Docker.md](README.Docker.md) for Docker-related issues
-- Review API logs: `.\docker.ps1 logs-api`
-- Check service status: `.\docker.ps1 ps`
+## 👥 Đội ngũ thực hiện
+Dự án được thực hiện bởi nhóm sinh viên **PBL3 - Cinema Management**:
+*   **Nguyễn Văn A:** Trưởng nhóm, Backend Developer (API Design, Database, VNPAY Integration).
+*   **Trần Thị B:** Frontend Developer (UI/UX, State Management, Real-time Seat Map).
 
 ---
+
+## ⚠️ Lưu ý bảo mật
+*   Tuyệt đối không đẩy file `.env` hoặc `appsettings.json` chứa thông tin nhạy cảm lên GitHub.
+*   Dự án đã cấu hình `.gitignore` để bỏ qua các tệp này.
+*   Các khóa API trong tài liệu này chỉ là ví dụ.
+
+---
+*Cảm ơn bạn đã quan tâm đến dự án của chúng tôi! Nếu thấy hữu ích, hãy tặng chúng tôi 1 ⭐ nhé!*

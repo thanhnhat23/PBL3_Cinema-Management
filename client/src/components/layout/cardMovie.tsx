@@ -14,6 +14,9 @@ import {
 } from "../ui/dialog";
 import { useMovieStore, type Movie } from "@/stores/useMovieStore";
 import { SparklesText } from "../ui/texts/sparkles-text";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useDialogStore } from "@/stores/useDialogStore";
+import { useRouter } from "next/navigation";
 
 interface DataMovieProps {
     movie: Movie;
@@ -36,6 +39,9 @@ export const CardMovie = ({
     const [isTrailerOpen, setIsTrailerOpen] = useState<number | null>(null);
     const { t } = useTranslation();
     const getStatusLabel = useMovieStore(state => state.getStatusLabel);
+    const authUser = useAuthStore(state => state.authUser);
+    const setOpenDialog = useDialogStore(state => state.setOpenDialog);
+    const router = useRouter();
 
     const OneDayLeftCurrentNow = useMemo(() => {
         return new Date(movie.release_date).getTime() - new Date().getTime() <= 1 * 24 * 60 * 60 * 1000;
@@ -115,8 +121,16 @@ export const CardMovie = ({
 
             {/* Immersive Button Overlay on Hover - Outside Link */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out hidden md:flex flex-col items-center justify-center bg-black/40 gap-4 z-40 pointer-events-none">
-                <Link
-                    href={movie.status === 0 || (movie.status === 1 && OneDayLeftCurrentNow) ? '/booking/' + movie.movie_id : '#'}
+                <button
+                    onClick={() => {
+                        if (!authUser) {
+                            setOpenDialog('signin');
+                        } else {
+                            if (movie.status === 0 || (movie.status === 1 && OneDayLeftCurrentNow)) {
+                                router.push('/booking/' + movie.movie_id);
+                            }
+                        }
+                    }}
                     className={`min-w-32 px-6 py-3 rounded-sm flex items-center justify-center gap-2 font-bold tracking-tight transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 shadow-lg pointer-events-auto ${movie.status === 0 || (movie.status === 1 && OneDayLeftCurrentNow)
                         ? "bg-linear-to-r from-orange-500 to-amber-500 text-white cursor-pointer hover:scale-105 active:scale-95"
                         : "bg-zinc-600 text-zinc-300 cursor-not-allowed pointer-events-none"
@@ -126,7 +140,7 @@ export const CardMovie = ({
                 >
                     <StarIcon animate={hoveredItem === "ticket"} size={20} />
                     <span>{t('movie_card.book_now')}</span>
-                </Link>
+                </button>
 
                 <Dialog open={isTrailerOpen === index} onOpenChange={(open) => setIsTrailerOpen(open ? index : null)}>
                     <DialogTrigger asChild>

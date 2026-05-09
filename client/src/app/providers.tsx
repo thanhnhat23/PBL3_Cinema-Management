@@ -9,7 +9,7 @@ import { AuthDialog } from '@/components/layout/formDialog';
 import FooterLayout from '@/components/layout/footer';
 import NavbarLayout from '@/components/layout/navbar';
 import ChatBot from '@/components/layout/chatBot';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import i18n, { i18nConfig } from '@/lib/i18n';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -32,6 +32,48 @@ if (!i18n.isInitialized) {
   });
 }
 
+function HealthGuard({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    const checkHealth = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 
+                      (process.env.NODE_ENV === 'development' ? 'http://localhost:5143' : 'https://cinema-api-vetv.onrender.com');
+        
+        const response = await fetch(`${apiUrl}/api/ping`, { 
+          cache: 'no-store',
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (response.ok) {
+           if (pathname === '/maintenance') {
+             router.push('/');
+           }
+        } else {
+           if (pathname !== '/maintenance') {
+             router.push('/maintenance');
+           }
+        }
+      } catch (error) {
+        if (pathname !== '/maintenance') {
+          router.push('/maintenance');
+        }
+      }
+    };
+
+    checkHealth(); // Initial check
+    interval = setInterval(checkHealth, 30000); // Check every 30 seconds to save credit
+
+    return () => clearInterval(interval);
+  }, [pathname, router]);
+
+  return <>{children}</>;
+}
 
 function AuthInitializer({ children }: { children: React.ReactNode }) {
   const checkAuth = useAuthStore((state) => state.checkAuth);
@@ -45,7 +87,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
 
 export function Providers({children, locale}: { children: React.ReactNode, locale?: string }) {
   const pathname = usePathname();
-  const isHideNavFooter = pathname === '/dashboard';
+  const isHideNavFooter = pathname === '/dashboard' || pathname === '/maintenance';
 
   if (locale && i18n.language !== locale) {
     void i18n.changeLanguage(locale);
@@ -69,13 +111,15 @@ export function Providers({children, locale}: { children: React.ReactNode, local
   return (
     <HeroUIProvider>
       <ToastProvider placement="top-right" />
-      <AuthInitializer>
-        {isHideNavFooter ? null : <NavbarLayout />}
-        {children}
-        {isHideNavFooter ? null : <FooterLayout />}
-        <AuthDialog />
-        {!isCheckingAuth && authUser ? <ChatBot /> : null}
-      </AuthInitializer>
+      <HealthGuard>
+        <AuthInitializer>
+          {isHideNavFooter ? null : <NavbarLayout />}
+          {children}
+          {isHideNavFooter ? null : <FooterLayout />}
+          <AuthDialog />
+          {!isCheckingAuth && authUser ? <ChatBot /> : null}
+        </AuthInitializer>
+      </HealthGuard>
     </HeroUIProvider>
   )
 }

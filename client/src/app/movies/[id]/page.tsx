@@ -15,6 +15,8 @@ import DetailPageSkeleton from "@/components/skeletons/detailPage";
 import { BlurFade } from "@/components/ui/effects/blur-fade";
 import UserReviewItem from "@/components/layout/userReviewItem";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useDialogStore } from "@/stores/useDialogStore";
 
 export default function MoviePage() {
     const { 
@@ -31,6 +33,8 @@ export default function MoviePage() {
     const { isOpen: isActorsOpen, onOpen: onActorsOpen, onOpenChange: onActorsOpenChange } = useDisclosure();
     const { isOpen: isReviewsOpen, onOpen: onReviewsOpen, onOpenChange: onReviewsOpenChange } = useDisclosure();
     const { t } = useTranslation();
+    const authUser = useAuthStore(state => state.authUser);
+    const setOpenDialog = useDialogStore(state => state.setOpenDialog);
 
     const params = useParams();
     const movieId = Number(Array.isArray(params.id) ? params.id[0] : params.id);
@@ -148,8 +152,12 @@ export default function MoviePage() {
                                                 : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 cursor-not-allowed"
                                         }`}
                                         onClick={() => {
-                                            if (selectedMovie?.status === 0 || (selectedMovie?.status === 1 && OneDayLeftCurrentNow)) {
-                                                router.push('/booking/' + selectedMovie.movie_id);
+                                            if (!authUser) {
+                                                setOpenDialog('signin');
+                                            } else {
+                                                if (selectedMovie?.status === 0 || (selectedMovie?.status === 1 && OneDayLeftCurrentNow)) {
+                                                    router.push('/booking/' + selectedMovie.movie_id);
+                                                }
                                             }
                                         }}
                                     >

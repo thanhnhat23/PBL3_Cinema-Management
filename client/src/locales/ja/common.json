@@ -1225,6 +1225,25 @@
     "button": "システムを復元",
     "bg_text": "CRITICAL"
   },
+  "maintenance": {
+    "label": "サービス停止中",
+    "title_main": "システム",
+    "title_highlight": "停止中",
+    "subtitle": "現在、サービスを一時的に休止しております",
+    "description": "インフラの問題またはリソース制限が発生しています。接続が復旧次第、ページは自動的に再読み込みされます。",
+    "bg_text": "SUSPENDED",
+    "auto_reconnect": "接続を確認中...",
+    "monitoring": "システム監視: 有効",
+    "protocol": "ネットワークプロトコル",
+    "polling": "ポーリング中...",
+    "report_title": "// システムステータスレポート",
+    "db_conn": "DB接続",
+    "api_gateway": "APIゲートウェイ",
+    "recovery_mode": "リカバリモード",
+    "status_failed": "失敗",
+    "status_unreachable": "到達不能",
+    "status_active": "有効"
+  },
   "payment_tab": {
     "order_info_title": "注文情報",
     "amount_to_pay": "お支払い金額",

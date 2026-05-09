@@ -36,22 +36,9 @@ builder.Services.AddCors(options =>
 
 // Configure Database Connection
 var connectionString = builder.Configuration.GetConnectionString("CinemaDatabase");
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new InvalidOperationException("Connection string 'CinemaDatabase' not found. Please set 'ConnectionStrings__CinemaDatabase' environment variable.");
-}
-
 builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    var serverVersion = new MySqlServerVersion(new Version(8, 0, 33));
-    options.UseMySql(connectionString, serverVersion, mySqlOptions =>
-        mySqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 10,
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorNumbersToAdd: null
-        ));
-});
+    options.UseMySql(connectionString, Microsoft.EntityFrameworkCore.ServerVersion.AutoDetect(connectionString))
+);
 
 // Configure MongoDB
 builder.Services.AddSingleton<MongoDbContext>();
@@ -230,7 +217,16 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowReactApp");
 
-app.MapMethods("/ping", new[] { "GET", "HEAD" }, () => Results.Ok());
+app.MapMethods("/api/ping", new[] { "GET", "HEAD" }, async (AppDbContext dbContext) => {
+    try {
+        // Simple check to see if database is reachable
+        var canConnect = await dbContext.Database.CanConnectAsync();
+        if (canConnect) return Results.Ok(new { status = "Healthy", database = "Connected" });
+        return Results.StatusCode(503); // Service Unavailable
+    } catch (Exception) {
+        return Results.StatusCode(503);
+    }
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
