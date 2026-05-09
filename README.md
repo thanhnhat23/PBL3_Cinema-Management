@@ -7,12 +7,14 @@
 
 **Nền tảng quản lý rạp chiếu phim tối ưu, hỗ trợ đặt vé thời gian thực và tích hợp thanh toán hiện đại.** Dự án được xây dựng nhằm giải quyết bài toán vận hành rạp phim từ khâu quản lý phim, suất chiếu đến trải nghiệm đặt vé của khách hàng.
 
-[🚀 Demo Trực Tuyến](#) | [📖 Tài liệu API (Swagger)](#) | [📋 Báo cáo dự án](#)
+[🚀 Demo Trực Tuyến](https://milkywayyy.me)
 
 ---
 
 ## 📷 Preview / Demo
-![Cinema Management Mockup](cinema_management_mockup_1778223660423.png)
+<img width="1837" height="987" alt="image" src="https://github.com/user-attachments/assets/571ac648-b4a2-449e-b398-8c131821cc46" />\
+<img width="413" height="896" alt="image" src="https://github.com/user-attachments/assets/7f006fe9-2ca3-49cc-a5eb-e153bd8eda3b" />
+
 *Giao diện đặt vé hiện đại với hiệu ứng Glassmorphism và sơ đồ ghế ngồi thời gian thực.*
 
 ---
@@ -31,7 +33,7 @@
 ### Frontend
 <p align="left">
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=nextjs,react,tailwind,zustand,ts" />
+    <img src="https://skillicons.dev/icons?i=nextjs,react,tailwind,ts" />
   </a>
 </p>
 
@@ -42,7 +44,7 @@
   </a>
 </p>
 
-*   **Công nghệ khác:** Agora SDK (Video/Voice), SignalR (Real-time), Cloudinary (Media storage).
+*   **Công nghệ khác:** SignalR (Real-time), Cloudinary (Media storage).
 
 ---
 
@@ -93,15 +95,8 @@ npm run dev
 
 ## 👥 Đội ngũ thực hiện
 Dự án được thực hiện bởi nhóm sinh viên **PBL3 - Cinema Management**:
-*   **Nguyễn Văn A:** Trưởng nhóm, Backend Developer (API Design, Database, VNPAY Integration).
-*   **Trần Thị B:** Frontend Developer (UI/UX, State Management, Real-time Seat Map).
-
----
-
-## ⚠️ Lưu ý bảo mật
-*   Tuyệt đối không đẩy file `.env` hoặc `appsettings.json` chứa thông tin nhạy cảm lên GitHub.
-*   Dự án đã cấu hình `.gitignore` để bỏ qua các tệp này.
-*   Các khóa API trong tài liệu này chỉ là ví dụ.
+*   **Lương Thanh Nhật:** Trưởng nhóm, Frontend Developer (UI/UX, State Management, Real-time Seat Map), Backend Developer
+*   **Nguyễn Thị Nghĩa:** Backend Developer (API Design, Database, VNPAY Integration).  
 
 ---
 *Cảm ơn bạn đã quan tâm đến dự án của chúng tôi! Nếu thấy hữu ích, hãy tặng chúng tôi 1 ⭐ nhé!*
