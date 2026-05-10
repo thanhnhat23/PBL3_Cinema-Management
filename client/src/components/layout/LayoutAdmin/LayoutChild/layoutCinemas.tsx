@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -328,28 +328,26 @@ export default function LayoutCinemas() {
 
                                 <div ref={drawerContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="name" className="text-right">
+                                        <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('cinemas_tab.name_label')}
                                         </Label>
-
                                         <Input
                                             id="name"
                                             value={editForm.name}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="location_id" className="text-right">
+                                        <Label htmlFor="location_id" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('cinemas_tab.city_label')}
                                         </Label>
-
                                         <Select
                                             value={editForm.location_id}
                                             onValueChange={(value) => setEditForm((prev) => ({ ...prev, location_id: value }))}
                                         >
-                                            <SelectTrigger className="col-span-3 w-full bg-sidebar">
+                                            <SelectTrigger className="col-span-3 w-full bg-sidebar h-12 rounded-lg">
                                                 <SelectValue placeholder={t('cinemas_tab.city_label')} />
                                             </SelectTrigger>
 
@@ -367,83 +365,77 @@ export default function LayoutCinemas() {
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="address" className="text-right">
+                                        <Label htmlFor="address" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('cinemas_tab.address_label')}
                                         </Label>
-
                                         <Input
                                             id="address"
                                             value={editForm.address}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, address: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="phone_number" className="text-right">
+                                        <Label htmlFor="phone_number" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('cinemas_tab.phone_label')}
                                         </Label>
-
                                         <Input
                                             id="phone_number"
                                             value={editForm.phone_number}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, phone_number: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="latitude" className="text-right">
+                                        <Label htmlFor="latitude" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('cinemas_tab.coordinates')} (Lat)
                                         </Label>
-
                                         <Input
                                             id="latitude"
                                             type="number"
                                             value={editForm.latitude}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, latitude: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="longitude" className="text-right">
+                                        <Label htmlFor="longitude" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('cinemas_tab.coordinates')} (Lng)
                                         </Label>
-
                                         <Input
                                             id="longitude"
                                             type="number"
                                             value={editForm.longitude}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, longitude: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-start gap-4">
-                                        <Label htmlFor="description" className="text-right pt-2">
+                                        <Label htmlFor="description" className="text-xs font-bold uppercase tracking-wider text-zinc-500 pt-2">
                                             {t('cinemas_tab.intro_label')}
                                         </Label>
-
                                         <Textarea
                                             id="description"
                                             value={editForm.description}
                                             placeholder={t('cinemas_tab.intro_placeholder')}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, description: event.target.value }))}
-                                            className="col-span-3 text-sm min-h-auto"
+                                            className="col-span-3 text-sm min-h-24 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="image_overview" className="text-right">
+                                        <Label htmlFor="image_overview" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('cinemas_tab.image_label')}
                                         </Label>
-
                                         <Input
                                             id="image_overview"
                                             value={editForm.image_overview}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, image_overview: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import { 
@@ -216,13 +216,13 @@ export default function LayoutLocations() {
                             <DrawerBody>
                                 <div className="flex flex-col gap-4 py-4">
                                     <div className="flex flex-col gap-2">
-                                        <Label htmlFor="city">{t('locations_tab.city_label')}</Label>
+                                        <Label htmlFor="city" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('locations_tab.city_label')}</Label>
                                         <Input 
                                             id="city" 
                                             value={form.city}
                                             onChange={(e) => setForm({ city: e.target.value })}
                                             placeholder={t('locations_tab.city_placeholder')}
-                                            className="bg-sidebar"
+                                            className="bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
                                     <button 

@@ -14,7 +14,8 @@ import {
     DrawerFooter,
     useDisclosure
 } from "@heroui/react";
-import { EllipsisVertical, Eye, PenLine, Trash, Ticket, Calendar, Percent, Banknote, Clock } from "lucide-react";
+import { EllipsisVertical, Eye, PenLine, Trash, Ticket, Calendar, Percent, Banknote, Clock, Info } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 import { useCouponStore, type Coupon } from "@/stores/useCouponStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
@@ -35,10 +36,11 @@ import { useTranslation } from "react-i18next";
 const getCouponColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: "ID", uid: "coupon_id", sortable: true },
     { name: t('coupons_tab.columns.code'), uid: "code", sortable: true },
-    { name: t('coupons_tab.columns.type'), uid: "type", sortable: true },
+    { name: t('coupons_tab.columns.type'), uid: "coupon_type", sortable: true },
+    { name: t('coupons_tab.columns.discount_type'), uid: "type", sortable: true },
     { name: t('coupons_tab.columns.value'), uid: "discountValue", sortable: true },
-    { name: t('coupons_tab.columns.min'), uid: "minOrderValue", sortable: true },
-    { name: t('coupons_tab.columns.status'), uid: "isHoliday", sortable: true },
+    { name: t('coupons_tab.columns.usage'), uid: "current_usage", sortable: true },
+    { name: t('coupons_tab.columns.status'), uid: "status", sortable: true },
     { name: t('coupons_tab.columns.expiry'), uid: "endDate", sortable: true },
     { name: t('common.actions'), uid: "actions" },
 ];
@@ -71,12 +73,17 @@ export default function LayoutCoupons() {
     const [editForm, setEditForm] = useState({
         code: "",
         description: "",
-        type: "0",
+        type: "0", // DiscountType: 0=Percentage, 1=FixedAmount
+        coupon_type: "0", // CouponType: 0=Limited, 1=Holiday, 2=Never
+        status: "0", // CouponStatus: 0=Active, 1=Expired, 2=Disabled
         discountValue: "",
+        maxDiscountAmount: "",
         minOrderValue: "",
+        max_usage: "",
         startDate: "",
         endDate: "",
         isHoliday: "false",
+        applies_to: "Both",
     });
 
     useEffect(() => {
@@ -102,11 +109,16 @@ export default function LayoutCoupons() {
             code: "",
             description: "",
             type: "0",
+            coupon_type: "0",
+            status: "0",
             discountValue: "",
+            maxDiscountAmount: "",
             minOrderValue: "",
+            max_usage: "",
             startDate: format(new Date(), "yyyy-MM-dd"),
-            endDate: format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), "yyyy-MM-dd"),
+            endDate: format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), "yyyy-MM-dd"),
             isHoliday: "false",
+            applies_to: "Both",
         });
         onEditOpen();
     };
@@ -118,33 +130,34 @@ export default function LayoutCoupons() {
             code: coupon.code,
             description: coupon.description ?? "",
             type: String(coupon.type),
+            coupon_type: String(coupon.coupon_type),
+            status: String(coupon.status),
             discountValue: String(coupon.discountValue),
+            maxDiscountAmount: String(coupon.maxDiscountAmount),
             minOrderValue: String(coupon.minOrderValue),
-            startDate: format(new Date(coupon.startDate), "yyyy-MM-dd"),
-            endDate: format(new Date(coupon.endDate), "yyyy-MM-dd"),
+            max_usage: coupon.max_usage ? String(coupon.max_usage) : "",
+            startDate: coupon.startDate ? format(new Date(coupon.startDate), "yyyy-MM-dd") : "",
+            endDate: coupon.endDate ? format(new Date(coupon.endDate), "yyyy-MM-dd") : "",
             isHoliday: String(coupon.isHoliday),
+            applies_to: coupon.applies_to || "Both",
         });
         onEditOpen();
     }, [onEditOpen]);
 
     const handleSaveCoupon = async () => {
-        const payload: {
-            description: string;
-            type: 0 | 1;
-            discountValue: number;
-            minOrderValue: number;
-            startDate: Date;
-            endDate: Date;
-            isHoliday: boolean;
-            code?: string;
-        } = {
+        const payload: Partial<Coupon> = {
             description: editForm.description.trim(),
             type: Number(editForm.type) as 0 | 1,
+            coupon_type: Number(editForm.coupon_type) as 0 | 1 | 2,
+            status: Number(editForm.status) as 0 | 1 | 2,
             discountValue: Number(editForm.discountValue),
+            maxDiscountAmount: Number(editForm.maxDiscountAmount),
             minOrderValue: Number(editForm.minOrderValue),
-            startDate: new Date(editForm.startDate),
-            endDate: new Date(editForm.endDate),
+            max_usage: editForm.max_usage ? Number(editForm.max_usage) : null,
+            startDate: editForm.startDate ? format(new Date(editForm.startDate), "yyyy-MM-dd'T'HH:mm:ss'Z'") : undefined,
+            endDate: editForm.endDate ? format(new Date(editForm.endDate), "yyyy-MM-dd'T'HH:mm:ss'Z'") : undefined,
             isHoliday: editForm.isHoliday === "true",
+            applies_to: editForm.applies_to,
         };
 
         if (!isAdding && selectedCoupon) {
@@ -173,6 +186,15 @@ export default function LayoutCoupons() {
                         <span className="font-bold tracking-tight text-blue-600 dark:text-blue-400">{coupon.code}</span>
                     </div>
                 );
+            case "coupon_type": {
+                const types = [t('coupons_tab.cats.limited'), t('coupons_tab.cats.holiday'), t('coupons_tab.cats.never')];
+                const colors: ("default" | "warning" | "secondary")[] = ["default", "warning", "secondary"];
+                return (
+                    <Chip className="capitalize font-bold" color={colors[coupon.coupon_type]} size="sm" variant="flat">
+                        {types[coupon.coupon_type]}
+                    </Chip>
+                );
+            }
             case "type": {
                 const typeText = getDiscountTypeText(coupon.type);
                 const typeKey = getDiscountTypeKey(coupon.type);
@@ -185,20 +207,40 @@ export default function LayoutCoupons() {
             case "discountValue":
                 return (
                     <div className="flex items-center gap-1 font-bold">
-                        {coupon.type === 0 ? <Percent size={14} className="text-zinc-400" /> : <Banknote size={14} className="text-zinc-400" />}
+                        {/* {coupon.type === 0 ? <Percent size={14} className="text-zinc-400" /> : <Banknote size={14} className="text-zinc-400" />} */}
                         <span>{coupon.type === 0 ? `${coupon.discountValue}%` : `${Number(coupon.discountValue).toLocaleString(t('locale_code'))} ${t('common.currency_vnd')}`}</span>
                     </div>
                 );
-            case "minOrderValue":
-                return <span className="text-zinc-500 font-medium">{Number(coupon.minOrderValue).toLocaleString(t('locale_code'))} {t('common.currency_vnd')}</span>;
-            case "endDate":
-                return <span className="text-xs font-medium text-zinc-400">{new Date(String(coupon.endDate)).toLocaleDateString(t('locale_code'))}</span>;
-            case "isHoliday":
+            case "current_usage":
                 return (
-                    <Chip className="capitalize font-bold" color={coupon.isHoliday ? "warning" : "success"} size="sm" variant="flat">
-                        {coupon.isHoliday ? t('coupons_tab.cat_holiday') : t('coupons_tab.cat_normal')}
+                    <div className="flex flex-col gap-0.5">
+                        <span className="font-bold text-xs">{coupon.current_usage} / {coupon.max_usage ?? "∞"}</span>
+                        <div className="w-20 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                            <div 
+                                className="h-full bg-amber-500 transition-all duration-500" 
+                                style={{ width: `${coupon.max_usage ? Math.min(100, (coupon.current_usage / coupon.max_usage) * 100) : 0}%` }} 
+                            />
+                        </div>
+                    </div>
+                );
+            case "endDate":
+                return (
+                    <span className={cn(
+                        "text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800",
+                        coupon.coupon_type === 2 ? "text-purple-500 bg-purple-500/10" : "text-zinc-500"
+                    )}>
+                        {coupon.coupon_type === 2 ? t('profile.no_expiration') : new Date(String(coupon.endDate)).toLocaleDateString(t('locale_code'))}
+                    </span>
+                );
+            case "status": {
+                const statuses = ["Active", "Expired", "Disabled"];
+                const colors: ("success" | "danger" | "default")[] = ["success", "danger", "default"];
+                return (
+                    <Chip className="capitalize font-bold" color={colors[coupon.status]} size="sm" variant="flat">
+                        {statuses[coupon.status]}
                     </Chip>
                 );
+            }
             case "actions":
                 return (
                     <Dropdown classNames={{
@@ -281,19 +323,12 @@ export default function LayoutCoupons() {
                 renderCell={renderCell}
                 filters={[
                     {
-                        uid: "type",
+                        uid: "coupon_type",
                         name: t('coupons_tab.type_label'),
                         options: [
-                            { name: t('coupons_tab.types.percentage'), uid: "0" },
-                            { name: t('coupons_tab.types.fixed'), uid: "1" },
-                        ]
-                    },
-                    {
-                        uid: "isHoliday",
-                        name: t('coupons_tab.category_label'),
-                        options: [
-                            { name: "Normal", uid: "false" },
-                            { name: "Holiday", uid: "true" },
+                            { name: t('coupons_tab.cats.limited'), uid: "0" },
+                            { name: t('coupons_tab.cats.holiday'), uid: "1" },
+                            { name: t('coupons_tab.cats.never'), uid: "2" },
                         ]
                     }
                 ]}
@@ -320,8 +355,8 @@ export default function LayoutCoupons() {
                                             <div className="text-center flex flex-col gap-2">
                                                 <h2 className="text-3xl font-black tracking-tighter text-blue-600 dark:text-blue-400 uppercase">{selectedCoupon.code}</h2>
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <Chip color={selectedCoupon.isHoliday ? "warning" : "success"} variant="flat" size="sm" className="font-bold">
-                                                        {selectedCoupon.isHoliday ? t('coupons_tab.special_event') : t('coupons_tab.normal_coupon')}
+                                                    <Chip color={selectedCoupon.coupon_type === 1 ? "warning" : selectedCoupon.coupon_type === 2 ? "secondary" : "success"} variant="flat" size="sm" className="font-bold">
+                                                        {selectedCoupon.coupon_type === 1 ? t('coupons_tab.cats.holiday') : selectedCoupon.coupon_type === 2 ? t('coupons_tab.cats.never') : t('coupons_tab.cats.limited')}
                                                     </Chip>
                                                 </div>
                                             </div>
@@ -362,8 +397,31 @@ export default function LayoutCoupons() {
                                                     <div className="w-10 h-px bg-zinc-100 dark:bg-zinc-800" />
                                                     <div className="flex flex-col gap-1 text-right">
                                                         <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{t('coupons_tab.end_date')}</span>
-                                                        <span className="text-sm font-bold text-rose-500">{new Date(String(selectedCoupon.endDate)).toLocaleDateString(t('locale_code'), { dateStyle: 'long' })}</span>
+                                                        <span className="text-sm font-bold text-rose-500">
+                                                            {selectedCoupon.coupon_type === 2 ? t('profile.no_expiration') : new Date(String(selectedCoupon.endDate)).toLocaleDateString(t('locale_code'), { dateStyle: 'long' })}
+                                                        </span>
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
+                                                    <div className="flex items-center gap-2 text-zinc-400">
+                                                        <Clock size={14} />
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('coupons_tab.usage_label')}</span>
+                                                    </div>
+                                                    <span className="text-xl font-bold">
+                                                        {selectedCoupon.current_usage} / {selectedCoupon.max_usage ?? "∞"}
+                                                    </span>
+                                                </div>
+                                                <div className="p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col gap-3 shadow-sm">
+                                                    <div className="flex items-center gap-2 text-zinc-400">
+                                                        <Info size={14} />
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">{t('coupons_tab.status_label')}</span>
+                                                    </div>
+                                                    <Chip color={selectedCoupon.status === 0 ? "success" : "danger"} variant="flat" size="sm" className="font-bold">
+                                                        {selectedCoupon.status === 0 ? "Active" : selectedCoupon.status === 1 ? "Expired" : "Disabled"}
+                                                    </Chip>
                                                 </div>
                                             </div>
 
@@ -428,11 +486,56 @@ export default function LayoutCoupons() {
                                         <div className="flex flex-col gap-2">
                                             <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.type_label')}</Label>
                                             <Select
+                                                value={editForm.coupon_type}
+                                                onValueChange={(v) => {
+                                                    setEditForm(p => ({ ...p, coupon_type: v }));
+                                                    if (v === "2") { // Never
+                                                        setEditForm(p => ({ ...p, startDate: "", endDate: "", max_usage: "" }));
+                                                    }
+                                                }}
+                                            >
+                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg overflow-hidden">
+                                                    <SelectValue placeholder={t('coupons_tab.type_label')} className="truncate" />
+                                                </SelectTrigger>
+                                                <SelectContent container={drawerContainerRef.current}>
+                                                    <SelectGroup>
+                                                        <SelectItem value="0">{t('coupons_tab.cats.limited')}</SelectItem>
+                                                        <SelectItem value="1">{t('coupons_tab.cats.holiday')}</SelectItem>
+                                                        <SelectItem value="2">{t('coupons_tab.cats.never')}</SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.status_label')}</Label>
+                                            <Select
+                                                value={editForm.status}
+                                                onValueChange={(v) => setEditForm(p => ({ ...p, status: v }))}
+                                            >
+                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg">
+                                                    <SelectValue placeholder="Status" />
+                                                </SelectTrigger>
+                                                <SelectContent container={drawerContainerRef.current}>
+                                                    <SelectGroup>
+                                                        <SelectItem value="0">Active</SelectItem>
+                                                        <SelectItem value="1">Expired</SelectItem>
+                                                        <SelectItem value="2">Disabled</SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="flex flex-col gap-2">
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.discount_type_label')}</Label>
+                                            <Select
                                                 value={editForm.type}
                                                 onValueChange={(v) => setEditForm(p => ({ ...p, type: v }))}
                                             >
-                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg">
-                                                    <SelectValue placeholder={t('coupons_tab.type_label')} />
+                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg overflow-hidden">
+                                                    <SelectValue placeholder={t('coupons_tab.discount_type_label')} className="truncate" />
                                                 </SelectTrigger>
                                                 <SelectContent container={drawerContainerRef.current}>
                                                     <SelectGroup>
@@ -455,55 +558,84 @@ export default function LayoutCoupons() {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <Label htmlFor="minOrderValue" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.min_order_label')}</Label>
-                                        <Input
-                                            id="minOrderValue"
-                                            type="number"
-                                            value={editForm.minOrderValue}
-                                            onChange={(e) => setEditForm(p => ({ ...p, minOrderValue: e.target.value }))}
-                                            className="bg-sidebar h-12 rounded-lg"
-                                        />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="flex flex-col gap-2">
+                                            <Label htmlFor="maxDiscountAmount" className={cn("text-xs font-bold uppercase tracking-wider text-zinc-500", editForm.type === "1" && "opacity-30")}>{t('coupons_tab.max_discount_label')}</Label>
+                                            <Input
+                                                id="maxDiscountAmount"
+                                                type="number"
+                                                disabled={editForm.type === "1"}
+                                                value={editForm.maxDiscountAmount}
+                                                onChange={(e) => setEditForm(p => ({ ...p, maxDiscountAmount: e.target.value }))}
+                                                className="bg-sidebar h-12 rounded-lg disabled:opacity-30"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <Label htmlFor="minOrderValue" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.min_order_label')}</Label>
+                                            <Input
+                                                id="minOrderValue"
+                                                type="number"
+                                                value={editForm.minOrderValue}
+                                                onChange={(e) => setEditForm(p => ({ ...p, minOrderValue: e.target.value }))}
+                                                className="bg-sidebar h-12 rounded-lg"
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex flex-col gap-2">
-                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.start_date')}</Label>
+                                            <Label htmlFor="max_usage" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.max_usage_label')}</Label>
                                             <Input
-                                                type="date"
-                                                value={editForm.startDate}
-                                                onChange={(e) => setEditForm(p => ({ ...p, startDate: e.target.value }))}
+                                                id="max_usage"
+                                                type="number"
+                                                placeholder="Unlimited"
+                                                value={editForm.max_usage}
+                                                onChange={(e) => setEditForm(p => ({ ...p, max_usage: e.target.value }))}
                                                 className="bg-sidebar h-12 rounded-lg"
                                             />
                                         </div>
                                         <div className="flex flex-col gap-2">
-                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.end_date')}</Label>
-                                            <Input
-                                                type="date"
-                                                value={editForm.endDate}
-                                                onChange={(e) => setEditForm(p => ({ ...p, endDate: e.target.value }))}
-                                                className="bg-sidebar h-12 rounded-lg"
-                                            />
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Applies To</Label>
+                                            <Select
+                                                value={editForm.applies_to}
+                                                onValueChange={(v) => setEditForm(p => ({ ...p, applies_to: v }))}
+                                            >
+                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg">
+                                                    <SelectValue placeholder="Applies To" />
+                                                </SelectTrigger>
+                                                <SelectContent container={drawerContainerRef.current}>
+                                                    <SelectGroup>
+                                                        <SelectItem value="Ticket">Ticket</SelectItem>
+                                                        <SelectItem value="Snack">Snack</SelectItem>
+                                                        <SelectItem value="Both">Both</SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.category_label')}</Label>
-                                        <Select
-                                            value={editForm.isHoliday}
-                                            onValueChange={(v) => setEditForm(p => ({ ...p, isHoliday: v }))}
-                                        >
-                                            <SelectTrigger className="bg-sidebar h-12 rounded-lg">
-                                                <SelectValue placeholder={t('coupons_tab.category_label')} />
-                                            </SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current}>
-                                                <SelectGroup>
-                                                    <SelectItem value="false">{t('coupons_tab.cat_normal')}</SelectItem>
-                                                    <SelectItem value="true">{t('coupons_tab.cat_holiday')}</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
+                                    {editForm.coupon_type !== "2" && (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="flex flex-col gap-2">
+                                                <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.start_date')}</Label>
+                                                <Input
+                                                    type="date"
+                                                    value={editForm.startDate}
+                                                    onChange={(e) => setEditForm(p => ({ ...p, startDate: e.target.value }))}
+                                                    className="bg-sidebar h-12 rounded-lg"
+                                                />
+                                            </div>
+                                            <div className="flex flex-col gap-2">
+                                                <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('coupons_tab.end_date')}</Label>
+                                                <Input
+                                                    type="date"
+                                                    value={editForm.endDate}
+                                                    onChange={(e) => setEditForm(p => ({ ...p, endDate: e.target.value }))}
+                                                    className="bg-sidebar h-12 rounded-lg"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </DrawerBody>
 

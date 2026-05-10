@@ -134,7 +134,7 @@ export function ConfirmationTab({
                         )}
                     </div>
 
-                    <Divider className="bg-white/5" />
+                    <Divider className="dark:bg-white/10 bg-black/10" />
 
                     {/* Payment Method Selection */}
                     <div className="space-y-5">
@@ -155,7 +155,7 @@ export function ConfirmationTab({
                                         !method.active ? "opacity-30 cursor-not-allowed dark:bg-zinc-800/50 bg-zinc-300 border-white/5" : 
                                         selectedMethod === method.id 
                                             ? "border-amber-500 bg-amber-500/5 ring-1 ring-amber-500/20 shadow-xl" 
-                                            : "border-white/5 bg-zinc-600/50 hover:border-white/20"
+                                            : "border-white/5 bg-zinc-300/50 dark:bg-zinc-800/50 hover:border-white/20"
                                     )}
                                 >
                                     <div className="w-12 h-12 flex items-center justify-center bg-sidebar rounded-sm border border-white/5 p-2 shrink-0">
@@ -178,7 +178,7 @@ export function ConfirmationTab({
                                     </div>
                                     <div className={cn(
                                         "w-5 h-5 rounded-full border flex items-center justify-center transition-all",
-                                        selectedMethod === method.id ? "border-amber-500 bg-amber-500" : "border-white/10"
+                                        selectedMethod === method.id ? "border-amber-500 bg-amber-500" : "dark:border-white/20 border-zinc-400"
                                     )}>
                                         {selectedMethod === method.id && <CheckCircle2 size={12} />}
                                     </div>
@@ -187,7 +187,7 @@ export function ConfirmationTab({
                         </div>
                     </div>
 
-                    <Divider className="bg-white/5" />
+                    <Divider className="dark:bg-white/10 bg-black/10" />
 
                     {/* Summary in Card */}
                     <div className="space-y-4 bg-zinc-300/50 dark:bg-zinc-800/50 p-6 rounded-sm border border-white/5">

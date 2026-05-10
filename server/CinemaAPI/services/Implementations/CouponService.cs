@@ -16,11 +16,74 @@ namespace CinemaAPI.Services.Implementations
             _dbContext = dbContext;
         }
 
-        public async Task<List<Coupon>> GetAllCoupons() => //LAMBDA FUNCTION(thay cho return)
-            await _dbContext.Coupons.ToListAsync();
+        public async Task<List<Coupon>> GetAllCoupons()
+        {
+            await MaintainCouponsAsync();
+            return await _dbContext.Coupons.ToListAsync();
+        }
 
-        public async Task<Coupon?> GetCouponById(int coupon_id) =>
-            await _dbContext.Coupons.FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
+        public async Task<Coupon?> GetCouponById(int coupon_id)
+        {
+            await MaintainCouponsAsync();
+            return await _dbContext.Coupons.FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
+        }
+
+        private async Task MaintainCouponsAsync()
+        {
+            var now = DateTime.UtcNow;
+            var coupons = await _dbContext.Coupons.Where(c => c.deleted_at == null).ToListAsync();
+            bool changed = false;
+
+            foreach (var coupon in coupons)
+            {
+                // 1. Never coupons are always active unless disabled
+                if (coupon.coupon_type == CouponType.Never)
+                {
+                    if (coupon.status == CouponStatus.Expired)
+                    {
+                        coupon.status = CouponStatus.Active;
+                        changed = true;
+                    }
+                    continue;
+                }
+
+                // 2. Check for expiration of Limited coupons
+                if (coupon.coupon_type == CouponType.Limited && coupon.status == CouponStatus.Active && now > coupon.endDate)
+                {
+                    coupon.status = CouponStatus.Expired;
+                    changed = true;
+                }
+
+                // 3. Holiday Reset Logic
+                if (coupon.coupon_type == CouponType.Holiday)
+                {
+                    // Valid for 3 days starting from startDate
+                    var holidayEnd = coupon.startDate.AddDays(2);
+                    
+                    if (now >= coupon.startDate && now <= holidayEnd)
+                    {
+                        // Reset usage if this is a new holiday period
+                        if (coupon.last_reset_at == null || coupon.last_reset_at < coupon.startDate)
+                        {
+                            coupon.current_usage = 0;
+                            coupon.last_reset_at = now;
+                            coupon.status = CouponStatus.Active;
+                            changed = true;
+                        }
+                    }
+                    else if (now > holidayEnd && coupon.status == CouponStatus.Active)
+                    {
+                        coupon.status = CouponStatus.Expired;
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed)
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+        }
 
         public async Task<string> GenerateUniqueCouponCodeAsync()
         {
@@ -55,8 +118,17 @@ namespace CinemaAPI.Services.Implementations
 
             if (coupon != null)
             {
+                if (request.code != null)
+                    coupon.code = request.code;
+
                 if (request.type.HasValue)
                     coupon.type = request.type.Value;
+
+                if (request.coupon_type.HasValue)
+                    coupon.coupon_type = request.coupon_type.Value;
+
+                if (request.status.HasValue)
+                    coupon.status = request.status.Value;
 
                 if (request.description != null)
                     coupon.description = request.description;
@@ -70,6 +142,9 @@ namespace CinemaAPI.Services.Implementations
                 if (request.minOrderValue.HasValue)
                     coupon.minOrderValue = request.minOrderValue.Value;
 
+                if (request.max_usage.HasValue)
+                    coupon.max_usage = request.max_usage.Value;
+
                 if (request.startDate.HasValue)
                     coupon.startDate = request.startDate.Value;
 
@@ -78,6 +153,9 @@ namespace CinemaAPI.Services.Implementations
 
                 if (request.isHoliday.HasValue)
                     coupon.isHoliday = request.isHoliday.Value;
+
+                if (request.applies_to != null)
+                    coupon.applies_to = request.applies_to;
 
                 _dbContext.Coupons.Update(coupon);
                 await _dbContext.SaveChangesAsync();

@@ -337,7 +337,8 @@
     },
     "tabs": {
       "personal_info": "Personal Info",
-      "booking_history": "Booking History"
+      "booking_history": "Booking History",
+      "my_coupons": "My Coupons"
     },
     "info_labels": {
       "full_name": "Full Name",
@@ -356,7 +357,10 @@
     "change_password": "Change Password",
     "currency": " VND",
     "next_rank_needed": "Spend {{amount}}{{currency}} more to reach {{rank}} rank",
-    "total_bookings": "bookings"
+    "total_bookings": "bookings",
+    "coupons_available": "available coupons",
+    "no_expiration": "No expiration",
+    "no_coupons_active": "You currently have no available coupons."
   },
   "actors": {
     "hero_title": "Faces of",
@@ -951,7 +955,7 @@
     "code_label": "Coupon Code",
     "desc_label": "Description",
     "desc_placeholder": "e.g. 50% off for orders over 100k VND...",
-    "type_label": "Discount Type",
+    "type_label": "Coupon Type",
     "value_label": "Discount Value",
     "min_order_label": "Min Order Value (VND)",
     "start_date": "Start Date",
@@ -959,6 +963,16 @@
     "category_label": "Coupon Category",
     "cat_normal": "Normal Coupon",
     "cat_holiday": "Holiday/Event Coupon",
+    "cats": {
+      "limited": "Limited",
+      "holiday": "Holiday",
+      "never": "Never"
+    },
+    "usage_label": "Current Usage",
+    "status_label": "Status",
+    "discount_type_label": "Discount Format",
+    "max_discount_label": "Max Discount (VND)",
+    "max_usage_label": "Usage Limit",
     "special_event": "Special Event",
     "normal_coupon": "Normal Coupon",
     "applied_all": "This coupon is applied to all showtimes if the minimum order condition is met.",
@@ -973,9 +987,10 @@
     },
     "columns": {
       "code": "Coupon Code",
-      "type": "Type",
-      "value": "Discount",
-      "min": "Min Value",
+      "type": "Category",
+      "discount_type": "Discount Type",
+      "value": "Value",
+      "usage": "Usage",
       "status": "Status",
       "expiry": "Expiry"
     }
@@ -1333,6 +1348,7 @@
       "result": "Result",
       "success": "Success",
       "failed": "Failed",
+      "pending": "Pending",
       "view_tickets": "View My Tickets",
       "retry": "Try Again Now",
       "back_home": "Back to Home",

@@ -6,26 +6,33 @@ export interface Coupon {
     code: string;
     description: string;
     type: 0 | 1; // Percentage = 0, FixedAmount = 1
+    coupon_type: 0 | 1 | 2; // Limited = 0, Holiday = 1, Never = 2
+    status: 0 | 1 | 2; // Active = 0, Expired = 1, Disabled = 2
     discountValue: number;
     maxDiscountAmount: number;
     minOrderValue: number;
-    startDate: Date;
-    endDate: Date;
+    max_usage?: number | null;
+    current_usage: number;
+    startDate: string;
+    endDate: string;
     isHoliday: boolean;
     applies_to?: string | null; // Ticket, Snack, Both
 }
 
 export const useCouponStore = create<{
     coupons: Coupon[];
+    activeCoupons: Coupon[];
     selectedCoupon: Coupon | null;
 
     isFetchingCoupons: boolean;
+    isFetchingActiveCoupons: boolean;
     isFetchingCouponDetails: boolean;
     isCreatingCoupon: boolean;
     isUpdatingCoupon: boolean;
     isDeletingCoupon: boolean;
 
     fetchAllCoupons: () => Promise<void>;
+    fetchActiveCoupons: () => Promise<void>;
     fetchCouponById: (couponId: number) => Promise<void>;
     createCoupon: (couponData: Partial<Coupon>) => Promise<void>;
     updateCoupon: (couponId: number, couponData: Partial<Coupon>) => Promise<void>;
@@ -33,18 +40,16 @@ export const useCouponStore = create<{
     clearSelectedCoupon: () => void;
 }>((set) => ({
     coupons: [],
+    activeCoupons: [],
     selectedCoupon: null,
     isFetchingCoupons: false,
+    isFetchingActiveCoupons: false,
     isFetchingCouponDetails: false,
     isCreatingCoupon: false,
     isUpdatingCoupon: false,
     isDeletingCoupon: false,
 
     fetchAllCoupons: async () => {
-        const currentCoupons = useCouponStore.getState().coupons;
-        // Skip if already fetched
-        if (currentCoupons.length > 0) return;
-
         try {
             set({ isFetchingCoupons: true });
 
@@ -57,6 +62,22 @@ export const useCouponStore = create<{
             console.error('Error fetching coupons:', error);
         } finally {
             set({ isFetchingCoupons: false });
+        }
+    },
+
+    fetchActiveCoupons: async () => {
+        try {
+            set({ isFetchingActiveCoupons: true });
+
+            const response = await _axios.get('/v1/coupon/active');
+
+            if (response.data) {
+                set({ activeCoupons: response.data });
+            }
+        } catch (error) {
+            console.error('Error fetching active coupons:', error);
+        } finally {
+            set({ isFetchingActiveCoupons: false });
         }
     },
 
