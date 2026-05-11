@@ -51,22 +51,63 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActiveCoupons()
+        {
+            try
+            {
+                var coupons = await _couponService.GetAllCoupons();
+                var activeCoupons = coupons.Where(c => c.deleted_at == null && c.IsActive).ToList();
+                return Ok(activeCoupons);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.GetActiveCoupons: {ex.Message}");
+            }
+        }
+
+        [HttpPost("validate")]
+        public async Task<IActionResult> ValidateCoupon([FromBody] CouponValidateRequest request)
+        {
+            try
+            {
+                var result = await _couponService.ValidateCouponAsync(request.code, request.user_id, request.order_value);
+                if (!result.isValid)
+                    return BadRequest(new { message = result.message });
+
+                return Ok(new { 
+                    message = result.message, 
+                    discountValue = result.discountValue, 
+                    type = result.type 
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.ValidateCoupon: {ex.Message}");
+            }
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> AddCoupon([FromBody] CouponCreateRequest request)
         {
             try
             {
-                var code = await _couponService.GenerateUniqueCouponCodeAsync();
+                var code = request.code ?? await _couponService.GenerateUniqueCouponCodeAsync();
 
                 var coupon = new Coupon
                 {
                     code = code,
                     type = request.type,
+                    coupon_type = request.coupon_type,
                     description = request.description ?? "No description",
                     discountValue = request.discountValue,
                     maxDiscountAmount = request.maxDiscountAmount,
                     minOrderValue = request.minOrderValue,
-                    isHoliday = request.isHoliday
+                    max_usage = request.max_usage,
+                    startDate = request.startDate,
+                    endDate = request.endDate,
+                    isHoliday = request.isHoliday,
+                    applies_to = request.applies_to
                 };
 
                 await _couponService.AddCoupon(coupon);

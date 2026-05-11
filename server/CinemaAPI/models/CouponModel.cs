@@ -11,6 +11,20 @@ namespace CinemaAPI.Models
         FixedAmount = 1
     }
 
+    public enum CouponType
+    {
+        Limited = 0,
+        Holiday = 1,
+        Never = 2
+    }
+
+    public enum CouponStatus
+    {
+        Active = 0,
+        Expired = 1,
+        Disabled = 2
+    }
+
     [Index(nameof(code), IsUnique = true)]
     [Index(nameof(startDate), nameof(endDate))]
     public class Coupon
@@ -30,9 +44,15 @@ namespace CinemaAPI.Models
         public string description { get; set; } = "No description";
 
         public DiscountType type { get; set; } = DiscountType.Percentage;
+        public CouponType coupon_type { get; set; } = CouponType.Limited;
+        public CouponStatus status { get; set; } = CouponStatus.Active;
+
         public decimal discountValue { get; set; } = 0;
         public decimal maxDiscountAmount { get; set; } = 0;
         public decimal minOrderValue { get; set; } = 0;
+
+        public int? max_usage { get; set; }
+        public int current_usage { get; set; } = 0;
 
         [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime startDate { get; set; } = DateTime.UtcNow;
@@ -43,9 +63,37 @@ namespace CinemaAPI.Models
         public bool isHoliday { get; set; } = false;
 
         [NotMapped]
-        public bool IsActive => DateTime.UtcNow >= startDate && DateTime.UtcNow <= endDate;
+        public bool IsActive 
+        {
+            get 
+            {
+                if (status != CouponStatus.Active) return false;
+                if (coupon_type == CouponType.Never) return true;
+                
+                var now = DateTime.UtcNow;
+                if (coupon_type == CouponType.Holiday)
+                {
+                    // Create dates for the current year
+                    var currentYearStart = new DateTime(now.Year, startDate.Month, startDate.Day, startDate.Hour, startDate.Minute, startDate.Second);
+                    var currentYearEnd = currentYearStart.AddDays(2);
+                    
+                    // Check if we are in this year's period
+                    if (now >= currentYearStart && now <= currentYearEnd) return true;
+                    
+                    // Check if we are in the period that started last year (e.g. Dec 31)
+                    var lastYearStart = currentYearStart.AddYears(-1);
+                    var lastYearEnd = lastYearStart.AddDays(2);
+                    if (now >= lastYearStart && now <= lastYearEnd) return true;
+                    
+                    return false;
+                }
+
+                return now >= startDate && now <= endDate && (max_usage == null || current_usage < max_usage);
+            }
+        }
 
         public string? applies_to { get; set; } // Ticket, Snack, Both
+        public DateTime? last_reset_at { get; set; } // For Holiday reset logic
         public DateTime? deleted_at { get; set; }
         public Guid? deleted_by { get; set; }
     }

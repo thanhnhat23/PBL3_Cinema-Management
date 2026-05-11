@@ -238,25 +238,56 @@ namespace CinemaAPI.Services.Implementations
                     var coupon = await _dbContext.Coupons.FindAsync(request.coupon_id.Value);
                     if (coupon != null)
                     {
-                        // Validate coupon
-                        var now = DateTime.UtcNow;
-                        if (now >= coupon.startDate && now <= coupon.endDate && totalAmount >= coupon.minOrderValue)
+                        // 1. Check if the coupon is active (dates, status, max_usage)
+                        if (!coupon.IsActive)
+                            throw new Exception("Coupon is not valid, has expired, or reached its usage limit.");
+
+                        // 2. Enforce "Once per user" rule
+                        bool alreadyUsed;
+                        if (coupon.coupon_type == CouponType.Holiday)
                         {
-                            decimal couponDiscount = 0;
-                            if (coupon.type == 0) // Percentage
-                            {
-                                couponDiscount = (totalAmount * coupon.discountValue) / 100;
-                                if (coupon.maxDiscountAmount > 0)
-                                    couponDiscount = Math.Min(couponDiscount, coupon.maxDiscountAmount);
-                            }
-                            else // Fixed amount
-                            {
-                                couponDiscount = coupon.discountValue;
-                            }
-                            
-                            discountAmount += couponDiscount;
-                            finalAmount = Math.Max(0, totalAmount - discountAmount);
+                            // For annual holiday coupons, we only check if used in the current holiday period
+                            alreadyUsed = await _dbContext.Bookings.AnyAsync(b =>
+                                b.user_id == userId &&
+                                b.coupon_id == request.coupon_id.Value &&
+                                b.status != BookingStatus.Cancelled &&
+                                (coupon.last_reset_at == null || b.createAt >= coupon.last_reset_at));
                         }
+                        else
+                        {
+                            // For normal/limited coupons, they can only be used once ever per user
+                            alreadyUsed = await _dbContext.Bookings.AnyAsync(b =>
+                                b.user_id == userId &&
+                                b.coupon_id == request.coupon_id.Value &&
+                                b.status != BookingStatus.Cancelled);
+                        }
+
+                        if (alreadyUsed)
+                            throw new Exception("You have already used this coupon code.");
+
+                        // 3. Check minimum order value
+                        if (totalAmount < coupon.minOrderValue)
+                            throw new Exception($"Minimum order value for this coupon is {coupon.minOrderValue:N0} VND.");
+
+                        // 4. Calculate discount
+                        decimal couponDiscount = 0;
+                        if (coupon.type == DiscountType.Percentage)
+                        {
+                            couponDiscount = (totalAmount * coupon.discountValue) / 100;
+                            if (coupon.maxDiscountAmount > 0)
+                                couponDiscount = Math.Min(couponDiscount, coupon.maxDiscountAmount);
+                        }
+                        else // Fixed amount
+                        {
+                            couponDiscount = coupon.discountValue;
+                        }
+
+                        // 5. Update usage count
+                        coupon.current_usage++;
+                        _dbContext.Coupons.Update(coupon);
+
+                        discountAmount += couponDiscount;
+                        finalAmount = Math.Max(0, totalAmount - discountAmount);
                     }
                 }
 

@@ -95,8 +95,8 @@ export default function LayoutShowtimeSlot() {
         } else if (selectedItem) {
             await updateSlot(selectedItem.slot_id, payload);
         }
+        await fetchAll();
         onEditOpenChange();
-        fetchAll();
     };
 
     const renderCell = useCallback((item: ShowTimeSlot, columnKey: Key) => {
@@ -252,10 +252,10 @@ export default function LayoutShowtimeSlot() {
                             <DrawerBody>
                                 <div className="grid gap-6 py-4">
                                     <div className="grid gap-2">
-                                        <Label>{t('showtimes_tab.slot_tab.day_of_week')}</Label>
+                                        <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.slot_tab.day_of_week')}</Label>
                                         <Select value={editForm.dayOfWeek} onValueChange={v => setEditForm(p => ({ ...p, dayOfWeek: v }))}>
-                                            <SelectTrigger className="bg-sidebar"><SelectValue /></SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current}>
+                                            <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue /></SelectTrigger>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     {[0,1,2,3,4,5,6].map((k) => (
                                                         <SelectItem key={k} value={String(k)}>{t(`common.day_names.${k}`)}</SelectItem>
@@ -266,12 +266,12 @@ export default function LayoutShowtimeSlot() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="grid gap-2">
-                                            <Label>{t('showtimes_tab.slot_tab.start_time')}</Label>
-                                            <Input type="time" value={editForm.startTime} onChange={e => setEditForm(p => ({ ...p, startTime: e.target.value }))} className="bg-sidebar" />
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.slot_tab.start_time')}</Label>
+                                            <Input type="time" value={editForm.startTime} onChange={e => setEditForm(p => ({ ...p, startTime: e.target.value }))} className="bg-sidebar h-12 rounded-lg" />
                                         </div>
                                         <div className="grid gap-2">
-                                            <Label>{t('showtimes_tab.slot_tab.end_time')}</Label>
-                                            <Input type="time" value={editForm.endTime} onChange={e => setEditForm(p => ({ ...p, endTime: e.target.value }))} className="bg-sidebar" />
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.slot_tab.end_time')}</Label>
+                                            <Input type="time" value={editForm.endTime} onChange={e => setEditForm(p => ({ ...p, endTime: e.target.value }))} className="bg-sidebar h-12 rounded-lg" />
                                         </div>
                                     </div>
                                 </div>

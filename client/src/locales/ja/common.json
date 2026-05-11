@@ -35,6 +35,11 @@
     "management_system": "管理システム",
     "add_new": "新規追加",
     "saving": "保存中...",
+    "active": "有効",
+    "expired": "期限切れ",
+    "disabled": "無効",
+    "scheduled": "予定済み",
+    "description": "概要",
     "day_names": {
       "0": "日曜日",
       "1": "月曜日",
@@ -337,7 +342,8 @@
     },
     "tabs": {
       "personal_info": "個人情報",
-      "booking_history": "予約履歴"
+      "booking_history": "予約履歴",
+      "my_coupons": "マイクーポン"
     },
     "info_labels": {
       "full_name": "氏名",
@@ -356,7 +362,10 @@
     "change_password": "パスワード変更",
     "currency": " VNĐ",
     "next_rank_needed": "あと {{amount}}{{currency}} の利用で {{rank}} ランクに昇格します",
-    "total_bookings": "予約"
+    "total_bookings": "予約",
+    "coupons_available": "利用可能なクーポン",
+    "no_expiration": "有効期限なし",
+    "no_coupons_active": "現在利用可能なクーポンはありません。"
   },
   "actors": {
     "hero_title": "スクリーンの",
@@ -951,14 +960,26 @@
     "code_label": "クーポンコード",
     "desc_label": "説明",
     "desc_placeholder": "例：100,000 VNĐ以上の注文で50%オフ...",
-    "type_label": "割引タイプ",
+    "type_label": "クーポンタイプ",
     "value_label": "割引額",
     "min_order_label": "最小注文額",
     "start_date": "開始日",
     "end_date": "終了日",
+    "holiday_date": "祝日（毎年）",
+    "holiday_desc": "このクーポンは、毎年この日から3日間自動的に有効になります。",
     "category_label": "クーポンカテゴリ",
     "cat_normal": "通常クーポン",
     "cat_holiday": "休日・イベントクーポン",
+    "cats": {
+      "limited": "期間限定",
+      "holiday": "休日/祝日",
+      "never": "無期限"
+    },
+    "usage_label": "現在の使用数",
+    "status_label": "ステータス",
+    "discount_type_label": "割引形式",
+    "max_discount_label": "最大割引額 (VND)",
+    "max_usage_label": "使用制限",
     "special_event": "スペシャルイベント",
     "normal_coupon": "通常クーポン",
     "applied_all": "このクーポンは、最小注文条件が満たされている場合、すべての上映に適用されます。",
@@ -973,9 +994,10 @@
     },
     "columns": {
       "code": "クーポンコード",
-      "type": "タイプ",
-      "value": "割引",
-      "min": "最小金額",
+      "type": "カテゴリ",
+      "discount_type": "割引タイプ",
+      "value": "値",
+      "usage": "使用状況",
       "status": "ステータス",
       "expiry": "有効期限"
     }
@@ -1333,6 +1355,7 @@
       "result": "結果",
       "success": "成功",
       "failed": "失敗",
+      "pending": "保留中",
       "view_tickets": "マイチケットを見る",
       "retry": "もう一度試す",
       "back_home": "ホームに戻る",

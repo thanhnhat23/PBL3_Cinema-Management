@@ -140,8 +140,8 @@ export default function LayoutShowtime() {
             };
             await updateShowtime(selectedItem.showtime_id, payload);
         }
+        await fetchAllShowtimes();
         onEditOpenChange();
-        fetchAllShowtimes();
     };
 
     const renderCell = useCallback((item: ShowtimeDisplay, columnKey: Key) => {
@@ -440,13 +440,13 @@ export default function LayoutShowtime() {
                             <DrawerBody>
                                 <div ref={drawerContainerRef} className="grid gap-6 py-4">
                                     <div className="grid gap-2">
-                                        <Label htmlFor="movie_id">{t('movie_details.movie_name')}</Label>
+                                        <Label htmlFor="movie_id" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('movie_details.movie_name')}</Label>
                                         <div onPointerDown={e => e.stopPropagation()}>
                                             <Select value={editForm.movie_id} onValueChange={(v) => setEditForm(p => ({ ...p, movie_id: v }))}>
-                                                <SelectTrigger className="bg-sidebar h-12">
+                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                     <SelectValue placeholder={t('showtimes_tab.placeholders.select_movie')} />
                                                 </SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current}>
+                                                <SelectContent>
                                                     <SelectGroup>
                                                         {movies.filter(m => {
                                                             const today = startOfDay(new Date());
@@ -490,11 +490,11 @@ export default function LayoutShowtime() {
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="room_id">{t('showtimes_tab.columns.room')}</Label>
+                                        <Label htmlFor="room_id" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.columns.room')}</Label>
                                         <div onPointerDown={e => e.stopPropagation()}>
                                             <Select value={editForm.room_id} onValueChange={(v) => setEditForm(p => ({ ...p, room_id: v }))}>
-                                                <SelectTrigger className="bg-sidebar"><SelectValue placeholder={t('showtimes_tab.placeholders.select_room')} /></SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current}>
+                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue placeholder={t('showtimes_tab.placeholders.select_room')} /></SelectTrigger>
+                                                <SelectContent>
                                                     <SelectGroup>
                                                         {rooms.map(r => (
                                                             <SelectItem key={r.room_id} value={String(r.room_id)}>
@@ -511,20 +511,20 @@ export default function LayoutShowtime() {
                                         {isAdding ? (
                                             <>
                                                 <div className="grid gap-2">
-                                                    <Label htmlFor="date">{t('common.date')}</Label>
+                                                    <Label htmlFor="date" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('common.date')}</Label>
                                                     <Input 
                                                         id="date" 
                                                         type="date" 
                                                         value={editForm.date} 
                                                         onChange={e => setEditForm(p => ({ ...p, date: e.target.value }))}
-                                                        className="bg-sidebar"
+                                                        className="bg-sidebar h-12 rounded-lg"
                                                     />
                                                 </div>
                                                 <div className="grid gap-2" onPointerDown={e => e.stopPropagation()}>
-                                                    <Label htmlFor="slot_id">{t('showtimes_tab.tabs.slot')}</Label>
+                                                    <Label htmlFor="slot_id" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.tabs.slot')}</Label>
                                                     <Select value={editForm.slot_id} onValueChange={(v) => setEditForm(p => ({ ...p, slot_id: v }))}>
-                                                        <SelectTrigger className="bg-sidebar"><SelectValue placeholder={t('showtimes_tab.placeholders.select_slot')} /></SelectTrigger>
-                                                        <SelectContent container={drawerContainerRef.current}>
+                                                        <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue placeholder={t('showtimes_tab.placeholders.select_slot')} /></SelectTrigger>
+                                                        <SelectContent>
                                                             <SelectGroup>
                                                                 {(() => {
                                                                     const selectedDate = parseISO(editForm.date);
@@ -547,10 +547,10 @@ export default function LayoutShowtime() {
                                                 </div>
 
                                                 <div className="grid gap-2" onPointerDown={e => e.stopPropagation()}>
-                                                    <Label>{t('common.status')}</Label>
+                                                    <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('common.status')}</Label>
                                                     <Select value={editForm.status} onValueChange={(v) => setEditForm(p => ({ ...p, status: v }))}>
-                                                        <SelectTrigger className="bg-sidebar"><SelectValue /></SelectTrigger>
-                                                        <SelectContent container={drawerContainerRef.current}>
+                                                        <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue /></SelectTrigger>
+                                                        <SelectContent>
                                                             <SelectGroup>
                                                                 {[0, 1, 2, 3, 4].map(s => (
                                                                     <SelectItem key={s} value={String(s)}>
@@ -565,23 +565,23 @@ export default function LayoutShowtime() {
                                         ) : (
                                             <>
                                                 <div className="grid gap-2">
-                                                    <Label htmlFor="startTime">{t('showtimes_tab.columns.start_time')}</Label>
+                                                    <Label htmlFor="startTime" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.columns.start_time')}</Label>
                                                     <Input 
                                                         id="startTime" 
                                                         type="datetime-local" 
                                                         value={editForm.startTime} 
                                                         onChange={e => setEditForm(p => ({ ...p, startTime: e.target.value }))}
-                                                        className="bg-sidebar"
+                                                        className="bg-sidebar h-12 rounded-lg"
                                                     />
                                                 </div>
                                                 <div className="grid gap-2">
-                                                    <Label htmlFor="endTime">{t('showtimes_tab.columns.end_time')}</Label>
+                                                    <Label htmlFor="endTime" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.columns.end_time')}</Label>
                                                     <Input 
                                                         id="endTime" 
                                                         type="datetime-local" 
                                                         value={editForm.endTime} 
                                                         onChange={e => setEditForm(p => ({ ...p, endTime: e.target.value }))}
-                                                        className="bg-sidebar"
+                                                        className="bg-sidebar h-12 rounded-lg"
                                                     />
                                                 </div>
                                             </>
@@ -589,10 +589,10 @@ export default function LayoutShowtime() {
                                     </div>
 
                                     <div className="grid gap-2" onPointerDown={e => e.stopPropagation()}>
-                                        <Label>{t('showtimes_tab.pricing_model.label')}</Label>
+                                        <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.pricing_model.label')}</Label>
                                         <Select value={editForm.pricing_model} onValueChange={(v) => setEditForm(p => ({ ...p, pricing_model: v }))}>
-                                            <SelectTrigger className="bg-sidebar"><SelectValue /></SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current}>
+                                            <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue /></SelectTrigger>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectItem value="0">{t('showtimes_tab.pricing_model.price_based')}</SelectItem>
                                                     <SelectItem value="1">{t('showtimes_tab.pricing_model.seat_based')}</SelectItem>
@@ -604,10 +604,10 @@ export default function LayoutShowtime() {
 
                                     {!isCreating && (
                                         <div className="grid gap-2" onPointerDown={e => e.stopPropagation()}>
-                                            <Label>{t('common.status')}</Label>
+                                            <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('common.status')}</Label>
                                             <Select value={editForm.status} onValueChange={(v) => setEditForm(p => ({ ...p, status: v }))}>
-                                                <SelectTrigger className="bg-sidebar"><SelectValue /></SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current}>
+                                                <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue /></SelectTrigger>
+                                                <SelectContent>
                                                     <SelectGroup>
                                                         {[0, 1, 2, 3, 4].map(s => (
                                                             <SelectItem key={s} value={String(s)}>

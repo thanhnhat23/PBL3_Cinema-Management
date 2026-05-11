@@ -35,6 +35,11 @@
     "released": "Đang chiếu",
     "upcoming": "Sắp chiếu",
     "saving": "Đang lưu...",
+    "active": "Hoạt động",
+    "expired": "Hết hạn",
+    "disabled": "Vô hiệu",
+    "scheduled": "Đã lên lịch",
+    "description": "Mô tả",
     "day_names": {
       "0": "Chủ nhật",
       "1": "Thứ hai",
@@ -337,7 +342,8 @@
     },
     "tabs": {
       "personal_info": "Thông tin cá nhân",
-      "booking_history": "Lịch sử đặt vé"
+      "booking_history": "Lịch sử đặt vé",
+      "my_coupons": "Ưu đãi của tôi"
     },
     "info_labels": {
       "full_name": "Tên cá nhân",
@@ -356,7 +362,10 @@
     "change_password": "Đổi mật khẩu",
     "currency": " VNĐ",
     "next_rank_needed": "Bạn cần chi tiêu thêm {{amount}}{{currency}} để lên hạng {{rank}}",
-    "total_bookings": "đơn đặt vé"
+    "total_bookings": "đơn đặt vé",
+    "coupons_available": "mã giảm giá khả dụng",
+    "no_expiration": "Vô thời hạn",
+    "no_coupons_active": "Bạn hiện không có mã giảm giá nào khả dụng."
   },
   "actors": {
     "hero_title": "Những gương mặt",
@@ -951,14 +960,26 @@
     "code_label": "Mã Coupon",
     "desc_label": "Mô tả",
     "desc_placeholder": "VD: Giảm 50% cho đơn hàng từ 100k...",
-    "type_label": "Loại giảm giá",
+    "type_label": "Loại mã giảm giá",
     "value_label": "Giá trị giảm",
     "min_order_label": "Giá trị đơn tối thiểu (VNĐ)",
     "start_date": "Ngày bắt đầu",
     "end_date": "Ngày kết thúc",
+    "holiday_date": "Ngày lễ (hàng năm)",
+    "holiday_desc": "Mã sẽ tự động kích hoạt trong 3 ngày bắt đầu từ ngày này mỗi năm.",
     "category_label": "Phân loại mã",
     "cat_normal": "Mã thông thường (Normal)",
     "cat_holiday": "Mã sự kiện/Lễ (Holiday)",
+    "cats": {
+      "limited": "Có thời hạn",
+      "holiday": "Ngày lễ",
+      "never": "Vĩnh viễn"
+    },
+    "usage_label": "Lượt đã dùng",
+    "status_label": "Trạng thái",
+    "discount_type_label": "Hình thức giảm",
+    "max_discount_label": "Giảm tối đa (VNĐ)",
+    "max_usage_label": "Giới hạn lượt dùng",
     "special_event": "Sự kiện đặc biệt",
     "normal_coupon": "Mã thông thường",
     "applied_all": "Mã giảm giá này được áp dụng cho toàn bộ các suất chiếu nếu thỏa mãn điều kiện đơn hàng tối thiểu.",
@@ -973,11 +994,12 @@
     },
     "columns": {
       "code": "Mã giảm giá",
-      "type": "Loại",
-      "value": "Giá trị giảm",
-      "min": "Giá trị tối thiểu",
+      "type": "Phân loại",
+      "discount_type": "Loại giảm",
+      "value": "Giá trị",
+      "usage": "Lượt dùng",
       "status": "Trạng thái",
-      "expiry": "Hết hạn"
+      "expiry": "Hạn dùng"
     }
   },
   "actors_tab": {
@@ -1237,12 +1259,12 @@
     "protocol": "Giao thức mạng",
     "polling": "Đang lấy dữ liệu...",
     "report_title": "// Báo cáo trạng thái hệ thống",
-    "db_conn": "KẾT NỐI DB",
-    "api_gateway": "CỔNG API",
-    "recovery_mode": "CHẾ ĐỘ KHÔI PHỤC",
-    "status_failed": "THẤT BẠI",
-    "status_unreachable": "KHÔNG THỂ TRUY CẬP",
-    "status_active": "ĐANG HOẠT ĐỘNG"
+    "db_conn": "Kết nối DB",
+    "api_gateway": "Cổng API",
+    "recovery_mode": "Chế độ khôi phục",
+    "status_failed": "Thất bại",
+    "status_unreachable": "Không thể truy cập",
+    "status_active": "Đang hoạt động"
   },
   "payment_tab": {
     "order_info_title": "Thông tin đơn hàng",
@@ -1333,6 +1355,7 @@
       "result": "Kết quả",
       "success": "Thành công",
       "failed": "Thất bại",
+      "pending": "Chờ thanh toán",
       "view_tickets": "Xem vé của tôi",
       "retry": "Thử lại ngay",
       "back_home": "Quay về trang chủ",

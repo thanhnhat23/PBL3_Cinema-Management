@@ -162,14 +162,11 @@ export default function LayoutMovie() {
         if (isAdding) {
             const { createMovie } = useMovieStore.getState();
             await createMovie(payload);
-            onEditOpenChange();
         } else if (selectedMovie) {
-            const updatedMovie = await updateMovie(selectedMovie.movie_id, payload);
-            if (updatedMovie) {
-                setSelectedMovie(updatedMovie);
-                onEditOpenChange();
-            }
+            await updateMovie(selectedMovie.movie_id, payload);
         }
+        await fetchAllMovies();
+        onEditOpenChange();
     };
 
     const releaseDateValue = parseLocalDate(editForm.release_date);
@@ -253,9 +250,10 @@ export default function LayoutMovie() {
                                 startContent={<Trash size={18} />}
                                 className="text-danger"
                                 color="danger"
-                                onPress={() => {
-                                    const { deleteMovie } = useMovieStore.getState();
-                                    deleteMovie(movie.movie_id);
+                                onPress={async () => {
+                                    const { deleteMovie, fetchAllMovies } = useMovieStore.getState();
+                                    await deleteMovie(movie.movie_id);
+                                    await fetchAllMovies();
                                 }}
                             >
                                 {t('common.delete')}
@@ -419,66 +417,62 @@ export default function LayoutMovie() {
 
                                 <div ref={popoverContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="title" className="text-right">
+                                        <Label htmlFor="title" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('movie_details.movie_name')}
                                         </Label>
-
                                         <Input
                                             id="title"
                                             value={editForm.title}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, title: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-start gap-4">
-                                        <Label htmlFor="overview" className="text-right pt-2">
+                                        <Label htmlFor="overview" className="text-xs font-bold uppercase tracking-wider text-zinc-500 pt-2">
                                             {t('movie_details.description')}
                                         </Label>
-
                                         <Textarea
                                             id="overview"
                                             value={editForm.overview}
                                             placeholder={t('movie_details.enter_description')}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, overview: event.target.value }))}
-                                            className="col-span-3 text-sm min-h-auto"
+                                            className="col-span-3 text-sm min-h-24 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="runtime" className="text-right">
+                                        <Label htmlFor="runtime" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('movie_details.runtime_label')}
                                         </Label>
-
                                         <Input
                                             id="runtime"
                                             type="number"
                                             min={0}
                                             value={editForm.runtime}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, runtime: event.target.value }))}
-                                            className="col-span-3 bg-sidebar"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="release_date" className="text-right">
+                                        <Label htmlFor="release_date" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('movie_details.release_date_label')}
                                         </Label>
-
                                         <div className="col-span-3">
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
                                                         variant="outline"
                                                         data-empty={!releaseDateValue}
-                                                        className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
+                                                        className="w-full h-12 rounded-lg justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
                                                     >
                                                         <CalendarIcon />
                                                         {releaseDateValue ? format(releaseDateValue, "PPP") : <span>{t('movie_details.select_date')}</span>}
                                                     </Button>
                                                 </PopoverTrigger>
 
-                                                <PopoverContent container={popoverContainerRef.current} className="w-auto p-0">
+                                                <PopoverContent className="w-auto p-0">
                                                     <Calendar
                                                         mode="single"
                                                         selected={releaseDateValue}
@@ -495,24 +489,23 @@ export default function LayoutMovie() {
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="end_date" className="text-right">
+                                        <Label htmlFor="end_date" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('movie_details.end_date_label')}
                                         </Label>
-
                                         <div className="col-span-3">
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
                                                         variant="outline"
                                                         data-empty={!endDateValue}
-                                                        className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
+                                                        className="w-full h-12 rounded-lg justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar"
                                                     >
                                                         <CalendarIcon />
                                                         {endDateValue ? format(endDateValue, "PPP") : <span>{t('movie_details.select_date')}</span>}
                                                     </Button>
                                                 </PopoverTrigger>
 
-                                                <PopoverContent container={popoverContainerRef.current} className="w-auto p-0">
+                                                <PopoverContent className="w-auto p-0">
                                                     <Calendar
                                                         mode="single"
                                                         selected={endDateValue}
@@ -529,19 +522,18 @@ export default function LayoutMovie() {
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="status" className="text-right">
+                                        <Label htmlFor="status" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('movie_details.status')}
                                         </Label>
-
                                         <Select
                                             value={editForm.status}
                                             onValueChange={(value) => setEditForm((prev) => ({ ...prev, status: value }))}
                                         >
-                                            <SelectTrigger className="col-span-3 w-full bg-sidebar">
+                                            <SelectTrigger className="col-span-3 w-full bg-sidebar h-12 rounded-lg">
                                                 <SelectValue placeholder={t('movie_details.status')} />
                                             </SelectTrigger>
 
-                                            <SelectContent container={popoverContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>{t('movie_details.status')}</SelectLabel>
                                                     <SelectItem value="0">{t('movie_status.released')}</SelectItem>
@@ -553,7 +545,7 @@ export default function LayoutMovie() {
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                         <Label htmlFor="poster" className="text-right">
+                                         <Label htmlFor="poster" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                              {t('movie_details.poster_path')}
                                          </Label>
                                          <Input
@@ -561,12 +553,12 @@ export default function LayoutMovie() {
                                              value={editForm.poster_path}
                                              placeholder="/path/to/poster.jpg"
                                              onChange={(event) => setEditForm((prev) => ({ ...prev, poster_path: event.target.value }))}
-                                             className="col-span-3 bg-sidebar"
+                                             className="col-span-3 bg-sidebar h-12 rounded-lg"
                                          />
                                      </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                         <Label htmlFor="backdrop" className="text-right">
+                                         <Label htmlFor="backdrop" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                              {t('movie_details.backdrop_path')}
                                          </Label>
                                          <Input
@@ -574,24 +566,23 @@ export default function LayoutMovie() {
                                              value={editForm.backdrop_path}
                                              placeholder="/path/to/backdrop.jpg"
                                              onChange={(event) => setEditForm((prev) => ({ ...prev, backdrop_path: event.target.value }))}
-                                             className="col-span-3 bg-sidebar"
+                                             className="col-span-3 bg-sidebar h-12 rounded-lg"
                                          />
                                      </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="adult" className="text-right">
+                                        <Label htmlFor="adult" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('movie_details.age_limit')}
                                         </Label>
-
                                         <Select
                                             value={editForm.adult}
                                             onValueChange={(value) => setEditForm((prev) => ({ ...prev, adult: value }))}
                                         >
-                                            <SelectTrigger className="col-span-3 w-full bg-sidebar">
+                                            <SelectTrigger className="col-span-3 w-full bg-sidebar h-12 rounded-lg">
                                                 <SelectValue placeholder={t('movie_details.age_limit')} />
                                             </SelectTrigger>
 
-                                            <SelectContent container={popoverContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>{t('movie_details.age_limit')}</SelectLabel>
                                                     <SelectItem value="false">{t('movie_details.no')}</SelectItem>

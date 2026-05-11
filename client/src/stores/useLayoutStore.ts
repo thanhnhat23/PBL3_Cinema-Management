@@ -9,7 +9,7 @@ export type LayoutKey =
     | 'users'
     | 'sync'
     | 'revenue'
-    | 'foods';
+    | 'foods'
 
 interface LayoutStore {
     openLayout: LayoutKey | null;

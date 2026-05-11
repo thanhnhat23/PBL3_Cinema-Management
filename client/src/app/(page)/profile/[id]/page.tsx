@@ -23,7 +23,8 @@ import { AvatarElement } from "@/components/ui/avatar";
 import { useTranslation } from "react-i18next";
 import { useBookingStore, type Booking } from "@/stores/useBookingStore";
 import { useMovieStore } from "@/stores/useMovieStore";
-import { Calendar, MapPin, CreditCard, ChevronRight, Ticket, Clock, Info, CheckCircle2 } from "lucide-react";
+import { useCouponStore } from "@/stores/useCouponStore";
+import { Calendar, MapPin, CreditCard, ChevronRight, Ticket, Clock, Info, CheckCircle2, Gift, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -34,20 +35,8 @@ export default function ProfilePage() {
   const { fetchUserById, user } = useUserStore();
   const searchParams = useSearchParams();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-
   const { setOpenDialog } = useDialogStore();
   const historyRef = useRef<HistoryIconHandle>(null);
-
-  const params = useParams();
-  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
-
-  const tabParam = searchParams.get('tab');
-  const [selectedTab, setSelectedTab] = useState<string>(() => {
-      if (tabParam && ['info', 'history'].includes(tabParam)) {
-          return tabParam;
-      }
-      return 'info';
-  });
 
   useEffect(() => {
     if (hoveredItem === 'history') {
@@ -56,6 +45,18 @@ export default function ProfilePage() {
         historyRef.current?.stopAnimation();
     }
   }, [hoveredItem]);
+
+  const params = useParams();
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const { activeCoupons, fetchActiveCoupons, isFetchingActiveCoupons } = useCouponStore();
+
+  const tabParam = searchParams.get('tab');
+  const [selectedTab, setSelectedTab] = useState<string>(() => {
+      if (tabParam && ['info', 'history', 'coupons'].includes(tabParam)) {
+          return tabParam;
+      }
+      return 'info';
+  });
 
   const { fetchAllBookings, bookings, isFetchingBookings } = useBookingStore();
   const { movies, fetchAllMovies } = useMovieStore();
@@ -74,8 +75,9 @@ export default function ProfilePage() {
     if (authUser?.id === id) {
         fetchAllBookings();
         fetchAllMovies();
+        fetchActiveCoupons();
     }
-  }, [id, fetchUserById, fetchAllBookings, fetchAllMovies, authUser]);
+  }, [id, fetchUserById, fetchAllBookings, fetchAllMovies, authUser, fetchActiveCoupons]);
 
     return (
         <>
@@ -141,7 +143,6 @@ export default function ProfilePage() {
                                     ];
 
                                     const currentRank = ranks.find(r => totalSpending <= r.max) || ranks[ranks.length - 1];
-                                    const nextRank = ranks[ranks.indexOf(currentRank) + 1] || null;
 
                                     return (
                                         <div>
@@ -254,6 +255,15 @@ export default function ProfilePage() {
                                             <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('history')} onMouseLeave={() => setHoveredItem(null)}>
                                                 <HistoryIcon ref={historyRef} size={18} />
                                                 <span>{t('profile.tabs.booking_history')}</span>
+                                            </div>
+                                        } />
+                                    )}
+
+                                    {authUser?.id === id && (
+                                        <Tab key="coupons" title={
+                                            <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('coupons')} onMouseLeave={() => setHoveredItem(null)}>
+                                                <Gift size={18} className={cn("transition-transform", hoveredItem === 'coupons' && "animate-bounce")} />
+                                                <span>{t('profile.tabs.my_coupons')}</span>
                                             </div>
                                         } />
                                     )}
@@ -454,6 +464,99 @@ export default function ProfilePage() {
                                     )}
                                 </div>
                             )}
+
+                            {selectedTab === "coupons" && authUser?.id === id && (() => {
+                                const filteredCoupons = activeCoupons.filter(c => c.coupon_type === 1 || c.coupon_type === 2);
+
+                                return (
+                                    <div className="space-y-6">
+                                        <div className="flex items-center justify-between px-1">
+                                            <h3 className="text-sm font-black uppercase tracking-widest">{t('profile.tabs.my_coupons')}</h3>
+                                            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                                                {filteredCoupons.length} {t('profile.coupons_available')}
+                                            </span>
+                                        </div>
+
+                                        {isFetchingActiveCoupons ? (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-pulse">
+                                                {[1, 2, 3, 4].map(i => (
+                                                    <div key={i} className="h-40 bg-zinc-100 dark:bg-zinc-800 rounded-sm" />
+                                                ))}
+                                            </div>
+                                        ) : filteredCoupons.length > 0 ? (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                {filteredCoupons.map((coupon) => (
+                                                    <div 
+                                                        key={coupon.coupon_id}
+                                                        className="group relative overflow-hidden bg-white dark:bg-zinc-800/30 rounded-sm flex"
+                                                    >
+                                                        {/* Coupon Left Side: Value */}
+                                                        <div className="w-24 shrink-0 bg-linear-to-b from-amber-500/10 to-transparent flex flex-col items-center justify-center border-r border-dashed border-zinc-100 dark:border-white/10 relative">
+                                                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-background border border-zinc-100 dark:border-white/5" />
+                                                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 rounded-full bg-background border border-zinc-100 dark:border-white/5" />
+                                                            
+                                                            <div className="text-amber-500 mb-2">
+                                                                {coupon.coupon_type === 2 ? <Sparkles size={24} /> : coupon.coupon_type === 1 ? <Gift size={24} /> : <Zap size={24} />}
+                                                            </div>
+                                                            <span className="text-xl font-black text-amber-500 italic">
+                                                                {coupon.type === 0 ? `${coupon.discountValue}%` : `${Math.floor(coupon.discountValue / 1000)}k`}
+                                                            </span>
+                                                            <span className="text-[8px] font-black uppercase tracking-widest text-zinc-400">OFF</span>
+                                                        </div>
+
+                                                        {/* Coupon Right Side: Info */}
+                                                        <div className="flex-1 p-4 flex flex-col justify-between">
+                                                            <div>
+                                                                <div className="flex items-center justify-between gap-2 mb-1">
+                                                                    <h4 className="text-[11px] font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100 group-hover:text-amber-500 transition-colors">
+                                                                        {coupon.code}
+                                                                    </h4>
+                                                                    <span className={cn(
+                                                                        "text-[7px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full",
+                                                                        coupon.coupon_type === 2 ? "bg-purple-500/10 text-purple-500" : "bg-blue-500/10 text-blue-500"
+                                                                    )}>
+                                                                        {coupon.coupon_type === 2 ? "Never" : coupon.coupon_type === 1 ? "Holiday" : "Limited"}
+                                                                    </span>
+                                                                </div>
+                                                                <p className="text-[10px] font-medium text-zinc-500 line-clamp-2 mb-3 leading-tight uppercase tracking-tight italic">
+                                                                    {coupon.description}
+                                                                </p>
+                                                            </div>
+
+                                                            <div className="space-y-2">
+                                                                <div className="flex items-center gap-2 text-[9px] font-bold text-zinc-400">
+                                                                    <Info size={10} className="text-amber-500" />
+                                                                    <span>Min: {coupon.minOrderValue.toLocaleString()}đ</span>
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[9px] font-bold text-zinc-400">
+                                                                    <Clock size={10} className="text-amber-500" />
+                                                                <span>
+                                                                    {coupon.coupon_type === 2 
+                                                                        ? t('profile.no_expiration') 
+                                                                        : coupon.coupon_type === 1
+                                                                            ? (coupon.startDate ? `${new Date(coupon.startDate).toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' })} - ${new Date(new Date(coupon.startDate).getTime() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString(undefined, { day: '2-digit', month: '2-digit' })}` : "N/A")
+                                                                            : (coupon.startDate && coupon.endDate ? `${new Date(coupon.startDate).toLocaleDateString()} - ${new Date(coupon.endDate).toLocaleDateString()}` : "N/A")}
+                                                                </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
+                                                <div className="w-20 h-20 rounded-full bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-300">
+                                                    <Gift size={40} />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-xl font-black uppercase tracking-tight">{t('profile.tabs.my_coupons')}</h3>
+                                                    <p className="text-sm text-zinc-500 max-w-xs mx-auto">{t('profile.no_coupons_active')}</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })()}
                         </div>
                     </div>
                 </div>

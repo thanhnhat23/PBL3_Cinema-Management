@@ -162,6 +162,7 @@ export default function LayoutActors() {
             await updateActor(selectedActor.actor_id, payload);
         }
 
+        await fetchAllActors();
         onEditOpenChange();
     };
 
@@ -416,19 +417,19 @@ export default function LayoutActors() {
 
                                 <div ref={popoverContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="name" className="text-right">
+                                        <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('actors_tab.name_label')}
                                         </Label>
                                         <Input
                                             id="name"
                                             value={editForm.name}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
-                                            className="col-span-3 bg-sidebar h-12"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="profile_path" className="text-right">
+                                        <Label htmlFor="profile_path" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('actors_tab.profile_label')}
                                         </Label>
                                         <Input
@@ -436,12 +437,12 @@ export default function LayoutActors() {
                                             value={editForm.profile_path}
                                             placeholder="/path/to/profile.jpg"
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, profile_path: event.target.value }))}
-                                            className="col-span-3 bg-sidebar h-12"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="birthday" className="text-right">
+                                        <Label htmlFor="birthday" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('actors_tab.birthday_label')}
                                         </Label>
 
@@ -451,14 +452,14 @@ export default function LayoutActors() {
                                                     <Button
                                                         variant="outline"
                                                         data-empty={!birthdayValue}
-                                                        className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar h-12"
+                                                        className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-sidebar h-12 rounded-lg"
                                                     >
                                                         <CalendarIcon />
                                                         {birthdayValue ? format(birthdayValue, "PPP") : <span>{t('actors_tab.select_date')}</span>}
                                                     </Button>
                                                 </PopoverTrigger>
 
-                                                <PopoverContent container={popoverContainerRef.current} className="w-auto p-0">
+                                                <PopoverContent className="w-auto p-0">
                                                     <Calendar
                                                         mode="single"
                                                         selected={birthdayValue}
@@ -475,7 +476,7 @@ export default function LayoutActors() {
                                     </div>
 
                                     <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="place_of_birth" className="text-right">
+                                        <Label htmlFor="place_of_birth" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                                             {t('actors_tab.birthplace_label')}
                                         </Label>
 
@@ -483,12 +484,12 @@ export default function LayoutActors() {
                                             id="place_of_birth"
                                             value={editForm.place_of_birth}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, place_of_birth: event.target.value }))}
-                                            className="col-span-3 bg-sidebar h-12"
+                                            className="col-span-3 bg-sidebar h-12 rounded-lg"
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-4 items-start gap-4">
-                                        <Label htmlFor="biography" className="text-right pt-2">
+                                        <Label htmlFor="biography" className="text-xs font-bold uppercase tracking-wider text-zinc-500 pt-2">
                                             {t('actors_tab.bio_label')}
                                         </Label>
 
@@ -497,7 +498,7 @@ export default function LayoutActors() {
                                             value={editForm.biography}
                                             placeholder={t('actors_tab.bio_placeholder')}
                                             onChange={(event) => setEditForm((prev) => ({ ...prev, biography: event.target.value }))}
-                                            className="col-span-3 text-sm min-h-30"
+                                            className="col-span-3 text-sm min-h-30 rounded-lg"
                                         />
                                     </div>
                                 </div>

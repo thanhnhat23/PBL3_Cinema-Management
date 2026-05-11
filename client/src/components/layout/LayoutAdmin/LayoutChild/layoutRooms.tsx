@@ -132,7 +132,7 @@ export default function LayoutRooms() {
         } else if (selectedRoom) {
             await updateRoom(selectedRoom.room_id, payload);
         }
-        
+        await fetchAllRooms();
         onEditOpenChange();
     };
 
@@ -397,7 +397,7 @@ export default function LayoutRooms() {
                                             <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                 <SelectValue placeholder={t('rooms_tab.columns.cinema')} />
                                             </SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>{t('rooms_tab.columns.cinema')}</SelectLabel>
                                                     {cinemas.map(c => (
@@ -429,7 +429,7 @@ export default function LayoutRooms() {
                                             <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                 <SelectValue placeholder={t('rooms_tab.type_label')} />
                                             </SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>{t('rooms_tab.type_label')}</SelectLabel>
                                                     <SelectItem value="0">Standard</SelectItem>

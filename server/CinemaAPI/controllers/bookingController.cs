@@ -63,6 +63,11 @@ namespace CinemaAPI.Controllers
             }
             catch (Exception ex)
             {
+                // Return 400 for validation errors (like already used coupon)
+                if (ex.Message.Contains("already used") || ex.Message.Contains("not valid") || ex.Message.Contains("Minimum order value"))
+                {
+                    return BadRequest(ex.Message);
+                }
                 return StatusCode(500, $"An error occurred in bookingController.CreateBooking: {ex.Message}");
             }
         }
