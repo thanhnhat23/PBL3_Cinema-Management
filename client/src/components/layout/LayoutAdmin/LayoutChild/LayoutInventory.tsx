@@ -104,6 +104,7 @@ export default function LayoutInventory() {
         } else if (selectedItem) {
             await updateInventory(selectedItem.cinema_id, selectedItem.snack_id, { quantity: data.quantity });
         }
+        await fetchAllInventories();
         onOpenChange();
     };
 
@@ -255,7 +256,7 @@ export default function LayoutInventory() {
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                     <SelectValue placeholder={t('booking.selection.select_cinema')} />
                                                 </SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current} className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
+                                                <SelectContent className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
                                                     {cinemas.map(c => (
                                                         <SelectItem key={c.cinema_id} value={String(c.cinema_id)}>{c.name}</SelectItem>
                                                     ))}
@@ -277,7 +278,7 @@ export default function LayoutInventory() {
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                     <SelectValue placeholder={t('foods_tab.type_placeholder')} />
                                                 </SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current} className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
+                                                <SelectContent className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
                                                     {snacks.map(s => (
                                                         <SelectItem key={s.snack_id} value={String(s.snack_id)}>{s.name}</SelectItem>
                                                     ))}

@@ -66,6 +66,27 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpPost("validate")]
+        public async Task<IActionResult> ValidateCoupon([FromBody] CouponValidateRequest request)
+        {
+            try
+            {
+                var result = await _couponService.ValidateCouponAsync(request.code, request.user_id, request.order_value);
+                if (!result.isValid)
+                    return BadRequest(new { message = result.message });
+
+                return Ok(new { 
+                    message = result.message, 
+                    discountValue = result.discountValue, 
+                    type = result.type 
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in couponController.ValidateCoupon: {ex.Message}");
+            }
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> AddCoupon([FromBody] CouponCreateRequest request)
         {

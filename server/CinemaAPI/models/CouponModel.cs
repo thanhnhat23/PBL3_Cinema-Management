@@ -73,8 +73,19 @@ namespace CinemaAPI.Models
                 var now = DateTime.UtcNow;
                 if (coupon_type == CouponType.Holiday)
                 {
-                    // Holiday is valid for 3 days starting from startDate (startDate + 2 days)
-                    return now >= startDate && now <= startDate.AddDays(2);
+                    // Create dates for the current year
+                    var currentYearStart = new DateTime(now.Year, startDate.Month, startDate.Day, startDate.Hour, startDate.Minute, startDate.Second);
+                    var currentYearEnd = currentYearStart.AddDays(2);
+                    
+                    // Check if we are in this year's period
+                    if (now >= currentYearStart && now <= currentYearEnd) return true;
+                    
+                    // Check if we are in the period that started last year (e.g. Dec 31)
+                    var lastYearStart = currentYearStart.AddYears(-1);
+                    var lastYearEnd = lastYearStart.AddDays(2);
+                    if (now >= lastYearStart && now <= lastYearEnd) return true;
+                    
+                    return false;
                 }
 
                 return now >= startDate && now <= endDate && (max_usage == null || current_usage < max_usage);

@@ -126,7 +126,7 @@ export default function LayoutSnacks() {
         } else if (selectedSnack) {
             await updateSnack(selectedSnack.snack_id, payload);
         }
-
+        await fetchAllSnacks();
         onEditOpenChange();
     };
 
@@ -355,7 +355,7 @@ export default function LayoutSnacks() {
                                                 <SelectTrigger className="w-full bg-sidebar h-12 rounded-lg">
                                                     <SelectValue placeholder={t('foods_tab.type_placeholder')} />
                                                 </SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current}>
+                                                <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>{t('foods_tab.type_label')}</SelectLabel>
                                                         <SelectItem value="0">{t('foods_tab.types.food')}</SelectItem>

@@ -10,5 +10,6 @@ namespace CinemaAPI.Services.Interfaces
         Task<string> GenerateUniqueCouponCodeAsync();
         Task AddCoupon(Coupon coupon);
         Task UpdateCoupon(int coupon_id, CouponUpdateRequest request);
+        Task<(bool isValid, string message, decimal discountValue, DiscountType type)> ValidateCouponAsync(string code, Guid userId, decimal orderValue);
     }
 }

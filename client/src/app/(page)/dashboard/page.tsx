@@ -29,18 +29,20 @@ import {
     Sun,
     Moon,
     ChevronDown,
-    Utensils
+    Utensils,
+    Languages
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { AvatarElement } from '@/components/ui/avatar';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Breadcrumbs, BreadcrumbItem, Selection } from '@heroui/react';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Breadcrumbs, BreadcrumbItem, Selection, Chip } from '@heroui/react';
 import { ThemeToggler } from '@/components/ui/effects/themeToggler';
 import { useLayoutStore, type LayoutKey } from '@/stores/useLayoutStore';
 import { LayoutAdmin } from '@/components/layout/layoutAdmin';
 import Link from 'next/link';
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
 
 const Management = ["movies", "tickets", "showtimes", "cinemas", "foods"] as const;
 
@@ -49,7 +51,7 @@ const ManagementLayoutMap: Record<(typeof Management)[number], LayoutKey> = {
     "tickets": 'tickets',
     "showtimes": 'showtimes',
     "cinemas": 'cinemas',
-    "foods": "foods"
+    "foods": "foods",
 };
 
 const Icon: Record<(typeof Management)[number], ReactNode> = {
@@ -57,7 +59,7 @@ const Icon: Record<(typeof Management)[number], ReactNode> = {
     "tickets": <Ticket size={18} />,
     "showtimes": <Drama size={18} />,
     "cinemas": <MapPinHouse size={18} />,
-    "foods": <Utensils size={18} />
+    "foods": <Utensils size={18} />,
 };
 
 const THEME_CONFIG = [
@@ -78,16 +80,28 @@ const CHART_THEME_STORAGE_KEY = "dashboard-chart-theme";
 const CHART_THEMES = new Set(["blue", "green", "yellow", "red", "pink", "purple", "cyan", "orange", "light_pink", "teal", "default"]);
 
 export default function Dashboard() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const router = useRouter();
     const { authUser, logout } = useAuthStore();
     const [isDark, setIsDark] = useState(false);
     const themeTogglerRef = useRef<HTMLButtonElement>(null);
+
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng);
+        if (typeof window !== 'undefined') {
+            document.cookie = `i18next=${lng}; path=/; max-age=31536000; SameSite=Lax`;
+            router.refresh();
+        }
+    };
+
+    const currentLang = (i18n.language || 'vi').startsWith('ja') ? 'ja' : (i18n.language || 'vi').startsWith('en') ? 'en' : 'vi';
 
     const { openLayout, setOpenLayout } = useLayoutStore();
     const menuButtonRefs = useRef<Partial<Record<LayoutKey, HTMLButtonElement | null>>>({});
 
     const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["default"]) as Selection);
-
+    const DROPDOWN_ITEM_CLASS = "data-[hover=true]:bg-amber-500/10 data-[hover=true]:text-amber-500 font-bold transition-all duration-200";
+    
     const selectedValue = useMemo(
         () => Array.from(selectedKeys).join(", "),
         [selectedKeys],
@@ -352,6 +366,72 @@ export default function Dashboard() {
 
                         <div className="flex items-center gap-2 sm:gap-3">
                             <div className="flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 bg-sidebar rounded-sm shadow-sm border border-zinc-200/50 dark:border-white/5">
+                                <Dropdown placement="bottom-end" className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-zinc-200 dark:border-white/10 rounded-xl shadow-2xl min-w-48">
+                                    <DropdownTrigger>
+                                        <button className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm transition-all group">
+                                            <div className="flex items-center gap-2 border-r border-zinc-200 dark:border-white/10 pr-2 sm:pr-3">
+                                                <Languages size={16} className="text-amber-500 group-hover:rotate-12 transition-transform duration-500" />
+                                                <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400">
+                                                    {currentLang === 'vi' ? 'VN' : currentLang === 'ja' ? 'JA' : 'EN'}
+                                                </span>
+                                            </div>
+                                            <span className="text-base leading-none">
+                                                {currentLang === 'vi' ? '🇻🇳' : currentLang === 'ja' ? '🇯🇵' : '🇺🇸'}
+                                            </span>
+                                            <ChevronDown size={12} className="text-zinc-400" />
+                                        </button>
+                                    </DropdownTrigger>
+                                    
+                                    <DropdownMenu
+                                        aria-label="Language selection"
+                                        onAction={(key) => changeLanguage(key as string)}
+                                        selectedKeys={[currentLang]}
+                                        selectionMode="single"
+                                        className="p-2"
+                                    >
+                                        <DropdownItem
+                                            key="vi"
+                                            textValue="Vietnamese"
+                                            startContent={<span className="text-md">🇻🇳</span>}
+                                            className={cn(DROPDOWN_ITEM_CLASS, "rounded-lg py-3")}
+                                            description="Tiếng Việt"
+                                        >
+                                            <div className="flex items-center justify-between w-full">
+                                                <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase">Vietnamese</span>
+                                                {currentLang === 'vi' && <Chip size="sm" variant="flat" color="warning" className="text-[8px] font-semibold h-5">ACTIVE</Chip>}
+                                            </div>
+                                        </DropdownItem>
+
+                                        <DropdownItem
+                                            key="ja"
+                                            textValue="Japanese"
+                                            startContent={<span className="text-md">🇯🇵</span>}
+                                            className={cn(DROPDOWN_ITEM_CLASS, "rounded-lg py-3")}
+                                            description="日本語"
+                                        >
+                                            <div className="flex items-center justify-between w-full">
+                                                <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase">Japanese</span>
+                                                {currentLang === 'ja' && <Chip size="sm" variant="flat" color="warning" className="text-[8px] font-semibold h-5">ACTIVE</Chip>}
+                                            </div>
+                                        </DropdownItem>
+
+                                        <DropdownItem
+                                            key="en"
+                                            textValue="English"
+                                            startContent={<span className="text-md">🇺🇸</span>}
+                                            className={cn(DROPDOWN_ITEM_CLASS, "rounded-lg py-3")}
+                                            description="English"
+                                        >
+                                            <div className="flex items-center justify-between w-full">
+                                                <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase">English</span>
+                                                {currentLang === 'en' && <Chip size="sm" variant="flat" color="warning" className="text-[8px] font-semibold h-5">ACTIVE</Chip>}
+                                            </div>
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
+
+                                <div className="w-px h-6 bg-zinc-200 dark:bg-white/10 mx-0.5 sm:mx-1" />
+
                                 <Dropdown>
                                     <DropdownTrigger>
                                         <button className="flex items-center gap-1 sm:gap-2.5 px-2 sm:px-4 py-2 text-[10px] sm:text-xs font-bold transition-all hover:bg-zinc-50 dark:hover:bg-white/5 rounded-sm">
@@ -376,6 +456,7 @@ export default function Dashboard() {
                                         {THEME_CONFIG.map((theme) => (
                                             <DropdownItem
                                                 key={theme.key}
+                                                textValue={theme.label}
                                                 startContent={<div className={`w-3.5 h-3.5 rounded-full ${theme.color} shadow-sm`} />}
                                                 showDivider={theme.showDivider}
                                                 className="font-bold py-2.5"

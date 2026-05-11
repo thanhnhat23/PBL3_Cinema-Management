@@ -106,6 +106,7 @@ export default function LayoutCombo() {
         } else if (selectedItem) {
             await updateComboDetail(selectedItem.combo_id, selectedItem.snack_id, { quantity: data.quantity });
         }
+        await fetchAllComboDetails();
         onOpenChange();
     };
 
@@ -270,7 +271,7 @@ export default function LayoutCombo() {
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                     <SelectValue placeholder={t('booking.selection.select_movie')} />
                                                 </SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current} className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
+                                                <SelectContent className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
                                                     {comboSnacks.map(s => (
                                                         <SelectItem key={s.snack_id} value={String(s.snack_id)}>{s.name}</SelectItem>
                                                     ))}
@@ -292,7 +293,7 @@ export default function LayoutCombo() {
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                     <SelectValue placeholder={t('foods_tab.type_placeholder')} />
                                                 </SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current} className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
+                                                <SelectContent className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
                                                     {nonComboSnacks.map(s => (
                                                         <SelectItem key={s.snack_id} value={String(s.snack_id)}>{s.name}</SelectItem>
                                                     ))}

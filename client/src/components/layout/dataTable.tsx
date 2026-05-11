@@ -96,7 +96,7 @@ export default function DataTableAdmin<T>({
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = useMemo(() => {
-    let filtered = [...items];
+    let filtered = items ? items.filter(item => item !== null && item !== undefined) : [];
 
     if (hasSearchFilter) {
       const query = filterValue.toLowerCase();
@@ -210,7 +210,11 @@ export default function DataTableAdmin<T>({
           <div className="flex w-full sm:w-auto gap-2 sm:gap-3">
             {onAdd && (
               <button 
-                onClick={() => onAdd?.()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onAdd?.();
+                }}
                 className="flex-1 sm:flex-none group flex items-center justify-center gap-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-950 px-3 sm:px-5 py-2.5 rounded-sm cursor-pointer font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95"
               >
                 <Plus size={16} className="group-hover:rotate-90 transition-transform duration-300" />
@@ -292,7 +296,7 @@ export default function DataTableAdmin<T>({
                         }}
                     >
                         {f.options.map((opt) => (
-                            <DropdownItem key={opt.uid} className="capitalize">
+                            <DropdownItem key={opt.uid} textValue={opt.name} className="capitalize">
                                 {opt.name}
                             </DropdownItem>
                         ))}
@@ -387,8 +391,8 @@ export default function DataTableAdmin<T>({
           tr: "group",
         }}
       >
-        <TableHeader columns={columns}>
-          {(column) => (
+        <TableHeader>
+          {columns.map((column) => (
             <TableColumn
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
@@ -396,7 +400,7 @@ export default function DataTableAdmin<T>({
             >
               {column.name}
             </TableColumn>
-          )}
+          ))}
         </TableHeader>
 
         <TableBody 
@@ -410,14 +414,21 @@ export default function DataTableAdmin<T>({
                     <Search size={48} />
                     <span className="text-sm font-medium">{emptyLabel}</span>
                 </div>
-            )} 
-            items={sortedItems}
+            )}
         >
-          {(item) => (
-            <TableRow key={rowKey(item)} className="cursor-default">
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
+          {sortedItems.map((item) => {
+            const rawKey = rowKey(item);
+            const key = rawKey !== null && rawKey !== undefined ? String(rawKey) : Math.random().toString();
+            return (
+              <TableRow key={key} className="cursor-default">
+                {columns.map((column) => (
+                    <TableCell key={`${key}-${column.uid}`}>
+                        {renderCell(item, column.uid)}
+                    </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>

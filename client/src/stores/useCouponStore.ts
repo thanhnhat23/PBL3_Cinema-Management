@@ -37,6 +37,7 @@ export const useCouponStore = create<{
     createCoupon: (couponData: Partial<Coupon>) => Promise<void>;
     updateCoupon: (couponId: number, couponData: Partial<Coupon>) => Promise<void>;
     deleteCoupon: (couponId: number) => Promise<void>;
+    validateCoupon: (code: string, userId: string, orderValue: number) => Promise<{ isValid: boolean; message: string; discountValue: number; type: 0 | 1 }>;
     clearSelectedCoupon: () => void;
 }>((set) => ({
     coupons: [],
@@ -146,6 +147,30 @@ export const useCouponStore = create<{
             console.error(`Error deleting coupon with ID ${couponId}:`, error);
         } finally {
             set({ isDeletingCoupon: false });
+        }
+    },
+
+    validateCoupon: async (code: string, userId: string, orderValue: number) => {
+        try {
+            const response = await _axios.post('/v1/coupon/validate', {
+                code,
+                user_id: userId,
+                order_value: orderValue,
+            });
+
+            return {
+                isValid: true,
+                message: response.data.message,
+                discountValue: response.data.discountValue,
+                type: response.data.type,
+            };
+        } catch (error: any) {
+            return {
+                isValid: false,
+                message: error.response?.data?.message || 'Invalid coupon code.',
+                discountValue: 0,
+                type: 0,
+            };
         }
     },
 

@@ -42,4 +42,10 @@ namespace CinemaAPI.Models.DTOs
         public bool? isHoliday { get; set; } = null;
         public string? applies_to { get; set; }
     }
+    public class CouponValidateRequest
+    {
+        public string code { get; set; } = string.Empty;
+        public Guid user_id { get; set; }
+        public decimal order_value { get; set; }
+    }
 }

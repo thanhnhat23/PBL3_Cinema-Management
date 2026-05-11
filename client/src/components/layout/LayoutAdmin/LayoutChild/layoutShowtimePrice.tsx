@@ -87,8 +87,8 @@ export default function LayoutShowtimePrice() {
         } else if (selectedItem) {
             await updatePrice(selectedItem.type_id, selectedItem.slot_id, payload);
         }
+        await fetchPrices();
         onEditOpenChange();
-        fetchPrices();
     };
 
     const getDayName = useCallback((day: number) => {
@@ -287,7 +287,7 @@ export default function LayoutShowtimePrice() {
                                             <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                 <SelectValue placeholder={t('showtimes_tab.price_tab.select_slot')} />
                                             </SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current} className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
+                                            <SelectContent className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
                                                 {slots.map(slot => (
                                                     <SelectItem key={slot.slot_id} value={String(slot.slot_id)}>
                                                         Slot #{slot.slot_id} ({getDayName(slot.dayOfWeek)} {slot.startTime.substring(0,5)})
@@ -307,7 +307,7 @@ export default function LayoutShowtimePrice() {
                                             <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                 <SelectValue placeholder={t('showtimes_tab.price_tab.select_seat_type')} />
                                             </SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current} className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
+                                            <SelectContent className="bg-sidebar border border-zinc-200 dark:border-zinc-800">
                                                 {seatTypes.map(st => (
                                                     <SelectItem key={st.type_id} value={String(st.type_id)}>
                                                         {typeof st.type_name === 'string' ? st.type_name : (st.type_id === 2 ? t('rooms_tab.seat_couple') : t('rooms_tab.seat_single'))}

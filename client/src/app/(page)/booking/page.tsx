@@ -24,6 +24,7 @@ import { ConfirmationTab } from '@/components/layout/SelectTab/ConfirmationTab';
 
 // Stores
 import { useCouponStore } from '@/stores/useCouponStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useVnpayStore } from '@/stores/useVnpayStore';
 import { useMomoStore } from '@/stores/useMomoStore';
 import { useBookingStore } from '@/stores/useBookingStore';
@@ -82,6 +83,9 @@ export default function BookingPage() {
 
   const coupons = useCouponStore(state => state.coupons);
   const fetchAllCoupons = useCouponStore(state => state.fetchAllCoupons);
+  const validateCoupon = useCouponStore(state => state.validateCoupon);
+
+  const authUser = useAuthStore(state => state.authUser);
 
   const createBooking = useBookingStore(state => state.createBooking);
   const isCreatingBooking = useBookingStore(state => state.isCreatingBooking);
@@ -222,37 +226,31 @@ export default function BookingPage() {
     });
   };
 
-  const handleApplyCoupon = () => {
+  const handleApplyCoupon = async () => {
     setCouponError("");
     if (!couponCode.trim()) {
       setSelection(prev => ({ ...prev, couponId: null }));
       return;
     }
 
+    if (!authUser) {
+        setCouponError(t('auth.login_required') || "Please login to use coupon.");
+        return;
+    }
+
+    const result = await validateCoupon(couponCode.trim(), authUser.id, subtotal);
+
+    if (!result.isValid) {
+      setCouponError(result.message);
+      setSelection(prev => ({ ...prev, couponId: null }));
+      return;
+    }
+
+    // Find the coupon to get its ID (though the backend should ideally return it too)
     const coupon = coupons.find(c => c.code.toLowerCase() === couponCode.trim().toLowerCase());
-
-    if (!coupon) {
-      setCouponError(t('confirmation_tab.coupon_not_found') || "Invalid coupon code.");
-      setSelection(prev => ({ ...prev, couponId: null }));
-      return;
-    }
-
-    if (subtotal < coupon.minOrderValue) {
-      setCouponError(t('confirmation_tab.coupon_min_value', { value: coupon.minOrderValue.toLocaleString() }));
-      setSelection(prev => ({ ...prev, couponId: null }));
-      return;
-    }
-
-    // Check date
-    const now = new Date();
-    if (new Date(coupon.startDate) > now || new Date(coupon.endDate) < now) {
-      setCouponError(t('confirmation_tab.coupon_expired'));
-      setSelection(prev => ({ ...prev, couponId: null }));
-      return;
-    }
-
+    
     setRealBookingData(null);
-    setSelection(prev => ({ ...prev, couponId: coupon.coupon_id }));
+    setSelection(prev => ({ ...prev, couponId: coupon?.coupon_id || null }));
   };
 
 

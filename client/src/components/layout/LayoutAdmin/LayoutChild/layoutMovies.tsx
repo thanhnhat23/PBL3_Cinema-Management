@@ -162,14 +162,11 @@ export default function LayoutMovie() {
         if (isAdding) {
             const { createMovie } = useMovieStore.getState();
             await createMovie(payload);
-            onEditOpenChange();
         } else if (selectedMovie) {
-            const updatedMovie = await updateMovie(selectedMovie.movie_id, payload);
-            if (updatedMovie) {
-                setSelectedMovie(updatedMovie);
-                onEditOpenChange();
-            }
+            await updateMovie(selectedMovie.movie_id, payload);
         }
+        await fetchAllMovies();
+        onEditOpenChange();
     };
 
     const releaseDateValue = parseLocalDate(editForm.release_date);
@@ -253,9 +250,10 @@ export default function LayoutMovie() {
                                 startContent={<Trash size={18} />}
                                 className="text-danger"
                                 color="danger"
-                                onPress={() => {
-                                    const { deleteMovie } = useMovieStore.getState();
-                                    deleteMovie(movie.movie_id);
+                                onPress={async () => {
+                                    const { deleteMovie, fetchAllMovies } = useMovieStore.getState();
+                                    await deleteMovie(movie.movie_id);
+                                    await fetchAllMovies();
                                 }}
                             >
                                 {t('common.delete')}
@@ -474,7 +472,7 @@ export default function LayoutMovie() {
                                                     </Button>
                                                 </PopoverTrigger>
 
-                                                <PopoverContent container={popoverContainerRef.current} className="w-auto p-0">
+                                                <PopoverContent className="w-auto p-0">
                                                     <Calendar
                                                         mode="single"
                                                         selected={releaseDateValue}
@@ -507,7 +505,7 @@ export default function LayoutMovie() {
                                                     </Button>
                                                 </PopoverTrigger>
 
-                                                <PopoverContent container={popoverContainerRef.current} className="w-auto p-0">
+                                                <PopoverContent className="w-auto p-0">
                                                     <Calendar
                                                         mode="single"
                                                         selected={endDateValue}
@@ -535,7 +533,7 @@ export default function LayoutMovie() {
                                                 <SelectValue placeholder={t('movie_details.status')} />
                                             </SelectTrigger>
 
-                                            <SelectContent container={popoverContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>{t('movie_details.status')}</SelectLabel>
                                                     <SelectItem value="0">{t('movie_status.released')}</SelectItem>
@@ -584,7 +582,7 @@ export default function LayoutMovie() {
                                                 <SelectValue placeholder={t('movie_details.age_limit')} />
                                             </SelectTrigger>
 
-                                            <SelectContent container={popoverContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>{t('movie_details.age_limit')}</SelectLabel>
                                                     <SelectItem value="false">{t('movie_details.no')}</SelectItem>

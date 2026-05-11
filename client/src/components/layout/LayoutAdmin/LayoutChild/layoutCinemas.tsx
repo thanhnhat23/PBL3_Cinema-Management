@@ -113,7 +113,7 @@ export default function LayoutCinemas() {
         } else if (selectedCinema) {
             await updateCinema(selectedCinema.cinema_id, payload);
         }
-
+        await fetchAllCinemas();
         onEditOpenChange();
     };
 
@@ -351,7 +351,7 @@ export default function LayoutCinemas() {
                                                 <SelectValue placeholder={t('cinemas_tab.city_label')} />
                                             </SelectTrigger>
 
-                                            <SelectContent container={drawerContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>{t('cinemas_tab.city_label')}</SelectLabel>
                                                     {locations.map((location) => (

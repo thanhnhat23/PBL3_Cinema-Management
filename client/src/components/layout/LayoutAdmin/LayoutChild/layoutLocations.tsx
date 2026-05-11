@@ -72,8 +72,9 @@ export default function LayoutLocations() {
         } else if (selectedLocation) {
             await updateLocation(selectedLocation.location_id, { city: form.city.trim() });
         }
+        await fetchAllLocations();
         onEditOpenChange();
-    }, [isAdding, form.city, selectedLocation, createLocation, updateLocation, onEditOpenChange]);
+    }, [isAdding, form.city, selectedLocation, createLocation, updateLocation, fetchAllLocations, onEditOpenChange]);
 
     const renderCell = useCallback((location: Location, columnKey: Key) => {
         const cellValue = location[columnKey as keyof Location];

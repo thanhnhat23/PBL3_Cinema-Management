@@ -162,6 +162,7 @@ export default function LayoutActors() {
             await updateActor(selectedActor.actor_id, payload);
         }
 
+        await fetchAllActors();
         onEditOpenChange();
     };
 
@@ -458,7 +459,7 @@ export default function LayoutActors() {
                                                     </Button>
                                                 </PopoverTrigger>
 
-                                                <PopoverContent container={popoverContainerRef.current} className="w-auto p-0">
+                                                <PopoverContent className="w-auto p-0">
                                                     <Calendar
                                                         mode="single"
                                                         selected={birthdayValue}

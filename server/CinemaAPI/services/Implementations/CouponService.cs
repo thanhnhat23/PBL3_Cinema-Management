@@ -57,13 +57,20 @@ namespace CinemaAPI.Services.Implementations
                 // 3. Holiday Reset Logic
                 if (coupon.coupon_type == CouponType.Holiday)
                 {
-                    // Valid for 3 days starting from startDate
-                    var holidayEnd = coupon.startDate.AddDays(2);
+                    // Calculate the start of the holiday for the current year
+                    var currentYearStart = new DateTime(now.Year, coupon.startDate.Month, coupon.startDate.Day, coupon.startDate.Hour, coupon.startDate.Minute, coupon.startDate.Second);
+                    var currentYearEnd = currentYearStart.AddDays(2);
                     
-                    if (now >= coupon.startDate && now <= holidayEnd)
+                    var lastYearStart = currentYearStart.AddYears(-1);
+                    var lastYearEnd = lastYearStart.AddDays(2);
+
+                    bool isInHoliday = (now >= currentYearStart && now <= currentYearEnd) || (now >= lastYearStart && now <= lastYearEnd);
+                    DateTime effectiveStart = (now >= currentYearStart) ? currentYearStart : lastYearStart;
+
+                    if (isInHoliday)
                     {
-                        // Reset usage if this is a new holiday period
-                        if (coupon.last_reset_at == null || coupon.last_reset_at < coupon.startDate)
+                        // Reset usage if this is a new holiday period (different from last_reset_at's period)
+                        if (coupon.last_reset_at == null || coupon.last_reset_at < effectiveStart)
                         {
                             coupon.current_usage = 0;
                             coupon.last_reset_at = now;
@@ -71,10 +78,14 @@ namespace CinemaAPI.Services.Implementations
                             changed = true;
                         }
                     }
-                    else if (now > holidayEnd && coupon.status == CouponStatus.Active)
+                    else if (coupon.status == CouponStatus.Active)
                     {
-                        coupon.status = CouponStatus.Expired;
-                        changed = true;
+                        // If not in holiday and was active, expire it if we are past the end of the current/most recent period
+                        if (now > currentYearEnd)
+                        {
+                            coupon.status = CouponStatus.Expired;
+                            changed = true;
+                        }
                     }
                 }
             }
@@ -200,6 +211,44 @@ namespace CinemaAPI.Services.Implementations
                 Console.WriteLine($"Error hard deleting coupon: {ex.Message}");
                 throw new Exception("An error occurred while hard deleting the coupon. Please try again.");
             }
+        }
+
+        public async Task<(bool isValid, string message, decimal discountValue, DiscountType type)> ValidateCouponAsync(string code, Guid userId, decimal orderValue)
+        {
+            await MaintainCouponsAsync();
+            var coupon = await _dbContext.Coupons.FirstOrDefaultAsync(c => c.code == code && c.deleted_at == null);
+
+            if (coupon == null)
+                return (false, "Coupon code not found.", 0, DiscountType.Percentage);
+
+            if (!coupon.IsActive)
+                return (false, "Coupon is not valid, has expired, or reached its usage limit.", 0, coupon.type);
+
+            if (orderValue < coupon.minOrderValue)
+                return (false, $"Minimum order value for this coupon is {coupon.minOrderValue:N0} VND.", 0, coupon.type);
+
+            // Check if already used
+            bool alreadyUsed;
+            if (coupon.coupon_type == CouponType.Holiday)
+            {
+                alreadyUsed = await _dbContext.Bookings.AnyAsync(b =>
+                    b.user_id == userId &&
+                    b.coupon_id == coupon.coupon_id &&
+                    b.status != BookingStatus.Cancelled &&
+                    (coupon.last_reset_at == null || b.createAt >= coupon.last_reset_at));
+            }
+            else
+            {
+                alreadyUsed = await _dbContext.Bookings.AnyAsync(b =>
+                    b.user_id == userId &&
+                    b.coupon_id == coupon.coupon_id &&
+                    b.status != BookingStatus.Cancelled);
+            }
+
+            if (alreadyUsed)
+                return (false, "You have already used this coupon code.", 0, coupon.type);
+
+            return (true, "Coupon applied successfully.", coupon.discountValue, coupon.type);
         }
     }
 }

@@ -140,8 +140,8 @@ export default function LayoutShowtime() {
             };
             await updateShowtime(selectedItem.showtime_id, payload);
         }
+        await fetchAllShowtimes();
         onEditOpenChange();
-        fetchAllShowtimes();
     };
 
     const renderCell = useCallback((item: ShowtimeDisplay, columnKey: Key) => {
@@ -446,7 +446,7 @@ export default function LayoutShowtime() {
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg">
                                                     <SelectValue placeholder={t('showtimes_tab.placeholders.select_movie')} />
                                                 </SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current}>
+                                                <SelectContent>
                                                     <SelectGroup>
                                                         {movies.filter(m => {
                                                             const today = startOfDay(new Date());
@@ -494,7 +494,7 @@ export default function LayoutShowtime() {
                                         <div onPointerDown={e => e.stopPropagation()}>
                                             <Select value={editForm.room_id} onValueChange={(v) => setEditForm(p => ({ ...p, room_id: v }))}>
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue placeholder={t('showtimes_tab.placeholders.select_room')} /></SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current}>
+                                                <SelectContent>
                                                     <SelectGroup>
                                                         {rooms.map(r => (
                                                             <SelectItem key={r.room_id} value={String(r.room_id)}>
@@ -524,7 +524,7 @@ export default function LayoutShowtime() {
                                                     <Label htmlFor="slot_id" className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.tabs.slot')}</Label>
                                                     <Select value={editForm.slot_id} onValueChange={(v) => setEditForm(p => ({ ...p, slot_id: v }))}>
                                                         <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue placeholder={t('showtimes_tab.placeholders.select_slot')} /></SelectTrigger>
-                                                        <SelectContent container={drawerContainerRef.current}>
+                                                        <SelectContent>
                                                             <SelectGroup>
                                                                 {(() => {
                                                                     const selectedDate = parseISO(editForm.date);
@@ -550,7 +550,7 @@ export default function LayoutShowtime() {
                                                     <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('common.status')}</Label>
                                                     <Select value={editForm.status} onValueChange={(v) => setEditForm(p => ({ ...p, status: v }))}>
                                                         <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue /></SelectTrigger>
-                                                        <SelectContent container={drawerContainerRef.current}>
+                                                        <SelectContent>
                                                             <SelectGroup>
                                                                 {[0, 1, 2, 3, 4].map(s => (
                                                                     <SelectItem key={s} value={String(s)}>
@@ -592,7 +592,7 @@ export default function LayoutShowtime() {
                                         <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('showtimes_tab.pricing_model.label')}</Label>
                                         <Select value={editForm.pricing_model} onValueChange={(v) => setEditForm(p => ({ ...p, pricing_model: v }))}>
                                             <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue /></SelectTrigger>
-                                            <SelectContent container={drawerContainerRef.current}>
+                                            <SelectContent>
                                                 <SelectGroup>
                                                     <SelectItem value="0">{t('showtimes_tab.pricing_model.price_based')}</SelectItem>
                                                     <SelectItem value="1">{t('showtimes_tab.pricing_model.seat_based')}</SelectItem>
@@ -607,7 +607,7 @@ export default function LayoutShowtime() {
                                             <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">{t('common.status')}</Label>
                                             <Select value={editForm.status} onValueChange={(v) => setEditForm(p => ({ ...p, status: v }))}>
                                                 <SelectTrigger className="bg-sidebar h-12 rounded-lg"><SelectValue /></SelectTrigger>
-                                                <SelectContent container={drawerContainerRef.current}>
+                                                <SelectContent>
                                                     <SelectGroup>
                                                         {[0, 1, 2, 3, 4].map(s => (
                                                             <SelectItem key={s} value={String(s)}>
