@@ -4,12 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CinemaAPI.data;
+using Microsoft.EntityFrameworkCore;
+using CinemaAPI.Models;
 
 namespace CinemaAPI.Hubs
 {
     public class SeatLockHub : Hub
     {
         private readonly IConnectionMultiplexer _redis;
+        private readonly AppDbContext _dbContext;
         private static readonly string LuaUnlockScript = @"
             if redis.call('get', KEYS[1]) == ARGV[1] then
                 return redis.call('del', KEYS[1])
@@ -17,9 +21,10 @@ namespace CinemaAPI.Hubs
                 return 0
             end";
 
-        public SeatLockHub(IConnectionMultiplexer redis)
+        public SeatLockHub(IConnectionMultiplexer redis, AppDbContext dbContext)
         {
             _redis = redis;
+            _dbContext = dbContext;
         }
 
         public async Task JoinShowtimeGroup(int showtimeId)
@@ -191,9 +196,27 @@ namespace CinemaAPI.Hubs
                     var parts = seatStr.ToString().Split(':');
                     if (parts.Length == 3)
                     {
-                        var showtimeIdStr = parts[0];
+                         var showtimeIdStr = parts[0];
                         var seatIdStr = parts[1];
                         var userId = parts[2];
+
+                        var showtimeId = int.Parse(showtimeIdStr);
+                        var seatId = int.Parse(seatIdStr);
+                        var userGuid = Guid.Parse(userId);
+
+                        // If this seat has been converted into a pending booking in SQL, DO NOT unlock it on Redis!
+                        // The background cleanup worker will clean it up if payment fails or expires.
+                        var isPendingInDb = await _dbContext.ShowTimeSeats
+                            .AnyAsync(sts => sts.showtime_id == showtimeId 
+                                             && sts.seat_id == seatId 
+                                             && sts.Booking != null 
+                                             && sts.Booking.user_id == userGuid 
+                                             && sts.Booking.status == BookingStatus.Pending);
+
+                        if (isPendingInDb)
+                        {
+                            continue;
+                        }
 
                         var lockKey = $"seat_lock:{showtimeIdStr}:{seatIdStr}";
 
