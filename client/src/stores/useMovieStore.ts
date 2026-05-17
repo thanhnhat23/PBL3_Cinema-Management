@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface Movie {
     movie_id: number;
@@ -46,9 +48,7 @@ export const useMovieStore = create<{
     isFetchingMoviesByStatus: boolean;
     isFetchingPopularMovies: boolean;
     isFetchingMovieDetails: boolean;
-    isCreatingMovie: boolean;
     isUpdatingMovie: boolean;
-    isDeletingMovie: boolean;
     isFetchingActorWithMovies: boolean;
 
     fetchAllMovies: () => Promise<void>;
@@ -56,9 +56,7 @@ export const useMovieStore = create<{
     fetchMoviesByStatus: (status: Movie['status'], limit?: number) => Promise<void>;
     fetchPopularMovies: (limit?: number) => Promise<void>;
     fetchMovieById: (movieId: number) => Promise<void>;
-    createMovie: (movieData: Partial<Movie>) => Promise<void>;
     updateMovie: (movieId: number, movieData: Partial<Movie>) => Promise<Movie | null>;
-    deleteMovie: (movieId: number) => Promise<void>;
     fetchActorWithMovies: (movieId: number) => Promise<void>;
     clearSelectedMovie: () => void;
     clearActorWithMovies: () => void;
@@ -76,16 +74,14 @@ export const useMovieStore = create<{
     isFetchingMoviesByStatus: false,
     isFetchingPopularMovies: false,
     isFetchingMovieDetails: false,
-    isCreatingMovie: false,
     isUpdatingMovie: false,
-    isDeletingMovie: false,
     isFetchingActorWithMovies: false,
 
     fetchAllMovies: async () => {
         const currentMovies = useMovieStore.getState().movies;
         // Skip if already fetched
         if (currentMovies.length > 0) return;
-        
+
         try {
             set({ isFetchingMovies: true });
 
@@ -178,22 +174,6 @@ export const useMovieStore = create<{
         }
     },
 
-    createMovie: async (movieData: Partial<Movie>) => {
-        try {
-            set({ isCreatingMovie: true });
-
-            const response = await _axios.post('/v1/movie/create', movieData);
-
-            if (response.data?.data) {  
-                set((state) => ({ movies: [...state.movies, response.data.data] }));
-            }
-        } catch (error) {
-            console.error('Error creating movie:', error);
-        } finally {
-            set({ isCreatingMovie: false });
-        }
-    },
-
     updateMovie: async (movieId: number, movieData: Partial<Movie>) => {
         try {
             set({ isUpdatingMovie: true });
@@ -208,30 +188,26 @@ export const useMovieStore = create<{
                     ),
                     selectedMovie: updatedMovie,
                 }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.movie.update_success'),
+                    color: "success",
+                    variant: "flat"
+                });
             }
 
             return updatedMovie;
         } catch (error) {
             console.error(`Error updating movie with ID ${movieId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.movie.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
             return null;
         } finally {
             set({ isUpdatingMovie: false });
-        }
-    },
-
-    deleteMovie: async (movieId: number) => {
-        try {
-            set({ isDeletingMovie: true });
-
-            await _axios.delete(`/v1/movie/delete/${movieId}`);
-            set((state) => ({
-                movies: state.movies.filter((movie) => movie.movie_id !== movieId),
-                selectedMovie: state.selectedMovie?.movie_id === movieId ? null : state.selectedMovie,
-            }));
-        } catch (error) {
-            console.error(`Error deleting movie with ID ${movieId}:`, error);
-        } finally {
-            set({ isDeletingMovie: false });
         }
     },
 

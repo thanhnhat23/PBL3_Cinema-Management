@@ -23,6 +23,7 @@ namespace CinemaAPI.Services.Implementations
             await _dbContext.Bookings
                 .AsNoTracking()
                 .Include(b => b.User)
+                .Include(b => b.Processor)
                 .Include(b => b.ShowTime)
                     .ThenInclude(st => st.Movie)
                 .Include(b => b.ShowTime)
@@ -39,6 +40,7 @@ namespace CinemaAPI.Services.Implementations
             await _dbContext.Bookings
                 .AsNoTracking()
                 .Include(b => b.User)
+                .Include(b => b.Processor)
                 .Include(b => b.ShowTime)
                     .ThenInclude(st => st.Movie)
                 .Include(b => b.ShowTime)
@@ -377,6 +379,48 @@ namespace CinemaAPI.Services.Implementations
                 Console.WriteLine($"Error in BookingService.UpdateBooking: {e.Message}");
                 throw new Exception("An error occurred while updating the booking.");
             }
+        }
+
+        public async Task CancelBooking(int booking_id, Guid? processedBy)
+        {
+            var booking = await _dbContext.Bookings
+                .Include(b => b.ShowTimeSeats)
+                .FirstOrDefaultAsync(b => b.booking_id == booking_id);
+
+            if (booking == null) throw new Exception("Booking not found");
+
+            booking.status = BookingStatus.Cancelled;
+            booking.processed_by = processedBy;
+
+            foreach (var seat in booking.ShowTimeSeats)
+            {
+                seat.status = ShowTimeSeatStatus.Available;
+                seat.booking_id = null;
+            }
+
+            _dbContext.Bookings.Update(booking);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task RefundBooking(int booking_id, Guid? processedBy)
+        {
+            var booking = await _dbContext.Bookings
+                .Include(b => b.ShowTimeSeats)
+                .FirstOrDefaultAsync(b => b.booking_id == booking_id);
+
+            if (booking == null) throw new Exception("Booking not found");
+
+            booking.status = BookingStatus.Refunded;
+            booking.processed_by = processedBy;
+
+            foreach (var seat in booking.ShowTimeSeats)
+            {
+                seat.status = ShowTimeSeatStatus.Available;
+                seat.booking_id = null;
+            }
+
+            _dbContext.Bookings.Update(booking);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -12,12 +12,11 @@ namespace CinemaAPI.Controllers
     public class couponController : ControllerBase
     {
         private readonly ICouponService _couponService;
-        private readonly CouponService _couponDeleteService;
+// removed _couponDeleteService
 
-        public couponController(ICouponService couponService, CouponService couponDeleteService)
+        public couponController(ICouponService couponService)
         {
             _couponService = couponService;
-            _couponDeleteService = couponDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -142,7 +141,10 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _couponDeleteService.SoftDeleteCoupon(couponId);
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? deletedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _couponService.SoftDeleteCoupon(couponId, deletedBy);
                 return Ok("Coupon deleted successfully.");
             }
             catch (Exception ex)
@@ -156,7 +158,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _couponDeleteService.HardDeleteCoupon(couponId);
+                await _couponService.HardDeleteCoupon(couponId);
                 return Ok("Coupon hard deleted successfully.");
             }
             catch (Exception ex)

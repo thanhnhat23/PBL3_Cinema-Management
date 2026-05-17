@@ -32,6 +32,8 @@
     "email": "メール",
     "actions": "操作",
     "id": "ID",
+    "name": "名前",
+    "type": "タイプ",
     "management_system": "管理システム",
     "add_new": "新規追加",
     "saving": "保存中...",
@@ -60,7 +62,18 @@
     },
     "copyright": "© 2026 MilkyWayyy Cinema - 無断複写・転載を禁じます",
     "change_method": "支払い方法を変更",
-    "coming_soon": "近日公開"
+    "coming_soon": "近日公開",
+    "restore": "復元",
+    "hard_delete": "完全に削除",
+    "confirm_hard_delete": "この項目を完全に削除してもよろしいですか？この操作は取り消せません。",
+    "search_deleted_items": "削除済みアイテムを検索...",
+    "total_deleted_count": "合計 {{count}} 件の削除済みアイテム",
+    "trash_empty": "ゴミ箱は空です",
+    "loading_trash": "ゴミ箱のデータを読み込み中...",
+    "entity_type": "タイプ",
+    "deleted_at": "削除日時",
+    "deleted_by": "削除者",
+    "unknown_user": "不明"
   },
   "navbar": {
     "movies": "映画",
@@ -221,6 +234,10 @@
       "change_showtime": "上映回を変更",
       "no_seat_info": "座席表情報が見つかりません",
       "screen": "スクリーン",
+      "lock_expired_title": "座席のキープ期限切れ",
+      "lock_expired_desc": "座席 {{seatCode}} は5分後に解放されました。",
+      "already_locked": "この座席は他のユーザーに選択されています！",
+      "not_connected": "サーバーへの接続が中断されました。しばらくしてからもう一度お試しください！",
       "legend": {
         "single": "一般席",
         "double": "ペア席",
@@ -365,7 +382,8 @@
     "total_bookings": "予約",
     "coupons_available": "利用可能なクーポン",
     "no_expiration": "有効期限なし",
-    "no_coupons_active": "現在利用可能なクーポンはありません。"
+    "no_coupons_active": "現在利用可能なクーポンはありません。",
+    "usage": "使用状況"
   },
   "actors": {
     "hero_title": "スクリーンの",
@@ -606,6 +624,7 @@
     "home": "ホーム",
     "profile": "マイプロフィール",
     "logout": "ログアウト",
+    "other": "その他",
     "chart_color": "グラフの色",
     "switch_light": "ライトモードへ切り替え",
     "switch_dark": "ダークモードへ切り替え",
@@ -619,7 +638,9 @@
       "sync": "データ同期",
       "revenue": "収益統計",
       "stats": "ダッシュボード概要",
-      "inventory": "在庫管理"
+      "inventory": "在庫管理",
+      "trash": "ゴミ箱",
+      "trash_desc": "削除された項目を管理し、必要に応じて復元します。"
     },
     "themes": {
       "blue": "ブルー",
@@ -923,6 +944,7 @@
     "loading_label": "データを読み込み中...",
     "details_title": "取引の詳細",
     "cancel_ticket": "チケットをキャンセル",
+    "refund_ticket": "チケット返金",
     "view_details": "チケットの詳細",
     "payment_info": "支払い情報",
     "original_price": "元の価格",
@@ -935,6 +957,7 @@
       "pending": "保留中",
       "confirmed": "確認済み",
       "cancelled": "キャンセル済み",
+      "refunded": "返金済み",
       "unknown": "不明"
     },
     "columns": {
@@ -943,7 +966,8 @@
       "total": "総額",
       "final": "最終金額",
       "status": "ステータス",
-      "created": "作成日"
+      "created": "作成日",
+      "processed_by": "担当者"
     }
   },
   "coupons_tab": {
@@ -1343,6 +1367,12 @@
     "failed_title": "支払い失敗",
     "success_desc": "当サービスをご利用いただきありがとうございます。素晴らしい映画の時間をお過ごしください！",
     "failed_desc": "申し訳ありませんが、支払い処理中にエラーが発生しました。口座残高を確認するか、別の方法をお試しください。",
+    "momo": {
+      "success_title": "MoMo決済成功",
+      "failed_title": "MoMo決済失敗",
+      "success_desc": "MoMoウォレットで正常に決済されました！",
+      "failed_desc": "MoMo決済中にエラーが発生しました。"
+    },
     "order_info": "注文情報",
     "order_payment_info": "注文の支払い",
     "download_invoice": "領収書をダウンロード (PDF)",
@@ -1388,5 +1418,201 @@
     "coupon_min_value": "このクーポンは{{value}} VND以上のご注文にのみ適用されます",
     "coupon_expired": "クーポンの有効期限が切れています",
     "coupon_applied": "クーポンが正常に適用されました"
+  },
+  "toasts": {
+    "trash": {
+      "fetch_error": "ゴミ箱アイテムの取得に失敗しました",
+      "restore_success": "アイテムを復元しました",
+      "restore_error": "アイテムの復元に失敗しました",
+      "hard_delete_success": "アイテムを永久に削除しました",
+      "hard_delete_error": "アイテムの永久削除に失敗しました。他のデータとリンクされている可能性があります。"
+    },
+    "movie": {
+      "add_success": "映画を追加しました",
+      "add_error": "映画の追加に失敗しました",
+      "update_success": "映画情報を更新しました",
+      "update_error": "映画情報の更新に失敗しました",
+      "delete_success": "映画を削除しました",
+      "delete_error": "映画の削除に失敗しました"
+    },
+    "actor": {
+      "add_success": "俳優を追加しました",
+      "add_error": "俳優の追加に失敗しました",
+      "update_success": "俳優情報を更新しました",
+      "update_error": "俳優情報の更新に失敗しました",
+      "delete_success": "俳優を削除しました",
+      "delete_error": "俳優の削除に失敗しました"
+    },
+    "room": {
+      "add_success": "シアターを追加しました",
+      "add_error": "シアターの追加に失敗しました",
+      "update_success": "シアター情報を更新しました",
+      "update_error": "シアター情報の更新に失敗しました",
+      "delete_success": "シアターを削除しました",
+      "delete_error": "シアターの削除に失敗しました"
+    },
+    "cinema": {
+      "add_success": "シアターを追加しました",
+      "add_error": "シアターの追加に失敗しました",
+      "update_success": "シアター情報を更新しました",
+      "update_error": "シアター情報の更新に失敗しました",
+      "delete_success": "シアターを削除しました",
+      "delete_error": "シアターの削除に失敗しました"
+    },
+    "location": {
+      "add_success": "場所を追加しました",
+      "add_error": "場所の追加に失敗しました",
+      "update_success": "場所情報を更新しました",
+      "update_error": "場所情報の更新に失敗しました",
+      "delete_success": "場所を削除しました",
+      "delete_error": "場所の削除に失敗しました"
+    },
+    "showtime": {
+      "add_success": "上映時間を追加しました",
+      "add_error": "上映時間の追加に失敗しました",
+      "update_success": "上映時間情報を更新しました",
+      "update_error": "上映時間情報の更新に失敗しました",
+      "delete_success": "上映時間を削除しました",
+      "delete_error": "上映時間の削除に失敗しました"
+    },
+    "snack": {
+      "add_success": "スナックを追加しました",
+      "add_error": "スナックの追加に失敗しました",
+      "update_success": "スナック情報を更新しました",
+      "update_error": "スナック情報の更新に失敗しました",
+      "delete_success": "スナックを削除しました",
+      "delete_error": "スナックの削除に失敗しました"
+    },
+    "coupon": {
+      "add_success": "クーポンを追加しました",
+      "add_error": "クーポンの追加に失敗しました",
+      "update_success": "クーポン情報を更新しました",
+      "update_error": "クーポン情報の更新に失敗しました",
+      "delete_success": "クーポンを削除しました",
+      "delete_error": "クーポンの削除に失敗しました"
+    },
+    "inventory": {
+      "update_success": "在庫を更新しました",
+      "update_error": "在庫の更新に失敗しました"
+    },
+    "user": {
+      "update_success": "ユーザー情報を更新しました",
+      "update_error": "ユーザー情報の更新に失敗しました",
+      "ban_success": "ユーザーを禁止しました",
+      "ban_error": "ユーザーの禁止に失敗しました"
+    },
+    "sync": {
+      "success": "同期に成功しました",
+      "error": "同期に失敗しました",
+      "cancelled": "同期がキャンセルされました",
+      "movie_success": "映画の同期に成功しました！",
+      "movie_desc": "ステータスが {{status}} の映画が正常に同期されました。",
+      "movie_error": "映画の同期に失敗しました！",
+      "movie_error_desc": "ステータスが {{status}} の映画を同期中にエラーが発生しました。後でもう一度お試しください。",
+      "movie_cancelled": "映画の同期がキャンセルされました！",
+      "movie_cancelled_desc": "ステータスが {{status}} の映画の同期がキャンセルされました。",
+      "status_success": "映画ステータスの更新に成功しました！",
+      "status_desc": "映画のステータスが正常に更新されました。",
+      "status_error": "映画ステータスの更新に失敗しました！",
+      "status_error_desc": "映画のステータスを更新中にエラーが発生しました。後でもう一度お試しください。",
+      "status_cancelled": "映画ステータスの更新がキャンセルされました！",
+      "status_cancelled_desc": "映画ステータスの更新がキャンセルされました。",
+      "review_success": "映画レビューの同期に成功しました！",
+      "review_desc": "映画のレビューが正常に同期されました。",
+      "review_error": "映画レビューの同期に失敗しました！",
+      "review_error_desc": "映画のレビューを同期中にエラーが発生しました。後でもう一度お試しください。",
+      "review_cancelled": "映画レビューの同期がキャンセルされました！",
+      "review_cancelled_desc": "映画のレビューの同期がキャンセルされました。"
+    },
+    "showtime_slot": {
+      "add_success": "上映枠が正常に追加されました",
+      "add_error": "上映枠の追加中にエラーが発生しました",
+      "update_success": "上映枠が正常に更新されました",
+      "update_error": "上映枠の更新中にエラーが発生しました",
+      "delete_success": "上映枠が正常に削除されました",
+      "delete_error": "上映枠の削除中にエラーが発生しました"
+    },
+    "showtime_price": {
+      "add_success": "上映価格が正常に追加されました",
+      "add_error": "上映価格の追加中にエラーが発生しました",
+      "update_success": "上映価格が正常に更新されました",
+      "update_error": "上映価格の更新中にエラーが発生しました",
+      "delete_success": "上映価格が正常に削除されました",
+      "delete_error": "上映価格の削除中にエラーが発生しました"
+    },
+    "review": {
+      "auth_required": "ログインが必要です",
+      "auth_required_desc": "レビューを作成するにはログインしてください。",
+      "add_success": "レビューが作成されました",
+      "add_desc": "レビューが正常に作成されました。",
+      "add_error": "レビュー作成エラー",
+      "add_error_desc": "レビューの作成中にエラーが発生しました。もう一度お試しください。",
+      "update_success": "レビューが更新されました",
+      "update_desc": "レビューが正常に更新されました。",
+      "update_error": "レビュー更新エラー",
+      "update_error_desc": "レビューの更新中にエラーが発生しました。もう一度お試しください。",
+      "ban_success": "レビューが禁止されました",
+      "ban_desc": "レビューが正常に禁止されました。",
+      "ban_error": "レビュー禁止エラー",
+      "ban_error_desc": "レビューの禁止中にエラーが発生しました。もう一度お試しください。"
+    },
+    "combo": {
+      "add_success": "コンボ詳細が正常に追加されました",
+      "add_error": "コンボ詳細の追加中にエラーが発生しました",
+      "update_success": "コンボ詳細が正常に更新されました",
+      "update_error": "コンボ詳細の更新中にエラーが発生しました",
+      "delete_success": "コンボ詳細が正常に削除されました",
+      "delete_error": "コンボ詳細の削除中にエラーが発生しました"
+    },
+    "auth": {
+      "signin_success": "ログインに成功しました！おかえりなさい。",
+      "signin_error": "ログインに失敗しました！",
+      "signin_error_desc": "認証情報を確認して、もう一度お試しください。",
+      "logout_success": "ログアウトに成功しました！またお会いしましょう。",
+      "logout_error": "ログアウトに失敗しました！",
+      "logout_error_desc": "ログアウト中にエラーが発生しました。もう一度お試しください。",
+      "signup_success": "登録に成功しました！",
+      "signup_success_desc": "メールを確認してアカウントを有効にしてください。",
+      "signup_error": "登録に失敗しました",
+      "signup_error_desc": "情報を確認してください。",
+      "verify_success": "メール認証に成功しました！",
+      "verify_desc": "今すぐログインできます。",
+      "verify_error": "メール認証に失敗しました",
+      "verify_error_desc": "後でもう一度お試しください。",
+      "forgot_success": "パスワード再設定リンクを送信しました！",
+      "forgot_desc": "メールを確認してください。",
+      "forgot_error": "リクエストに失敗しました",
+      "forgot_error_desc": "後でもう一度お試しください。",
+      "reset_check_success": "再設定トークンは有効です！",
+      "reset_check_desc": "新しいパスワードを設定できます。",
+      "reset_check_error": "無効なトークン",
+      "reset_check_error_desc": "トークンの期限が切れているか、正しくありません。",
+      "reset_success": "パスワードの再設定に成功しました！",
+      "reset_desc": "新しいパスワードでログインできます。",
+      "reset_error": "パスワードの再設定に失敗しました",
+      "reset_error_desc": "後でもう一度お試しください。",
+      "change_password_success": "パスワードを変更しました",
+      "change_password_desc": "パスワードが正常に変更されました。",
+      "change_password_error": "パスワード変更エラー",
+      "change_password_error_desc": "パスワードの変更中にエラーが発生しました。もう一度お試しください。",
+      "change_email_success": "メールアドレスを変更しました",
+      "change_email_desc": "メールアドレスが正常に変更されました。",
+      "change_email_error": "メールアドレス変更エラー",
+      "change_email_error_desc": "メールアドレスの変更中にエラーが発生しました。もう一度お試しください。",
+      "change_birthdate_success": "誕生日を変更しました",
+      "change_birthdate_desc": "誕生日は正常に変更されました。",
+      "change_birthdate_error": "誕生日変更エラー",
+      "change_birthdate_error_desc": "誕生日の変更中にエラーが発生しました。もう一度お試しください。",
+      "change_avatar_success": "アバターを変更しました",
+      "change_avatar_desc": "アバターが正常に変更されました。",
+      "change_avatar_error": "アバター変更エラー",
+      "change_avatar_error_desc": "アバターの変更中にエラーが発生しました。もう一度お試しください。"
+    },
+    "booking": {
+      "auth_required": "ログインが必要です",
+      "auth_required_desc": "予約を続けるにはログインしてください。",
+      "create_error": "予約エラー",
+      "create_error_desc": "注文の作成中にエラーが発生しました。もう一度お試しください。"
+    }
   }
 }

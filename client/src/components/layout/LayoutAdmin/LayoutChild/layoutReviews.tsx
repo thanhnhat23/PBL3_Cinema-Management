@@ -24,7 +24,7 @@ import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { useTranslation } from "react-i18next";
 
 const getReviewColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "review_id", sortable: true },
+    { name: t('common.id'), uid: "review_id", sortable: true },
     { name: t('reviews_tab.columns.user'), uid: "username", sortable: true },
     { name: t('reviews_tab.columns.movie'), uid: "movie_id", sortable: true },
     { name: t('reviews_tab.columns.rating'), uid: "rating", sortable: true },
@@ -122,9 +122,6 @@ export default function LayoutReviews() {
                                 {t('common.view')}
                             </DropdownItem>
 
-                            <DropdownItem key="delete" startContent={<Ban size={18} />} className="text-danger" color="danger">
-                                {t('reviews_tab.ban_user')}
-                            </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 );
@@ -166,6 +163,8 @@ export default function LayoutReviews() {
                 rowKey={(item) => `${item.review_id || "review"}-${item.movie_id}-${item.profile_slug}-${item.createAt}`}
                 searchBy={(item) => item.username}
                 renderCell={renderCell}
+                selectionMode="none"
+                hideDeleteSelected={true}
             />
 
             <Drawer isOpen={isOpen} onOpenChange={onOpenChange} size="md" classNames={{ base: "bg-sidebar" }}>

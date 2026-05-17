@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface Booking {
     booking_id: number;
@@ -21,6 +23,8 @@ export interface Booking {
     roomName?: string;
     seats?: string[];
     paymentMethod?: string;
+    processedByUserName?: string;
+    processedByAvatarPath?: string;
 }
 
 interface ApiBooking {
@@ -35,6 +39,10 @@ interface ApiBooking {
     createAt: Date;
     User?: {
         userName?: string;
+    };
+    Processor?: {
+        userName?: string;
+        avatar_path?: string;
     };
     ShowTime?: {
         Room?: {
@@ -88,6 +96,8 @@ export const useBookingStore = create<{
         finalAmount: number;
         status: string;
     } | null>;
+    cancelBooking: (bookingId: number) => Promise<boolean>;
+    refundBooking: (bookingId: number) => Promise<boolean>;
     clearSelectedBooking: () => void;
 }>((set) => ({
     bookings: [],
@@ -125,6 +135,8 @@ export const useBookingStore = create<{
                     movie_id: item.ShowTime?.movie_id,
                     seats: item.ShowTimeSeats?.map(d => d.Seat?.seat_code).filter(Boolean) as string[],
                     paymentMethod: item.VnpayPayments?.[0] ? 'VNPAY' : (item.MomoPayments?.[0] ? 'MOMO' : 'N/A'),
+                    processedByUserName: item.Processor?.userName,
+                    processedByAvatarPath: item.Processor?.avatar_path,
                 }));
 
                 set({ bookings: mapped });
@@ -164,6 +176,8 @@ export const useBookingStore = create<{
                         movie_id: item.ShowTime?.movie_id,
                         seats: item.ShowTimeSeats?.map(d => d.Seat?.seat_code).filter(Boolean) as string[],
                         paymentMethod: item.VnpayPayments?.[0] ? 'VNPAY' : (item.MomoPayments?.[0] ? 'MOMO' : 'N/A'),
+                        processedByUserName: item.Processor?.userName,
+                        processedByAvatarPath: item.Processor?.avatar_path,
                     },
                 });
             }
@@ -191,6 +205,12 @@ export const useBookingStore = create<{
 
             if (!userId) {
                 console.error('Cannot create booking: User is not logged in');
+                addToast({
+                    title: i18n.t('toasts.booking.auth_required'),
+                    description: i18n.t('toasts.booking.auth_required_desc'),
+                    color: "danger",
+                    variant: "flat"
+                });
                 return null;
             }
 
@@ -221,9 +241,61 @@ export const useBookingStore = create<{
             return null;
         } catch (error) {
             console.error('Error creating booking:', error instanceof Error ? error.message : 'Unknown error');
+            addToast({
+                title: i18n.t('toasts.booking.create_error'),
+                description: i18n.t('toasts.booking.create_error_desc'),
+                color: "danger",
+                variant: "flat"
+            });
             return null;
         } finally {
             set({ isCreatingBooking: false });
+        }
+    },
+
+    cancelBooking: async (bookingId: number) => {
+        try {
+            const response = await _axios.post(`/v1/booking/cancel/${bookingId}`);
+            if (response.status === 200) {
+                set((state) => ({
+                    bookings: state.bookings.map((b) => 
+                        b.booking_id === bookingId ? { ...b, status: '2' } : b
+                    )
+                }));
+                addToast({
+                    title: i18n.t('toasts.booking.cancel_success'),
+                    color: "success",
+                    variant: "flat"
+                });
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error cancelling booking:', error);
+            return false;
+        }
+    },
+
+    refundBooking: async (bookingId: number) => {
+        try {
+            const response = await _axios.post(`/v1/booking/refund/${bookingId}`);
+            if (response.status === 200) {
+                set((state) => ({
+                    bookings: state.bookings.map((b) => 
+                        b.booking_id === bookingId ? { ...b, status: '3' } : b
+                    )
+                }));
+                addToast({
+                    title: i18n.t('toasts.booking.refund_success'),
+                    color: "success",
+                    variant: "flat"
+                });
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error refunding booking:', error);
+            return false;
         }
     },
 

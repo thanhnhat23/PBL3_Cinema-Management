@@ -28,6 +28,7 @@
     "@heroui/tabs": "^2.2.27",
     "@heroui/theme": "^2.4.26",
     "@heroui/toast": "^2.0.20",
+    "@microsoft/signalr": "^10.0.0",
     "@react-google-maps/api": "^2.20.8",
     "@tabler/icons-react": "^3.41.1",
     "axios": "^1.13.5",

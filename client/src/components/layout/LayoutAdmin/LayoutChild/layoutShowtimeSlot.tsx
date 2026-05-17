@@ -29,7 +29,7 @@ import {
 
 
 const getColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "slot_id", sortable: true },
+    { name: t('common.id'), uid: "slot_id", sortable: true },
     { name: t('showtimes_tab.slot_tab.day_of_week'), uid: "dayOfWeek", sortable: true },
     { name: t('showtimes_tab.slot_tab.start_time'), uid: "startTime", sortable: true },
     { name: t('showtimes_tab.slot_tab.end_time'), uid: "endTime", sortable: true },

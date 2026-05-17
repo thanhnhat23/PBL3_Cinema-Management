@@ -77,7 +77,7 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task SoftDeleteSnackById(int snack_id)
+        public async Task SoftDeleteSnackById(int snack_id, Guid? deletedBy)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace CinemaAPI.Services.Implementations
                 if (snackToDelete.BookingSnacks.Any() || snackToDelete.ComboDetails.Any() || snackToDelete.Inventory.Any())
                     throw new Exception("Cannot delete snack that is associated with bookings, combo details, or inventory records.");
 
-                await SoftDeleteAsync(snackToDelete);
+                await SoftDeleteAsync(snackToDelete, deletedBy);
                 RagCacheKeys.Invalidate("snacks");
             }
             catch (Exception ex)

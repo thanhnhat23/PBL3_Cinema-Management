@@ -12,5 +12,8 @@ namespace CinemaAPI.Services.Interfaces
         Task AddCinema(CinemaCreateRequest request);
         // Update
         Task UpdateCinema(int cinema_id, CinemaUpdateRequest request);
+        // Delete
+        Task SoftDeleteCinema(int cinema_id, Guid? deletedBy);
+        Task HardDeleteCinema(int cinema_id);
     }
 }

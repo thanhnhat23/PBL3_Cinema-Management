@@ -161,7 +161,7 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task SoftDeleteRoom(int room_id)
+        public async Task SoftDeleteRoom(int room_id, Guid? deletedBy)
         {
             try
             {
@@ -169,7 +169,7 @@ namespace CinemaAPI.Services.Implementations
                 if (room == null)
                     throw new Exception("Room not found");
 
-                await SoftDeleteAsync(room);
+                await SoftDeleteAsync(room, deletedBy);
                 RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)

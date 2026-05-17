@@ -56,18 +56,18 @@ export const FormSignUp = ({
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-h-[85vh] overflow-y-auto px-1 custom-scrollbar p-4 md:p-0">
             <DialogHeader className="mb-8">
                 <div className="flex flex-col items-center justify-center w-full gap-4">
-                    <div className="relative">
-                        <div className="absolute -inset-2 bg-linear-to-r from-amber-500 to-orange-600 rounded-2xl blur opacity-20" />
-                        <div className="relative bg-white dark:bg-zinc-950 p-3 rounded-2xl border border-zinc-200 dark:border-white/10 shadow-lg">
-                            <Image 
-                                src="/logo.png" 
-                                alt="MilkyWayyy Logo" 
-                                className="h-12 w-auto object-contain"
-                                width={60}
-                                height={60}
-                            />
+                    <div className="relative group">
+                        <div className="absolute -inset-4 bg-linear-to-r from-fuchsia-500/20 to-pink-600/20 rounded-full blur-2xl group-hover:opacity-100 transition duration-1000 opacity-70" />
+                            <div className="relative p-4">
+                                <Image 
+                                    src="/logo.png" 
+                                    alt="MilkyWayyy Logo" 
+                                    className="h-24 w-auto object-contain"
+                                    width={80}
+                                    height={80}
+                                />
+                            </div>
                         </div>
-                    </div>
 
                     <div className="text-center space-y-1">
                         <DialogTitle className="text-2xl font-bold tracking-tighter text-zinc-900 dark:text-white uppercase">

@@ -11,11 +11,10 @@ namespace CinemaAPI.Controllers
     public class cinemaController : ControllerBase
     {
         private readonly ICinemaService _cinemaService;
-        private readonly CinemaService _cinemaDeleteService;
-        public cinemaController(ICinemaService cinemaService, CinemaService cinemaDeleteService)
+// removed _cinemaDeleteService
+        public cinemaController(ICinemaService cinemaService)
         {
             _cinemaService = cinemaService;
-            _cinemaDeleteService = cinemaDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -82,7 +81,10 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _cinemaDeleteService.SoftDeleteCinema(cinemaId);
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? deletedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _cinemaService.SoftDeleteCinema(cinemaId, deletedBy);
                 return Ok("Cinema deleted successfully");
             }
             catch (Exception ex)
@@ -96,7 +98,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _cinemaDeleteService.HardDeleteCinema(cinemaId);
+                await _cinemaService.HardDeleteCinema(cinemaId);
                 return Ok("Cinema hard deleted successfully");
             }
             catch (Exception ex)

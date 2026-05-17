@@ -11,6 +11,5 @@ namespace CinemaAPI.Services.Interfaces
         Task<List<MovieWithActor>> GetMovieWithActorAsync(int id);
         Task<List<CharacterWithActor>> GetCharacterWithActorAsync(int id);
         Task UpdateActorAsync(int id, ActorRequest request);
-        Task DeleteActorAsync(int id);
     }
 }

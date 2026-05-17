@@ -30,6 +30,8 @@
     "email": "Email",
     "actions": "Actions",
     "id": "ID",
+    "name": "Name",
+    "type": "Type",
     "management_system": "Management System",
     "add_new": "Add New",
     "released": "Released",
@@ -58,9 +60,20 @@
       "3": "Ended",
       "4": "Cancelled"
     },
-    "copyright": "© 2026 MilkyWayyy Cinema - All rights reserved",
+    "copyright": "Â© 2026 MilkyWayyy Cinema - All rights reserved",
     "change_method": "Change Payment Method",
-    "coming_soon": "Coming Soon"
+    "coming_soon": "Coming Soon",
+    "restore": "Restore",
+    "hard_delete": "Permanently Delete",
+    "confirm_hard_delete": "Are you sure you want to permanently delete this item? This action cannot be undone.",
+    "search_deleted_items": "Search deleted items...",
+    "total_deleted_count": "Total {{count}} deleted items",
+    "trash_empty": "Recycle bin is empty",
+    "loading_trash": "Loading recycle bin data...",
+    "entity_type": "Entity Type",
+    "deleted_at": "Deleted At",
+    "deleted_by": "Deleted By",
+    "unknown_user": "Unknown User"
   },
   "navbar": {
     "movies": "Movies",
@@ -221,6 +234,10 @@
       "change_showtime": "Change showtime",
       "no_seat_info": "No seat map information found",
       "screen": "Screen",
+      "lock_expired_title": "Seat Hold Expired",
+      "lock_expired_desc": "Seat {{seatCode}} has been released after 5 minutes.",
+      "already_locked": "This seat is already selected by another user!",
+      "not_connected": "Connection to the server was interrupted. Please try again in a moment!",
       "legend": {
         "single": "Single seat",
         "double": "Double seat",
@@ -365,7 +382,8 @@
     "total_bookings": "bookings",
     "coupons_available": "available coupons",
     "no_expiration": "No expiration",
-    "no_coupons_active": "You currently have no available coupons."
+    "no_coupons_active": "You currently have no available coupons.",
+    "usage": "Usage"
   },
   "actors": {
     "hero_title": "Faces of",
@@ -606,6 +624,7 @@
     "home": "Home",
     "profile": "Profile",
     "logout": "Logout",
+    "other": "Other",
     "chart_color": "Chart Color",
     "switch_light": "Switch to light mode",
     "switch_dark": "Switch to dark mode",
@@ -619,7 +638,9 @@
       "sync": "Data Sync",
       "revenue": "Revenue Stats",
       "stats": "Dashboard Overview",
-      "inventory": "Inventory"
+      "inventory": "Inventory",
+      "trash": "Recycle Bin",
+      "trash_desc": "Manage and restore deleted items."
     },
     "themes": {
       "blue": "Blue",
@@ -923,6 +944,7 @@
     "loading_label": "Loading ticket data...",
     "details_title": "Transaction Details",
     "cancel_ticket": "Cancel Ticket",
+    "refund_ticket": "Refund Ticket",
     "view_details": "Ticket Details",
     "payment_info": "Payment Information",
     "original_price": "Original Price",
@@ -935,6 +957,7 @@
       "pending": "Pending",
       "confirmed": "Confirmed",
       "cancelled": "Cancelled",
+      "refunded": "Refunded",
       "unknown": "Unknown"
     },
     "columns": {
@@ -943,7 +966,8 @@
       "total": "Total Amount",
       "final": "Final Amount",
       "status": "Status",
-      "created": "Created At"
+      "created": "Created At",
+      "processed_by": "Processed By"
     }
   },
   "coupons_tab": {
@@ -1128,7 +1152,7 @@
       "edit_title": "Edit Slot Price",
       "select_slot": "Select a slot",
       "select_seat_type": "Select seat type",
-      "override_price": "Override Price (VNĐ)",
+      "override_price": "Override Price (VNÄ)",
       "enter_price": "Enter price..."
     },
     "slot_tab": {
@@ -1343,6 +1367,12 @@
     "failed_title": "PAYMENT FAILED",
     "success_desc": "Thank you for choosing our service. Have a great movie time!",
     "failed_desc": "Unfortunately, an error occurred during the payment process. Please check your account balance or try another method.",
+    "momo": {
+      "success_title": "MoMo Payment Successful",
+      "failed_title": "MoMo Payment Failed",
+      "success_desc": "Transaction processed successfully via MoMo wallet!",
+      "failed_desc": "An error occurred during the MoMo payment process."
+    },
     "order_info": "Order Information",
     "order_payment_info": "Order Payment",
     "download_invoice": "Download Invoice (PDF)",
@@ -1388,5 +1418,201 @@
     "coupon_min_value": "This coupon is only applicable for orders over {{value}} VND",
     "coupon_expired": "Coupon has expired",
     "coupon_applied": "Coupon applied successfully"
+  },
+  "toasts": {
+    "trash": {
+      "fetch_error": "Failed to load trash items",
+      "restore_success": "Item restored successfully",
+      "restore_error": "Failed to restore item",
+      "hard_delete_success": "Item deleted permanently",
+      "hard_delete_error": "Failed to delete item permanently. It may be linked to other data."
+    },
+    "movie": {
+      "add_success": "Movie added successfully",
+      "add_error": "Failed to add movie",
+      "update_success": "Movie updated successfully",
+      "update_error": "Failed to update movie",
+      "delete_success": "Movie deleted successfully",
+      "delete_error": "Failed to delete movie"
+    },
+    "actor": {
+      "add_success": "Actor added successfully",
+      "add_error": "Failed to add actor",
+      "update_success": "Actor updated successfully",
+      "update_error": "Failed to update actor",
+      "delete_success": "Actor deleted successfully",
+      "delete_error": "Failed to delete actor"
+    },
+    "room": {
+      "add_success": "Room added successfully",
+      "add_error": "Failed to add room",
+      "update_success": "Room updated successfully",
+      "update_error": "Failed to update room",
+      "delete_success": "Room deleted successfully",
+      "delete_error": "Failed to delete room"
+    },
+    "cinema": {
+      "add_success": "Cinema added successfully",
+      "add_error": "Failed to add cinema",
+      "update_success": "Cinema updated successfully",
+      "update_error": "Failed to update cinema",
+      "delete_success": "Cinema deleted successfully",
+      "delete_error": "Failed to delete cinema"
+    },
+    "location": {
+      "add_success": "Location added successfully",
+      "add_error": "Failed to add location",
+      "update_success": "Location updated successfully",
+      "update_error": "Failed to update location",
+      "delete_success": "Location deleted successfully",
+      "delete_error": "Failed to delete location"
+    },
+    "showtime": {
+      "add_success": "Showtime added successfully",
+      "add_error": "Failed to add showtime",
+      "update_success": "Showtime updated successfully",
+      "update_error": "Failed to update showtime",
+      "delete_success": "Showtime deleted successfully",
+      "delete_error": "Failed to delete showtime"
+    },
+    "snack": {
+      "add_success": "Snack added successfully",
+      "add_error": "Failed to add snack",
+      "update_success": "Snack updated successfully",
+      "update_error": "Failed to update snack",
+      "delete_success": "Snack deleted successfully",
+      "delete_error": "Failed to delete snack"
+    },
+    "coupon": {
+      "add_success": "Coupon added successfully",
+      "add_error": "Failed to add coupon",
+      "update_success": "Coupon updated successfully",
+      "update_error": "Failed to update coupon",
+      "delete_success": "Coupon deleted successfully",
+      "delete_error": "Failed to delete coupon"
+    },
+    "inventory": {
+      "update_success": "Inventory updated successfully",
+      "update_error": "Failed to update inventory"
+    },
+    "user": {
+      "update_success": "User updated successfully",
+      "update_error": "Failed to update user",
+      "ban_success": "User banned successfully",
+      "ban_error": "Failed to ban user"
+    },
+    "sync": {
+      "success": "Sync successful",
+      "error": "Sync failed",
+      "cancelled": "Sync cancelled",
+      "movie_success": "Movie sync successful!",
+      "movie_desc": "Movies with status {{status}} have been synced successfully.",
+      "movie_error": "Movie sync failed!",
+      "movie_error_desc": "An error occurred while syncing movies with status {{status}}. Please try again later.",
+      "movie_cancelled": "Movie sync cancelled!",
+      "movie_cancelled_desc": "Movie sync with status {{status}} has been cancelled.",
+      "status_success": "Movie status update successful!",
+      "status_desc": "Movie statuses have been updated successfully.",
+      "status_error": "Movie status update failed!",
+      "status_error_desc": "An error occurred while updating movie statuses. Please try again later.",
+      "status_cancelled": "Movie status update cancelled!",
+      "status_cancelled_desc": "Movie status update has been cancelled.",
+      "review_success": "Movie review sync successful!",
+      "review_desc": "Movie reviews have been synced successfully.",
+      "review_error": "Movie review sync failed!",
+      "review_error_desc": "An error occurred while syncing movie reviews. Please try again later.",
+      "review_cancelled": "Movie review sync cancelled!",
+      "review_cancelled_desc": "Movie review sync has been cancelled."
+    },
+    "showtime_slot": {
+      "add_success": "Showtime slot added successfully",
+      "add_error": "Error adding showtime slot",
+      "update_success": "Showtime slot updated successfully",
+      "update_error": "Error updating showtime slot",
+      "delete_success": "Showtime slot deleted successfully",
+      "delete_error": "Error deleting showtime slot"
+    },
+    "showtime_price": {
+      "add_success": "Showtime price added successfully",
+      "add_error": "Error adding showtime price",
+      "update_success": "Showtime price updated successfully",
+      "update_error": "Error updating showtime price",
+      "delete_success": "Showtime price deleted successfully",
+      "delete_error": "Error deleting showtime price"
+    },
+    "review": {
+      "auth_required": "Login required",
+      "auth_required_desc": "Please login to create a review.",
+      "add_success": "Review created",
+      "add_desc": "Your review has been created successfully.",
+      "add_error": "Error creating review",
+      "add_error_desc": "An error occurred while creating the review. Please try again.",
+      "update_success": "Review updated",
+      "update_desc": "Your review has been updated successfully.",
+      "update_error": "Error updating review",
+      "update_error_desc": "An error occurred while updating the review. Please try again.",
+      "ban_success": "Review banned",
+      "ban_desc": "Review has been banned successfully.",
+      "ban_error": "Error banning review",
+      "ban_error_desc": "An error occurred while banning the review. Please try again."
+    },
+    "combo": {
+      "add_success": "Combo detail added successfully",
+      "add_error": "Error adding combo detail",
+      "update_success": "Combo detail updated successfully",
+      "update_error": "Error updating combo detail",
+      "delete_success": "Combo detail deleted successfully",
+      "delete_error": "Error deleting combo detail"
+    },
+    "auth": {
+      "signin_success": "Login successful! Welcome back.",
+      "signin_error": "Login failed!",
+      "signin_error_desc": "Please check your credentials and try again.",
+      "logout_success": "Logout successful! See you later.",
+      "logout_error": "Logout failed!",
+      "logout_error_desc": "An error occurred while logging out. Please try again.",
+      "signup_success": "Registration successful!",
+      "signup_success_desc": "Please check your email to verify your account.",
+      "signup_error": "Registration failed",
+      "signup_error_desc": "Please check your information.",
+      "verify_success": "Email verification successful!",
+      "verify_desc": "You can now log in.",
+      "verify_error": "Email verification failed",
+      "verify_error_desc": "Please try again later.",
+      "forgot_success": "Password reset link sent!",
+      "forgot_desc": "Please check your email.",
+      "forgot_error": "Request failed",
+      "forgot_error_desc": "Please try again later.",
+      "reset_check_success": "Reset token is valid!",
+      "reset_check_desc": "You can now set a new password.",
+      "reset_check_error": "Invalid token",
+      "reset_check_error_desc": "Token has expired or is incorrect.",
+      "reset_success": "Password reset successful!",
+      "reset_desc": "You can now log in with your new password.",
+      "reset_error": "Password reset failed",
+      "reset_error_desc": "Please try again later.",
+      "change_password_success": "Password changed successfully",
+      "change_password_desc": "Your password has been changed successfully.",
+      "change_password_error": "Error changing password",
+      "change_password_error_desc": "An error occurred while changing your password. Please try again.",
+      "change_email_success": "Email changed successfully",
+      "change_email_desc": "Your email has been changed successfully.",
+      "change_email_error": "Error changing email",
+      "change_email_error_desc": "An error occurred while changing your email. Please try again.",
+      "change_birthdate_success": "Birthdate changed successfully",
+      "change_birthdate_desc": "Your birthdate has been changed successfully.",
+      "change_birthdate_error": "Error changing birthdate",
+      "change_birthdate_error_desc": "An error occurred while changing your birthdate. Please try again.",
+      "change_avatar_success": "Avatar changed successfully",
+      "change_avatar_desc": "Your avatar has been changed successfully.",
+      "change_avatar_error": "Error changing avatar",
+      "change_avatar_error_desc": "An error occurred while changing your avatar. Please try again."
+    },
+    "booking": {
+      "auth_required": "Login required",
+      "auth_required_desc": "Please login to proceed with booking.",
+      "create_error": "Booking error",
+      "create_error_desc": "An error occurred while creating your order. Please try again."
+    }
   }
 }

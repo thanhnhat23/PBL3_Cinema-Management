@@ -11,12 +11,10 @@ namespace CinemaAPI.Controllers
     public class movieController : ControllerBase
     {
         private readonly IMovieService _movieService;
-        private readonly MovieService _movieDeleteService;
-
-        public movieController(IMovieService movieService, MovieService movieDeleteService)
+ 
+        public movieController(IMovieService movieService)
         {
             _movieService = movieService;
-            _movieDeleteService = movieDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -97,21 +95,7 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in movieController.GetPopularMovies: {ex.Message}");
             }
         }
-
-        [HttpPost("create")]
-        public async Task<IActionResult> AddMovie([FromBody] Movie movie)
-        {
-            try
-            {
-                await _movieService.AddMovie(movie);
-                return Ok("Movie created successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in movieController.AddMovie: {ex.Message}");
-            }
-        }
-
+        
         [HttpPut("update/{movieId}")]
         public async Task<IActionResult> UpdateMovie(int movieId, [FromBody] MovieUpdateRequest request)
         {
@@ -123,34 +107,6 @@ namespace CinemaAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred in movieController.UpdateMovie: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("delete/{movieId}")]
-        public async Task<IActionResult> DeleteMovie(int movieId)
-        {
-            try
-            {
-                await _movieDeleteService.SoftDeleteMovie(movieId);
-                return Ok("Movie deleted successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in movieController.DeleteMovie: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("hard-delete/{movieId}")]
-        public async Task<IActionResult> HardDeleteMovie(int movieId)
-        {
-            try
-            {
-                await _movieDeleteService.HardDeleteMovie(movieId);
-                return Ok("Movie hard deleted successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred in movieController.HardDeleteMovie: {ex.Message}");
             }
         }
 

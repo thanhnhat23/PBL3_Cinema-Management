@@ -24,7 +24,7 @@ namespace CinemaAPI.Services.Implementations
                     .ThenInclude(r => r.Cinema)
                         .ThenInclude(c => c.Location)
                 .Include(st => st.Slot)
-                    .ThenInclude(s => s.ShowTimePrices)
+                    .ThenInclude(s => s!.ShowTimePrices)
                 .Include(st => st.ShowTimeSeats)
                 .AsSplitQuery()
                 .ToListAsync();
@@ -38,7 +38,7 @@ namespace CinemaAPI.Services.Implementations
                     .ThenInclude(r => r.Cinema)
                         .ThenInclude(c => c.Location)
                 .Include(st => st.Slot)
-                    .ThenInclude(s => s.ShowTimePrices)
+                    .ThenInclude(s => s!.ShowTimePrices)
                 .Include(st => st.ShowTimeSeats)
                     .ThenInclude(sts => sts.Seat)
                         .ThenInclude(seat => seat.SeatType)
@@ -84,7 +84,7 @@ namespace CinemaAPI.Services.Implementations
                             .ThenInclude(r => r.Cinema)
                                 .ThenInclude(c => c.Location)
                         .Include(st => st.Slot)
-                            .ThenInclude(s => s.ShowTimePrices)
+                            .ThenInclude(s => s!.ShowTimePrices)
                         .Include(st => st.ShowTimeSeats)
                             .ThenInclude(sts => sts.Seat)
                                 .ThenInclude(seat => seat.SeatType)
@@ -102,7 +102,7 @@ namespace CinemaAPI.Services.Implementations
                 .AsNoTracking()
                 .Include(s => s.Room)
                 .Include(s => s.Slot)
-                    .ThenInclude(sl => sl.ShowTimePrices)
+                    .ThenInclude(sl => sl!.ShowTimePrices)
                 .FirstOrDefaultAsync(s => s.showtime_id == showtime_id);
 
             if (st == null) return null;
@@ -265,13 +265,13 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task SoftDeleteShowTime(int showtime_id)
+        public async Task SoftDeleteShowTime(int showtime_id, Guid? deletedBy)
         {
             try
             {
                 var st = await _dbContext.ShowTimes.FirstOrDefaultAsync(s => s.showtime_id == showtime_id);
                 if (st == null) throw new Exception("Showtime not found");
-                await SoftDeleteAsync(st);
+                await SoftDeleteAsync(st, deletedBy);
             }
             catch (Exception ex)
             {

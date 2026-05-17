@@ -173,13 +173,13 @@ namespace CinemaAPI.Services.Implementations
             }
         }
 
-        public async Task SoftDeleteCoupon(int coupon_id)
+        public async Task SoftDeleteCoupon(int coupon_id, Guid? deletedBy)
         {
             try {
                 var coupon = await _dbContext.Coupons.FirstOrDefaultAsync(c => c.coupon_id == coupon_id);
                 if (coupon != null)
                 {
-                    await SoftDeleteAsync(coupon);
+                    await SoftDeleteAsync(coupon, deletedBy);
                 }
             }
             catch (Exception ex)

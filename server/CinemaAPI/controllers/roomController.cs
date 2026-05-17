@@ -11,12 +11,11 @@ namespace CinemaAPI.Controllers
     public class roomController : ControllerBase
     {
         private readonly IRoomService _roomService;
-        private readonly RoomService _roomDeleteService;
+// removed _roomDeleteService
 
-        public roomController(IRoomService roomService, RoomService roomDeleteService)
+        public roomController(IRoomService roomService)
         {
             _roomService = roomService;
-            _roomDeleteService = roomDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -94,7 +93,10 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _roomDeleteService.SoftDeleteRoom(roomId);
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? deletedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _roomService.SoftDeleteRoom(roomId, deletedBy);
                 return Ok("Room deleted successfully.");
             }
             catch (Exception ex)
@@ -108,7 +110,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _roomDeleteService.HardDeleteRoom(roomId);
+                await _roomService.HardDeleteRoom(roomId);
                 return Ok("Room hard deleted successfully.");
             }
             catch (Exception ex)

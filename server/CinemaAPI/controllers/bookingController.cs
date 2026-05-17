@@ -71,5 +71,39 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in bookingController.CreateBooking: {ex.Message}");
             }
         }
+
+        [HttpPost("refund/{bookingId}")]
+        public async Task<IActionResult> RefundBooking(int bookingId)
+        {
+            try
+            {
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? processedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _bookingService.RefundBooking(bookingId, processedBy);
+                return Ok("Booking refunded successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in bookingController.RefundBooking: {ex.Message}");
+            }
+        }
+
+        [HttpPost("cancel/{bookingId}")]
+        public async Task<IActionResult> CancelBooking(int bookingId)
+        {
+            try
+            {
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? processedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _bookingService.CancelBooking(bookingId, processedBy);
+                return Ok("Booking cancelled successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in bookingController.CancelBooking: {ex.Message}");
+            }
+        }
     }
 }

@@ -7,6 +7,9 @@ using CinemaAPI.Models.DTOs;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
+using Microsoft.AspNetCore.SignalR;
+using CinemaAPI.Hubs;
 
 namespace CinemaAPI.Services.Implementations
 {
@@ -14,11 +17,19 @@ namespace CinemaAPI.Services.Implementations
     {
         private readonly AppDbContext _dbContext;
         private readonly VnpayConfig _vnpayConfig;
+        private readonly IConnectionMultiplexer _redis;
+        private readonly IHubContext<SeatLockHub> _hubContext;
 
-        public VnpayPaymentService(AppDbContext dbContext, IOptions<VnpayConfig> vnpayConfig)
+        public VnpayPaymentService(
+            AppDbContext dbContext, 
+            IOptions<VnpayConfig> vnpayConfig,
+            IConnectionMultiplexer redis,
+            IHubContext<SeatLockHub> hubContext)
         {
             _dbContext = dbContext;
             _vnpayConfig = vnpayConfig.Value;
+            _redis = redis;
+            _hubContext = hubContext;
         }
 
         public async Task<List<VnpayPayment>> GetAllPaymentsAsync() =>
@@ -42,6 +53,9 @@ namespace CinemaAPI.Services.Implementations
             if (booking == null)
                 throw new Exception($"Booking {request.booking_id} not found.");
 
+            if (booking.status != BookingStatus.Pending)
+                throw new Exception("Booking is already processed or cancelled. Cannot create payment.");
+
             if (request.method != VnpayPaymentType.VNPAYQR && request.method != VnpayPaymentType.VNBANK)
                 throw new Exception("Unsupported payment method.");
 
@@ -50,7 +64,7 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("Payment amount must be greater than 0.");
 
             var vnNow = DateTime.UtcNow.AddHours(7);
-            var expireAt = vnNow.AddMinutes(15);
+            var expireAt = vnNow.AddMinutes(5);
             var txnRef = $"B{booking.booking_id}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 
             var payment = new VnpayPayment
@@ -134,19 +148,77 @@ namespace CinemaAPI.Services.Implementations
             payment.vnp_BankCode = queryParams.TryGetValue("vnp_BankCode", out var bankCode) ? bankCode : null;
             payment.vnp_SecureHash = secureHash;
 
-            if (responseCode == "00")
+            if (payment.Booking != null)
             {
-                payment.status = VnpayPaymentStatus.Success;
-                payment.paid_at = DateTime.UtcNow;
-
-                if (payment.Booking.status == BookingStatus.Pending)
+                if (responseCode == "00")
                 {
-                    payment.Booking.status = BookingStatus.Confirmed;
+                    payment.status = VnpayPaymentStatus.Success;
+                    payment.paid_at = DateTime.UtcNow;
+
+                    if (payment.Booking.status == BookingStatus.Pending)
+                    {
+                        payment.Booking.status = BookingStatus.Confirmed;
+                    }
+                }
+                else
+                {
+                    payment.status = VnpayPaymentStatus.Failed;
+
+                    if (payment.Booking.status == BookingStatus.Pending)
+                    {
+                        payment.Booking.status = BookingStatus.Cancelled;
+
+                        // Release seats linked to this booking immediately
+                        var showtimeSeats = await _dbContext.ShowTimeSeats
+                            .Where(sts => sts.booking_id == payment.Booking.booking_id)
+                            .ToListAsync();
+
+                        foreach (var sts in showtimeSeats)
+                        {
+                            sts.status = ShowTimeSeatStatus.Available;
+                            sts.booking_id = null;
+
+                            // Delete Redis lock key safely
+                            try
+                            {
+                                var redisDb = _redis.GetDatabase();
+                                var lockKey = $"seat_lock:{payment.Booking.showtime_id}:{sts.seat_id}";
+                                await redisDb.KeyDeleteAsync(lockKey);
+                            }
+                            catch (Exception redisEx)
+                            {
+                                Console.WriteLine($"[Vnpay Callback] Redis error while deleting lock key: {redisEx.Message}");
+                            }
+
+                            // Broadcast SignalR SeatUnlocked safely
+                            try
+                            {
+                                await _hubContext.Clients.Group(payment.Booking.showtime_id.ToString()).SendAsync("SeatUnlocked", new
+                                {
+                                    showtimeId = payment.Booking.showtime_id,
+                                    seatId = sts.seat_id
+                                });
+                            }
+                            catch (Exception signalrEx)
+                            {
+                                Console.WriteLine($"[Vnpay Callback] SignalR error while broadcasting SeatUnlocked: {signalrEx.Message}");
+                            }
+                        }
+                    }
                 }
             }
             else
             {
-                payment.status = VnpayPaymentStatus.Failed;
+                // Fallback if booking was not eagerly loaded or is missing
+                if (responseCode == "00")
+                {
+                    payment.status = VnpayPaymentStatus.Success;
+                    payment.paid_at = DateTime.UtcNow;
+                }
+                else
+                {
+                    payment.status = VnpayPaymentStatus.Failed;
+                }
             }
 
             await _dbContext.SaveChangesAsync();

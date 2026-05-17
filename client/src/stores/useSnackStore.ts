@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface Snack {
     snack_id: number;
@@ -78,9 +80,21 @@ export const useSnackStore = create<{
 
             if (response.data) {
                 set((state) => ({ snacks: [...state.snacks, response.data] }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.snack.add_success'),
+                    color: "success",
+                    variant: "flat"
+                });
             }
         } catch (error) {
             console.error('Error creating snack:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.snack.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isCreatingSnack: false });
         }
@@ -100,8 +114,20 @@ export const useSnackStore = create<{
                         ? { ...state.selectedSnack, ...snackData }
                         : state.selectedSnack,
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.snack.update_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error updating snack with ID ${snackId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.snack.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isUpdatingSnack: false });
         }
@@ -115,8 +141,20 @@ export const useSnackStore = create<{
             set((state) => ({
                 snacks: state.snacks.filter((snack) => snack.snack_id !== snackId),
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.snack.delete_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error deleting snack with ID ${snackId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.snack.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isDeletingSnack: false });
         }

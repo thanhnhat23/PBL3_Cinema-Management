@@ -10,7 +10,7 @@ namespace CinemaAPI.Services.Interfaces
         Task AddShowTime(ShowTime showTime);
         Task<ShowTime> CreateShowTimeFromSlotAsync(ShowTimeFromSlotRequest request);
         Task UpdateShowTime(int showtime_id, ShowTimeUpdateRequest request);
-        Task SoftDeleteShowTime(int showtime_id);
+        Task SoftDeleteShowTime(int showtime_id, Guid? deletedBy);
         Task HardDeleteShowTime(int showtime_id);
         Task<decimal?> GetEffectiveSeatPrice(int showtime_id, int seat_id);
     }

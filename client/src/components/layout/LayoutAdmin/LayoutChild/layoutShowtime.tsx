@@ -39,7 +39,7 @@ interface ShowtimeDisplay extends ShowTime {
 }
 
 const getShowtimeColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "showtime_id", sortable: true },
+    { name: t('common.id'), uid: "showtime_id", sortable: true },
     { name: t('movie_details.title'), uid: "movie_title", sortable: true },
     { name: t('dashboard.management.cinemas'), uid: "cinema_name", sortable: true },
     { name: t('showtimes_tab.columns.room'), uid: "room_name", sortable: true },

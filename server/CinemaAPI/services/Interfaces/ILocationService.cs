@@ -9,6 +9,7 @@ namespace CinemaAPI.Services.Interfaces
         Task<Location?> GetLocationById(int location_id);
         Task AddLocation(Location location);
         Task UpdateLocation(int location_id, Location location);
+        Task SoftDeleteLocation(int location_id, Guid? deletedBy);
+        Task HardDeleteLocation(int location_id);
     }
-
 }

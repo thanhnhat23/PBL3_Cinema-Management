@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 import { useAuthStore } from '@/stores/useAuthStore';
 
 export interface ShowTime {
@@ -78,8 +80,20 @@ export const useShowTimeStore = create<{
             await _axios.post('/v1/showtime/create', payload);
             // invalidate list to force refetch later
             set({ showtimes: [] });
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.showtime.add_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error('Error creating showtime', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.showtime.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isCreating: false });
         }
@@ -95,6 +109,12 @@ export const useShowTimeStore = create<{
                     showtimes: [...state.showtimes, newShowtime],
                     selectedShowtime: newShowtime,
                 }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.showtime.add_success'),
+                    color: "success",
+                    variant: "flat"
+                });
                 return newShowtime;
             }
         } catch (error: any) {
@@ -107,6 +127,12 @@ export const useShowTimeStore = create<{
             }
             const msg = error.response?.data || error.message;
             console.error('Error creating showtime from slot:', msg);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.showtime.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
             throw new Error(msg);
         } finally {
             set({ isCreating: false });
@@ -121,8 +147,20 @@ export const useShowTimeStore = create<{
                 showtimes: state.showtimes.map((s) => (s.showtime_id === id ? { ...s, ...payload } as ShowTime : s)),
                 selectedShowtime: state.selectedShowtime?.showtime_id === id ? { ...state.selectedShowtime, ...payload } as ShowTime : state.selectedShowtime,
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.showtime.update_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (err) {
             console.error(`Error updating showtime ${id}`, err);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.showtime.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isUpdating: false });
         }
@@ -133,8 +171,20 @@ export const useShowTimeStore = create<{
             set({ isDeleting: true });
             await _axios.delete(`/v1/showtime/delete/${id}`);
             set((state) => ({ showtimes: state.showtimes.filter((s) => s.showtime_id !== id) }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.showtime.delete_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (err) {
             console.error(`Error deleting showtime ${id}`, err);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.showtime.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isDeleting: false });
         }

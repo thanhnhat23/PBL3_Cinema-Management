@@ -35,7 +35,7 @@ import { useLocationStore } from "@/stores/useLocationStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const getCinemaColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "cinema_id", sortable: true },
+    { name: t('common.id'), uid: "cinema_id", sortable: true },
     { name: t('cinemas_tab.columns.name'), uid: "name", sortable: true },
     { name: t('cinemas_tab.columns.address'), uid: "address", sortable: true },
     { name: t('cinemas_tab.columns.city'), uid: "location", sortable: true },

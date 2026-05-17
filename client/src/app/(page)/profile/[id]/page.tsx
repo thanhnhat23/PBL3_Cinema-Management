@@ -10,6 +10,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { UserRound } from "@/components/icons/user-round";
 import { HistoryIcon, type HistoryIconHandle } from "@/components/icons/history";
+import { GiftIcon } from "@/components/icons/gift";
 import { IoIosMail } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
 import { MdDateRange } from "react-icons/md";
@@ -24,7 +25,7 @@ import { useTranslation } from "react-i18next";
 import { useBookingStore, type Booking } from "@/stores/useBookingStore";
 import { useMovieStore } from "@/stores/useMovieStore";
 import { useCouponStore } from "@/stores/useCouponStore";
-import { Calendar, MapPin, CreditCard, ChevronRight, Ticket, Clock, Info, CheckCircle2, Gift, Sparkles, Zap } from "lucide-react";
+import { Calendar, MapPin, CreditCard, ChevronRight, Ticket, Clock, Info, CheckCircle2, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -81,7 +82,7 @@ export default function ProfilePage() {
 
     return (
         <>
-        <div className="min-h-screen bg-background pb-20 pt-12">
+        <div className="bg-background pb-20 pt-12">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Sidebar: Profile Overview */}
@@ -262,7 +263,7 @@ export default function ProfilePage() {
                                     {authUser?.id === id && (
                                         <Tab key="coupons" title={
                                             <div className="flex items-center gap-2" onMouseEnter={() => setHoveredItem('coupons')} onMouseLeave={() => setHoveredItem(null)}>
-                                                <Gift size={18} className={cn("transition-transform", hoveredItem === 'coupons' && "animate-bounce")} />
+                                                <GiftIcon animate={hoveredItem === 'coupons'} size={18} />
                                                 <span>{t('profile.tabs.my_coupons')}</span>
                                             </div>
                                         } />
@@ -466,7 +467,16 @@ export default function ProfilePage() {
                             )}
 
                             {selectedTab === "coupons" && authUser?.id === id && (() => {
-                                const filteredCoupons = activeCoupons.filter(c => c.coupon_type === 1 || c.coupon_type === 2);
+                                const usedCouponIds = new Set(
+                                    userBookings
+                                        .filter(b => String(b.status) === "1" || String(b.status).toLowerCase() === "success")
+                                        .map(b => b.coupon_id)
+                                        .filter(Boolean)
+                                );
+
+                                const filteredCoupons = activeCoupons.filter(c => 
+                                    !usedCouponIds.has(c.coupon_id)
+                                );
 
                                 return (
                                     <div className="space-y-6">
@@ -496,7 +506,7 @@ export default function ProfilePage() {
                                                             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-4 h-4 rounded-full bg-background border border-zinc-100 dark:border-white/5" />
                                                             
                                                             <div className="text-amber-500 mb-2">
-                                                                {coupon.coupon_type === 2 ? <Sparkles size={24} /> : coupon.coupon_type === 1 ? <Gift size={24} /> : <Zap size={24} />}
+                                                                {coupon.coupon_type === 2 ? <Sparkles size={24} /> : coupon.coupon_type === 1 ? <GiftIcon size={24} /> : <Zap size={24} />}
                                                             </div>
                                                             <span className="text-xl font-black text-amber-500 italic">
                                                                 {coupon.type === 0 ? `${coupon.discountValue}%` : `${Math.floor(coupon.discountValue / 1000)}k`}
@@ -529,6 +539,10 @@ export default function ProfilePage() {
                                                                     <span>Min: {coupon.minOrderValue.toLocaleString()}đ</span>
                                                                 </div>
                                                                 <div className="flex items-center gap-2 text-[9px] font-bold text-zinc-400">
+                                                                    <GiftIcon size={10} className="text-amber-500" />
+                                                                    <span>{t('profile.usage')}: {coupon.current_usage}{coupon.max_usage ? `/${coupon.max_usage}` : ''}</span>
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-[9px] font-bold text-zinc-400">
                                                                     <Clock size={10} className="text-amber-500" />
                                                                 <span>
                                                                     {coupon.coupon_type === 2 
@@ -546,7 +560,7 @@ export default function ProfilePage() {
                                         ) : (
                                             <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
                                                 <div className="w-20 h-20 rounded-full bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-300">
-                                                    <Gift size={40} />
+                                                    <GiftIcon size={40} />
                                                 </div>
                                                 <div>
                                                     <h3 className="text-xl font-black uppercase tracking-tight">{t('profile.tabs.my_coupons')}</h3>

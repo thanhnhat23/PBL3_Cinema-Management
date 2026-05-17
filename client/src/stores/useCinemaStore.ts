@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface Cinema {
     cinema_id: number;
@@ -117,9 +119,21 @@ export const useCinemaStore = create<{
 
             if (response.data) {
                 set((state) => ({ cinemas: [...state.cinemas, response.data] }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.cinema.add_success'),
+                    color: "success",
+                    variant: "flat"
+                });
             }
         } catch (error) {
             console.error('Error creating cinema:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.cinema.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isCreatingCinema: false });
         }
@@ -139,8 +153,20 @@ export const useCinemaStore = create<{
                         ? { ...state.selectedCinema, ...cinemaData }
                         : state.selectedCinema,
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.cinema.update_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error updating cinema with ID ${cinemaId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.cinema.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isUpdatingCinema: false });
         }
@@ -154,8 +180,20 @@ export const useCinemaStore = create<{
             set((state) => ({
                 cinemas: state.cinemas.filter((cinema) => cinema.cinema_id !== cinemaId),
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.cinema.delete_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error deleting cinema with ID ${cinemaId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.cinema.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isDeletingCinema: false });
         }

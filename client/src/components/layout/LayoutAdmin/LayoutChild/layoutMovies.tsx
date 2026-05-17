@@ -72,7 +72,6 @@ export default function LayoutMovie() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-    const [isAdding, setIsAdding] = useState(false);
     const popoverContainerRef = useRef<HTMLDivElement | null>(null);
     const [editForm, setEditForm] = useState({
         title: "",
@@ -122,25 +121,7 @@ export default function LayoutMovie() {
         });
     }, []);
 
-    const handleOpenAdd = useCallback(() => {
-        setIsAdding(true);
-        setSelectedMovie(null);
-        setEditForm({
-            title: "",
-            overview: "",
-            release_date: "",
-            end_date: "",
-            status: "0",
-            runtime: "",
-            adult: "false",
-            poster_path: "",
-            backdrop_path: "",
-        });
-        onEditOpen();
-    }, [onEditOpen]);
-
     const handleOpenEdit = useCallback((movie: Movie) => {
-        setIsAdding(false);
         setSelectedMovie(movie);
         syncEditForm(movie);
         onEditOpen();
@@ -159,10 +140,7 @@ export default function LayoutMovie() {
             backdrop_path: editForm.backdrop_path.trim(),
         };
 
-        if (isAdding) {
-            const { createMovie } = useMovieStore.getState();
-            await createMovie(payload);
-        } else if (selectedMovie) {
+        if (selectedMovie) {
             await updateMovie(selectedMovie.movie_id, payload);
         }
         await fetchAllMovies();
@@ -237,26 +215,11 @@ export default function LayoutMovie() {
                             <DropdownItem
                                 key="edit"
                                 startContent={<PenLine size={18} />}
-                                showDivider
                                 onPress={() => {
                                     handleOpenEdit(movie);
                                 }}
                             >
                                 {t('common.edit')}
-                            </DropdownItem>
-
-                            <DropdownItem
-                                key="delete"
-                                startContent={<Trash size={18} />}
-                                className="text-danger"
-                                color="danger"
-                                onPress={async () => {
-                                    const { deleteMovie, fetchAllMovies } = useMovieStore.getState();
-                                    await deleteMovie(movie.movie_id);
-                                    await fetchAllMovies();
-                                }}
-                            >
-                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -292,8 +255,6 @@ export default function LayoutMovie() {
                 items={movies}
                 isLoading={isFetchingMovies}
                 searchPlaceholder={t('movie_details.search_placeholder')}
-                addButtonLabel={t('movie_details.add_movie')}
-                onAdd={handleOpenAdd}
                 totalLabel={(count) => t('movie_details.total_count', { count })}
                 emptyLabel={t('movie_details.empty_label')}
                 loadingLabel={t('movie_details.loading_label')}
@@ -301,6 +262,8 @@ export default function LayoutMovie() {
                 rowKey={(item) => item.movie_id}
                 searchBy={(item) => item.title}
                 renderCell={renderCell}
+                selectionMode="none"
+                hideDeleteSelected={true}
                 filters={[
                     {
                         uid: "status",
@@ -409,7 +372,7 @@ export default function LayoutMovie() {
                     {() => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1">
-                                {isAdding ? t('movie_details.add_new_movie') : t('movie_details.edit_movie')}
+                                {t('movie_details.edit_movie')}
                             </DrawerHeader>
 
                             <DrawerBody>

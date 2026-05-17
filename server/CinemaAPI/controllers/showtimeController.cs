@@ -11,12 +11,11 @@ namespace CinemaAPI.Controllers
     public class showtimeController : ControllerBase
     {
         private readonly IShowTimeService _showTimeService;
-        private readonly ShowTimeService _showTimeDeleteService;
+// removed _showTimeDeleteService
 
-        public showtimeController(IShowTimeService showTimeService, ShowTimeService showTimeDeleteService)
+        public showtimeController(IShowTimeService showTimeService)
         {
             _showTimeService = showTimeService;
-            _showTimeDeleteService = showTimeDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -119,7 +118,10 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _showTimeDeleteService.SoftDeleteShowTime(id);
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? deletedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _showTimeService.SoftDeleteShowTime(id, deletedBy);
                 return Ok("Showtime deleted successfully.");
             }
             catch (Exception ex)
@@ -133,7 +135,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _showTimeDeleteService.HardDeleteShowTime(id);
+                await _showTimeService.HardDeleteShowTime(id);
                 return Ok("Showtime hard deleted successfully.");
             }
             catch (Exception ex)
