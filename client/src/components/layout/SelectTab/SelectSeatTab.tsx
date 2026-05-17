@@ -1,8 +1,12 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import type { Seat } from "@/stores/useSeatStore";
 import { Monitor, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from "@microsoft/signalr";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { addToast } from "@heroui/toast";
+import { SIGNALR_HUB_URL } from "@/lib/config";
 
 interface SelectSeatTabProps {
   selectedSeatCodes: string[];
@@ -30,7 +34,148 @@ export function SelectSeatTab({
   showtimeOptions = [],
 }: SelectSeatTabProps) {
   const { t } = useTranslation();
-  
+  const authUser = useAuthStore(state => state.authUser);
+
+  const [lockedSeats, setLockedSeats] = useState<Record<number, { userId: string; expiresAt: string }>>({});
+  const [connection, setConnection] = useState<HubConnection | null>(null);
+
+  const seatsRef = useRef(seats);
+  const selectedSeatCodesRef = useRef(selectedSeatCodes);
+  const onSelectSeatsRef = useRef(onSelectSeats);
+  const connectionRef = useRef<HubConnection | null>(null);
+
+  useEffect(() => {
+    seatsRef.current = seats;
+    selectedSeatCodesRef.current = selectedSeatCodes;
+    onSelectSeatsRef.current = onSelectSeats;
+  }, [seats, selectedSeatCodes, onSelectSeats]);
+
+  useEffect(() => {
+    if (!activeShowtimeId) return;
+
+    let isMounted = true;
+
+    const newConnection = new HubConnectionBuilder()
+      .withUrl(SIGNALR_HUB_URL)
+      .configureLogging(LogLevel.None)
+      .withAutomaticReconnect()
+      .build();
+
+    newConnection.on("CurrentLockedSeats", (lockedList: Array<{ showtimeId: number; seatId: number; userId: string; expiresAt: string }>) => {
+      if (!isMounted) return;
+      const locksMap: Record<number, { userId: string; expiresAt: string }> = {};
+      lockedList.forEach(item => {
+        locksMap[item.seatId] = { userId: item.userId, expiresAt: item.expiresAt };
+      });
+      setLockedSeats(locksMap);
+    });
+
+    newConnection.on("SeatLocked", (item: { showtimeId: number; seatId: number; userId: string; expiresAt: string }) => {
+      if (!isMounted) return;
+      setLockedSeats(prev => ({
+        ...prev,
+        [item.seatId]: { userId: item.userId, expiresAt: item.expiresAt }
+      }));
+    });
+
+    newConnection.on("SeatUnlocked", (item: { showtimeId: number; seatId: number }) => {
+      if (!isMounted) return;
+      setLockedSeats(prev => {
+        const next = { ...prev };
+        delete next[item.seatId];
+        return next;
+      });
+
+      // If it was locked by us and is still in our selection, we deselect it locally
+      const seat = seatsRef.current.find(s => s.seat_id === item.seatId);
+      if (seat) {
+        const seatCode = `${String.fromCharCode(65 + seat.row)}${seat.column}`;
+        if (selectedSeatCodesRef.current.includes(seatCode)) {
+          onSelectSeatsRef.current(selectedSeatCodesRef.current.filter(code => code !== seatCode));
+          addToast({
+            title: t('booking.seat_tab.lock_expired_title'),
+            description: t('booking.seat_tab.lock_expired_desc', { seatCode }),
+            color: "warning",
+            variant: "flat"
+          });
+        }
+      }
+    });
+
+    newConnection.on("LockResult", (res: { success: boolean; showtimeId: number; seatId: number; message: string }) => {
+      if (!isMounted) return;
+      if (res.success) {
+        const seat = seatsRef.current.find(s => s.seat_id === res.seatId);
+        if (seat) {
+          const seatCode = `${String.fromCharCode(65 + seat.row)}${seat.column}`;
+          if (!selectedSeatCodesRef.current.includes(seatCode)) {
+            onSelectSeatsRef.current([...selectedSeatCodesRef.current, seatCode]);
+          }
+        }
+      } else {
+        addToast({
+          title: t('common.error'),
+          description: t('booking.seat_tab.already_locked'),
+          color: "danger",
+          variant: "flat"
+        });
+      }
+    });
+
+    newConnection.on("UnlockResult", (res: { success: boolean; showtimeId: number; seatId: number; message: string }) => {
+      if (!isMounted) return;
+      if (res.success) {
+        const seat = seatsRef.current.find(s => s.seat_id === res.seatId);
+        if (seat) {
+          const seatCode = `${String.fromCharCode(65 + seat.row)}${seat.column}`;
+          onSelectSeatsRef.current(selectedSeatCodesRef.current.filter(code => code !== seatCode));
+        }
+      }
+    });
+
+    const startConnection = async () => {
+      try {
+        await newConnection.start();
+        if (!isMounted) {
+          newConnection.stop().catch(() => {});
+          return;
+        }
+        console.log("SignalR connected to SeatLockHub");
+        connectionRef.current = newConnection;
+        setConnection(newConnection);
+
+        // Join showtime group
+        if (newConnection.state === HubConnectionState.Connected) {
+          await newConnection.invoke("JoinShowtimeGroup", parseInt(activeShowtimeId, 10));
+        }
+      } catch (err: any) {
+        if (isMounted) {
+          if (err?.toString().includes("stopped during negotiation")) {
+            console.log("SignalR connection aborted during negotiation due to component unmount.");
+          } else {
+            console.error("SignalR Connection Error: ", err);
+          }
+        }
+      }
+    };
+
+    startConnection();
+
+    return () => {
+      isMounted = false;
+      if (newConnection) {
+        if (newConnection.state === HubConnectionState.Connected) {
+          newConnection.invoke("LeaveShowtimeGroup", parseInt(activeShowtimeId, 10))
+            .then(() => newConnection.stop())
+            .catch(err => console.error("Error leaving SignalR group/stopping connection: ", err));
+        } else {
+          newConnection.stop()
+            .catch(err => console.error("Error stopping connection: ", err));
+        }
+      }
+    };
+  }, [activeShowtimeId, t]);
+
   const layoutData = useMemo(() => {
     if (!seats.length) {
       return { rowLabels: [], columnIndices: [], seatMap: new Map<string, Seat>() };
@@ -59,8 +204,18 @@ export function SelectSeatTab({
   const { rowLabels, columnIndices, seatMap } = layoutData;
 
   const handleSeatClick = (seatCode: string, isWide = false) => {
+    const conn = connectionRef.current;
+    if (!conn || conn.state !== HubConnectionState.Connected) {
+      addToast({
+        title: t('common.error') || "Lỗi kết nối",
+        description: t('booking.seat_tab.not_connected') || "Kết nối máy chủ bị gián đoạn. Vui lòng thử lại sau giây lát!",
+        color: "danger",
+        variant: "flat"
+      });
+      return;
+    }
+
     if (isWide) {
-        // Seat code is e.g. "A12" representing A11 and A12
         const row = seatCode.charAt(0);
         const col = parseInt(seatCode.substring(1));
         const prevCol = col - 1;
@@ -71,30 +226,31 @@ export function SelectSeatTab({
         const s2 = seatMap.get(code2);
         if (!s1 || !s2) return;
         
-        if (s1.status !== SeatStatus.AVAILABLE || s2.status !== SeatStatus.AVAILABLE) return;
+        const isSold1 = s1.status !== SeatStatus.AVAILABLE || (lockedSeats[s1.seat_id] && lockedSeats[s1.seat_id].userId !== authUser?.id);
+        const isSold2 = s2.status !== SeatStatus.AVAILABLE || (lockedSeats[s2.seat_id] && lockedSeats[s2.seat_id].userId !== authUser?.id);
+        if (isSold1 || isSold2) return;
         
         const isAlreadySelected = selectedSeatCodes.includes(code1) || selectedSeatCodes.includes(code2);
-        let updatedSelection = [...selectedSeatCodes];
-        
         if (isAlreadySelected) {
-            updatedSelection = updatedSelection.filter(c => c !== code1 && c !== code2);
+            conn.invoke("UnlockSeat", parseInt(activeShowtimeId, 10), s1.seat_id, authUser?.id || "");
+            conn.invoke("UnlockSeat", parseInt(activeShowtimeId, 10), s2.seat_id, authUser?.id || "");
         } else {
-            updatedSelection.push(code1, code2);
+            conn.invoke("LockSeat", parseInt(activeShowtimeId, 10), s1.seat_id, authUser?.id || "");
+            conn.invoke("LockSeat", parseInt(activeShowtimeId, 10), s2.seat_id, authUser?.id || "");
         }
-        onSelectSeats(updatedSelection);
     } else {
         const targetSeat = seatMap.get(seatCode);
         if (!targetSeat) return;
 
-        const isLocked = targetSeat.status === SeatStatus.RESERVED || targetSeat.status === SeatStatus.OCCUPIED;
-        if (isLocked) return;
+        const isLockedByOthers = targetSeat.status === SeatStatus.RESERVED || targetSeat.status === SeatStatus.OCCUPIED || (lockedSeats[targetSeat.seat_id] && lockedSeats[targetSeat.seat_id].userId !== authUser?.id);
+        if (isLockedByOthers) return;
 
         const isAlreadySelected = selectedSeatCodes.includes(seatCode);
-        const updatedSelection = isAlreadySelected
-          ? selectedSeatCodes.filter(code => code !== seatCode)
-          : [...selectedSeatCodes, seatCode];
-
-        onSelectSeats(updatedSelection);
+        if (isAlreadySelected) {
+            conn.invoke("UnlockSeat", parseInt(activeShowtimeId, 10), targetSeat.seat_id, authUser?.id || "");
+        } else {
+            conn.invoke("LockSeat", parseInt(activeShowtimeId, 10), targetSeat.seat_id, authUser?.id || "");
+        }
     }
   };
 
@@ -105,6 +261,11 @@ export function SelectSeatTab({
     if (!seatData) return <div key={seatCode} className={isWide ? "w-16 h-8" : "w-8 h-8"} />;
 
     let isSold = seatData.status === SeatStatus.RESERVED || seatData.status === SeatStatus.OCCUPIED;
+    const isLockedByOthers = lockedSeats[seatData.seat_id] && lockedSeats[seatData.seat_id].userId !== authUser?.id;
+    if (isLockedByOthers) {
+        isSold = true;
+    }
+
     let isSelected = selectedSeatCodes.includes(seatCode);
     
     if (isWide) {
@@ -112,7 +273,8 @@ export function SelectSeatTab({
         const prevSeatCode = `${row}${prevCol}`;
         const prevSeatData = seatMap.get(prevSeatCode);
         if (prevSeatData) {
-            isSold = isSold || prevSeatData.status === SeatStatus.RESERVED || prevSeatData.status === SeatStatus.OCCUPIED;
+            const prevLockedByOthers = lockedSeats[prevSeatData.seat_id] && lockedSeats[prevSeatData.seat_id].userId !== authUser?.id;
+            isSold = isSold || prevSeatData.status === SeatStatus.RESERVED || prevSeatData.status === SeatStatus.OCCUPIED || prevLockedByOthers;
             isSelected = isSelected || selectedSeatCodes.includes(prevSeatCode);
         }
     }

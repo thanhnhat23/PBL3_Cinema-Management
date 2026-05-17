@@ -53,7 +53,7 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("Payment amount must be greater than 0.");
 
             var vnNow = DateTime.UtcNow.AddHours(7);
-            var expireAt = vnNow.AddMinutes(15);
+            var expireAt = vnNow.AddMinutes(5);
             var txnRef = $"B{booking.booking_id}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 
             var payment = new VnpayPayment

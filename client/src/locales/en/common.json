@@ -234,6 +234,10 @@
       "change_showtime": "Change showtime",
       "no_seat_info": "No seat map information found",
       "screen": "Screen",
+      "lock_expired_title": "Seat Hold Expired",
+      "lock_expired_desc": "Seat {{seatCode}} has been released after 5 minutes.",
+      "already_locked": "This seat is already selected by another user!",
+      "not_connected": "Connection to the server was interrupted. Please try again in a moment!",
       "legend": {
         "single": "Single seat",
         "double": "Double seat",

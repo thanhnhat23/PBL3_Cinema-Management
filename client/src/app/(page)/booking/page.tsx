@@ -470,7 +470,7 @@ export default function BookingPage() {
       <div className="flex-1 flex flex-col md:flex-row gap-8 max-w-7xl w-full mx-auto px-6 py-10">
         {/* Main Content Area */}
         <div className="flex-1 space-y-6">
-          {currentStep === "select-service" ? (
+          <div className={cn(currentStep !== "select-service" && "hidden")}>
             <SelectServiceTab
               select={selectProps}
               showSelect={expandedSections}
@@ -495,66 +495,70 @@ export default function BookingPage() {
               }}
               onFetchShowtimes={fetchAllShowtimes}
             />
-          ) : currentStep === "select-seat" ? (
-            <SelectSeatTab
-              selectedSeatCodes={selection.selectedSeats}
-              activeShowtimeId={selection.showtimeId}
-              seats={seats}
-              showtimeOptions={filteredShowtimes.map(st => ({
-                id: st.showtime_id,
-                label: new Date(st.startTime).toLocaleTimeString(t('locale_code'), { hour: '2-digit', minute: '2-digit' }),
-              }))}
-              onSelectSeats={(s) => handleSelectionChange('selectedSeats', s)}
-              onSelectShowtime={(id) => handleSelectionChange('showtimeId', id)}
-            />
-          ) : currentStep === "select-food" ? (
-            <SelectFoodTab
-              snacks={snacks}
-              selectedSnacks={selection.selectedSnacks}
-              isLoading={isFetchingSnacks}
-              onUpdateQuantity={handleSnackQuantityChange}
-            />
-          ) : currentStep === "confirmation" ? (
-            <ConfirmationTab
-              movieTitle={selection.movieTitle}
-              cinemaName={cinemas.find(c => String(c.cinema_id) === selection.cinemaId)?.name || ""}
-              showtimeDate={selection.showtimeDate}
-              showtimeTime={activeShowtime ? new Date(activeShowtime.startTime).toLocaleTimeString(t('locale_code'), { hour: '2-digit', minute: '2-digit' }) : ""}
-              selectedSeats={selection.selectedSeats}
-              selectedSnacks={selection.selectedSnacks}
-              snacks={snacks}
-              subtotal={subtotal}
-              discountAmount={discountAmount}
-              finalTotal={finalTotal}
-              selectedMethod={selection.paymentMethod}
-              onSelectMethod={(m) => setSelection(prev => ({ ...prev, paymentMethod: m }))}
-              couponCode={couponCode}
-              onCouponChange={setCouponCode}
-              onApplyCoupon={handleApplyCoupon}
-              activeCoupon={activeCoupon}
-              couponError={couponError}
-            />
-          ) : currentStep === "payment" ? (
-            <SelectPaymentTab
-              selectedMethod={selection.paymentMethod}
-              onSelectMethod={(m) => setSelection(prev => ({ ...prev, paymentMethod: m }))}
-              activeCoupon={activeCoupon}
-              subtotal={subtotal}
-              orderCode={realBookingData?.booking_id.toString()}
-              paymentUrl={realBookingData?.paymentUrl}
-              onBack={() => navigateToStep('confirmation')}
-            />
-          ) : (
-            <div className="w-full min-h-100 flex flex-col items-center justify-center bg-white dark:bg-zinc-900/50 backdrop-blur-xl rounded-sm border border-zinc-200 dark:border-white/10 shadow-2xl p-12 text-center space-y-4">
-              <div className="w-20 h-20 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
-                <BadgeCheck size={40} />
-              </div>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">
-                {STEPS.find(s => s.key === currentStep)?.label}
-              </h2>
-              <p className="text-zinc-500 font-medium max-w-md">
-                {t('booking.feature_updating')}
-              </p>
+          </div>
+
+          {selection.showtimeId && currentStep !== "select-service" && (
+            <div className={cn(currentStep !== "select-seat" && "hidden")}>
+              <SelectSeatTab
+                selectedSeatCodes={selection.selectedSeats}
+                activeShowtimeId={selection.showtimeId}
+                seats={seats}
+                showtimeOptions={filteredShowtimes.map(st => ({
+                  id: st.showtime_id,
+                  label: new Date(st.startTime).toLocaleTimeString(t('locale_code'), { hour: '2-digit', minute: '2-digit' }),
+                }))}
+                onSelectSeats={(s) => handleSelectionChange('selectedSeats', s)}
+                onSelectShowtime={(id) => handleSelectionChange('showtimeId', id)}
+              />
+            </div>
+          )}
+
+          {unlockedStepIndex >= 2 && (
+            <div className={cn(currentStep !== "select-food" && "hidden")}>
+              <SelectFoodTab
+                snacks={snacks}
+                selectedSnacks={selection.selectedSnacks}
+                isLoading={isFetchingSnacks}
+                onUpdateQuantity={handleSnackQuantityChange}
+              />
+            </div>
+          )}
+
+          {unlockedStepIndex >= 3 && (
+            <div className={cn(currentStep !== "confirmation" && "hidden")}>
+              <ConfirmationTab
+                movieTitle={selection.movieTitle}
+                cinemaName={cinemas.find(c => String(c.cinema_id) === selection.cinemaId)?.name || ""}
+                showtimeDate={selection.showtimeDate}
+                showtimeTime={activeShowtime ? new Date(activeShowtime.startTime).toLocaleTimeString(t('locale_code'), { hour: '2-digit', minute: '2-digit' }) : ""}
+                selectedSeats={selection.selectedSeats}
+                selectedSnacks={selection.selectedSnacks}
+                snacks={snacks}
+                subtotal={subtotal}
+                discountAmount={discountAmount}
+                finalTotal={finalTotal}
+                selectedMethod={selection.paymentMethod}
+                onSelectMethod={(m) => setSelection(prev => ({ ...prev, paymentMethod: m }))}
+                couponCode={couponCode}
+                onCouponChange={setCouponCode}
+                onApplyCoupon={handleApplyCoupon}
+                activeCoupon={activeCoupon}
+                couponError={couponError}
+              />
+            </div>
+          )}
+
+          {unlockedStepIndex >= 4 && (
+            <div className={cn(currentStep !== "payment" && "hidden")}>
+              <SelectPaymentTab
+                selectedMethod={selection.paymentMethod}
+                onSelectMethod={(m) => setSelection(prev => ({ ...prev, paymentMethod: m }))}
+                activeCoupon={activeCoupon}
+                subtotal={subtotal}
+                orderCode={realBookingData?.booking_id.toString()}
+                paymentUrl={realBookingData?.paymentUrl}
+                onBack={() => navigateToStep('confirmation')}
+              />
             </div>
           )}
         </div>

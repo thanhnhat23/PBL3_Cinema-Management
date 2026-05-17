@@ -33,7 +33,7 @@ const getTicketColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: t('common.actions'), uid: "actions" },
 ];
 
-const statusColorMap: Record<string, "warning" | "success" | "danger" | "default"> = {
+const statusColorMap: Record<string, "warning" | "success" | "danger" | "default" | "secondary"> = {
     pending: "warning",
     confirmed: "success",
     cancelled: "danger",

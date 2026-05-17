@@ -2,7 +2,7 @@ using CinemaAPI.data;
 using CinemaAPI.Models;
 using CinemaAPI.Services.Interfaces;
 using CinemaAPI.Services.Implementations;
-// using CinemaAPI.Hubs;
+using CinemaAPI.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -99,8 +99,44 @@ builder.Services.AddScoped<MomoPaymentService>();
 builder.Services.AddScoped<IVnpayPaymentService, VnpayPaymentService>();
 builder.Services.AddScoped<VnpayPaymentService>();
 
-// Configure SignalR
-builder.Services.AddSignalR();
+// Configure Redis & SignalR Backplane
+var redisConn = builder.Configuration["Redis:ConnectionString"] ?? "localhost:6379";
+builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(sp =>
+{
+    try
+    {
+        var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConn);
+        config.AbortOnConnectFail = true;
+        config.ConnectTimeout = 2000;
+        return StackExchange.Redis.ConnectionMultiplexer.Connect(config);
+    }
+    catch
+    {
+        var fallbackConfig = StackExchange.Redis.ConfigurationOptions.Parse("localhost:6379");
+        fallbackConfig.AbortOnConnectFail = false;
+        return StackExchange.Redis.ConnectionMultiplexer.Connect(fallbackConfig);
+    }
+});
+
+builder.Services.AddSignalR().AddStackExchangeRedis(options =>
+{
+    options.ConnectionFactory = async writer =>
+    {
+        try
+        {
+            var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConn);
+            config.AbortOnConnectFail = true;
+            config.ConnectTimeout = 2000;
+            return await StackExchange.Redis.ConnectionMultiplexer.ConnectAsync(config, writer);
+        }
+        catch
+        {
+            var fallbackConfig = StackExchange.Redis.ConfigurationOptions.Parse("localhost:6379");
+            fallbackConfig.AbortOnConnectFail = false;
+            return await StackExchange.Redis.ConnectionMultiplexer.ConnectAsync(fallbackConfig, writer);
+        }
+    };
+});
 
 // Configure Tmdb
 builder.Services.Configure<TmdbConfig>(builder.Configuration.GetSection("TmdbConfig"));
@@ -213,7 +249,7 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docke
 
 app.UseHttpsRedirection();
 
-// app.MapHub<ChatHub>("/chathub");
+app.MapHub<SeatLockHub>("/seatlockhub");
 
 app.UseCors("AllowReactApp");
 

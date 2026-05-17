@@ -72,7 +72,8 @@ namespace CinemaAPI.Services.Implementations
                 requestType = requestType,
                 extraData = extraData,
                 lang = "vi",
-                signature = signature
+                signature = signature,
+                expireAfter = 5 // 5 minutes
             };
 
             var payment = new MomoPayment
