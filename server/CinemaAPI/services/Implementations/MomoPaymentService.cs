@@ -7,6 +7,9 @@ using CinemaAPI.Models.DTOs;
 using CinemaAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
+using Microsoft.AspNetCore.SignalR;
+using CinemaAPI.Hubs;
 
 namespace CinemaAPI.Services.Implementations
 {
@@ -15,12 +18,21 @@ namespace CinemaAPI.Services.Implementations
         private readonly AppDbContext _dbContext;
         private readonly MomoConfig _momoConfig;
         private readonly HttpClient _httpClient;
+        private readonly IConnectionMultiplexer _redis;
+        private readonly IHubContext<SeatLockHub> _hubContext;
 
-        public MomoPaymentService(AppDbContext dbContext, IOptions<MomoConfig> momoConfig, HttpClient httpClient)
+        public MomoPaymentService(
+            AppDbContext dbContext, 
+            IOptions<MomoConfig> momoConfig, 
+            HttpClient httpClient,
+            IConnectionMultiplexer redis,
+            IHubContext<SeatLockHub> hubContext)
         {
             _dbContext = dbContext;
             _momoConfig = momoConfig.Value;
             _httpClient = httpClient;
+            _redis = redis;
+            _hubContext = hubContext;
         }
 
         public async Task<List<MomoPayment>> GetAllPaymentsAsync() =>
@@ -72,7 +84,8 @@ namespace CinemaAPI.Services.Implementations
                 requestType = requestType,
                 extraData = extraData,
                 lang = "vi",
-                signature = signature
+                signature = signature,
+                expireAfter = 5 // 5 minutes
             };
 
             var payment = new MomoPayment
@@ -155,19 +168,77 @@ namespace CinemaAPI.Services.Implementations
                 payment.message = message;
                 payment.signature = signature;
 
-                if (resultCode == 0)
+                if (payment.Booking != null)
                 {
-                    payment.status = MomoPaymentStatus.Success;
-                    payment.paidAt = DateTime.UtcNow;
-
-                    if (payment.Booking.status == BookingStatus.Pending)
+                    if (resultCode == 0)
                     {
-                        payment.Booking.status = BookingStatus.Confirmed;
+                        payment.status = MomoPaymentStatus.Success;
+                        payment.paidAt = DateTime.UtcNow;
+
+                        if (payment.Booking.status == BookingStatus.Pending)
+                        {
+                            payment.Booking.status = BookingStatus.Confirmed;
+                        }
+                    }
+                    else
+                    {
+                        payment.status = MomoPaymentStatus.Failed;
+
+                        if (payment.Booking.status == BookingStatus.Pending)
+                        {
+                            payment.Booking.status = BookingStatus.Cancelled;
+
+                            // Release seats linked to this booking immediately
+                            var showtimeSeats = await _dbContext.ShowTimeSeats
+                                .Where(sts => sts.booking_id == payment.Booking.booking_id)
+                                .ToListAsync();
+
+                            foreach (var sts in showtimeSeats)
+                            {
+                                sts.status = ShowTimeSeatStatus.Available;
+                                sts.booking_id = null;
+
+                                // Delete Redis lock key safely
+                                try
+                                {
+                                    var redisDb = _redis.GetDatabase();
+                                    var lockKey = $"seat_lock:{payment.Booking.showtime_id}:{sts.seat_id}";
+                                    await redisDb.KeyDeleteAsync(lockKey);
+                                }
+                                catch (Exception redisEx)
+                                {
+                                    Console.WriteLine($"[Momo Callback] Redis error while deleting lock key: {redisEx.Message}");
+                                }
+
+                                // Broadcast SignalR SeatUnlocked safely
+                                try
+                                {
+                                    await _hubContext.Clients.Group(payment.Booking.showtime_id.ToString()).SendAsync("SeatUnlocked", new
+                                    {
+                                        showtimeId = payment.Booking.showtime_id,
+                                        seatId = sts.seat_id
+                                    });
+                                }
+                                catch (Exception signalrEx)
+                                {
+                                    Console.WriteLine($"[Momo Callback] SignalR error while broadcasting SeatUnlocked: {signalrEx.Message}");
+                                }
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    payment.status = MomoPaymentStatus.Failed;
+                    // Fallback if booking was not eagerly loaded or is missing
+                    if (resultCode == 0)
+                    {
+                        payment.status = MomoPaymentStatus.Success;
+                        payment.paidAt = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        payment.status = MomoPaymentStatus.Failed;
+                    }
                 }
 
                 await _dbContext.SaveChangesAsync();

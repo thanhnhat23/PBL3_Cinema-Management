@@ -150,8 +150,17 @@ namespace CinemaAPI.Services.Implementations
                 if (user == null)
                     return false; // Invalid token or email
 
-                // Check if token has expired
-                if (user.verificationTokenExpires < DateTime.UtcNow)
+                // Check if token has expired (robust timezone handling)
+                var isExpired = false;
+                if (user.verificationTokenExpires.HasValue)
+                {
+                    var exp = user.verificationTokenExpires.Value;
+                    isExpired = Math.Abs((exp - DateTime.Now).TotalMinutes) < Math.Abs((exp - DateTime.UtcNow).TotalMinutes)
+                        ? exp < DateTime.Now
+                        : exp < DateTime.UtcNow;
+                }
+
+                if (isExpired)
                 {
                     // Token expired - delete the user account to allow re-registration
                     _dbContext.Users.Remove(user);
@@ -209,12 +218,21 @@ namespace CinemaAPI.Services.Implementations
             {
                 var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
                     u.email == request.email &&
-                    u.passwordResetToken == request.resetToken &&
-                    u.resetTokenExpires > DateTime.UtcNow);
+                    u.passwordResetToken == request.resetToken);
 
                 if (user == null)
                     return false; // Invalid token or email
-                if (user.resetTokenExpires < DateTime.UtcNow)
+
+                var isExpired = false;
+                if (user.resetTokenExpires.HasValue)
+                {
+                    var exp = user.resetTokenExpires.Value;
+                    isExpired = Math.Abs((exp - DateTime.Now).TotalMinutes) < Math.Abs((exp - DateTime.UtcNow).TotalMinutes)
+                        ? exp < DateTime.Now
+                        : exp < DateTime.UtcNow;
+                }
+
+                if (isExpired)
                     return false; // Token expired
 
                 return true;

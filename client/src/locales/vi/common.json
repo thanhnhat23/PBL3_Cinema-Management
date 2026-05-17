@@ -234,6 +234,10 @@
       "change_showtime": "Đổi suất chiếu",
       "no_seat_info": "Không tìm thấy thông tin sơ đồ ghế",
       "screen": "Màn hình",
+      "lock_expired_title": "Giữ ghế hết hạn",
+      "lock_expired_desc": "Ghế {{seatCode}} đã được giải phóng sau 5 phút.",
+      "already_locked": "Ghế này đã có người khác chọn!",
+      "not_connected": "Kết nối máy chủ bị gián đoạn. Vui lòng thử lại sau giây lát!",
       "legend": {
         "single": "Ghế đơn",
         "double": "Ghế đôi",

@@ -234,6 +234,10 @@
       "change_showtime": "上映回を変更",
       "no_seat_info": "座席表情報が見つかりません",
       "screen": "スクリーン",
+      "lock_expired_title": "座席のキープ期限切れ",
+      "lock_expired_desc": "座席 {{seatCode}} は5分後に解放されました。",
+      "already_locked": "この座席は他のユーザーに選択されています！",
+      "not_connected": "サーバーへの接続が中断されました。しばらくしてからもう一度お試しください！",
       "legend": {
         "single": "一般席",
         "double": "ペア席",

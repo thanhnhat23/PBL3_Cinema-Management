@@ -22,14 +22,15 @@ namespace CinemaAPI.Services.Implementations
                     using var scope = _serviceProvider.CreateScope();
                     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-                    var now = DateTime.UtcNow;
+                    var nowUtc = DateTime.UtcNow;
+                    var nowLocal = DateTime.Now;
 
                     // Delete unverified users with expired verification tokens
                     var unverifiedExpiredUsers = await dbContext.Users
                         .Where(u => !u.isEmailVerified 
                               && u.verificationToken != null 
                               && u.verificationTokenExpires != null 
-                              && u.verificationTokenExpires < now)
+                              && (u.verificationTokenExpires < nowUtc || u.verificationTokenExpires < nowLocal))
                         .ToListAsync(stoppingToken);
 
                     if (unverifiedExpiredUsers.Count > 0)
@@ -50,7 +51,7 @@ namespace CinemaAPI.Services.Implementations
                     var expiredResetTokenUsers = await dbContext.Users
                         .Where(u => u.passwordResetToken != null 
                               && u.resetTokenExpires != null 
-                              && u.resetTokenExpires < now)
+                              && (u.resetTokenExpires < nowUtc || u.resetTokenExpires < nowLocal))
                         .ToListAsync(stoppingToken);
 
                     if (expiredResetTokenUsers.Count > 0)
