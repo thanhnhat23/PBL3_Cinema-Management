@@ -1,4 +1,4 @@
-﻿import type { Key } from "react";
+import type { Key } from "react";
 
 import { useCallback, useEffect, useMemo } from "react";
 import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
@@ -39,7 +39,7 @@ export default function LayoutUsers() {
     const { users, isFetchingAllUsers, fetchAllUsers } = useUserStore();
 
     const columns: AdminColumn[] = useMemo(() => [
-        { name: "ID", uid: "user_id", sortable: true },
+        { name: t('common.id'), uid: "user_id", sortable: true },
         { name: t('users_tab.columns.user'), uid: "username", sortable: true },
         { name: t('common.email'), uid: "email", sortable: true },
         { name: t('users_tab.columns.role'), uid: "role", sortable: true },

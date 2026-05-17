@@ -112,5 +112,49 @@ namespace CinemaAPI.Controllers
                 return StatusCode(500, $"An error occurred in adminController.GetTotalMoviesByGenre: {ex.Message}");
             }
         }
+
+        [HttpGet("get-deleted-items")]
+        public async Task<IActionResult> GetDeletedItems()
+        {
+            try
+            {
+                var deletedItems = await _adminService.GetDeletedItemsAsync();
+                return Ok(deletedItems);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in adminController.GetDeletedItems: {ex.Message}");
+            }
+        }
+
+        [HttpPost("restore-item/{type}/{id}")]
+        public async Task<IActionResult> RestoreItem(string type, string id)
+        {
+            try
+            {
+                var success = await _adminService.RestoreItemAsync(type, id);
+                if (success) return Ok(new { message = "Item restored successfully" });
+                return BadRequest(new { message = "Failed to restore item or item not found" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in adminController.RestoreItem: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("hard-delete-item/{type}/{id}")]
+        public async Task<IActionResult> HardDeleteItem(string type, string id)
+        {
+            try
+            {
+                var success = await _adminService.HardDeleteItemAsync(type, id);
+                if (success) return Ok(new { message = "Item hard deleted successfully" });
+                return BadRequest(new { message = "Failed to hard delete item. It might be linked to other records." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred in adminController.HardDeleteItem: {ex.Message}");
+            }
+        }
     }
 }

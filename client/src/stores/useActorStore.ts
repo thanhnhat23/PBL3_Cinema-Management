@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { _axios } from "@/lib/axios";
+import { addToast } from '@heroui/toast';
 import { Movie } from './useMovieStore';
+import i18n from '@/lib/i18n';
 
 export interface Actor {
     actor_id: number;
@@ -27,14 +29,10 @@ export const useActorStore = create<{
     isFetchingActors: boolean;
     isFetchingActorDetails: boolean;
     isUpdatingActor: boolean;
-    isCreatingActor: boolean;
-    isDeletingActor: boolean;
 
     fetchAllActors: () => Promise<void>;
     fetchActorById: (actorId: number) => Promise<Actor | null>;
-    createActor: (actorData: ActorUpdatePayload) => Promise<void>;
     updateActor: (actorId: number, actorData: ActorUpdatePayload) => Promise<void>;
-    deleteActor: (actorId: number) => Promise<void>;
     fetchMovieWithActors: (movieId: number) => Promise<void>;
     fetchCharacterWithActors: (movieId: number) => Promise<void>;
     clearSelectedActor: () => void;
@@ -46,14 +44,12 @@ export const useActorStore = create<{
     isFetchingActors: false,
     isFetchingActorDetails: false,
     isUpdatingActor: false,
-    isCreatingActor: false,
-    isDeletingActor: false,
 
     fetchAllActors: async () => {
         const currentActors = useActorStore.getState().actors;
         // Skip if already fetched
         if (currentActors.length > 0) return;
-        
+
         try {
             set({ isFetchingActors: true });
 
@@ -89,19 +85,6 @@ export const useActorStore = create<{
         }
     },
 
-    createActor: async (actorData: ActorUpdatePayload) => {
-        try {
-            set({ isCreatingActor: true });
-            const response = await _axios.post('/v1/actor/create', actorData);
-            if (response.data) {
-                set((state) => ({ actors: [...state.actors, response.data] }));
-            }
-        } catch (error) {
-            console.error('Error creating actor:', error);
-        } finally {
-            set({ isCreatingActor: false });
-        }
-    },
 
     updateActor: async (actorId: number, actorData: ActorUpdatePayload) => {
         try {
@@ -116,33 +99,31 @@ export const useActorStore = create<{
                         actor.actor_id === actorId ? refreshedActor : actor
                     ),
                 }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.actor.update_success'),
+                    color: "success",
+                    variant: "flat"
+                });
             }
         } catch (error) {
             console.error(`Error updating actor with ID ${actorId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.actor.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isUpdatingActor: false });
-        }   
-    },
-
-    deleteActor: async (actorId: number) => {
-        try {
-            set({ isDeletingActor: true });
-            await _axios.delete(`/v1/actor/delete/${actorId}`);
-            set((state) => ({
-                actors: state.actors.filter((actor) => actor.actor_id !== actorId),
-                selectedActor: state.selectedActor?.actor_id === actorId ? null : state.selectedActor,
-            }));
-        } catch (error) {
-            console.error(`Error deleting actor with ID ${actorId}:`, error);
-        } finally {
-            set({ isDeletingActor: false });
         }
     },
+
 
     fetchMovieWithActors: async (movieId: number) => {
         try {
             const response = await _axios.get(`/v1/actor/get-movie-with-actors/${movieId}`);
-            
+
             if (response.data) {
                 set({ movieWithActors: response.data });
             }

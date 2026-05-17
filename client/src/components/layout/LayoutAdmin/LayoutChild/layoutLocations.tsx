@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
 
 const getLocationColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "location_id", sortable: true },
+    { name: t('common.id'), uid: "location_id", sortable: true },
     { name: t('locations_tab.columns.city'), uid: "city", sortable: true },
     { name: t('common.actions'), uid: "actions" },
 ];

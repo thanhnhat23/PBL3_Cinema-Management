@@ -26,6 +26,8 @@
     "email": "Email",
     "actions": "Hành động",
     "id": "ID",
+    "name": "Tên",
+    "type": "Loại",
     "management_system": "Quản lý hệ thống",
     "add_new": "Thêm mới",
     "save": "Lưu thay đổi",
@@ -60,7 +62,18 @@
     },
     "copyright": "© 2026 MilkyWayyy Cinema - Bản quyền đã được bảo hộ",
     "change_method": "Đổi phương thức thanh toán",
-    "coming_soon": "Sắp ra mắt"
+    "coming_soon": "Sắp ra mắt",
+    "restore": "Khôi phục",
+    "hard_delete": "Xóa vĩnh viễn",
+    "confirm_hard_delete": "Bạn có chắc chắn muốn xóa vĩnh viễn mục này? Hành động này không thể hoàn tác.",
+    "search_deleted_items": "Tìm kiếm mục đã xóa...",
+    "total_deleted_count": "Tổng cộng {{count}} mục đã xóa",
+    "trash_empty": "Thùng rác trống",
+    "loading_trash": "Đang tải dữ liệu thùng rác...",
+    "entity_type": "Loại đối tượng",
+    "deleted_at": "Ngày xóa",
+    "deleted_by": "Người xóa",
+    "unknown_user": "Không xác định"
   },
   "navbar": {
     "movies": "Phim",
@@ -365,7 +378,8 @@
     "total_bookings": "đơn đặt vé",
     "coupons_available": "mã giảm giá khả dụng",
     "no_expiration": "Vô thời hạn",
-    "no_coupons_active": "Bạn hiện không có mã giảm giá nào khả dụng."
+    "no_coupons_active": "Bạn hiện không có mã giảm giá nào khả dụng.",
+    "usage": "Lượt sử dụng"
   },
   "actors": {
     "hero_title": "Những gương mặt",
@@ -606,7 +620,8 @@
     "home": "Trang chủ",
     "profile": "Hồ sơ cá nhân",
     "logout": "Đăng xuất",
-    "chart_color": "Màu Chart",
+    "other": "Khác",
+    "chart_color": "Màu sắc biểu đồ",
     "switch_light": "Chuyển sang chế độ sáng",
     "switch_dark": "Chuyển sang chế độ tối",
     "management": {
@@ -619,7 +634,9 @@
       "sync": "Đồng bộ dữ liệu",
       "revenue": "Thống kê doanh thu",
       "stats": "Thống kê tổng quan",
-      "inventory": "Kho hàng"
+      "inventory": "Kho hàng",
+      "trash": "Thùng rác",
+      "trash_desc": "Quản lý các mục đã xóa và khôi phục nếu cần."
     },
     "themes": {
       "blue": "Xanh dương",
@@ -923,6 +940,7 @@
     "loading_label": "Đang tải dữ liệu vé...",
     "details_title": "Chi tiết giao dịch vé",
     "cancel_ticket": "Hủy vé",
+    "refund_ticket": "Hoàn tiền",
     "view_details": "Chi tiết vé",
     "payment_info": "Thông tin thanh toán",
     "original_price": "Giá gốc",
@@ -935,6 +953,7 @@
       "pending": "Đang chờ",
       "confirmed": "Đã xác nhận",
       "cancelled": "Đã hủy",
+      "refunded": "Đã hoàn tiền",
       "unknown": "Không xác định"
     },
     "columns": {
@@ -943,7 +962,8 @@
       "total": "Tổng tiền",
       "final": "Thành tiền",
       "status": "Trạng thái",
-      "created": "Ngày tạo"
+      "created": "Ngày tạo",
+      "processed_by": "Người xử lý"
     }
   },
   "coupons_tab": {
@@ -1062,7 +1082,7 @@
     "columns": {
       "user": "Người dùng",
       "movie": "Phim",
-      "rating": "Rating",
+      "rating": "Điểm đánh giá",
       "content": "Nội dung",
       "status": "Trạng thái",
       "created": "Ngày tạo"
@@ -1343,6 +1363,12 @@
     "failed_title": "THANH TOÁN THẤT BẠI",
     "success_desc": "Cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi. Chúc bạn có những phút giây xem phim vui vẻ!",
     "failed_desc": "Rất tiếc, đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng kiểm tra lại số dư tài khoản hoặc thử phương thức khác.",
+    "momo": {
+      "success_title": "Thanh toán MoMo thành công",
+      "failed_title": "Thanh toán MoMo thất bại",
+      "success_desc": "Giao dịch đã được xử lý thành công qua ví MoMo!",
+      "failed_desc": "Đã có lỗi xảy ra trong quá trình thanh toán MoMo."
+    },
     "order_info": "Thông tin đơn hàng",
     "order_payment_info": "Thanh toán đơn hàng",
     "download_invoice": "Tải hóa đơn (PDF)",
@@ -1388,5 +1414,201 @@
     "coupon_min_value": "Mã này chỉ áp dụng cho đơn hàng từ {{value}} VND trở lên",
     "coupon_expired": "Mã giảm giá đã hết hạn sử dụng",
     "coupon_applied": "Mã giảm giá đã được áp dụng thành công"
+  },
+  "toasts": {
+    "trash": {
+      "fetch_error": "Lỗi khi tải danh sách thùng rác",
+      "restore_success": "Khôi phục mục thành công",
+      "restore_error": "Lỗi khi khôi phục mục",
+      "hard_delete_success": "Đã xóa vĩnh viễn mục",
+      "hard_delete_error": "Lỗi khi xóa vĩnh viễn mục. Có thể mục này đang được liên kết với dữ liệu khác."
+    },
+    "movie": {
+      "add_success": "Thêm phim thành công",
+      "add_error": "Lỗi khi thêm phim mới",
+      "update_success": "Cập nhật phim thành công",
+      "update_error": "Lỗi khi cập nhật phim",
+      "delete_success": "Xóa phim thành công",
+      "delete_error": "Lỗi khi xóa phim"
+    },
+    "actor": {
+      "add_success": "Thêm diễn viên thành công",
+      "add_error": "Lỗi khi thêm diễn viên",
+      "update_success": "Cập nhật diễn viên thành công",
+      "update_error": "Lỗi khi cập nhật diễn viên",
+      "delete_success": "Xóa diễn viên thành công",
+      "delete_error": "Lỗi khi xóa diễn viên"
+    },
+    "room": {
+      "add_success": "Thêm phòng thành công",
+      "add_error": "Lỗi khi thêm phòng mới",
+      "update_success": "Cập nhật phòng thành công",
+      "update_error": "Lỗi khi cập nhật phòng",
+      "delete_success": "Xóa phòng thành công",
+      "delete_error": "Lỗi khi xóa phòng"
+    },
+    "cinema": {
+      "add_success": "Thêm rạp thành công",
+      "add_error": "Lỗi khi thêm rạp mới",
+      "update_success": "Cập nhật rạp thành công",
+      "update_error": "Lỗi khi cập nhật rạp",
+      "delete_success": "Xóa rạp thành công",
+      "delete_error": "Lỗi khi xóa rạp"
+    },
+    "location": {
+      "add_success": "Thêm địa điểm thành công",
+      "add_error": "Lỗi khi thêm địa điểm mới",
+      "update_success": "Cập nhật địa điểm thành công",
+      "update_error": "Lỗi khi cập nhật địa điểm",
+      "delete_success": "Xóa địa điểm thành công",
+      "delete_error": "Lỗi khi xóa địa điểm"
+    },
+    "showtime": {
+      "add_success": "Thêm suất chiếu thành công",
+      "add_error": "Lỗi khi thêm suất chiếu mới",
+      "update_success": "Cập nhật suất chiếu thành công",
+      "update_error": "Lỗi khi cập nhật suất chiếu",
+      "delete_success": "Xóa suất chiếu thành công",
+      "delete_error": "Lỗi khi xóa suất chiếu"
+    },
+    "snack": {
+      "add_success": "Thêm món ăn thành công",
+      "add_error": "Lỗi khi thêm món ăn mới",
+      "update_success": "Cập nhật món ăn thành công",
+      "update_error": "Lỗi khi cập nhật món ăn",
+      "delete_success": "Xóa món ăn thành công",
+      "delete_error": "Lỗi khi xóa món ăn"
+    },
+    "coupon": {
+      "add_success": "Thêm mã giảm giá thành công",
+      "add_error": "Lỗi khi thêm mã giảm giá mới",
+      "update_success": "Cập nhật mã giảm giá thành công",
+      "update_error": "Lỗi khi cập nhật mã giảm giá",
+      "delete_success": "Xóa mã giảm giá thành công",
+      "delete_error": "Lỗi khi xóa mã giảm giá"
+    },
+    "inventory": {
+      "update_success": "Cập nhật kho hàng thành công",
+      "update_error": "Lỗi khi cập nhật kho hàng"
+    },
+    "user": {
+      "update_success": "Cập nhật người dùng thành công",
+      "update_error": "Lỗi khi cập nhật người dùng",
+      "ban_success": "Đã khóa người dùng",
+      "ban_error": "Lỗi khi khóa người dùng"
+    },
+    "sync": {
+      "success": "Đồng bộ thành công",
+      "error": "Đồng bộ thất bại",
+      "cancelled": "Đồng bộ đã bị hủy",
+      "movie_success": "Đồng bộ phim thành công!",
+      "movie_desc": "Phim với trạng thái {{status}} đã được đồng bộ thành công.",
+      "movie_error": "Đồng bộ phim thất bại!",
+      "movie_error_desc": "Đã xảy ra lỗi khi đồng bộ phim với trạng thái {{status}}. Vui lòng thử lại sau.",
+      "movie_cancelled": "Đồng bộ phim đã bị hủy!",
+      "movie_cancelled_desc": "Đồng bộ phim với trạng thái {{status}} đã bị hủy.",
+      "status_success": "Cập nhật trạng thái phim thành công!",
+      "status_desc": "Trạng thái của các phim đã được cập nhật thành công.",
+      "status_error": "Cập nhật trạng thái phim thất bại!",
+      "status_error_desc": "Đã xảy ra lỗi khi cập nhật trạng thái phim. Vui lòng thử lại sau.",
+      "status_cancelled": "Cập nhật trạng thái phim đã bị hủy!",
+      "status_cancelled_desc": "Cập nhật trạng thái phim đã bị hủy.",
+      "review_success": "Đồng bộ đánh giá phim thành công!",
+      "review_desc": "Đánh giá của các phim đã được đồng bộ thành công.",
+      "review_error": "Đồng bộ đánh giá phim thất bại!",
+      "review_error_desc": "Đã xảy ra lỗi khi đồng bộ đánh giá phim. Vui lòng thử lại sau.",
+      "review_cancelled": "Đồng bộ đánh giá phim đã bị hủy!",
+      "review_cancelled_desc": "Đồng bộ đánh giá phim đã bị hủy."
+    },
+    "showtime_slot": {
+      "add_success": "Thêm khung giờ thành công",
+      "add_error": "Lỗi khi thêm khung giờ",
+      "update_success": "Cập nhật khung giờ thành công",
+      "update_error": "Lỗi khi cập nhật khung giờ",
+      "delete_success": "Xóa khung giờ thành công",
+      "delete_error": "Lỗi khi xóa khung giờ"
+    },
+    "showtime_price": {
+      "add_success": "Thêm giá vé thành công",
+      "add_error": "Lỗi khi thêm giá vé",
+      "update_success": "Cập nhật giá vé thành công",
+      "update_error": "Lỗi khi cập nhật giá vé",
+      "delete_success": "Xóa giá vé thành công",
+      "delete_error": "Lỗi khi xóa giá vé"
+    },
+    "review": {
+      "auth_required": "Cần đăng nhập",
+      "auth_required_desc": "Vui lòng đăng nhập để tạo đánh giá.",
+      "add_success": "Đánh giá đã được tạo",
+      "add_desc": "Đánh giá của bạn đã được tạo thành công.",
+      "add_error": "Lỗi tạo đánh giá",
+      "add_error_desc": "Đã xảy ra lỗi khi tạo đánh giá. Vui lòng thử lại.",
+      "update_success": "Đánh giá đã được cập nhật",
+      "update_desc": "Đánh giá của bạn đã được cập nhật thành công.",
+      "update_error": "Lỗi cập nhật đánh giá",
+      "update_error_desc": "Đã xảy ra lỗi khi cập nhật đánh giá. Vui lòng thử lại.",
+      "ban_success": "Đánh giá đã bị cấm",
+      "ban_desc": "Đánh giá đã bị cấm thành công.",
+      "ban_error": "Lỗi cấm đánh giá",
+      "ban_error_desc": "Đã xảy ra lỗi khi cấm đánh giá. Vui lòng thử lại."
+    },
+    "combo": {
+      "add_success": "Thêm chi tiết combo thành công",
+      "add_error": "Lỗi khi thêm chi tiết combo",
+      "update_success": "Cập nhật chi tiết combo thành công",
+      "update_error": "Lỗi khi cập nhật chi tiết combo",
+      "delete_success": "Xóa chi tiết combo thành công",
+      "delete_error": "Lỗi khi xóa chi tiết combo"
+    },
+    "auth": {
+      "signin_success": "Đăng nhập thành công! Chào mừng bạn trở lại.",
+      "signin_error": "Đăng nhập thất bại!",
+      "signin_error_desc": "Vui lòng kiểm tra thông tin đăng nhập và thử lại.",
+      "logout_success": "Đăng xuất thành công! Hẹn gặp lại bạn sau.",
+      "logout_error": "Đăng xuất thất bại!",
+      "logout_error_desc": "Đã xảy ra lỗi khi đăng xuất. Vui lòng thử lại.",
+      "signup_success": "Đăng ký thành công!",
+      "signup_success_desc": "Vui lòng kiểm tra email để xác minh tài khoản của bạn.",
+      "signup_error": "Đăng ký thất bại",
+      "signup_error_desc": "Vui lòng kiểm tra lại thông tin.",
+      "verify_success": "Xác minh email thành công!",
+      "verify_desc": "Bạn có thể đăng nhập ngay bây giờ.",
+      "verify_error": "Xác minh email thất bại",
+      "verify_error_desc": "Vui lòng thử lại sau.",
+      "forgot_success": "Đã gửi liên kết đặt lại mật khẩu!",
+      "forgot_desc": "Vui lòng kiểm tra email của bạn.",
+      "forgot_error": "Lỗi gửi yêu cầu",
+      "forgot_error_desc": "Vui lòng thử lại sau.",
+      "reset_check_success": "Mã đặt lại mật khẩu hợp lệ!",
+      "reset_check_desc": "Bạn có thể tiếp tục đặt lại mật khẩu mới.",
+      "reset_check_error": "Mã không hợp lệ",
+      "reset_check_error_desc": "Mã đã hết hạn hoặc không đúng.",
+      "reset_success": "Đặt lại mật khẩu thành công!",
+      "reset_desc": "Bạn có thể đăng nhập với mật khẩu mới.",
+      "reset_error": "Đặt lại mật khẩu thất bại",
+      "reset_error_desc": "Vui lòng thử lại sau.",
+      "change_password_success": "Đổi mật khẩu thành công",
+      "change_password_desc": "Mật khẩu của bạn đã được đổi thành công.",
+      "change_password_error": "Lỗi đổi mật khẩu",
+      "change_password_error_desc": "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại.",
+      "change_email_success": "Đổi email thành công",
+      "change_email_desc": "Email của bạn đã được đổi thành công.",
+      "change_email_error": "Lỗi đổi email",
+      "change_email_error_desc": "Đã xảy ra lỗi khi đổi email. Vui lòng thử lại.",
+      "change_birthdate_success": "Đổi ngày sinh thành công",
+      "change_birthdate_desc": "Ngày sinh của bạn đã được đổi thành công.",
+      "change_birthdate_error": "Lỗi đổi ngày sinh",
+      "change_birthdate_error_desc": "Đã xảy ra lỗi khi đổi ngày sinh. Vui lòng thử lại.",
+      "change_avatar_success": "Đổi ảnh đại diện thành công",
+      "change_avatar_desc": "Ảnh đại diện của bạn đã được đổi thành công.",
+      "change_avatar_error": "Lỗi đổi ảnh đại diện",
+      "change_avatar_error_desc": "Đã xảy ra lỗi khi đổi ảnh đại diện. Vui lòng thử lại."
+    },
+    "booking": {
+      "auth_required": "Cần đăng nhập",
+      "auth_required_desc": "Vui lòng đăng nhập để thực hiện đặt vé.",
+      "create_error": "Lỗi đặt vé",
+      "create_error_desc": "Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại."
+    }
   }
 }

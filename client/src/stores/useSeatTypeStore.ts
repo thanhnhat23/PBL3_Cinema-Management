@@ -18,7 +18,7 @@ export const useSeatTypeStore = create<{
     fetchAll: async () => {
         try {
             set({ isFetching: true });
-            const res = await _axios.get('/v1/seat/types'); 
+            const res = await _axios.get('/v1/seat/types');
             if (res.data) set({ seatTypes: res.data as SeatType[] });
         } catch (err) {
             console.error(err);

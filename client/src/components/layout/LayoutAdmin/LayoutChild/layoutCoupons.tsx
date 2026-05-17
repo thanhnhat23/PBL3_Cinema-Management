@@ -42,7 +42,7 @@ export default function LayoutCoupons() {
     const { t } = useTranslation();
 
     const columns = useMemo(() => [
-        { name: "ID", uid: "coupon_id", sortable: true },
+        { name: t('common.id'), uid: "coupon_id", sortable: true },
         { name: t('coupons_tab.columns.code'), uid: "code", sortable: true },
         { name: t('common.description'), uid: "description", sortable: true },
         { name: t('coupons_tab.columns.type'), uid: "coupon_type", sortable: true },

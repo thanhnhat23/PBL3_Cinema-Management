@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface Coupon {
     coupon_id: number;
@@ -106,9 +108,21 @@ export const useCouponStore = create<{
 
             if (response.data) {
                 set((state) => ({ coupons: [...state.coupons, response.data] }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.coupon.add_success'),
+                    color: "success",
+                    variant: "flat"
+                });
             }
         } catch (error) {
             console.error('Error creating coupon:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.coupon.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isCreatingCoupon: false });
         }
@@ -128,8 +142,20 @@ export const useCouponStore = create<{
                         ? { ...state.selectedCoupon, ...couponData }
                         : state.selectedCoupon,
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.coupon.update_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error updating coupon with ID ${couponId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.coupon.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isUpdatingCoupon: false });
         }
@@ -143,8 +169,20 @@ export const useCouponStore = create<{
             set((state) => ({
                 coupons: state.coupons.filter((coupon) => coupon.coupon_id !== couponId),
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.coupon.delete_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error deleting coupon with ID ${couponId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.coupon.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isDeletingCoupon: false });
         }

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface Location {
     location_id: number;
@@ -75,9 +77,21 @@ export const useLocationStore = create<{
 
             if (response.data) {
                 set((state) => ({ locations: [...state.locations, response.data] }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.location.add_success'),
+                    color: "success",
+                    variant: "flat"
+                });
             }
         } catch (error) {
             console.error('Error creating location:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.location.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isCreatingLocation: false });
         }
@@ -97,8 +111,20 @@ export const useLocationStore = create<{
                         ? { ...state.selectedLocation, ...locationData }
                         : state.selectedLocation,
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.location.update_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error updating location with ID ${locationId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.location.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isUpdatingLocation: false });
         }
@@ -112,8 +138,20 @@ export const useLocationStore = create<{
             set((state) => ({
                 locations: state.locations.filter((location) => location.location_id !== locationId),
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.location.delete_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error deleting location with ID ${locationId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.location.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isDeletingLocation: false });
         }

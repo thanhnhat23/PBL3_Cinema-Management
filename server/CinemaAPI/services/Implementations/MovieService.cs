@@ -62,12 +62,6 @@ namespace CinemaAPI.Services.Implementations
                 .Take(limit)
                 .ToListAsync();
 
-        public async Task AddMovie(Movie movie)
-        {
-            _dbContext.Movies.Add(movie);
-            await _dbContext.SaveChangesAsync();
-            RagCacheKeys.Invalidate("movies");
-        }
 
         public async Task<Movie> UpdateMovie(int movie_id, MovieUpdateRequest request)
         {
@@ -117,19 +111,24 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception("Movie not found.");
 
             await SoftDeleteAsync(movie);
-                RagCacheKeys.Invalidate("movies");
+            RagCacheKeys.Invalidate("movies");
         }
 
         public async Task HardDeleteMovie(int movie_id)
         {
             try
             {
-                var movie = await _dbContext.Movies.FindAsync(movie_id);
+                var movie = await _dbContext.Movies
+                    .Include(m => m.ShowTimes)
+                    .FirstOrDefaultAsync(m => m.movie_id == movie_id);
+
                 if (movie == null)
                     throw new Exception("Movie not found");
 
-                movie.deleted_at = DateTime.UtcNow;
-                await _dbContext.SaveChangesAsync();
+                if (movie.ShowTimes.Any())
+                    throw new Exception("Cannot hard delete movie that already has showtimes.");
+
+                await HardDeleteAsync(movie);
                 RagCacheKeys.Invalidate("movies");
             }
             catch (Exception ex)

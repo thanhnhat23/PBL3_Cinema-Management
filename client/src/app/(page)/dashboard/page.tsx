@@ -30,7 +30,8 @@ import {
     Moon,
     ChevronDown,
     Utensils,
-    Languages
+    Languages,
+    Trash2
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
@@ -101,7 +102,7 @@ export default function Dashboard() {
 
     const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["default"]) as Selection);
     const DROPDOWN_ITEM_CLASS = "data-[hover=true]:bg-amber-500/10 data-[hover=true]:text-amber-500 font-bold transition-all duration-200";
-    
+
     const selectedValue = useMemo(
         () => Array.from(selectedKeys).join(", "),
         [selectedKeys],
@@ -277,6 +278,40 @@ export default function Dashboard() {
                             })}
                         </SidebarMenu>
                     </SidebarGroup>
+
+                    <SidebarGroup>
+                        <SidebarGroupLabel className='px-2 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 flex items-center gap-2'>
+                            <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                            {t('dashboard.other')}
+                        </SidebarGroupLabel>
+                        <SidebarMenu className="gap-1">
+                            {[
+                                { key: 'trash', icon: <Trash2 size={18} />, label: t('dashboard.management.trash') }
+                            ].map((item) => {
+                                const isActive = openLayout === item.key;
+                                return (
+                                    <SidebarMenuItem key={item.key}>
+                                        <SidebarMenuButton
+                                            ref={(el) => { menuButtonRefs.current[item.key as LayoutKey] = el; }}
+                                            className={cn(
+                                                "h-11 px-3 rounded-sm transition-all duration-300 font-bold text-sm",
+                                                isActive
+                                                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-500 shadow-sm shadow-amber-500/5"
+                                                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/5"
+                                            )}
+                                            onClick={() => handleSetLayout(item.key as LayoutKey)}
+                                        >
+                                            <div className={cn("transition-transform duration-300", isActive && "scale-110")}>
+                                                {item.icon}
+                                            </div>
+                                            <span>{item.label}</span>
+                                            {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-amber-500" />}
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                );
+                            })}
+                        </SidebarMenu>
+                    </SidebarGroup>
                 </SidebarContent>
 
                 <SidebarFooter className="p-4 border-t border-zinc-200/50 dark:border-white/5">
@@ -381,7 +416,7 @@ export default function Dashboard() {
                                             <ChevronDown size={12} className="text-zinc-400" />
                                         </button>
                                     </DropdownTrigger>
-                                    
+
                                     <DropdownMenu
                                         aria-label="Language selection"
                                         onAction={(key) => changeLanguage(key as string)}
@@ -443,7 +478,7 @@ export default function Dashboard() {
                                             <ChevronDown size={12} className="text-zinc-400" />
                                         </button>
                                     </DropdownTrigger>
-                                    
+
                                     <DropdownMenu
                                         disallowEmptySelection
                                         aria-label="Theme Selection"

@@ -3,6 +3,7 @@ import { isAxiosError } from "axios";
 import { _axios } from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { addToast } from "@heroui/toast";
+import i18n from '@/lib/i18n';
 
 export interface Review {
     review_id: string;
@@ -111,8 +112,8 @@ export const useReviewStore = create<{
             const authUser = useAuthStore.getState().authUser;
             if (!authUser?.id) {
                 addToast({
-                    title: "Cần đăng nhập",
-                    description: "Vui lòng đăng nhập để tạo đánh giá.",
+                    title: i18n.t('toasts.review.auth_required'),
+                    description: i18n.t('toasts.review.auth_required_desc'),
                     color: "danger",
                     variant: "flat"
                 });
@@ -127,8 +128,8 @@ export const useReviewStore = create<{
             });
 
             addToast({
-                title: "Đánh giá đã được tạo",
-                description: "Đánh giá của bạn đã được tạo thành công.",
+                title: i18n.t('toasts.review.add_success'),
+                description: i18n.t('toasts.review.add_desc'),
                 color: "success",
                 variant: "flat"
             });
@@ -137,8 +138,8 @@ export const useReviewStore = create<{
             console.error("Failed to create review:", error);
 
             addToast({
-                title: "Lỗi tạo đánh giá",
-                description: "Đã xảy ra lỗi khi tạo đánh giá. Vui lòng thử lại.",
+                title: i18n.t('toasts.review.add_error'),
+                description: i18n.t('toasts.review.add_error_desc'),
                 color: "danger",
                 variant: "flat"
             });
@@ -158,8 +159,8 @@ export const useReviewStore = create<{
             });
 
             addToast({
-                title: "Đánh giá đã được cập nhật",
-                description: "Đánh giá của bạn đã được cập nhật thành công.",
+                title: i18n.t('toasts.review.update_success'),
+                description: i18n.t('toasts.review.update_desc'),
                 color: "success",
                 variant: "flat"
             });
@@ -168,8 +169,8 @@ export const useReviewStore = create<{
             console.error("Failed to update review:", error);
             
             addToast({
-                title: "Lỗi cập nhật đánh giá",
-                description: "Đã xảy ra lỗi khi cập nhật đánh giá. Vui lòng thử lại.",
+                title: i18n.t('toasts.review.update_error'),
+                description: i18n.t('toasts.review.update_error_desc'),
                 color: "danger",
                 variant: "flat"
             });
@@ -185,8 +186,8 @@ export const useReviewStore = create<{
             await _axios.put(`/v1/review/ban/${reviewId}`);
 
             addToast({
-                title: "Đánh giá đã bị cấm",
-                description: "Đánh giá đã bị cấm thành công.",
+                title: i18n.t('toasts.review.ban_success'),
+                description: i18n.t('toasts.review.ban_desc'),
                 color: "success",
                 variant: "flat"
             });
@@ -194,8 +195,8 @@ export const useReviewStore = create<{
             console.error("Failed to ban review:", error);
 
             addToast({
-                title: "Lỗi cấm đánh giá",
-                description: "Đã xảy ra lỗi khi cấm đánh giá. Vui lòng thử lại.", 
+                title: i18n.t('toasts.review.ban_error'),
+                description: i18n.t('toasts.review.ban_error_desc'), 
                 color: "danger",
                 variant: "flat"
             });

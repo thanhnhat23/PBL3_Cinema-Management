@@ -35,7 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
 
 const getRoomColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "room_id", sortable: true },
+    { name: t('common.id'), uid: "room_id", sortable: true },
     { name: t('rooms_tab.columns.name'), uid: "nameRoom", sortable: true },
     { name: t('rooms_tab.columns.cinema'), uid: "cinema", sortable: true },
     { name: t('rooms_tab.columns.type'), uid: "roomLayoutType", sortable: true },

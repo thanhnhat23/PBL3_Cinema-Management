@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { _axios } from "@/lib/axios";
+import { addToast } from "@heroui/toast";
+import i18n from "@/lib/i18n";
 
 export interface User {
     user_id: string;
@@ -44,7 +46,7 @@ export const useUserStore = create<{
     fetchAllUsers: () => Promise<void>;
     fetchUserById: (userId: string) => Promise<void>;
     banUser: (userId: string) => Promise<void>;
-}>(( set) => ({
+}>((set) => ({
     user: null,
     users: [],
     isFetchingAllUsers: false,
@@ -126,8 +128,20 @@ export const useUserStore = create<{
                 }
                 return {};
             });
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.user.ban_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Failed to ban user with ID ${userId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.user.ban_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isBannedUser: false });
         }

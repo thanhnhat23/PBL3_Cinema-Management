@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
 import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 type MovieSyncStatus = 'upcoming' | 'nowplaying' | 'popular';
 
@@ -60,24 +61,24 @@ export const useSyncDateStore = create<{
             })
 
             addToast({ 
-                title: 'Đồng bộ phim thành công!', 
-                description: `Phim với trạng thái ${status} đã được đồng bộ thành công.`,
+                title: i18n.t('toasts.sync.movie_success'), 
+                description: i18n.t('toasts.sync.movie_desc', { status }),
                 color: 'success', 
                 variant: 'flat'
             });
         } catch (error: unknown) {
             if (error instanceof Error && error.name === 'CanceledError') {
                 addToast({
-                    title: 'Đồng bộ phim đã bị hủy!',
-                    description: `Đồng bộ phim với trạng thái ${status} đã bị hủy.`,
+                    title: i18n.t('toasts.sync.movie_cancelled'),
+                    description: i18n.t('toasts.sync.movie_cancelled_desc', { status }),
                     color: 'warning',
                     variant: 'flat'
                 });
             } else {
                 console.log('Error syncing movies:', error);
                 addToast({ 
-                    title: 'Đồng bộ phim thất bại!', 
-                    description: `Đã xảy ra lỗi khi đồng bộ phim với trạng thái ${status}. Vui lòng thử lại sau.`,
+                    title: i18n.t('toasts.sync.movie_error'), 
+                    description: i18n.t('toasts.sync.movie_error_desc', { status }),
                     color: 'danger', 
                     variant: 'flat'
                 });
@@ -104,24 +105,24 @@ export const useSyncDateStore = create<{
             });
 
             addToast({ 
-                title: 'Cập nhật trạng thái phim thành công!', 
-                description: 'Trạng thái của các phim đã được cập nhật thành công.',
+                title: i18n.t('toasts.sync.status_success'), 
+                description: i18n.t('toasts.sync.status_desc'),
                 color: 'success', 
                 variant: 'flat'
             });
         } catch (error) {
             if (error instanceof Error && error.name === 'CanceledError') {
                 addToast({
-                    title: 'Cập nhật trạng thái phim đã bị hủy!',
-                    description: 'Cập nhật trạng thái phim đã bị hủy.',
+                    title: i18n.t('toasts.sync.status_cancelled'),
+                    description: i18n.t('toasts.sync.status_cancelled_desc'),
                     color: 'warning',
                     variant: 'flat'
                 });
             } else {
                 console.log('Error syncing movie statuses:', error);
                 addToast({ 
-                    title: 'Cập nhật trạng thái phim thất bại!', 
-                    description: 'Đã xảy ra lỗi khi cập nhật trạng thái phim. Vui lòng thử lại sau.',
+                    title: i18n.t('toasts.sync.status_error'), 
+                    description: i18n.t('toasts.sync.status_error_desc'),
                     color: 'danger', 
                     variant: 'flat'
                 });
@@ -141,24 +142,24 @@ export const useSyncDateStore = create<{
             });
 
             addToast({ 
-                title: 'Đồng bộ đánh giá phim thành công!', 
-                description: 'Đánh giá của các phim đã được đồng bộ thành công.',
+                title: i18n.t('toasts.sync.review_success'), 
+                description: i18n.t('toasts.sync.review_desc'),
                 color: 'success', 
                 variant: 'flat'
             });
         } catch (error) {
             if (error instanceof Error && error.name === 'CanceledError') {
                 addToast({
-                    title: 'Đồng bộ đánh giá phim đã bị hủy!',
-                    description: 'Đồng bộ đánh giá phim đã bị hủy.',
+                    title: i18n.t('toasts.sync.review_cancelled'),
+                    description: i18n.t('toasts.sync.review_cancelled_desc'),
                     color: 'warning',
                     variant: 'flat'
                 });
             } else {
                 console.log('Error syncing movie reviews:', error);
                 addToast({ 
-                    title: 'Đồng bộ đánh giá phim thất bại!', 
-                    description: 'Đã xảy ra lỗi khi đồng bộ đánh giá phim. Vui lòng thử lại sau.',
+                    title: i18n.t('toasts.sync.review_error'), 
+                    description: i18n.t('toasts.sync.review_error_desc'),
                     color: 'danger', 
                     variant: 'flat'
                 });

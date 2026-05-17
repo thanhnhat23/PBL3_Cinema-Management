@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface Room {
     room_id: number;
@@ -138,9 +140,21 @@ export const useRoomStore = create<{
 
             if (response.data) {
                 set((state) => ({ rooms: [...state.rooms, response.data] }));
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.room.add_success'),
+                    color: "success",
+                    variant: "flat"
+                });
             }
         } catch (error) {
             console.error('Error creating room:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.room.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isCreatingRoom: false });
         }
@@ -160,8 +174,20 @@ export const useRoomStore = create<{
                         ? { ...state.selectedRoom, ...roomData }
                         : state.selectedRoom,
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.room.update_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error updating room with ID ${roomId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.room.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isUpdatingRoom: false });
         }
@@ -175,8 +201,20 @@ export const useRoomStore = create<{
             set((state) => ({
                 rooms: state.rooms.filter((room) => room.room_id !== roomId),
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.room.delete_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error(`Error deleting room with ID ${roomId}:`, error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.room.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
         } finally {
             set({ isDeletingRoom: false });
         }

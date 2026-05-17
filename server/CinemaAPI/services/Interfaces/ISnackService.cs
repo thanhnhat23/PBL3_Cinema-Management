@@ -9,5 +9,7 @@ namespace CinemaAPI.Services.Interfaces
         Task<Snack?> GetSnackById(int snack_id);
         Task AddSnack(Snack snack);
         Task UpdateSnack(int snack_id, SnackUpdateRequest request);
+        Task SoftDeleteSnackById(int snack_id, Guid? deletedBy);
+        Task HardDeleteSnackById(int snack_id);
     }
 }

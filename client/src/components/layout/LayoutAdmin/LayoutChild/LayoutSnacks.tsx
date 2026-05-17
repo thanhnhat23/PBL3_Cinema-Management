@@ -33,7 +33,7 @@ import { useSnackStore, type Snack } from "@/stores/useSnackStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 
 const getColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "snack_id", sortable: true },
+    { name: t('common.id'), uid: "snack_id", sortable: true },
     { name: t('foods_tab.name_label'), uid: "name", sortable: true },
     { name: t('foods_tab.type_label'), uid: "type", sortable: true },
     { name: t('foods_tab.price_label'), uid: "price", sortable: true },

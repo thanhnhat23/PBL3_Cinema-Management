@@ -33,7 +33,7 @@ import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { useTranslation } from "react-i18next";
 
 const getActorColumns = (t: (key: string) => string): AdminColumn[] => [
-    { name: "ID", uid: "actor_id", sortable: true },
+    { name: t('common.id'), uid: "actor_id", sortable: true },
     { name: t('actors_tab.columns.name'), uid: "name", sortable: true },
     { name: t('actors_tab.columns.gender'), uid: "gender", sortable: true },
     { name: t('actors_tab.columns.birthday'), uid: "birthday", sortable: true },
@@ -69,7 +69,6 @@ export default function LayoutActors() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
     const [selectedActor, setSelectedActor] = useState<Actor | null>(null);
-    const [isAdding, setIsAdding] = useState(false);
     const popoverContainerRef = useRef<HTMLDivElement | null>(null);
     const [editForm, setEditForm] = useState({
         name: "",
@@ -117,22 +116,7 @@ export default function LayoutActors() {
 
     const birthdayValue = parseLocalDate(editForm.birthday);
 
-    const handleOpenAdd = useCallback(() => {
-        setIsAdding(true);
-        setSelectedActor(null);
-        setEditForm({
-            name: "",
-            gender: "2",
-            profile_path: "",
-            biography: "",
-            birthday: "",
-            place_of_birth: "",
-        });
-        onEditOpen();
-    }, [onEditOpen]);
-
     const handleOpenEdit = useCallback((actor: Actor) => {
-        setIsAdding(false);
         setSelectedActor(actor);
         setEditForm({
             name: actor.name ?? "",
@@ -155,10 +139,7 @@ export default function LayoutActors() {
             place_of_birth: editForm.place_of_birth.trim(),
         };
 
-        if (isAdding) {
-            const { createActor } = useActorStore.getState();
-            await createActor(payload);
-        } else if (selectedActor) {
+        if (selectedActor) {
             await updateActor(selectedActor.actor_id, payload);
         }
 
@@ -231,25 +212,12 @@ export default function LayoutActors() {
                             >
                                 {t('common.view')}
                             </DropdownItem>
-                            <DropdownItem
+                             <DropdownItem
                                 key="edit"
                                 startContent={<PenLine size={18} />}
-                                showDivider
                                 onPress={() => handleOpenEdit(actor)}
                             >
                                 {t('common.edit')}
-                            </DropdownItem>
-                            <DropdownItem
-                                key="delete"
-                                startContent={<Trash size={18} />}
-                                className="text-danger"
-                                color="danger"
-                                onPress={() => {
-                                    const { deleteActor } = useActorStore.getState();
-                                    deleteActor(actor.actor_id);
-                                }}
-                            >
-                                {t('common.delete')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -286,8 +254,6 @@ export default function LayoutActors() {
                 items={actors}
                 isLoading={isFetchingActors}
                 searchPlaceholder={t('actors_tab.search_placeholder')}
-                addButtonLabel={t('actors_tab.add_actor')}
-                onAdd={handleOpenAdd}
                 totalLabel={(count) => t('actors_tab.total_count', { count })}
                 emptyLabel={t('actors_tab.empty_label')}
                 loadingLabel={t('actors_tab.loading_label')}
@@ -295,6 +261,8 @@ export default function LayoutActors() {
                 rowKey={(item) => item.actor_id}
                 searchBy={(item) => item.name}
                 renderCell={renderCell}
+                selectionMode="none"
+                hideDeleteSelected={true}
                 filters={[
                     {
                         uid: "gender",
@@ -410,10 +378,10 @@ export default function LayoutActors() {
                     {() => (
                         <>
                             <DrawerHeader className="flex flex-col gap-1 border-b border-zinc-100 dark:border-zinc-800">
-                                {isAdding ? t('actors_tab.add_new_actor') : t('actors_tab.edit_actor')}
+                                {t('actors_tab.edit_actor')}
                             </DrawerHeader>
                             <DrawerBody>
-                                <p className="text-sm text-zinc-500 mb-4 py-4">{isAdding ? t('actors_tab.add_actor_subtitle') : t('actors_tab.edit_actor_subtitle')}</p>
+                                <p className="text-sm text-zinc-500 mb-4 py-4">{t('actors_tab.edit_actor_subtitle')}</p>
 
                                 <div ref={popoverContainerRef} className="grid gap-4 py-2">
                                     <div className="grid grid-cols-4 items-center gap-4">

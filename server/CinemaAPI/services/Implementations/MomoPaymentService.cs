@@ -44,6 +44,9 @@ namespace CinemaAPI.Services.Implementations
             if (booking == null)
                 throw new Exception($"Booking {request.booking_id} not found.");
 
+            if (booking.status != BookingStatus.Pending)
+                throw new Exception("Booking is already processed or cancelled. Cannot create payment.");
+
             var amount = (long)booking.finalAmount;
             var orderId = $"M{booking.booking_id}_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
             var requestId = Guid.NewGuid().ToString();

@@ -377,7 +377,7 @@ export function SelectPaymentTab({
                                                 isMomo ? "bg-[#A50064] shadow-pink-500/20" : "shadow-amber-500/20"
                                             )}
                                             startContent={<ExternalLink size={20} />}
-                                            onClick={() => paymentUrl && window.open(paymentUrl, '_blank')}
+                                            onClick={() => paymentUrl && (window.location.href = paymentUrl)}
                                         >
                                             {isMomo ? t('payment_tab.momo_redirect_button') : t('payment_tab.redirect_button')}
                                         </Button>

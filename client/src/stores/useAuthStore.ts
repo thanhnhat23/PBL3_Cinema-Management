@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
 import Swal from 'sweetalert2';
 import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export interface AuthUser {
     id: string;
@@ -132,7 +133,7 @@ export const useAuthStore = create<{
                 }
 
                 Swal.fire({
-                    title: "Đăng nhập thành công! Chào mừng bạn trở lại.",
+                    title: i18n.t('toasts.auth.signin_success'),
                     icon: "success",
                     draggable: true
                 });
@@ -141,8 +142,8 @@ export const useAuthStore = create<{
             console.log('Error in signin: ', error);
             Swal.fire({
                 icon: "error",
-                title: "Đăng nhập thất bại!",
-                text: "Vui lòng kiểm tra thông tin đăng nhập và thử lại.",
+                title: i18n.t('toasts.auth.signin_error'),
+                text: i18n.t('toasts.auth.signin_error_desc'),
             });
         } finally {
             set({ isSigningIn: false });
@@ -166,7 +167,7 @@ export const useAuthStore = create<{
             }
 
             Swal.fire({
-                title: "Đăng xuất thành công! Hẹn gặp lại bạn sau.",
+                title: i18n.t('toasts.auth.logout_success'),
                 icon: "success",
                 draggable: true
             });
@@ -174,8 +175,8 @@ export const useAuthStore = create<{
             console.log('Error in logout: ', error);
             Swal.fire({
                 icon: "error",
-                title: "Đăng xuất thất bại!",
-                text: "Đã xảy ra lỗi khi đăng xuất. Vui lòng thử lại.",
+                title: i18n.t('toasts.auth.logout_error'),
+                text: i18n.t('toasts.auth.logout_error_desc'),
             });
         }
     },
@@ -198,15 +199,15 @@ export const useAuthStore = create<{
             });
 
             Swal.fire({
-                title: 'Thành công',
-                text: 'Đăng ký thành công! Vui lòng kiểm tra email để xác minh tài khoản của bạn.',
+                title: i18n.t('toasts.auth.signup_success'),
+                text: i18n.t('toasts.auth.signup_success_desc'),
                 icon: 'success',
             });
         } catch (error) {
             console.log('Error in signup: ', error);
             Swal.fire({
-                title: 'Lỗi',
-                text: 'Đăng ký thất bại. Vui lòng kiểm tra email hoa.',
+                title: i18n.t('toasts.auth.signup_error'),
+                text: i18n.t('toasts.auth.signup_error_desc'),
                 icon: 'error',
             });
         } finally {
@@ -220,15 +221,15 @@ export const useAuthStore = create<{
             await _axios.post('v1/auth/verify-email', { userId, verificationCode });
 
             Swal.fire({
-                title: 'Thành công',
-                text: 'Xác minh email thành công! Bạn có thể đăng nhập ngay bây giờ.',
+                title: i18n.t('common.success'),
+                text: i18n.t('toasts.auth.verify_success'),
                 icon: 'success',
             });
         } catch (error) {
             console.log('Error in verifyEmail: ', error);
             Swal.fire({
-                title: 'Lỗi',
-                text: 'Xác minh email thất bại. Vui lòng thử lại.',
+                title: i18n.t('common.error'),
+                text: i18n.t('toasts.auth.verify_error_desc'),
                 icon: 'error',
             });
         } finally {
@@ -242,15 +243,15 @@ export const useAuthStore = create<{
             await _axios.post('v1/auth/forgot-password', { email });
 
             Swal.fire({
-                title: 'Thành công',
-                text: 'Đã gửi liên kết đặt lại mật khẩu! Vui lòng kiểm tra email của bạn.',
+                title: i18n.t('common.success'),
+                text: i18n.t('toasts.auth.forgot_success'),
                 icon: 'success',
             });
         } catch (error) {
             console.log('Error in forgotPassword: ', error);
             Swal.fire({
-                title: 'Lỗi',
-                text: 'Gửi liên kết đặt lại mật khẩu thất bại. Vui lòng thử lại.',
+                title: i18n.t('common.error'),
+                text: i18n.t('toasts.auth.forgot_error_desc'),
                 icon: 'error',
             });
         } finally {
@@ -264,16 +265,16 @@ export const useAuthStore = create<{
             await _axios.post('v1/auth/check-reset-password', { email, resetToken });
 
             await Swal.fire({
-                title: 'Thành công',
-                text: 'Mã đặt lại mật khẩu hợp lệ! Bạn có thể tiếp tục đặt lại mật khẩu mới.',
+                title: i18n.t('common.success'),
+                text: i18n.t('toasts.auth.reset_check_success'),
                 icon: 'success',
             });
             return true;
         } catch (error) {
             console.log('Error in checkResetPassword: ', error);
             Swal.fire({
-                title: 'Lỗi',
-                text: 'Mã đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng thử lại.',
+                title: i18n.t('common.error'),
+                text: i18n.t('toasts.auth.reset_check_error_desc'),
                 icon: 'error',
             });
             return false;
@@ -288,15 +289,15 @@ export const useAuthStore = create<{
             await _axios.post('v1/auth/reset-password', { email, newPassword });
 
             Swal.fire({
-                title: 'Thành công',
-                text: 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.',
+                title: i18n.t('common.success'),
+                text: i18n.t('toasts.auth.reset_success'),
                 icon: 'success',
             });
         } catch (error) {
             console.log('Error in resetPassword: ', error);
             Swal.fire({
-                title: 'Lỗi',
-                text: 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.',
+                title: i18n.t('common.error'),
+                text: i18n.t('toasts.auth.reset_error_desc'),
                 icon: 'error',
             });
         } finally {
@@ -310,8 +311,8 @@ export const useAuthStore = create<{
             await _axios.post('v1/auth/change-password', { currentPassword, newPassword });
 
             addToast({
-                title: "Đổi mật khẩu thành công",
-                description: "Mật khẩu của bạn đã được đổi thành công.",
+                title: i18n.t('toasts.auth.change_password_success'),
+                description: i18n.t('toasts.auth.change_password_desc'),
                 color: "success",
                 variant: "flat"
             });
@@ -319,8 +320,8 @@ export const useAuthStore = create<{
             console.log('Error in changePassword: ', error);
 
             addToast({
-                title: "Lỗi đổi mật khẩu",
-                description: "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại.",
+                title: i18n.t('toasts.auth.change_password_error'),
+                description: i18n.t('toasts.auth.change_password_error_desc'),
                 color: "danger",
                 variant: "flat"
             });
@@ -335,8 +336,8 @@ export const useAuthStore = create<{
             await _axios.post('v1/auth/change-email', { newEmail });
 
             addToast({
-                title: "Đổi email thành công",
-                description: "Email của bạn đã được đổi thành công.",
+                title: i18n.t('toasts.auth.change_email_success'),
+                description: i18n.t('toasts.auth.change_email_desc'),
                 color: "success",
                 variant: "flat"
             });
@@ -344,8 +345,8 @@ export const useAuthStore = create<{
             console.log('Error in changeEmail: ', error);
 
             addToast({
-                title: "Lỗi đổi email",
-                description: "Đã xảy ra lỗi khi đổi email. Vui lòng thử lại.",
+                title: i18n.t('toasts.auth.change_email_error'),
+                description: i18n.t('toasts.auth.change_email_error_desc'),
                 color: "danger",
                 variant: "flat"
             });
@@ -360,8 +361,8 @@ export const useAuthStore = create<{
             await _axios.post('v1/auth/change-birthdate', { newBirthDate: newBirthDate });
 
             addToast({
-                title: "Đổi ngày sinh thành công",
-                description: "Ngày sinh của bạn đã được đổi thành công.",
+                title: i18n.t('toasts.auth.change_birthdate_success'),
+                description: i18n.t('toasts.auth.change_birthdate_desc'),
                 color: "success",
                 variant: "flat"
             });
@@ -369,8 +370,8 @@ export const useAuthStore = create<{
             console.log('Error in changeBirthdate: ', error);
 
             addToast({
-                title: "Lỗi đổi ngày sinh",
-                description: "Đã xảy ra lỗi khi đổi ngày sinh. Vui lòng thử lại.",
+                title: i18n.t('toasts.auth.change_birthdate_error'),
+                description: i18n.t('toasts.auth.change_birthdate_error_desc'),
                 color: "danger",
                 variant: "flat"
             });
@@ -410,8 +411,8 @@ export const useAuthStore = create<{
             }
 
             addToast({
-                title: "Đổi ảnh đại diện thành công",
-                description: "Ảnh đại diện của bạn đã được đổi thành công.",
+                title: i18n.t('toasts.auth.change_avatar_success'),
+                description: i18n.t('toasts.auth.change_avatar_desc'),
                 color: "success",
                 variant: "flat"
             });
@@ -419,8 +420,8 @@ export const useAuthStore = create<{
             console.log('Error in changeAvatar: ', error);
 
             addToast({
-                title: "Lỗi đổi ảnh đại diện",
-                description: "Đã xảy ra lỗi khi đổi ảnh đại diện. Vui lòng thử lại.",
+                title: i18n.t('toasts.auth.change_avatar_error'),
+                description: i18n.t('toasts.auth.change_avatar_error_desc'),
                 color: "danger",
                 variant: "flat"
             });

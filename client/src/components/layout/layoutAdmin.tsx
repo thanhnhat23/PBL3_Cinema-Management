@@ -9,6 +9,7 @@ import LayoutUsers from "./LayoutAdmin/layoutUsers";
 import LayoutSyncData from "./LayoutAdmin/layoutSyncData";
 import LayoutStatistics from "./LayoutAdmin/layoutStatistics";
 import LayoutFood from "./LayoutAdmin/layoutFoods";
+import LayoutTrash from "./LayoutAdmin/layoutTrash";
 import React from "react";
 import { LayoutKey } from "@/stores/useLayoutStore";
 
@@ -30,6 +31,7 @@ export const LayoutAdmin = React.memo(({
             {openLayout === "sync" && <LayoutSyncData />}
             {openLayout === "revenue" && <LayoutStatistics />}
             {openLayout === "foods" && <LayoutFood />}
+            {openLayout === "trash" && <LayoutTrash />}
         </div>
     )
 })

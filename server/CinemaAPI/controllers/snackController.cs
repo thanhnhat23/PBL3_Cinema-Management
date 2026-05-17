@@ -88,10 +88,13 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _snackDeleteService.SoftDeleteSnackById(snackId);
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? deletedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _snackDeleteService.SoftDeleteSnackById(snackId, deletedBy);
                 return Ok("Snack deleted successfully");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(0, "");
             }

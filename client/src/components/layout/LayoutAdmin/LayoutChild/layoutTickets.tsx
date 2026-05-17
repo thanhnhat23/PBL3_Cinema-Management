@@ -19,6 +19,7 @@ import { useBookingStore, type Booking } from "@/stores/useBookingStore";
 import DataTableAdmin, { type AdminColumn } from "../../dataTable";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
+import { AvatarElement } from "@/components/ui/avatar";
 
 const getTicketColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: t('common.id'), uid: "booking_id", sortable: true },
@@ -28,6 +29,7 @@ const getTicketColumns = (t: (key: string) => string): AdminColumn[] => [
     { name: t('tickets_tab.columns.final'), uid: "finalAmount", sortable: true },
     { name: t('tickets_tab.columns.status'), uid: "status", sortable: true },
     { name: t('tickets_tab.columns.created'), uid: "createAt", sortable: true },
+    { name: t('tickets_tab.columns.processed_by'), uid: "processedBy", sortable: true },
     { name: t('common.actions'), uid: "actions" },
 ];
 
@@ -35,12 +37,13 @@ const statusColorMap: Record<string, "warning" | "success" | "danger" | "default
     pending: "warning",
     confirmed: "success",
     cancelled: "danger",
+    refunded: "secondary",
     unknown: "default",
 };
 
 export default function LayoutTickets() {
     const { t } = useTranslation();
-    const { bookings, isFetchingBookings, fetchAllBookings } = useBookingStore();
+    const { bookings, isFetchingBookings, fetchAllBookings, cancelBooking, refundBooking } = useBookingStore();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
@@ -53,6 +56,7 @@ export default function LayoutTickets() {
         if (normalized === "pending" || normalized === "0") return t('tickets_tab.status.pending');
         if (normalized === "confirmed" || normalized === "1") return t('tickets_tab.status.confirmed');
         if (normalized === "cancelled" || normalized === "2") return t('tickets_tab.status.cancelled');
+        if (normalized === "refunded" || normalized === "3") return t('tickets_tab.status.refunded');
         return t('tickets_tab.status.unknown');
     }, [t]);
 
@@ -61,6 +65,7 @@ export default function LayoutTickets() {
         if (normalized === "pending" || normalized === "0") return "pending";
         if (normalized === "confirmed" || normalized === "1") return "confirmed";
         if (normalized === "cancelled" || normalized === "2") return "cancelled";
+        if (normalized === "refunded" || normalized === "3") return "refunded";
         return "unknown";
     }, []);
 
@@ -94,6 +99,30 @@ export default function LayoutTickets() {
             }
             case "createAt":
                 return <span className="text-xs font-medium text-zinc-400">{new Date(String(booking.createAt)).toLocaleDateString(t('locale_code'))}</span>;
+            case "processedBy":
+                return (
+                    <div className="flex items-center gap-2">
+                        {booking.processedByUserName ? (
+                            <>
+                                <AvatarElement 
+                                    avatar={booking.processedByAvatarPath}
+                                    width="w-7"
+                                    height="h-7"
+                                    left="left-1/2"
+                                    translatex="-translate-x-1/2"
+                                    widthDeco="w-10"
+                                />
+                                <span className="text-[10px] font-bold uppercase text-zinc-500 dark:text-zinc-400">
+                                    {booking.processedByUserName}
+                                </span>
+                            </>
+                        ) : (
+                            <span className="text-[10px] font-bold uppercase text-zinc-400">
+                                —
+                            </span>
+                        )}
+                    </div>
+                );
             case "actions":
                 return (
                     <Dropdown classNames={{
@@ -116,8 +145,23 @@ export default function LayoutTickets() {
                             >
                                 {t('common.view')}
                             </DropdownItem>
-                            <DropdownItem key="delete" startContent={<Trash size={18} />} className="text-danger" color="danger">
+                            <DropdownItem 
+                                key="cancel" 
+                                startContent={<Trash size={18} />} 
+                                className="text-danger" 
+                                color="danger"
+                                onPress={() => cancelBooking(booking.booking_id)}
+                            >
                                 {t('tickets_tab.cancel_ticket')}
+                            </DropdownItem>
+                            <DropdownItem 
+                                key="refund" 
+                                startContent={<CreditCard size={18} />} 
+                                className="text-warning" 
+                                color="warning"
+                                onPress={() => refundBooking(booking.booking_id)}
+                            >
+                                {t('tickets_tab.refund_ticket')}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>

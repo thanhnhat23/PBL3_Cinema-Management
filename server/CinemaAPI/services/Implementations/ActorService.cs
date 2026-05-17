@@ -70,23 +70,5 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception($"Error updating actor: {ex.Message}");
             }
         }
-        public async Task DeleteActorAsync(int id)
-        {
-            try
-            {
-                var actor = await _dbContext.Actors.FindAsync(id);
-                if (actor == null)
-                    throw new Exception("Actor not found");
-
-                actor.deleted_at = DateTime.UtcNow;
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in ActorService.DeleteActor: {ex.Message}");
-                throw new Exception("An error occurred while deleting the actor.");
-            }
-
-        }
     }
 }

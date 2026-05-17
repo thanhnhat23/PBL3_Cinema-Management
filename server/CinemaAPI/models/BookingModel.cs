@@ -9,7 +9,8 @@ namespace CinemaAPI.Models
     {
         Pending = 0,
         Confirmed = 1,
-        Cancelled = 2
+        Cancelled = 2,
+        Refunded = 3
     }
 
     [Index(nameof(user_id), nameof(createAt), IsDescending = new[] { false, true })]
@@ -50,5 +51,9 @@ namespace CinemaAPI.Models
 
         [JsonConverter(typeof(TmdbService.DateTimeConverter))]
         public DateTime createAt { get; set; } = DateTime.UtcNow;
+
+        public Guid? processed_by { get; set; }
+        [ForeignKey("processed_by")]
+        public virtual User? Processor { get; set; }
     }
 }

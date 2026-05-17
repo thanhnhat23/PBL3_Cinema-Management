@@ -42,6 +42,9 @@ namespace CinemaAPI.Services.Implementations
             if (booking == null)
                 throw new Exception($"Booking {request.booking_id} not found.");
 
+            if (booking.status != BookingStatus.Pending)
+                throw new Exception("Booking is already processed or cancelled. Cannot create payment.");
+
             if (request.method != VnpayPaymentType.VNPAYQR && request.method != VnpayPaymentType.VNBANK)
                 throw new Exception("Unsupported payment method.");
 

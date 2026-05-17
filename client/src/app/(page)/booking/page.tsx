@@ -662,7 +662,7 @@ export default function BookingPage() {
 
               <Button
                 size="lg"
-                onClick={currentStep === "payment" ? () => realBookingData?.paymentUrl && window.open(realBookingData.paymentUrl, '_blank') : nextStep}
+                onClick={currentStep === "payment" ? () => realBookingData?.paymentUrl && (window.location.href = realBookingData.paymentUrl) : nextStep}
                 isDisabled={!canProceed || isCreatingBooking || isCreatingVnpay || isCreatingMomo}
                 isLoading={isCreatingBooking || isCreatingVnpay || isCreatingMomo}
                 className={cn(

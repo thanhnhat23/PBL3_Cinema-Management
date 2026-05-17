@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 import type { Snack } from './useSnackStore';
 
 export interface ComboComponent {
@@ -72,11 +74,23 @@ export const useComboStore = create<{
             if (res.status === 200) {
                 // Refresh that combo
                 await get().fetchComboDetailsByCombo(data.combo_id);
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.combo.add_success'),
+                    color: "success",
+                    variant: "flat"
+                });
                 return true;
             }
             return false;
         } catch (error) {
             console.error('Error creating combo detail:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.combo.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
             return false;
         }
     },
@@ -86,11 +100,23 @@ export const useComboStore = create<{
             const res = await _axios.put(`/v1/combodetail/update/${combo_id}/${snack_id}`, data);
             if (res.status === 200) {
                 await get().fetchComboDetailsByCombo(combo_id);
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.combo.update_success'),
+                    color: "success",
+                    variant: "flat"
+                });
                 return true;
             }
             return false;
         } catch (error) {
             console.error('Error updating combo detail:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.combo.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
             return false;
         }
     },
@@ -100,11 +126,23 @@ export const useComboStore = create<{
             const res = await _axios.delete(`/v1/combodetail/delete/${combo_id}/${snack_id}`);
             if (res.status === 200) {
                 await get().fetchComboDetailsByCombo(combo_id);
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.combo.delete_success'),
+                    color: "success",
+                    variant: "flat"
+                });
                 return true;
             }
             return false;
         } catch (error) {
             console.error('Error deleting combo detail:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.combo.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
             return false;
         }
     },

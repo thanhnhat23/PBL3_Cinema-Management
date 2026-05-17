@@ -10,5 +10,7 @@ namespace CinemaAPI.Services.Interfaces
         Task AddBooking(Booking booking);
         Task<Booking> CreateBookingWithSnacksAsync(BookingCreateRequest request);
         Task UpdateBooking(int booking_id, BookingUpdateRequest request);
+        Task CancelBooking(int booking_id, Guid? processedBy);
+        Task RefundBooking(int booking_id, Guid? processedBy);
     }
 }

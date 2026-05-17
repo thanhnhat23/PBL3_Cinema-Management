@@ -70,9 +70,9 @@ public class TmdbService : ITmdbService
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string dateString = reader.GetString();
+            string? dateString = reader.GetString();
 
-            if (DateTime.TryParse(dateString, out DateTime result))
+            if (dateString != null && DateTime.TryParse(dateString, out DateTime result))
             {
                 return result;
             }
@@ -181,7 +181,7 @@ public class TmdbService : ITmdbService
             vote_average = item.vote_average,
             vote_count = item.vote_count,
             runtime = runtimeResponse?.runtime ?? 0,
-            trailer_url = trailerResponse?.results.FirstOrDefault(v => v.type == "Trailer" && v.site == "YouTube")?.key,
+            trailer_url = trailerResponse?.results?.FirstOrDefault(v => v.type == "Trailer" && v.site == "YouTube")?.key,
             status = !item.release_date.HasValue ? MovieStatus.Upcoming :
                 now < item.release_date.Value ? MovieStatus.Upcoming :
                 now > endDate ? MovieStatus.Ended : MovieStatus.Released,
@@ -374,10 +374,10 @@ public class TmdbService : ITmdbService
 
                     var actor = new Actor
                     {
-                        actor_id = cast.Id,
-                        name = cast.name,
+                        actor_id = cast?.Id ?? 0,
+                        name = cast?.name ?? string.Empty,
                         profile_path = cast?.profile_path,
-                        gender = (ActorGender)cast.gender,
+                        gender = (ActorGender)(cast?.gender ?? 0),
                         biography = detail?.biography,
                         place_of_birth = detail?.place_of_birth,
                         birthday = detail?.birthday ?? null

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 import type { Snack } from './useSnackStore';
 
 export interface Inventory {
@@ -55,11 +57,23 @@ export const useInventoryStore = create<{
             const res = await _axios.post('/v1/inventory/create', data);
             if (res.status === 200) {
                 await get().fetchInventory(data.cinema_id, data.snack_id);
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.inventory.update_success'),
+                    color: "success",
+                    variant: "flat"
+                });
                 return true;
             }
             return false;
         } catch (error) {
             console.error('Error creating inventory:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.inventory.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
             return false;
         }
     },
@@ -69,11 +83,23 @@ export const useInventoryStore = create<{
             const res = await _axios.put(`/v1/inventory/update/${cinemaId}/${snackId}`, data);
             if (res.status === 200) {
                 await get().fetchInventory(cinemaId, snackId);
+                addToast({
+                    title: i18n.t('common.success'),
+                    description: i18n.t('toasts.inventory.update_success'),
+                    color: "success",
+                    variant: "flat"
+                });
                 return true;
             }
             return false;
         } catch (error) {
             console.error('Error updating inventory:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.inventory.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
             return false;
         }
     },

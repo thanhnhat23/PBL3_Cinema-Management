@@ -80,14 +80,14 @@ namespace CinemaAPI.Services.Implementations
                 throw new Exception($"An error occurred while updating the cinema: {ex.Message}");
             }
         }
-        public async Task SoftDeleteCinema(int cinema_id)
+        public async Task SoftDeleteCinema(int cinema_id, Guid? deletedBy)
         {
             try
             {
                 var cinema = await _dbContext.Cinemas.FirstOrDefaultAsync(c => c.cinema_id == cinema_id);
                 if (cinema == null) throw new Exception("Cinema not found");
 
-                await SoftDeleteAsync(cinema);
+                await SoftDeleteAsync(cinema, deletedBy);
                 RagCacheKeys.Invalidate("rooms");
             }
             catch (Exception ex)

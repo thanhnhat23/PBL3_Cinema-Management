@@ -11,12 +11,11 @@ namespace CinemaAPI.Controllers
     public class locationController : ControllerBase
     {
         private readonly ILocationService _locationService;
-        private readonly LocationService _locationDeleteService;
+// removed _locationDeleteService
 
-        public locationController(ILocationService locationService, LocationService locationDeleteService)
+        public locationController(ILocationService locationService)
         {
             _locationService = locationService;
-            _locationDeleteService = locationDeleteService;
         }
 
         [HttpGet("get-all")]
@@ -95,7 +94,10 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _locationDeleteService.SoftDeleteLocation(locationId);
+                var userIdValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                Guid? deletedBy = string.IsNullOrEmpty(userIdValue) ? (Guid?)null : Guid.Parse(userIdValue);
+
+                await _locationService.SoftDeleteLocation(locationId, deletedBy);
                 return Ok("Location deleted successfully");
             }
             catch (Exception ex)
@@ -109,7 +111,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                await _locationDeleteService.HardDeleteLocation(locationId);
+                await _locationService.HardDeleteLocation(locationId);
                 return Ok("Location hard deleted successfully");
             }
             catch (Exception ex)

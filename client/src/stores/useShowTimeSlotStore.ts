@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { _axios } from '@/lib/axios';
+import { addToast } from '@heroui/toast';
+import i18n from '@/lib/i18n';
 
 export enum ShowTimeSlotStatus {
     Draft = 0,
@@ -28,7 +30,7 @@ export const useShowTimeSlotStore = create<{
 }>((set) => ({
     slots: [],
     isFetching: false,
-    
+
     fetchAll: async () => {
         try {
             set({ isFetching: true });
@@ -55,8 +57,20 @@ export const useShowTimeSlotStore = create<{
         try {
             await _axios.post('/v1/showtimeSlot/create', payload);
             set({ slots: [] });
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.showtime_slot.add_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error('create slot error:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.showtime_slot.add_error'),
+                color: "danger",
+                variant: "flat"
+            });
         }
     },
 
@@ -66,8 +80,20 @@ export const useShowTimeSlotStore = create<{
             set((s) => ({
                 slots: s.slots.map(x => x.slot_id === id ? { ...x, ...payload } as ShowTimeSlot : x)
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.showtime_slot.update_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error('update slot error:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.showtime_slot.update_error'),
+                color: "danger",
+                variant: "flat"
+            });
         }
     },
 
@@ -77,8 +103,20 @@ export const useShowTimeSlotStore = create<{
             set((s) => ({
                 slots: s.slots.filter(x => x.slot_id !== id)
             }));
+            addToast({
+                title: i18n.t('common.success'),
+                description: i18n.t('toasts.showtime_slot.delete_success'),
+                color: "success",
+                variant: "flat"
+            });
         } catch (error) {
             console.error('delete slot error:', error);
+            addToast({
+                title: i18n.t('common.error'),
+                description: i18n.t('toasts.showtime_slot.delete_error'),
+                color: "danger",
+                variant: "flat"
+            });
         }
     }
 }));

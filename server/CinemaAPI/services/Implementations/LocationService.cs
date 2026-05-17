@@ -62,14 +62,14 @@ namespace CinemaAPI.Services.Implementations
 
         }
 
-        public async Task SoftDeleteLocation(int location_id)
+        public async Task SoftDeleteLocation(int location_id, Guid? deletedBy)
         {
             try
             {
                 var location = await _dbContext.Locations.FindAsync(location_id);
                 if (location != null)
                 {
-                    await SoftDeleteAsync(location);
+                    await SoftDeleteAsync(location, deletedBy);
                     RagCacheKeys.Invalidate("rooms");
                 }
             }
