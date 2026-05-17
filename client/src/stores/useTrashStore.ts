@@ -29,7 +29,16 @@ export const useTrashStore = create<TrashStore>((set, get) => ({
         set({ isLoading: true });
         try {
             const response = await _axios.get('/v1/admin/get-deleted-items');
-            set({ deletedItems: response.data, isLoading: false });
+            const mappedItems = (response.data || []).map((item: any) => ({
+                id: item.Id ?? item.id,
+                name: item.Name ?? item.name,
+                type: item.Type ?? item.type,
+                deletedAt: item.DeletedAt ?? item.deletedAt,
+                deletedByUserId: item.DeletedByUserId ?? item.deletedByUserId,
+                deletedByUserName: item.DeletedByUserName ?? item.deletedByUserName,
+                deletedByAvatarPath: item.DeletedByAvatarPath ?? item.deletedByAvatarPath,
+            }));
+            set({ deletedItems: mappedItems, isLoading: false });
         } catch (error: any) {
             console.error('Error fetching deleted items:', error);
             addToast({
