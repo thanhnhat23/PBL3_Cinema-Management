@@ -110,7 +110,7 @@ public class TmdbSyncWorker : BackgroundService
                         var lockKey = $"seat_lock:{booking.showtime_id}:{seat.seat_id}";
                         await redisDb.KeyDeleteAsync(lockKey);
 
-                        // Broadcast to other users in real time that this seat is now available
+                        // Broadcast SignalR SeatUnlocked to other users in real time
                         await _hubContext.Clients.Group(booking.showtime_id.ToString()).SendAsync("SeatUnlocked", new
                         {
                             showtimeId = booking.showtime_id,
