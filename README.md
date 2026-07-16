@@ -6,7 +6,7 @@
   📽 CINEMA MANAGEMENT SYSTEM (CMS)
 </h1> 
 
-### The cinema management platform supports real-time ticket booking and integrates modern payment methods
+### A cinema management system with real-time booking and online payment integration.
 
 <p align="center">
   A full-stack cinema management system that supports real-time seat reservation, secure online payment integration, and efficient theater operations. The platform covers end-to-end management of movies,showtimes, bookings, and customer interactions.
