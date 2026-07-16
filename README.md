@@ -1,31 +1,82 @@
-# 🎬 CINEMA MANAGEMENT SYSTEM (PBL3)
+<div align="center">
+  <img width="200" height="200" alt="image" src="https://github.com/user-attachments/assets/ff9368bb-a2bf-4235-b936-4562ffbcd2a1" />
+</div>
 
-[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)](https://github.com/thanhnhat23/PBL3_Cinema-Management)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![VNPAY](https://img.shields.io/badge/Payment-VNPAY--Integrated-blue)](https://vnpay.vn)
-[![Framework](https://img.shields.io/badge/Backend-.NET%209--Core-512BD4)](https://dotnet.microsoft.com/en-us/apps/aspnet)
+<h1 align="center">
+  📽 CINEMA MANAGEMENT SYSTEM (CMS)
+</h1> 
 
-**Nền tảng quản lý rạp chiếu phim tối ưu, hỗ trợ đặt vé thời gian thực và tích hợp thanh toán hiện đại.** Dự án được xây dựng nhằm giải quyết bài toán vận hành rạp phim từ khâu quản lý phim, suất chiếu đến trải nghiệm đặt vé của khách hàng.
+### The cinema management platform supports real-time ticket booking and integrates modern payment methods
 
-[🚀 Demo Trực Tuyến](https://milkywayyy.me)
+<p align="center">
+  A full-stack cinema management system that supports real-time seat reservation, secure online payment integration, and efficient theater operations. The platform covers end-to-end management of movies,showtimes, bookings, and customer interactions.
+</p>
+
+<div align="center">
+  
+  [![Build Status](https://img.shields.io/badge/PASSING%20-%20green?style=for-the-badge&label=BUILD&color=brightgreen)](https://github.com/thanhnhat23/PBL3_Cinema-Management)
+  [![License: MIT](https://img.shields.io/badge/MIT%20-%20yellow?style=for-the-badge&label=License&color=yellow)](https://opensource.org/licenses/MIT)
+  [![VNPAY](https://img.shields.io/badge/VNPAY%20-%20blue?style=for-the-badge&label=Payment&color=blue)](https://vnpay.vn)
+  [![MOMO](https://img.shields.io/badge/Momo%20-%20blue?style=for-the-badge&label=Payment&color=%23e01f76)](https://www.momo.vn/)
+  
+</div>
+
+WEBSITE DEMO: https://milkywayyy.me
 
 ---
 
-## 📷 Preview / Demo
-<img width="1837" height="987" alt="image" src="https://github.com/user-attachments/assets/571ac648-b4a2-449e-b398-8c131821cc46" />\
-<img width="413" height="896" alt="image" src="https://github.com/user-attachments/assets/7f006fe9-2ca3-49cc-a5eb-e153bd8eda3b" />
+## 📷 Preview
 
-*Giao diện đặt vé hiện đại với hiệu ứng Glassmorphism và sơ đồ ghế ngồi thời gian thực.*
+- *Modern ticket booking interface with Glassmorphism effects.*
+
+#### 💻 DESKTOP
+<div align="center"> 
+  <img width="1000" height="500" alt="image" src="https://github.com/user-attachments/assets/571ac648-b4a2-449e-b398-8c131821cc46" />
+</div>
+
+#### 📱 MOBILE
+<div align="center"> 
+  <img width="400" height="800" alt="image" src="https://github.com/user-attachments/assets/7f006fe9-2ca3-49cc-a5eb-e153bd8eda3b" />
+</div>
 
 ---
 
-## ✨ Tính năng nổi bật
-*   **💳 Thanh toán VNPAY:** Tích hợp cổng thanh toán VNPAY phiên bản 2.1.0, hỗ trợ quét mã QR và thẻ nội địa an toàn, nhanh chóng.
-*   **💺 Đặt vé thời gian thực:** Sơ đồ ghế ngồi cập nhật trạng thái tức thì khi có người đang chọn, tránh tình trạng trùng lặp.
-*   **🤖 Chatbot AI (Gemini):** Trợ lý ảo hỗ trợ tìm kiếm phim, gợi ý suất chiếu và giải đáp thắc mắc khách hàng 24/7.
-*   **🔄 Đồng bộ TMDB:** Tự động lấy thông tin phim, trailer, đánh giá từ hệ thống dữ liệu điện ảnh thế giới (The Movie Database).
-*   **📊 Admin Dashboard:** Hệ thống quản lý toàn diện: doanh thu, lịch chiếu, nhân viên, và kho hàng (Snack/Combo).
+## 🚀 Key Features
+* 🌐 **Multi-Language Support**: Fully localized user interface (English & Vietnamese) integrated client-side using i18next middleware.
 
+* 💺 **Real-Time Seat Reservation**:Active lock state (5-min TTL) synchronized across all buyers through WebSockets.
+
+* 💳 **Dual Payment Gateways**: Seamless checkout supporting both VNPAY and MoMo with IPN endpoints.
+
+* 🤖 **AI Chatbot Assistant**: Integrated Google Gemini LLM for intelligent answers, movie lookups, and scheduling recommendations.
+
+* 🎫 **Coupon & Voucher Engine**: Fully-managed discount coupon engine supporting percentage or flat-rate deductions.
+  
+* 🍿 **Snack & Retail Inventory**: Dynamic management of snack orders and ingredient/product stocks updated automatically on checkout.
+  
+* 📧 **Email Notifications**: Automated, professionally-styled HTML receipts sent to customers upon ticket confirmation via Resend.
+  
+* 🔄 **Automated TMDB Sync**: Background worker automatically updates movie metadata, cast members, and trailers from The Movie Database (TMDB).
+
+---
+
+## 🧠 Technical Highlights
+* ⚡ **Scalable WebSockets**: The SignalR real-time messaging layer is configured with a Redis Backplane to support horizontal scaling across multiple application nodes under heavy concurrency load.
+  
+* 🔄 **Atomic Resilient Seat Locking**: Uses Redis transaction routines and Lua script evaluations to atomically clear locks on socket disconnects (OnDisconnectedAsync), but prevents lock removals if seats have been verified as Pending payment in MySQL.
+  
+* 🗄️ **Polyglot Persistence (Multi-DB Architecture)**:
+  
+  * **MySQL (ACID relational database)**: Preserves transactional ticket orders, invoices, and user states.
+    
+  * **MongoDB (Document database)**: Handles chatbot logs and movie reviews.
+    
+  * **Redis (In-memory storage)**: Manages distributed locks, token caching, and prompt context indexes.
+    
+* 🏗️ **Modular Clean Architecture**: Standard separation of concerns (Controllers, Services, Data models, Infrastructure) ensuring payment gateway providers or background workers can be replaced or updated modularly.
+  
+* 🐳 **Cloud-Ready DevOps Pipeline**: Multi-stage Docker builds orchestrate the frontend, backend, database servers, and caches. Deployment scripts (docker.sh and docker.ps1) handle setup and boot dependencies automatically.
+  
 ---
 
 ## 🛠 Tech Stack
@@ -44,40 +95,40 @@
   </a>
 </p>
 
-*   **Công nghệ khác:** SignalR (Real-time), Cloudinary (Media storage).
+*   **Other technologies:** SignalR (Real-time), Cloudinary (Media storage).
 
 ---
 
-## 🏗 Kiến trúc hệ thống
-Dự án được thiết kế theo mô hình **Clean Architecture** kết hợp với kiến trúc **Monolith** (có xu hướng tách Service) để đảm bảo tính mở rộng và dễ bảo trì.
+## 🏗 System architecture
+The project is designed using a **Clean Architecture** model combined with **Monolith** architecture (which tends to separate services) to ensure scalability and ease of maintenance.
 
 ```mermaid
 graph TD
-    User[Khách hàng] --> NextJS[Frontend - Next.js]
+    User[User] --> NextJS[Frontend - Next.js]
     NextJS --> API[Backend API - ASP.NET Core]
-    API --> MySQL[(MySQL - Dữ liệu chính)]
+    API --> MySQL[(MySQL - Main Data)]
     API --> Mongo[(MongoDB - Chat & Reviews)]
     API --> Redis[(Redis - Caching)]
-    API --> VNPAY[VNPAY Gateway]
+    API --> VNPAY[VNPAY Gateway] & MOMO[MOMO Gateway]
     API --> Gemini[Google Gemini AI]
 ```
 
 ---
 
-## 🚀 Hướng dẫn cài đặt nhanh
+## 🚀 Quick installation guide
 
-### 1. Clone dự án
+### 1. Clone project
 ```bash
 git clone https://github.com/thanhnhat23/PBL3_Cinema-Management.git
 ```
 
 ### 2. Cấu hình Environment
-Tạo file `appsettings.json` trong thư mục `server/CinemaAPI` và điền thông tin:
+Create a file named `appsettings.json` in the `server/CinemaAPI` directory and fill in the following information:
 *   ConnectionStrings (MySQL & MongoDB)
 *   VNPAY Config (TmnCode, HashSecret)
 *   API Keys (Gemini, TMDB, Cloudinary)
 
-### 3. Chạy ứng dụng
+### 3. Run the application
 **Backend:**
 ```bash
 cd server/CinemaAPI
@@ -93,10 +144,10 @@ npm run dev
 
 ---
 
-## 👥 Đội ngũ thực hiện
-Dự án được thực hiện bởi nhóm sinh viên **PBL3 - Cinema Management**:
-*   **Lương Thanh Nhật:** Trưởng nhóm, Frontend Developer (UI/UX, State Management, Real-time Seat Map), Backend Developer
-*   **Nguyễn Thị Nghĩa:** Backend Developer (API Design, Database, VNPAY Integration).  
+## 👥 Implementation team
+This project was carried out by the **PBL3 - Cinema Management** student group:
+*   **Lương Thanh Nhật (ルオン・タイン・ニャット):** Leader, Frontend Developer (UI/UX, State Management, Real-time Seat Map), Backend Developer
+*   **Nguyễn Thị Nghĩa (グエン・ティ・ギア):** Backend Developer (API Design, Database, VNPAY Integration), Database design and optimization.
 
 ---
-*Cảm ơn bạn đã quan tâm đến dự án của chúng tôi! Nếu thấy hữu ích, hãy tặng chúng tôi 1 ⭐ nhé!*
+*Thank you for your interest in our project! If you found it helpful, please give us a ⭐!*
